@@ -1,0 +1,14 @@
+[IMAGE]
+FILE = "CosmoScan_00-163653"
+WIDTH = -1
+HEIGHT = -1
+FORMAT = "TIF"
+
+[IMAGING_LAYOUT]
+PositionOnly = 1
+AfterBefore = "01"
+Points = 4
+P_1 = "24.5693; 11.0685; 24.6437; 11.1429;red;A01;"
+P_2 = "24.6994; 11.1114; 24.7781; 11.1901;blue;B01;"
+P_3 = "24.6722; 11.1880; 24.7142; 11.2300;red;C01;"
+P_4 = "24.6104; 11.2206; 24.6404; 11.2506;red;D01;"
