@@ -1,0 +1,95 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+cache/
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Large binary files
+*.exe
+*.dmg
+*.pkg
+*.deb
+*.app/
+
+# PySide6 generated files
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+*.qrc
+
+# Node modules (if using any JS tools)
+node_modules/
+
+# Documentation builds
+docs/_build/
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.temp
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.tiff
+*.bmp
+*.ico
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration with secrets
+config.ini
+settings.json
+.env.local
+.env.production 
