@@ -1,1 +1,590 @@
- 
+/* CellSorter Design System CSS */
+/* Inspired by shadcn/ui and qt-material */
+
+/* ============================================ */
+/* CSS Variables / Design Tokens               */
+/* ============================================ */
+
+:root {
+  /* Colors - Light Theme (shadcn/ui inspired) */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+  
+  /* Scientific/Medical Colors */
+  --cancer-primary: 0 84.2% 60.2%;
+  --normal-tissue: 142.1 76.2% 36.3%;
+  --stroma: 221.2 83.2% 53.3%;
+  --immune-cells: 262.1 83.3% 57.8%;
+  --blood-vessels: 24.6 95% 53.1%;
+  --necrosis: 47.9 95.8% 53.1%;
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  
+  /* Animations */
+  --duration-fast: 100ms;
+  --duration-normal: 150ms;
+  --duration-slow: 300ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  /* Colors - Dark Theme */
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+}
+
+/* ============================================ */
+/* Base Styles                                 */
+/* ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================ */
+/* Qt Widget Styles                            */
+/* ============================================ */
+
+/* Main Window */
+QMainWindow {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Menu Bar */
+QMenuBar {
+  background-color: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
+  padding: var(--spacing-2) var(--spacing-4);
+  font-weight: 500;
+}
+
+QMenuBar::item {
+  background: transparent;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius);
+  margin-right: var(--spacing-1);
+}
+
+QMenuBar::item:selected {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+QMenuBar::item:pressed {
+  background-color: hsl(var(--muted));
+}
+
+/* Toolbar */
+QToolBar {
+  background-color: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
+  spacing: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+}
+
+QToolButton {
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: var(--spacing-2);
+  min-width: 36px;
+  min-height: 36px;
+}
+
+QToolButton:hover {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--border));
+}
+
+QToolButton:pressed {
+  background-color: hsl(var(--muted));
+}
+
+QToolButton:checked {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* ============================================ */
+/* Button Components                           */
+/* ============================================ */
+
+QPushButton {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--spacing-2) var(--spacing-4);
+  font-weight: 500;
+  font-size: 14px;
+  min-height: 40px;
+  transition: all var(--duration-normal) var(--easing);
+}
+
+QPushButton:hover {
+  background-color: hsl(var(--primary) / 0.9);
+  transform: translateY(-1px);
+}
+
+QPushButton:pressed {
+  background-color: hsl(var(--primary) / 0.8);
+  transform: translateY(0);
+}
+
+QPushButton:disabled {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  cursor: not-allowed;
+}
+
+/* Button Variants */
+QPushButton[variant="secondary"] {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+QPushButton[variant="secondary"]:hover {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+
+QPushButton[variant="outline"] {
+  background-color: transparent;
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+QPushButton[variant="outline"]:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+QPushButton[variant="ghost"] {
+  background-color: transparent;
+  color: hsl(var(--foreground));
+  border: none;
+}
+
+QPushButton[variant="ghost"]:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+QPushButton[variant="destructive"] {
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+QPushButton[variant="destructive"]:hover {
+  background-color: hsl(var(--destructive) / 0.9);
+}
+
+/* Button Sizes */
+QPushButton[size="sm"] {
+  min-height: 36px;
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: 12px;
+}
+
+QPushButton[size="lg"] {
+  min-height: 44px;
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: 16px;
+}
+
+/* ============================================ */
+/* Input Components                            */
+/* ============================================ */
+
+QLineEdit, QTextEdit, QSpinBox, QDoubleSpinBox {
+  background-color: transparent;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: 14px;
+  min-height: 40px;
+  transition: all var(--duration-normal) var(--easing);
+}
+
+QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {
+  border-color: hsl(var(--ring));
+  outline: 2px solid hsl(var(--ring) / 0.2);
+  outline-offset: 2px;
+}
+
+QLineEdit:disabled, QTextEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  opacity: 0.5;
+}
+
+/* Placeholder text */
+QLineEdit[placeholderText] {
+  color: hsl(var(--muted-foreground));
+}
+
+/* ============================================ */
+/* Card Components                             */
+/* ============================================ */
+
+QFrame[role="card"] {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) * 2);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+QFrame[role="card-header"] {
+  padding: var(--spacing-6);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+QFrame[role="card-content"] {
+  padding: var(--spacing-6);
+}
+
+QFrame[role="card-footer"] {
+  padding: var(--spacing-6);
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+/* ============================================ */
+/* Table Components                            */
+/* ============================================ */
+
+QTableWidget {
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  gridline-color: hsl(var(--border));
+  selection-background-color: hsl(var(--accent));
+  selection-color: hsl(var(--accent-foreground));
+}
+
+QHeaderView::section {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  padding: var(--spacing-2) var(--spacing-3);
+  border: none;
+  border-bottom: 1px solid hsl(var(--border));
+  font-weight: 600;
+}
+
+QTableWidget::item {
+  padding: var(--spacing-2) var(--spacing-3);
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+}
+
+QTableWidget::item:alternate {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+QTableWidget::item:selected {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* ============================================ */
+/* Dialog Components                           */
+/* ============================================ */
+
+QDialog {
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) * 2);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+QDialog QLabel[role="title"] {
+  font-size: 18px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: var(--spacing-4);
+}
+
+QDialog QLabel[role="description"] {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: var(--spacing-6);
+}
+
+/* ============================================ */
+/* Status Bar                                  */
+/* ============================================ */
+
+QStatusBar {
+  background-color: hsl(var(--muted));
+  border-top: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  padding: var(--spacing-1) var(--spacing-4);
+}
+
+QStatusBar QLabel {
+  color: hsl(var(--muted-foreground));
+}
+
+QStatusBar QLabel[status="success"] {
+  color: hsl(var(--normal-tissue));
+}
+
+QStatusBar QLabel[status="warning"] {
+  color: hsl(var(--necrosis));
+}
+
+QStatusBar QLabel[status="error"] {
+  color: hsl(var(--destructive));
+}
+
+/* ============================================ */
+/* Scientific Components                       */
+/* ============================================ */
+
+/* Well Plate Widget */
+QFrame[role="well-plate"] {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: var(--spacing-4);
+}
+
+QPushButton[role="well"] {
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  margin: 1px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+QPushButton[role="well"][state="empty"] {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+QPushButton[role="well"][state="assigned"] {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 1px solid hsl(var(--primary));
+}
+
+QPushButton[role="well"]:hover {
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+/* Color Picker */
+QPushButton[role="color-picker"] {
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 50%;
+  border: 2px solid hsl(var(--border));
+  margin: var(--spacing-1);
+}
+
+QPushButton[role="color-picker"]:checked {
+  border-color: hsl(var(--ring));
+  border-width: 3px;
+}
+
+/* Medical Colors */
+QPushButton[color="cancer"] { background-color: hsl(var(--cancer-primary)); }
+QPushButton[color="normal"] { background-color: hsl(var(--normal-tissue)); }
+QPushButton[color="stroma"] { background-color: hsl(var(--stroma)); }
+QPushButton[color="immune"] { background-color: hsl(var(--immune-cells)); }
+QPushButton[color="vessels"] { background-color: hsl(var(--blood-vessels)); }
+QPushButton[color="necrosis"] { background-color: hsl(var(--necrosis)); }
+
+/* ============================================ */
+/* Loading and Progress                        */
+/* ============================================ */
+
+QProgressBar {
+  background-color: hsl(var(--secondary));
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  text-align: center;
+  height: 8px;
+}
+
+QProgressBar::chunk {
+  background-color: hsl(var(--primary));
+  border-radius: calc(var(--radius) / 2);
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+QLabel[role="loading-spinner"] {
+  animation: spin 1s linear infinite;
+}
+
+/* ============================================ */
+/* Animations and Transitions                  */
+/* ============================================ */
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scale Animation */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Slide Up Animation */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Apply animations to dialogs and modals */
+QDialog {
+  animation: scaleIn var(--duration-slow) var(--easing);
+}
+
+/* ============================================ */
+/* Accessibility                               */
+/* ============================================ */
+
+/* Focus indicators */
+*:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 0%;
+    --ring: 0 0% 0%;
+  }
+  
+  [data-theme="dark"] {
+    --border: 0 0% 100%;
+    --ring: 0 0% 100%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================ */
+/* Utility Classes                             */
+/* ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-base { font-size: 16px; }
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+.p-1 { padding: var(--spacing-1); }
+.p-2 { padding: var(--spacing-2); }
+.p-3 { padding: var(--spacing-3); }
+.p-4 { padding: var(--spacing-4); }
+.p-6 { padding: var(--spacing-6); }
+
+.m-1 { margin: var(--spacing-1); }
+.m-2 { margin: var(--spacing-2); }
+.m-3 { margin: var(--spacing-3); }
+.m-4 { margin: var(--spacing-4); }
+.m-6 { margin: var(--spacing-6); }
+
+.rounded { border-radius: var(--radius); }
+.rounded-lg { border-radius: calc(var(--radius) * 2); }
+.rounded-full { border-radius: 9999px; }
+
+.shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+.shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); } 
