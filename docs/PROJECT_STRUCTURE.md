@@ -41,16 +41,11 @@
 │   ├── /assets/                    # 아이콘, 이미지 등 정적 파일
 │   └── main.py                     # 애플리케이션 진입점
 │
-├── /tests/                         # 단위 및 통합 테스트 코드
-│   ├── /components/                # 컴포넌트 테스트
-│   ├── /pages/                     # 페이지 테스트
-│   ├── /models/                    # 모델 테스트
-│   └── /utils/                     # 유틸리티 테스트
-│
-└── /.cursor/                       # Cursor IDE 설정
-    └── /rules/                     # 프로젝트별 AI 규칙 정의
-        ├── base-rules.mdc          # 기본 개발 규칙
-        └── update-rules.mdc        # 프로젝트 업데이트 규칙
+└── /tests/                         # 단위 및 통합 테스트 코드
+    ├── /components/                # 컴포넌트 테스트
+    ├── /pages/                     # 페이지 테스트
+    ├── /models/                    # 모델 테스트
+    └── /utils/                     # 유틸리티 테스트
 ```
 
 ## Directory Descriptions
@@ -97,7 +92,9 @@
 - **models/**: 비즈니스 로직 테스트
 - **utils/**: 유틸리티 함수 테스트
 
-### Development Configuration (/.cursor/)
-- **rules/**: Cursor AI를 위한 프로젝트별 규칙 정의
-  - **base-rules.mdc**: 기본 개발 및 코딩 규칙
-  - **update-rules.mdc**: 프로젝트 업데이트 및 동기화 규칙 
+### Development Configuration
+- **.cursorignore**: Cursor IDE가 분석에서 제외할 파일/폴더 패턴 정의
+- **.gitignore**: Git 버전 관리에서 제외할 파일/폴더 패턴 정의
+
+### Note on IDE Configuration
+현재 프로젝트는 Cursor IDE의 기본 설정을 사용하며, 별도의 `.cursor/` 디렉토리 구성 없이 `.cursorignore` 파일을 통해 필요한 설정을 관리합니다. 향후 프로젝트 복잡도가 증가하면 별도의 Cursor 설정 디렉토리 구성을 고려할 수 있습니다. 
