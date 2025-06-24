@@ -23,15 +23,15 @@ CellSorter operates as a bridge between:
 ## Data Flow Architecture
 
 ```
-[Microscopy Image (TIFF)] ──┐
-                            ├──► [CellSorter GUI] ──► [.cxprotocol Export] ──► [CosmoSort Hardware]
-[CellProfiler CSV Data] ────┘
+[Microscopy Image (TIFF/JPG/PNG)] ──┐
+                                    ├──► [CellSorter GUI] ──► [.cxprotocol Export] ──► [CosmoSort Hardware]
+[CellProfiler CSV Data] ────────────┘
 ```
 
 ### Detailed Data Flow
 
 1. **Input Stage**
-   - Load TIFF microscopy image → Image Handler
+   - Load microscopy image (TIFF/JPG/JPEG/PNG) → Image Handler
    - Parse CellProfiler CSV → CSV Parser
    - Extract cellular features and coordinates
 
@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
 ### 2. Image Handler (`src/models/image_handler.py`)
 
 **Responsibilities:**
-- TIFF image loading and validation
+- Multi-format image loading and validation (TIFF/JPG/JPEG/PNG)
 - Image display and zoom functionality
 - Overlay management for cell highlighting
 - Coordinate tracking for user interactions
@@ -276,43 +276,38 @@ The coordinate transformation system employs a robust two-point calibration appr
 
 ### File Format Specification
 
-```json
-{
-  "metadata": {
-    "software_version": "1.0.0",
-    "creation_timestamp": "2024-01-15T10:30:00Z",
-    "source_image": "sample_tissue.tiff",
-    "source_csv": "data_FilterObjects_dapi_CK7n_CK20_CDX2.csv",
-    "calibration_points": [
-      {"pixel": [100, 200], "stage": [1.5, 2.3]},
-      {"pixel": [500, 600], "stage": [5.2, 6.1]}
-    ]
-  },
-  "selections": [
-    {
-      "selection_id": "sel_001",
-      "label": "Cancer_Cells",
-      "color": "#FF0000",
-      "well": "A01",
-      "cell_count": 145,
-      "crops": [
-        {
-          "crop_id": "crop_001",
-          "stage_coordinates": {"x": 2.45, "y": 3.67},
-          "crop_size": 50,
-          "pixel_region": {"x": 245, "y": 367, "size": 50}
-        }
-      ]
-    }
-  ]
-}
+The .cxprotocol file follows an INI-style format with sections for image metadata and imaging layout:
+
+```ini
+[IMAGE]
+FILE = "sample_tissue"
+WIDTH = 2048
+HEIGHT = 2048
+FORMAT = "TIF"
+
+[IMAGING_LAYOUT]
+PositionOnly = 1
+AfterBefore = "01"
+Points = 4
+P_1 = "24.5693; 11.0685; 24.6437; 11.1429;red;A01;"
+P_2 = "24.6994; 11.1114; 24.7781; 11.1901;blue;B01;"
+P_3 = "24.6722; 11.1880; 24.7142; 11.2300;green;C01;"
+P_4 = "24.6104; 11.2206; 24.6404; 11.2506;yellow;D01;"
 ```
+
+Each point entry (P_1, P_2, etc.) contains semicolon-separated values:
+- **min_x**: Minimum X coordinate of crop region
+- **min_y**: Minimum Y coordinate of crop region  
+- **max_x**: Maximum X coordinate of crop region
+- **max_y**: Maximum Y coordinate of crop region
+- **color**: Selection color (red, blue, green, etc.)
+- **well**: 96-well plate position (A01-H12)
 
 ### Export Validation
 
 - **Coordinate Bounds Checking**: Ensure all coordinates are within valid ranges
-- **File Integrity**: JSON schema validation
-- **Hardware Compatibility**: Format verification for CosmoSort
+- **File Integrity**: INI format structure validation
+- **Hardware Compatibility**: .cxprotocol format verification for CosmoSort
 - **Backup Generation**: Automatic backup file creation
 
 ## Design Principles
@@ -339,7 +334,7 @@ The coordinate transformation system employs a robust two-point calibration appr
 
 ### 4. Performance Optimization
 
-- **Memory Management**: Efficient handling of large TIFF images
+- **Memory Management**: Efficient handling of large images (TIFF/JPG/JPEG/PNG)
 - **Lazy Loading**: On-demand data processing
 - **Caching Strategy**: Intelligent caching of processed data
 - **Vectorized Operations**: NumPy optimization for coordinate transformations
@@ -354,7 +349,7 @@ The coordinate transformation system employs a robust two-point calibration appr
 ## Error Handling and Validation
 
 ### Input Validation
-- **File Format Verification**: Strict TIFF and CSV format checking
+- **File Format Verification**: Strict image format (TIFF/JPG/JPEG/PNG) and CSV format checking
 - **Data Integrity**: Missing value detection and handling
 - **Coordinate Validation**: Bounds checking for all coordinate operations
 

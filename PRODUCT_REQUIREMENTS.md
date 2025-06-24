@@ -19,8 +19,9 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 ### FR1: Data Input and Loading
 
 #### FR1.1: Image Loading
-- **Requirement**: Load and display TIFF microscopy images
+- **Requirement**: Load and display microscopy images in multiple formats
 - **Acceptance Criteria**:
+  - Support for TIFF, JPG, JPEG, and PNG image formats
   - Support for multi-channel TIFF files up to 2GB
   - Display images with pan and zoom functionality
   - Maintain image quality during zoom operations (1x to 100x magnification)
@@ -41,7 +42,7 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 #### FR1.3: File Format Validation
 - **Requirement**: Validate input file formats and data integrity
 - **Acceptance Criteria**:
-  - Reject non-TIFF image files with clear error messages
+  - Support TIFF, JPG, JPEG, and PNG image formats with appropriate validation
   - Validate CSV structure and required columns
   - Check for data completeness and consistency
   - Provide specific error descriptions for invalid data
@@ -148,7 +149,7 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 #### FR6.1: Protocol File Export
 - **Requirement**: Generate .cxprotocol files for CosmoSort hardware
 - **Acceptance Criteria**:
-  - JSON format with complete metadata
+  - INI-style format with IMAGE and IMAGING_LAYOUT sections
   - Include all selection data, coordinates, and calibration information
   - File size optimization for large datasets
   - Export validation and integrity checking
@@ -192,7 +193,7 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 - Memory leak prevention
 
 #### NFR1.3: File Size Limits
-- Maximum image size: 2GB TIFF files
+- Maximum image size: 2GB for all supported formats (TIFF/JPG/JPEG/PNG)
 - Maximum CSV records: 100,000 cells
 - Protocol file size: < 100MB for largest datasets
 
@@ -456,9 +457,9 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 - `blood_cells_morphology.csv` - 50,000 cells with size and shape features
 
 #### Protocol Files (`docs/examples/protocols/`)
-- **Format**: JSON (.cxprotocol extension)
+- **Format**: INI-style format (.cxprotocol extension)
 - **Content**: Complete workflow metadata and extraction coordinates
-- **Validation**: Schema-validated format for hardware compatibility
+- **Validation**: Format-validated structure for hardware compatibility
 
 **Example Files:**
 - `cancer_cell_extraction.cxprotocol` - 200 selected cancer cells with metadata
@@ -481,14 +482,14 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 
 #### Protocol Validation
 - **Coordinate bounds**: All coordinates within valid stage range
-- **File integrity**: JSON schema validation
-- **Hardware compatibility**: Format verification for CosmoSort
+- **File integrity**: INI format structure validation
+- **Hardware compatibility**: .cxprotocol format verification for CosmoSort
 - **Metadata completeness**: All required fields populated
 
 ## Acceptance Criteria Summary
 
 ### Critical Success Factors
-1. **Data Integration**: Seamless loading and processing of TIFF images and CellProfiler CSV data
+1. **Data Integration**: Seamless loading and processing of multiple image formats (TIFF/JPG/JPEG/PNG) and CellProfiler CSV data
 2. **User Interaction**: Intuitive scatter plot selection and image visualization
 3. **Coordinate Accuracy**: Precise pixel-to-stage transformation with <1% error
 4. **Protocol Generation**: Valid .cxprotocol files compatible with CosmoSort hardware
