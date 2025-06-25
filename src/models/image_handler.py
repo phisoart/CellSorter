@@ -223,6 +223,7 @@ class ImageHandler(QWidget, LoggerMixin):
     image_load_failed = Signal(str)  # error_message
     zoom_changed = Signal(float)  # zoom_level
     coordinates_changed = Signal(float, float)  # x, y
+    calibration_point_clicked = Signal(int, int, str)  # x, y, label
     
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
@@ -237,6 +238,13 @@ class ImageHandler(QWidget, LoggerMixin):
         # Overlay data
         self.overlays: List[Dict[str, Any]] = []
         self.show_overlays: bool = True
+        self.cell_overlays: Dict[str, List[Dict[str, Any]]] = {}  # selection_id -> overlays
+        self.bounding_boxes: List[Tuple[int, int, int, int]] = []  # (min_x, min_y, max_x, max_y)
+        
+        # Calibration mode
+        self.calibration_mode: bool = False
+        self.calibration_points: List[Dict[str, Any]] = []  # {x, y, label}
+        self.current_mouse_pos: Tuple[int, int] = (0, 0)
         
         # Performance tracking
         self.load_start_time: Optional[float] = None
@@ -263,13 +271,23 @@ class ImageHandler(QWidget, LoggerMixin):
         """)
         self.image_label.setText("No image loaded")
         
+        # Enable mouse tracking for coordinate display
+        self.image_label.setMouseTracking(True)
+        self.image_label.mousePressEvent = self._mouse_press_event
+        self.image_label.mouseMoveEvent = self._mouse_move_event
+        
         # Progress bar (hidden by default)
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
         self.progress_bar.setTextVisible(True)
         
+        # Coordinate display label
+        self.coord_label = QLabel("Coordinates: (0, 0)")
+        self.coord_label.setStyleSheet("QLabel { font-family: monospace; }")
+        
         layout.addWidget(self.image_label)
         layout.addWidget(self.progress_bar)
+        layout.addWidget(self.coord_label)
     
     @error_handler("Loading image file")
     def load_image(self, file_path: str) -> None:
@@ -385,7 +403,7 @@ class ImageHandler(QWidget, LoggerMixin):
             pixmap = QPixmap.fromImage(qimage)
             
             # Draw overlays if enabled
-            if self.show_overlays and self.overlays:
+            if self.show_overlays and (self.overlays or self.cell_overlays):
                 pixmap = self._draw_overlays(pixmap)
             
             # Update label
@@ -464,29 +482,58 @@ class ImageHandler(QWidget, LoggerMixin):
         painter = QPainter(pixmap)
         painter.setRenderHint(QPainter.Antialiasing)
         
+        # Draw general overlays
         for overlay in self.overlays:
-            overlay_type = overlay.get('type', 'rectangle')
-            color = overlay.get('color', '#FF0000')
-            alpha = overlay.get('alpha', 0.3)
-            
-            # Set up pen and brush
-            pen = QPen(Qt.red if color == '#FF0000' else Qt.blue)
-            pen.setWidth(2)
-            brush = QBrush(Qt.red if color == '#FF0000' else Qt.blue)
-            brush.setStyle(Qt.SolidPattern)
-            
-            painter.setPen(pen)
-            painter.setBrush(brush)
-            
-            if overlay_type == 'rectangle':
-                x = int(overlay['x'] * self.zoom_level)
-                y = int(overlay['y'] * self.zoom_level) 
-                width = int(overlay['width'] * self.zoom_level)
-                height = int(overlay['height'] * self.zoom_level)
-                painter.drawRect(x, y, width, height)
+            self._draw_single_overlay(painter, overlay)
+        
+        # Draw cell highlight overlays
+        for selection_id, overlays in self.cell_overlays.items():
+            for overlay in overlays:
+                self._draw_single_overlay(painter, overlay)
         
         painter.end()
         return pixmap
+    
+    def _draw_single_overlay(self, painter: QPainter, overlay: Dict[str, Any]) -> None:
+        """
+        Draw a single overlay.
+        
+        Args:
+            painter: QPainter instance
+            overlay: Overlay data dictionary
+        """
+        overlay_type = overlay.get('type', 'rectangle')
+        color = overlay.get('color', '#FF0000')
+        alpha = overlay.get('alpha', 0.3)
+        
+        # Parse hex color
+        if color.startswith('#'):
+            color_val = int(color[1:], 16)
+            r = (color_val >> 16) & 255
+            g = (color_val >> 8) & 255
+            b = color_val & 255
+        else:
+            # Fallback to red
+            r, g, b = 255, 0, 0
+        
+        # Create color with alpha
+        from PySide6.QtGui import QColor
+        qt_color = QColor(r, g, b, int(alpha * 255))
+        
+        # Set up pen and brush
+        pen = QPen(qt_color)
+        pen.setWidth(2)
+        brush = QBrush(qt_color)
+        
+        painter.setPen(pen)
+        painter.setBrush(brush)
+        
+        if overlay_type in ['rectangle', 'cell_highlight']:
+            x = int(overlay['x'] * self.zoom_level)
+            y = int(overlay['y'] * self.zoom_level) 
+            width = int(overlay['width'] * self.zoom_level)
+            height = int(overlay['height'] * self.zoom_level)
+            painter.drawRect(x, y, width, height)
     
     def set_zoom(self, zoom_level: float) -> None:
         """
@@ -585,9 +632,181 @@ class ImageHandler(QWidget, LoggerMixin):
         info.update(self.image_metadata)
         return info
     
+    def set_bounding_boxes(self, bounding_boxes: List[Tuple[int, int, int, int]]) -> None:
+        """
+        Set bounding boxes for cell highlighting.
+        
+        Args:
+            bounding_boxes: List of (min_x, min_y, max_x, max_y) tuples
+        """
+        self.bounding_boxes = bounding_boxes
+        self.log_info(f"Set {len(bounding_boxes)} bounding boxes for cell highlighting")
+    
+    def highlight_cells(self, selection_id: str, cell_indices: List[int], 
+                       color: str, alpha: float = 0.5) -> None:
+        """
+        Highlight selected cells on the image.
+        
+        Args:
+            selection_id: Unique selection identifier
+            cell_indices: List of cell indices to highlight
+            color: Highlight color (hex format)
+            alpha: Transparency level
+        """
+        if not self.bounding_boxes:
+            self.log_warning("No bounding boxes available for cell highlighting")
+            return
+        
+        # Clear previous overlays for this selection
+        self.cell_overlays.pop(selection_id, None)
+        
+        # Create new overlays for selected cells
+        overlays = []
+        for cell_index in cell_indices:
+            if 0 <= cell_index < len(self.bounding_boxes):
+                min_x, min_y, max_x, max_y = self.bounding_boxes[cell_index]
+                overlay = {
+                    'type': 'cell_highlight',
+                    'x': min_x,
+                    'y': min_y,
+                    'width': max_x - min_x,
+                    'height': max_y - min_y,
+                    'color': color,
+                    'alpha': alpha,
+                    'cell_index': cell_index
+                }
+                overlays.append(overlay)
+        
+        self.cell_overlays[selection_id] = overlays
+        self._update_display()
+        
+        self.log_info(f"Highlighted {len(overlays)} cells for selection {selection_id}")
+    
+    def remove_cell_highlights(self, selection_id: str) -> None:
+        """
+        Remove cell highlights for a specific selection.
+        
+        Args:
+            selection_id: Selection identifier
+        """
+        if selection_id in self.cell_overlays:
+            del self.cell_overlays[selection_id]
+            self._update_display()
+            self.log_info(f"Removed cell highlights for selection {selection_id}")
+    
+    def clear_all_cell_highlights(self) -> None:
+        """Clear all cell highlights."""
+        self.cell_overlays.clear()
+        self._update_display()
+        self.log_info("Cleared all cell highlights")
+    
+    def set_calibration_mode(self, enabled: bool) -> None:
+        """
+        Enable or disable calibration mode for clicking reference points.
+        
+        Args:
+            enabled: Whether to enable calibration mode
+        """
+        self.calibration_mode = enabled
+        if enabled:
+            self.image_label.setCursor(Qt.CrossCursor)
+            self.update_status("Calibration mode: Click on reference points")
+        else:
+            self.image_label.setCursor(Qt.ArrowCursor)
+            self.update_status("Calibration mode disabled")
+        
+        self.log_info(f"Calibration mode {'enabled' if enabled else 'disabled'}")
+    
+    def clear_calibration_points(self) -> None:
+        """Clear all calibration points."""
+        self.calibration_points.clear()
+        self._update_display()
+        self.log_info("Cleared calibration points")
+    
+    def _mouse_press_event(self, event) -> None:
+        """Handle mouse press events on the image."""
+        if not self.image_data is None and event.button() == Qt.LeftButton:
+            # Get image coordinates from label coordinates
+            label_x = event.x()
+            label_y = event.y()
+            
+            # Convert to image coordinates (accounting for zoom and pan)
+            image_x, image_y = self._label_to_image_coords(label_x, label_y)
+            
+            if self.calibration_mode:
+                # Add calibration point
+                point_label = f"Point_{len(self.calibration_points) + 1}"
+                calibration_point = {
+                    'x': image_x,
+                    'y': image_y,
+                    'label': point_label
+                }
+                self.calibration_points.append(calibration_point)
+                self._update_display()
+                
+                # Emit signal for UI to handle
+                self.calibration_point_clicked.emit(image_x, image_y, point_label)
+                
+                self.log_info(f"Added calibration point: {point_label} at ({image_x}, {image_y})")
+    
+    def _mouse_move_event(self, event) -> None:
+        """Handle mouse move events for coordinate tracking."""
+        if not self.image_data is None:
+            # Get image coordinates from label coordinates
+            label_x = event.x()
+            label_y = event.y()
+            
+            # Convert to image coordinates
+            image_x, image_y = self._label_to_image_coords(label_x, label_y)
+            
+            # Update coordinate display
+            self.current_mouse_pos = (image_x, image_y)
+            self.coord_label.setText(f"Coordinates: ({image_x}, {image_y})")
+            
+            # Emit coordinate change signal
+            self.coordinates_changed.emit(float(image_x), float(image_y))
+    
+    def _label_to_image_coords(self, label_x: int, label_y: int) -> Tuple[int, int]:
+        """
+        Convert label coordinates to image coordinates.
+        
+        Args:
+            label_x: X coordinate in label
+            label_y: Y coordinate in label
+        
+        Returns:
+            Tuple of (image_x, image_y)
+        """
+        if self.image_data is None:
+            return (0, 0)
+        
+        # Account for image scaling in the label
+        label_size = self.image_label.size()
+        image_height, image_width = self.image_data.shape[:2]
+        
+        # Calculate scale factors
+        scale_x = image_width / label_size.width()
+        scale_y = image_height / label_size.height()
+        
+        # Convert coordinates
+        image_x = int(label_x * scale_x)
+        image_y = int(label_y * scale_y)
+        
+        # Clamp to image bounds
+        image_x = max(0, min(image_x, image_width - 1))
+        image_y = max(0, min(image_y, image_height - 1))
+        
+        return (image_x, image_y)
+    
+    def update_status(self, message: str) -> None:
+        """Update status message (placeholder for main window integration)."""
+        pass  # Will be connected to main window status bar
+    
     def cleanup(self) -> None:
         """Clean up resources."""
         self.cancel_loading()
         self.image_data = None
         self.image_metadata = {}
         self.overlays.clear()
+        self.cell_overlays.clear()
+        self.bounding_boxes.clear()

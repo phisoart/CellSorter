@@ -54,6 +54,11 @@ class CalibrationError(CoordinateTransformError):
     pass
 
 
+class TransformationError(CoordinateTransformError):
+    """Raised when coordinate transformation fails."""
+    pass
+
+
 class SelectionError(CellSorterError):
     """Raised when cell selection operations fail."""
     pass
@@ -91,6 +96,11 @@ class UIError(CellSorterError):
 
 class ConfigurationError(CellSorterError):
     """Raised when configuration is invalid."""
+    pass
+
+
+class SessionError(CellSorterError):
+    """Raised when session management operations fail."""
     pass
 
 
