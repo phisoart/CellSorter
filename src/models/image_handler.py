@@ -131,7 +131,7 @@ class ImageLoadWorker(QObject, LoggerMixin):
                     'format': 'TIFF',
                     'shape': image.shape,
                     'dtype': str(image.dtype),
-                    'channels': len(image.shape) if len(image.shape) == 2 else image.shape[2],
+                    'channels': 1 if len(image.shape) == 2 else image.shape[2],
                     'bit_depth': image.dtype.itemsize * 8,
                     'loader': 'opencv'
                 }
@@ -156,7 +156,7 @@ class ImageLoadWorker(QObject, LoggerMixin):
                     'format': 'TIFF',
                     'shape': image.shape,
                     'dtype': str(image.dtype),
-                    'channels': len(image.shape) if len(image.shape) == 2 else image.shape[2],
+                    'channels': 1 if len(image.shape) == 2 else image.shape[2],
                     'mode': pil_image.mode,
                     'frames': getattr(pil_image, 'n_frames', 1),
                     'loader': 'pillow'
@@ -194,7 +194,7 @@ class ImageLoadWorker(QObject, LoggerMixin):
                 'format': file_path.suffix.upper().lstrip('.'),
                 'shape': image.shape,
                 'dtype': str(image.dtype),
-                'channels': len(image.shape) if len(image.shape) == 2 else image.shape[2],
+                'channels': 1 if len(image.shape) == 2 else image.shape[2],
                 'bit_depth': image.dtype.itemsize * 8,
                 'loader': 'opencv'
             }
