@@ -1,819 +1,239 @@
 {
-  "master": {
-    "tasks": [
-      {
-        "id": 1,
-        "title": "Setup Project Structure and Environment",
-        "description": "Verify the existing project repository structure and set up the development environment for a Python-based desktop application with PySide6.",
-        "status": "done",
-        "dependencies": [],
-        "priority": "high",
-        "details": "The project is a Python PySide6 application using Python 3.11+. The project structure already exists as defined in CODING_STYLE_GUIDE.md and PROJECT_STRUCTURE.md with:\n- src/ directory for source code\n- tests/ directory for test code\n- requirements.txt with all Python dependencies\n- Comprehensive documentation files\n\nSetup tasks:\n1. Create and configure a conda environment for the project\n2. Install all dependencies from requirements.txt\n3. Verify PySide6 installation and functionality\n4. Ensure pytest is properly configured for testing\n5. Verify that the main.py entry point can launch a basic PySide6 application window\n\nKey dependencies (already defined in requirements.txt):\n- PySide6 (for GUI framework)\n- pytest (for testing)\n- Other dependencies as specified in requirements.txt\n\nNo need to set up the project structure as it already exists according to the documentation.",
-        "testStrategy": "1. Verify conda environment creation and activation\n2. Confirm all dependencies install correctly without conflicts\n3. Run a simple test that imports PySide6 and creates a basic window\n4. Execute a basic pytest to ensure the testing framework is operational\n5. Launch the application via main.py and verify a window appears\n6. Test on target platforms (Windows/Linux/Mac as applicable)",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create and configure conda environment",
-            "description": "Set up a conda environment with Python 3.11+ for the project",
-            "status": "done",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Install dependencies from requirements.txt",
-            "description": "Install all required packages from the existing requirements.txt file into the conda environment",
-            "status": "done",
-            "dependencies": [],
-            "details": "<info added on 2025-06-24T09:24:29.405Z>\nDependencies installation is proceeding as expected. Successfully installed key packages including:\n- PySide6\n- OpenCV\n- pytest-qt\n- qt-material\n- pyinstaller\n- Additional required packages\n\nAll packages are installing correctly in the base Python environment. Installation process is ongoing.\n</info added on 2025-06-24T09:24:29.405Z>",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Verify PySide6 installation",
-            "description": "Create a simple test script that imports PySide6 and displays a window to verify correct installation",
-            "status": "done",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Configure pytest",
-            "description": "Ensure pytest is properly set up and can run the existing tests in the tests/ directory",
-            "status": "done",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Test main.py entry point",
-            "description": "Verify that the main.py entry point successfully launches a basic PySide6 application window",
-            "status": "done",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Document environment setup",
-            "description": "Add documentation on how to set up and activate the conda environment for new developers",
-            "status": "done",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 2,
-        "title": "Implement Image Loading Module",
-        "description": "Create a module to load and display microscopy images in multiple formats (TIFF, JPG, JPEG, PNG) with support for multi-channel TIFF files up to 2GB.",
-        "status": "pending",
-        "dependencies": [
-          1
-        ],
-        "priority": "high",
-        "details": "Implement an ImageHandler class using Python/PySide6 for handling large microscopy images. Add support for:\n1. Single and multi-channel TIFF files using OpenCV\n2. Standard image formats (JPG, JPEG, PNG) using PySide6.QtGui.QPixmap\n\nImplement memory-efficient loading with:\n- Progressive loading for large files\n- Memory-mapped file access for large TIFFs\n- Image caching for performance optimization\n\nThe ImageHandler class should include:\n- load_image method for asynchronous loading with progress reporting\n- get_image_info method for extracting metadata (dimensions, channels, bit depth)\n- validate_format method for file format validation\n- Thumbnail generation functionality\n\nImplement error handling for corrupted or unsupported files with specific error messages. Optimize for performance to meet <5 second load time for 500MB files using background thread processing.",
-        "testStrategy": "Create unit tests with sample images of each supported format. Test with various file sizes (10MB, 100MB, 500MB, 2GB) to verify loading performance. Validate memory usage stays under 4GB for 2GB files. Test error handling with corrupted files. Measure and verify load times meet the <5 second requirement for 500MB files. Test thumbnail generation functionality with different image sizes.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Set up Python/PySide6 environment",
-            "description": "Install and configure required Python packages: PySide6, OpenCV, and other dependencies for image processing",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement basic ImageHandler class structure",
-            "description": "Create the ImageHandler class with method stubs for load_image, get_image_info, and validate_format",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement format validation",
-            "description": "Create the validate_format method to verify supported image formats (TIFF, JPG, JPEG, PNG)",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Implement standard image format loading",
-            "description": "Implement loading of JPG, JPEG, and PNG formats using PySide6.QtGui.QPixmap",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Implement TIFF loading with OpenCV",
-            "description": "Add support for single and multi-channel TIFF files using OpenCV, with memory-mapped access for large files",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Implement asynchronous loading with progress reporting",
-            "description": "Create background thread processing for image loading with progress updates",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Add metadata extraction",
-            "description": "Implement get_image_info method to extract image dimensions, channels, bit depth and other metadata",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 8,
-            "title": "Implement memory optimization",
-            "description": "Add memory-efficient loading techniques for large files including caching mechanisms",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 9,
-            "title": "Implement thumbnail generation",
-            "description": "Add functionality to generate thumbnails from loaded images",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 10,
-            "title": "Implement error handling",
-            "description": "Add comprehensive error handling for corrupted files and unsupported formats with specific error messages",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 11,
-            "title": "Create unit tests",
-            "description": "Develop unit tests for all ImageHandler functionality with sample images of various formats and sizes",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 12,
-            "title": "Performance optimization",
-            "description": "Optimize loading performance to meet the <5 second requirement for 500MB files",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 3,
-        "title": "Implement CSV Data Import and Validation",
-        "description": "Create a module to parse and validate CellProfiler CSV exports, detecting required columns and handling large datasets efficiently.",
-        "details": "Implement a CsvDataImporter class using CsvHelper 30.0.1 with the following features:\n\n1. Asynchronous CSV parsing with streaming for large files\n2. Automatic detection and validation of required columns:\n   - AreaShape_BoundingBoxMaximum_X/Y\n   - AreaShape_BoundingBoxMinimum_X/Y\n3. Data validation with specific error reporting\n4. Support for up to 100,000 cell records\n\nCreate a CellDataModel class to represent individual cell data with properties for all potential CellProfiler measurements. Implement a DataValidationService that:\n- Checks for missing values in required columns\n- Validates data types and ranges\n- Ensures bounding box coordinates are within valid ranges\n- Provides detailed error messages with column references\n\nOptimize parsing using parallel processing for large files and implement memory-efficient data structures to handle 50,000+ records while staying under memory constraints.",
-        "testStrategy": "Create unit tests with sample CellProfiler CSV files of varying sizes (100, 1,000, 10,000, 50,000, 100,000 records). Test validation with both valid and invalid CSV files (missing columns, incorrect data types, out-of-range values). Measure parsing performance to ensure <3 seconds for 50,000 records. Test memory usage during parsing of large files.",
-        "priority": "high",
-        "dependencies": [
-          1
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 4,
-        "title": "Implement Interactive Scatter Plot Visualization",
-        "description": "Create an interactive scatter plot component that allows users to select any two numeric columns from the CSV data for X and Y axes, with support for rectangular region selection.",
-        "details": "Implement a ScatterPlotViewModel and View using OxyPlot.Wpf 2.1.2 with the following features:\n\n1. Dynamic axis selection from any numeric columns in the imported CSV\n2. High-performance rendering for up to 50,000 data points using data reduction techniques\n3. Interactive features:\n   - Pan and zoom functionality\n   - Shift+drag rectangular selection tool\n   - Real-time selection count display\n   - Multiple independent selections with different colors\n   - Selection modification and deletion\n\nImplement a SelectionManager class to track and manage multiple selections with:\n- Unique color assignment from a predefined palette of 16+ colors\n- Custom labeling support\n- Selection metadata storage\n\nOptimize rendering using:\n- Data downsampling for very large datasets\n- Hardware acceleration when available\n- Asynchronous rendering on background threads\n\nImplement PNG/SVG export functionality for plots.",
-        "testStrategy": "Create unit tests for the scatter plot component with various datasets. Test performance with 10,000 and 50,000 data points to ensure rendering in <2 seconds. Test all interactive features: selection creation, modification, deletion. Verify color assignment and labeling functionality. Test export to PNG/SVG formats. Validate memory usage during interaction with large datasets.",
-        "priority": "high",
-        "dependencies": [
-          3,
-          "16"
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 5,
-        "title": "Implement Selection Management System",
-        "description": "Create a system to manage multiple cell selections with metadata, including color assignment, labeling, and tabular display of selection information.",
-        "details": "Implement a SelectionManager class that handles:\n\n1. Creation and management of multiple CellSelection objects\n2. Unique color assignment from a predefined palette (minimum 16 colors)\n3. Custom labeling and metadata for selections\n\nCreate a SelectionViewModel and corresponding View with:\n- DataGrid display of selections with columns: checkbox, label, color, well, cell count\n- In-place editing of selection properties\n- Delete functionality for individual selections\n- Selection filtering and sorting options\n\nImplement a ColorPaletteService with:\n- 16+ visually distinct colors optimized for visibility\n- Color uniqueness validation\n- Automatic color assignment logic\n\nEnsure all selection operations update in real-time across the application using an event-based notification system. Implement serialization support for selections to enable save/load functionality.",
-        "testStrategy": "Create unit tests for the SelectionManager with various selection scenarios. Test color assignment to ensure uniqueness. Verify selection property editing and deletion functionality. Test performance with a large number of selections (20+). Validate event propagation for selection changes across the application. Test serialization and deserialization of selection data.",
-        "priority": "high",
-        "dependencies": [
-          4,
-          "16"
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 6,
-        "title": "Implement Cell Highlighting on Microscopy Images",
-        "description": "Create a system to overlay selected cells on the microscopy image with colored markers that correspond to scatter plot selections.",
-        "details": "Implement an ImageOverlayService that:\n\n1. Renders cell bounding boxes on the microscopy image using WPF Canvas overlays\n2. Maintains color consistency with scatter plot selections\n3. Supports toggling overlay visibility\n4. Handles up to 10,000 highlighted cells efficiently\n\nOptimize rendering performance using:\n- Virtualization for large numbers of cells\n- Visibility culling for cells outside the current view\n- Level-of-detail rendering based on zoom level\n- Hardware acceleration when available\n\nImplement a CellHighlightViewModel that:\n- Synchronizes with SelectionManager changes\n- Updates overlay in real-time when selections change\n- Provides overlay customization options (outline thickness, opacity)\n- Supports different highlight styles (outline, filled, marker)\n\nEnsure memory efficiency by using lightweight visual elements and disposing unused resources properly.",
-        "testStrategy": "Create unit tests for the overlay system with various image and selection sizes. Test performance with 1,000, 5,000, and 10,000 highlighted cells to ensure <1 second update time. Verify color consistency between scatter plot and image overlay. Test overlay toggling and customization options. Validate memory usage during interaction with large numbers of highlighted cells.",
-        "priority": "high",
-        "dependencies": [
-          2,
-          5,
-          "16"
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 7,
-        "title": "Implement Image Navigation and Zoom Controls",
-        "description": "Create intuitive image navigation tools including pan and zoom functionality, minimap for large image navigation, and coordinate display.",
-        "details": "Implement an ImageNavigationController using WPF's ScrollViewer and ScaleTransform with custom enhancements:\n\n1. Smooth pan functionality with mouse drag and keyboard controls\n2. Zoom levels from 10% to 1000% with mouse wheel and slider controls\n3. Minimap navigation panel for large images showing current viewport\n4. Pixel coordinate display updated in real-time\n5. Fit-to-window and 1:1 zoom options\n\nOptimize performance using:\n- Image tiling for efficient rendering at different zoom levels\n- Asynchronous loading of image regions during pan/zoom\n- Hardware acceleration for smooth transitions\n\nImplement keyboard shortcuts for common navigation actions:\n- Ctrl+0: Fit to window\n- Ctrl+1: 100% zoom (1:1)\n- Arrow keys: Pan in corresponding direction\n- +/-: Zoom in/out\n\nEnsure responsive UI during navigation operations by using background threads for image processing.",
-        "testStrategy": "Create unit tests for navigation functionality with various image sizes. Test all zoom levels from 10% to 1000%. Verify minimap accuracy and interaction. Test keyboard shortcuts and mouse controls. Measure performance during rapid zoom/pan operations with large images. Validate coordinate display accuracy at different zoom levels.",
-        "priority": "medium",
-        "dependencies": [
-          2
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 8,
-        "title": "Implement Two-Point Calibration System",
-        "description": "Create a calibration system that allows users to click two reference points on the image and enter corresponding real-world XY stage coordinates to calculate an affine transformation matrix.",
-        "details": "Implement a CalibrationService with the following features:\n\n1. Two-point calibration UI allowing users to:\n   - Click two reference points on the image\n   - Enter corresponding real-world XY stage coordinates\n   - Visualize calibration points with clear markers\n\n2. Transformation calculation:\n   - Compute affine transformation matrix from pixel to stage coordinates\n   - Handle rotation, scaling, and translation\n   - Validate calibration quality (minimum distance requirements)\n   - Provide calibration error estimates\n\n3. Calibration management:\n   - Save/load calibration parameters\n   - Apply calibration to all cell coordinates\n   - Reset calibration option\n\nImplement mathematical validation to ensure calibration points are sufficiently distant (>10% of image width) and transformation is non-singular. Provide visual feedback on calibration quality with color-coded indicators.",
-        "testStrategy": "Create unit tests for the calibration system with known reference points and expected transformations. Test with various calibration scenarios including different scales, rotations, and translations. Verify transformation accuracy to 0.1 micrometer precision. Test validation logic for insufficient calibration points. Verify error handling for invalid calibration attempts. Test save/load functionality for calibration parameters.",
-        "priority": "high",
-        "dependencies": [
-          2,
-          7
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 9,
-        "title": "Implement Coordinate Transformation System",
-        "description": "Create a system to transform pixel coordinates to stage coordinates using the calibration matrix, maintaining precision to 0.1 micrometer accuracy.",
-        "details": "Implement a CoordinateTransformationService that:\n\n1. Applies the calibration matrix to convert between coordinate systems:\n   - Pixel to stage coordinate transformation\n   - Stage to pixel coordinate transformation (for validation)\n\n2. Handles all cell bounding boxes:\n   - Transform corners and centroids\n   - Calculate transformed bounding regions\n   - Maintain precision to 0.1 micrometer\n\n3. Provides coordinate utilities:\n   - Real-time coordinate display during image interaction\n   - Distance measurement in both coordinate systems\n   - Area calculation in real-world units\n\nImplement efficient batch processing for transforming large numbers of coordinates simultaneously. Use double precision for all calculations to maintain accuracy. Create a coordinate caching system to avoid redundant calculations for static elements.",
-        "testStrategy": "Create unit tests with known pixel coordinates and expected stage coordinates. Test transformation accuracy with various calibration matrices. Verify precision to 0.1 micrometer across the entire image. Test batch transformation performance with 50,000+ coordinates. Validate reverse transformation (stage to pixel) for consistency. Test coordinate display accuracy during image navigation.",
-        "priority": "high",
-        "dependencies": [
-          8
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 10,
-        "title": "Implement 96-Well Plate Assignment and Visualization",
-        "description": "Create a system to assign selections to 96-well plate positions following standard layout (A01-H12) with manual override capability and visual well plate map display.",
-        "details": "Implement a WellPlateManager class that:\n\n1. Handles 96-well plate layout (8 rows A-H, 12 columns 01-12)\n2. Provides automatic assignment of selections following standard layout\n3. Supports manual well assignment override\n4. Prevents duplicate well assignments with validation\n5. Resolves assignment conflicts\n\nCreate a WellPlateViewModel and View with:\n- Visual 96-well plate representation\n- Color-coded wells matching selection colors\n- Click-to-select well functionality\n- Drag-and-drop reassignment capability\n- Export well plate map as image\n\nImplement data binding between selections and well assignments to maintain consistency. Create a WellAssignmentService that handles the logic of mapping selections to wells with various assignment strategies (sequential, by selection size, custom).",
-        "testStrategy": "Create unit tests for well plate assignment with various selection scenarios. Test automatic assignment logic for correctness. Verify conflict detection and resolution. Test manual override functionality. Validate visual representation accuracy. Test export functionality for well plate maps. Verify drag-and-drop reassignment works correctly.",
-        "priority": "medium",
-        "dependencies": [
-          5,
-          "16"
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 11,
-        "title": "Implement Protocol File Export System",
-        "description": "Create a system to generate .cxprotocol files in INI-style format for CosmoSort hardware, including all selection data, coordinates, and calibration information.",
-        "details": "Implement a ProtocolExportService that:\n\n1. Generates .cxprotocol files with:\n   - INI-style format with required sections (IMAGE, IMAGING_LAYOUT)\n   - All selection data and metadata\n   - Transformed stage coordinates\n   - Calibration information\n\n2. Handles file optimization:\n   - Efficient data representation for large datasets\n   - File size reduction techniques\n   - Integrity checking and validation\n\n3. Provides export options:\n   - Automatic backup generation\n   - Custom file naming\n   - Export location selection\n\nUse IniFileParser 4.0.0 library for INI file generation. Implement a ProtocolValidator to ensure all generated files meet CosmoSort hardware requirements. Create progress reporting for long export operations with cancellation support.",
-        "testStrategy": "Create unit tests for protocol file generation with various selection datasets. Verify INI format correctness and section structure. Test with large datasets (10,000+ cells) to ensure file size optimization. Validate protocol files against CosmoSort specifications. Test backup generation functionality. Verify error handling for invalid export attempts.",
-        "priority": "high",
-        "dependencies": [
-          9,
-          10
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 12,
-        "title": "Implement Crop Region Calculation",
-        "description": "Create a system to calculate square crop regions from cell bounding boxes by selecting the shorter dimension for square size and centering on the bounding box centroid.",
-        "details": "Implement a CropRegionService that:\n\n1. Calculates optimal square crop regions:\n   - Select shorter dimension of bounding box for square size\n   - Center square on bounding box centroid\n   - Ensure crops don't exceed image boundaries\n   - Apply minimum crop size validation (10x10 pixels)\n\n2. Handles coordinate systems:\n   - Calculate crops in both pixel and stage coordinates\n   - Apply appropriate rounding/precision for each system\n   - Handle edge cases near image boundaries\n\n3. Provides crop region visualization:\n   - Preview crop regions on image\n   - Adjust crop size manually if needed\n   - Batch modification options\n\nImplement efficient algorithms for handling thousands of crop regions simultaneously. Create a CropRegionViewModel to manage crop region data and visualization.",
-        "testStrategy": "Create unit tests for crop region calculation with various bounding box sizes and positions. Test boundary conditions (cells near image edges). Verify square crop regions are correctly centered and sized. Test minimum size validation. Validate coordinate transformation accuracy for crop regions. Test performance with large numbers of regions (1,000+).",
-        "priority": "high",
-        "dependencies": [
-          9
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 13,
-        "title": "Implement Data Export Options",
-        "description": "Create a system to export analysis results in multiple formats including CSV, image overlays, and configuration files for session recovery.",
-        "details": "Implement a DataExportService with support for multiple export formats:\n\n1. CSV export:\n   - Selection data and coordinates\n   - Cell measurements and metadata\n   - Transformation parameters\n   - Well plate assignments\n\n2. Image export:\n   - Original image with selection overlays\n   - Customizable overlay appearance\n   - Resolution and format options (PNG, TIFF, JPEG)\n   - Optional scale bar and metadata\n\n3. Session export:\n   - Complete configuration file for session recovery\n   - All selections, transformations, and settings\n   - Relative or absolute file paths options\n\n4. Batch export:\n   - Export multiple selections/formats simultaneously\n   - Progress reporting and cancellation\n   - Error handling and logging\n\nUse background processing for export operations to maintain UI responsiveness. Implement file naming conventions and organization options.",
-        "testStrategy": "Create unit tests for each export format with various datasets. Verify CSV export contains all required data. Test image export with different overlay configurations. Validate session export/import for complete recovery. Test batch export performance with large datasets. Verify error handling for export failures.",
-        "priority": "medium",
-        "dependencies": [
-          5,
-          6,
-          11
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 14,
-        "title": "Implement Error Handling and Logging System",
-        "description": "Create a comprehensive error handling and logging system that provides user-friendly error messages, diagnostic information, and session recovery options in accordance with NFR3 (Reliability and Availability) requirements.",
-        "status": "pending",
-        "dependencies": [
-          1
-        ],
-        "priority": "medium",
-        "details": "Implement an ErrorHandlingService using Serilog 3.0.1 with the following features:\n\n1. Comprehensive logging:\n   - Multiple log levels (Debug, Info, Warning, Error, Fatal)\n   - File-based logging with rotation\n   - Structured logging for machine parsing\n   - Performance metrics logging\n\n2. User-friendly error handling:\n   - Contextual error messages\n   - Suggested recovery actions\n   - Technical details expandable but hidden by default\n   - Non-blocking notification system\n\n3. Session recovery:\n   - Auto-save on critical operations\n   - Crash recovery from last known good state\n   - Temporary file management\n   - Data integrity validation\n   - Recovery after unexpected shutdowns\n\n4. Diagnostic information:\n   - System information collection\n   - Error context capture\n   - Optional error reporting mechanism\n   - Detailed diagnostics for support team\n\n5. Data protection:\n   - Zero data loss guarantee during normal operations\n   - Graceful handling of invalid input data\n   - Fallback options for recoverable errors\n\nImplement global exception handling at the application level with specific handlers for different error types. Create a user-facing log viewer for troubleshooting.",
-        "testStrategy": "Create unit tests for error handling with various error scenarios. Test logging functionality for different log levels. Verify user-friendly error messages are displayed correctly. Test session recovery after simulated crashes and unexpected shutdowns. Validate diagnostic information collection. Test performance impact of logging during normal operation. Verify zero data loss during normal operations. Test fallback mechanisms for recoverable errors. Validate graceful handling of invalid input data.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement comprehensive logging system with Serilog",
-            "description": "Set up Serilog with multiple log levels, file rotation, structured logging, and performance metrics",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Create user-friendly error handling system",
-            "description": "Implement contextual error messages, recovery suggestions, and non-blocking notifications",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Develop auto-save and session recovery functionality",
-            "description": "Implement automatic saving of work in progress and recovery mechanisms after crashes or unexpected shutdowns",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Build diagnostic information collection system",
-            "description": "Create system for collecting and reporting diagnostic information for support purposes",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Implement zero data loss protection",
-            "description": "Ensure no data is lost during normal operations through transaction management and integrity checks",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Create fallback mechanisms for recoverable errors",
-            "description": "Implement alternative paths and recovery options for errors that don't require application termination",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Develop graceful handling of invalid input data",
-            "description": "Create validation and sanitization mechanisms to handle malformed or unexpected input data",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 8,
-            "title": "Create user-facing log viewer",
-            "description": "Implement an interface for users to view and filter application logs for troubleshooting",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 15,
-        "title": "Implement User Interface Integration and Final Testing",
-        "description": "Integrate all components into a cohesive user interface following the modern design system specified in DESIGN_SPEC.md and DESIGN_SYSTEM.md, implement keyboard shortcuts, contextual help, and perform comprehensive testing.",
-        "status": "pending",
-        "dependencies": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14
-        ],
-        "priority": "high",
-        "details": "Create the main application UI using shadcn/ui + qt-material design systems with:\n\n1. Intuitive layout:\n   - 3-panel responsive layout (Image 40%, Scatter Plot 35%, Selection 25%)\n   - Responsive design supporting Desktop → Tablet → Mobile\n   - Modal dialog system for file loading and calibration\n   - Context menus for image right-click and selection right-click\n   - Status bar with context information\n   - Light/dark/material theme support\n\n2. User assistance features:\n   - Contextual help and tooltips\n   - Keyboard navigation and global shortcuts for all operations\n   - Built-in tutorial system\n   - Example datasets and workflows\n\n3. Performance optimization:\n   - Asynchronous loading for all operations\n   - Loading states and error feedback system\n   - Memory usage optimization\n   - UI responsiveness during processing\n\n4. Final integration:\n   - Connect all components through proper MVVM architecture\n   - Implement application settings and persistence\n   - Create installer package with prerequisites\n   - Perform end-to-end testing of complete workflows\n\nImplement automated UI testing to validate all user interactions. Create comprehensive user documentation and help system.",
-        "testStrategy": "Perform comprehensive integration testing of all components. Test complete user workflows from the use case scenarios. Validate UI responsiveness under load and across different device sizes (desktop, tablet, mobile). Test theme switching between light, dark, and material themes. Verify all keyboard shortcuts, navigation, and accessibility features. Test modal dialogs and context menus for proper functionality. Validate that the 3-panel layout maintains proper proportions and resizing behavior. Test installer on clean Windows 10 and 11 systems. Validate memory usage stays under 4GB for typical workflows.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement shadcn/ui + qt-material design system",
-            "description": "Set up and configure the design system according to DESIGN_SPEC.md and DESIGN_SYSTEM.md",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Create 3-panel responsive layout",
-            "description": "Implement the main layout with Image (40%), Scatter Plot (35%), and Selection (25%) panels with proper resizing behavior",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Implement theme system",
-            "description": "Create light, dark, and material theme options with proper switching mechanism",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Develop modal dialog system",
-            "description": "Create reusable modal components for file loading, calibration, and other system operations",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Implement context menus",
-            "description": "Create context-sensitive right-click menus for image and selection interactions",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Set up keyboard navigation and shortcuts",
-            "description": "Implement global keyboard shortcuts and proper focus navigation throughout the application",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Create loading state and error feedback system",
-            "description": "Implement consistent loading indicators and error handling UI components",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 8,
-            "title": "Perform responsive design testing",
-            "description": "Test and optimize UI across desktop, tablet, and mobile viewport sizes",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 9,
-            "title": "Integrate all components with MVVM architecture",
-            "description": "Connect UI components to view models and ensure proper data flow",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 10,
-            "title": "Create comprehensive test suite",
-            "description": "Develop automated tests for UI components and interactions",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 16,
-        "title": "Implement Modern Design System with shadcn/ui and qt-material",
-        "description": "Establish a comprehensive design system for the CellSorter application using shadcn/ui and qt-material, including color tokens, component library, theming, and accessibility features.",
-        "details": "Implement a unified design system that bridges web and desktop interfaces using shadcn/ui and qt-material with the following components:\n\n1. CSS Variables and Color System:\n   - Define a comprehensive color palette with semantic tokens (primary, secondary, accent, etc.)\n   - Create CSS custom properties for colors, with light/dark variants\n   - Implement a color scale system (50-900) for each primary color\n   - Ensure color contrast ratios meet WCAG 2.1 AA standards (4.5:1 for normal text, 3:1 for large text)\n\n2. Component Library Foundation:\n   - Implement core UI components using shadcn/ui primitives:\n     - Button (primary, secondary, ghost, outline variants)\n     - Input fields and form controls\n     - Card and container components\n     - Dialog and modal systems\n     - Dropdown and select components\n     - Navigation elements (tabs, breadcrumbs)\n   - Create component documentation with usage examples\n\n3. Theme Management System:\n   - Implement light/dark mode toggle with system preference detection\n   - Create theme context provider for React components\n   - Develop theme persistence using local storage\n   - Add smooth transitions between theme changes\n\n4. Qt-Material Integration:\n   - Bridge qt-material with PySide6 for desktop components\n   - Synchronize color tokens between web and desktop interfaces\n   - Create custom Qt stylesheets that match shadcn/ui aesthetics\n   - Implement theme switching in Qt application to match web interface\n\n5. Responsive Design System:\n   - Define breakpoints for mobile, tablet, desktop, and large displays\n   - Create responsive utilities for layout adjustments\n   - Implement container queries for component-level responsiveness\n   - Test and optimize for various screen sizes and orientations\n\n6. Accessibility Features:\n   - Ensure keyboard navigation for all interactive elements\n   - Add proper ARIA attributes to custom components\n   - Implement focus management and visible focus indicators\n   - Support screen readers with appropriate text alternatives\n   - Test with assistive technologies\n\n7. Typography and Spacing:\n   - Define a type scale with consistent heading and body text styles\n   - Implement a spacing system with consistent increments\n   - Create utility classes for margin and padding\n   - Ensure proper line heights and letter spacing for readability\n\n8. Implementation Structure:\n   - Create a design tokens file for centralized management\n   - Develop a component library documentation site\n   - Implement storybook or similar tool for component visualization\n   - Provide migration guidelines for existing UI components",
-        "testStrategy": "1. Component Testing:\n   - Create unit tests for each UI component using React Testing Library\n   - Verify component rendering in both light and dark themes\n   - Test interactive behaviors (hover, focus, click states)\n   - Validate component props and customization options\n\n2. Accessibility Testing:\n   - Run automated accessibility tests using axe-core or similar tools\n   - Perform keyboard navigation testing for all interactive elements\n   - Test with screen readers (NVDA, VoiceOver) to verify proper announcements\n   - Verify color contrast meets WCAG 2.1 AA standards using contrast analyzers\n   - Create an accessibility checklist for developers\n\n3. Responsive Design Testing:\n   - Test components at all defined breakpoints\n   - Verify layout adjustments on different screen sizes\n   - Use device emulation to test mobile and tablet experiences\n   - Validate touch interactions on touch-enabled devices\n\n4. Cross-Platform Consistency:\n   - Compare web (shadcn/ui) and desktop (qt-material) implementations\n   - Verify color tokens match between platforms\n   - Test theme switching synchronization\n   - Document any intentional platform-specific differences\n\n5. Performance Testing:\n   - Measure component render times\n   - Test theme switching performance\n   - Verify CSS bundle size optimization\n   - Check for unnecessary re-renders with React DevTools\n\n6. Visual Regression Testing:\n   - Implement screenshot comparison tests for components\n   - Create visual snapshots for both light and dark themes\n   - Test component states (hover, focus, disabled)\n   - Document expected visual appearance\n\n7. Integration Testing:\n   - Test design system components in actual application views\n   - Verify theme consistency across the application\n   - Test real user workflows with the new components\n   - Validate form submissions and interactive features",
-        "status": "pending",
-        "dependencies": [
-          1
-        ],
-        "priority": "high",
-        "subtasks": []
-      },
-      {
-        "id": 17,
-        "title": "Implement TDD Test Framework Setup",
-        "description": "Establish a comprehensive Test-Driven Development infrastructure for the entire project, including pytest configuration, GUI testing, coverage reporting, test fixtures, and CI/CD integration, following the complete test strategy defined in TESTING_STRATEGY.md.",
-        "status": "pending",
-        "dependencies": [
-          1,
-          14
-        ],
-        "priority": "high",
-        "details": "Implement a complete TDD test framework with the following components:\n\n1. **Project Structure and Configuration**:\n   - Create a standardized test directory structure (`tests/unit`, `tests/integration`, `tests/performance`)\n   - Configure pytest.ini with custom markers, logging settings, and test discovery paths\n   - Set up conftest.py with shared fixtures and test utilities\n\n2. **GUI Component Testing**:\n   - Integrate pytest-qt 4.2.0 for testing WPF UI components\n   - Create base test classes for common UI testing patterns\n   - Implement screen capture utilities for visual regression testing\n   - Set up event simulation for mouse/keyboard interactions\n\n3. **Coverage Reporting**:\n   - Configure pytest-cov with .coveragerc file\n   - Set minimum coverage thresholds (85% line coverage for all code)\n   - Create HTML and XML report generation\n   - Implement branch coverage and path analysis\n\n4. **Test Fixtures**:\n   - Create sample data generators for:\n     - Microscopy images (TIFF, JPG, PNG) in various sizes and formats\n     - CellProfiler CSV exports with configurable cell counts\n     - Well plate configurations\n     - Selection data with various distributions\n   - Implement fixture factories for parameterized testing\n   - Establish test data management system for consistent test data across all test types\n\n5. **Performance Testing**:\n   - Set up pytest-benchmark for performance testing\n   - Create baseline performance metrics for critical operations\n   - Implement comparison utilities for performance regression detection\n   - Configure resource monitoring (memory, CPU) during tests\n   - Implement memory profiling for critical operations\n   - Create benchmark tracking system to detect performance regressions over time\n\n6. **Integration Testing**:\n   - Create test harnesses for component integration\n   - Implement end-to-end test scenarios covering core workflows\n   - Set up database fixtures for data persistence testing\n   - Create mock external systems for boundary testing\n\n7. **Mock/Stub System**:\n   - Configure pytest-mock for function/method mocking\n   - Create stub implementations for external dependencies\n   - Implement service virtualization for hardware interfaces\n   - Set up network request interception for isolated testing\n   - Develop comprehensive mocking strategy for GUI dependencies\n\n8. **CI/CD Integration**:\n   - Configure GitHub Actions workflow for automated testing\n   - Set up matrix testing across multiple platforms (Windows, macOS, Linux)\n   - Implement test result reporting and visualization\n   - Configure failure notifications and reporting\n   - Establish continuous testing pipeline with defined stages\n\n9. **Documentation**:\n   - Create comprehensive test documentation\n   - Provide examples for writing tests for each component type\n   - Document test naming conventions and organization\n   - Create tutorials for TDD workflow in the project\n\n10. **Regression Testing System**:\n    - Implement automated regression tests for all resolved bugs\n    - Create tagging system to categorize regression tests\n    - Establish process for adding regression tests with each bug fix\n    - Configure regression test suite to run on all code changes\n\n11. **Test Pipeline**:\n    - Implement complete test pipeline with sequential stages:\n      - Code quality checks (linting, static analysis)\n      - Unit tests\n      - GUI tests\n      - Integration tests\n      - Performance tests\n    - Configure pipeline to fail fast on critical issues",
-        "testStrategy": "Verify the TDD framework implementation through the following steps:\n\n1. **Framework Validation**:\n   - Run a complete test suite execution to verify discovery and configuration\n   - Validate that all custom markers and plugins are correctly registered\n   - Verify test isolation by running tests in random order\n   - Check that test reporting generates correct output formats\n\n2. **GUI Testing Verification**:\n   - Create sample tests for each UI component type\n   - Verify screen capture and comparison functionality\n   - Test event simulation with complex UI interactions\n   - Validate that UI tests run headless in CI environment\n   - Verify mocking strategy for GUI dependencies works correctly\n\n3. **Coverage Verification**:\n   - Generate coverage reports for existing codebase\n   - Verify that coverage thresholds (>85% line coverage) are enforced\n   - Test branch and path coverage reporting\n   - Validate HTML report generation and navigation\n\n4. **Fixture Testing**:\n   - Verify all sample data generators produce valid outputs\n   - Test parameterized fixtures with boundary conditions\n   - Measure fixture creation performance for large datasets\n   - Validate that fixtures are properly isolated between tests\n   - Verify test data management system provides consistent data\n\n5. **Performance Testing Validation**:\n   - Run benchmark tests for core operations\n   - Verify performance regression detection\n   - Test resource monitoring during intensive operations\n   - Validate benchmark result storage and comparison\n   - Verify memory profiling correctly identifies memory usage patterns\n   - Test benchmark tracking system with simulated performance changes\n\n6. **Integration Test Verification**:\n   - Execute end-to-end test scenarios\n   - Verify component integration test isolation\n   - Test database fixture setup and teardown\n   - Validate mock external system behavior\n\n7. **Mock System Validation**:\n   - Test mock creation and verification\n   - Verify stub implementations match real components\n   - Validate service virtualization for hardware interfaces\n   - Test network request interception\n\n8. **CI/CD Validation**:\n   - Trigger GitHub Actions workflow manually\n   - Verify matrix testing across multiple platforms\n   - Validate test result reporting\n   - Test failure notification system\n   - Verify continuous testing pipeline executes all stages correctly\n\n9. **Documentation Review**:\n   - Review all test documentation for completeness\n   - Verify examples work as documented\n   - Test tutorials with new team members\n   - Validate that naming conventions are consistently applied\n\n10. **Regression Testing Validation**:\n    - Verify regression tests for existing bugs function correctly\n    - Test the process of adding new regression tests\n    - Validate that regression tests run as part of the standard test suite\n    - Verify tagging system for categorizing regression tests\n\n11. **Test Pipeline Validation**:\n    - Verify each stage of the test pipeline executes correctly\n    - Test pipeline with intentionally failing tests at each stage\n    - Validate that the pipeline fails fast on critical issues\n    - Verify pipeline reports provide actionable information",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Set up basic pytest configuration",
-            "description": "Create pytest.ini with basic settings and directory structure",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "Implement GUI testing framework with pytest-qt",
-            "description": "Set up pytest-qt 4.2.0 and create base classes for UI testing",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "Configure coverage reporting with >85% threshold",
-            "description": "Set up pytest-cov with .coveragerc file and configure for 85% line coverage requirement",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Create test data generators and fixture system",
-            "description": "Implement sample data generators for microscopy images, CSV exports, and other test data",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "Set up performance testing with pytest-benchmark",
-            "description": "Configure performance testing framework with baseline metrics and regression detection",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "Implement memory profiling for critical operations",
-            "description": "Add memory profiling capabilities to performance tests to track memory usage",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 7,
-            "title": "Create regression testing system for resolved bugs",
-            "description": "Implement framework for automatically testing all fixed bugs with appropriate tagging",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 8,
-            "title": "Configure GitHub Actions for multi-platform testing",
-            "description": "Set up CI/CD workflow with matrix testing across Windows, macOS, and Linux",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 9,
-            "title": "Implement complete test pipeline with sequential stages",
-            "description": "Create pipeline with code quality, unit, GUI, integration, and performance test stages",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 10,
-            "title": "Develop comprehensive mocking strategy",
-            "description": "Create mocking approach for external dependencies and GUI components",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 11,
-            "title": "Create benchmark tracking system",
-            "description": "Implement system to track performance benchmarks over time and detect regressions",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 12,
-            "title": "Document complete test framework",
-            "description": "Create comprehensive documentation for all aspects of the test framework",
-            "status": "pending",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 18,
-        "title": "Implement Session Management System",
-        "description": "Create a comprehensive session management system that allows users to save and restore complete analysis states, including selections, calibration parameters, and visualization settings.",
-        "details": "Implement a SessionManagementService class that provides the following functionality:\n\n1. Session State Capture:\n   - Create a SessionState model class that encapsulates all application state:\n     - Selected cells and their metadata\n     - Image navigation state (zoom level, position)\n     - Applied calibration parameters\n     - Well plate assignments\n     - Analysis parameters and filters\n     - Visualization settings\n   - Implement deep cloning to ensure state snapshots are independent\n\n2. Storage and Serialization:\n   - Use JSON.NET for serialization with custom converters for complex objects\n   - Implement file-based storage with a .cxsession extension\n   - Include metadata (timestamp, user, version) in session files\n   - Support compression for large session files\n\n3. Auto-save Functionality:\n   - Implement configurable auto-save intervals (1-30 minutes)\n   - Create temporary recovery files with rotation (last 5 auto-saves)\n   - Add recovery dialog on application startup after crash\n\n4. Session Templates:\n   - Allow saving sessions as templates with customizable names\n   - Implement template management (create, edit, delete)\n   - Support applying templates to new datasets\n\n5. Project Organization:\n   - Create a ProjectManager class to organize related sessions\n   - Implement project metadata (name, description, creation date)\n   - Support hierarchical organization with folders\n\n6. Version Control:\n   - Implement session history with incremental snapshots\n   - Add version comparison functionality\n   - Support rollback to previous versions\n\n7. Import/Export:\n   - Create portable session files with all dependencies\n   - Implement validation for imported sessions\n   - Support cross-platform compatibility (Windows/macOS)\n\n8. User Interface:\n   - Design SessionManagerView with:\n     - Session browser with search and filtering\n     - Save/load dialogs with previews\n     - Template management interface\n     - Version history visualization\n   - Implement keyboard shortcuts for common operations\n\n9. Performance Optimization:\n   - Use background threads for saving/loading operations\n   - Implement incremental state updates for auto-save\n   - Add progress reporting for long operations",
-        "testStrategy": "1. Unit Testing:\n   - Create unit tests for each component of the SessionManagementService\n   - Test serialization/deserialization with various state configurations\n   - Verify state capture accuracy with complex application states\n   - Test template functionality with different datasets\n\n2. Integration Testing:\n   - Verify session restoration restores all application components correctly\n   - Test auto-save recovery after simulated crashes\n   - Validate version control with multiple session versions\n   - Test cross-component state consistency after restoration\n\n3. Performance Testing:\n   - Measure save/load times with various session sizes\n   - Verify memory usage during large session operations\n   - Test auto-save impact on application performance\n   - Benchmark compression effectiveness for large sessions\n\n4. User Scenario Testing:\n   - Create test scripts for common user workflows:\n     - Save session and continue later\n     - Create and apply templates\n     - Recover from crash using auto-save\n     - Compare and roll back to previous versions\n   - Validate all scenarios work with minimal user interaction\n\n5. Cross-platform Testing:\n   - Verify session files created on Windows can be opened on macOS\n   - Test with different application versions\n   - Validate backward compatibility with older session formats\n\n6. Edge Case Testing:\n   - Test with extremely large datasets (100,000+ cells)\n   - Verify behavior with corrupted session files\n   - Test recovery from interrupted save operations\n   - Validate session management with limited disk space",
-        "status": "pending",
-        "dependencies": [
-          3,
-          5,
-          6,
-          9,
-          10,
-          13,
-          14
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 19,
-        "title": "Implement Batch Processing Framework",
-        "description": "Create a batch processing system that enables laboratory technicians to efficiently process 10-15 similar tissue samples daily with consistent criteria, progress tracking, error handling, and automated organization.",
-        "details": "Implement a BatchProcessingService class that provides the following functionality:\n\n1. Queue Management:\n   - Create a BatchQueue class to manage multiple image/CSV pairs\n   - Support prioritization and reordering of samples in the queue\n   - Implement batch metadata storage (technician, date, batch name, etc.)\n   - Allow saving and loading of batch queue configurations\n\n2. Template-based Processing:\n   - Create a ProcessingTemplate class to store analysis parameters\n   - Include selection criteria, transformation settings, and well plate assignments\n   - Support template versioning and validation\n   - Provide template library management with import/export capabilities\n\n3. Progress Tracking:\n   - Implement a BatchProgressTracker to monitor overall and per-sample progress\n   - Create a real-time progress visualization with estimated completion time\n   - Support cancellation of individual samples or entire batch\n   - Implement event-based progress notification system\n\n4. Error Handling and Recovery:\n   - Develop robust error detection for individual sample processing\n   - Implement automatic retry mechanisms with configurable attempts\n   - Create detailed error logs with diagnostic information\n   - Provide sample-specific error recovery options without affecting the batch\n\n5. File Management:\n   - Implement automated file naming based on configurable patterns\n   - Create organized folder structures for batch outputs\n   - Support file versioning and backup generation\n   - Implement batch-level file operations (move, copy, delete)\n\n6. Batch Export:\n   - Create a BatchExportService for generating multiple .cxprotocol files\n   - Implement batch-specific naming conventions\n   - Support parallel export operations for improved performance\n   - Include batch summary information in exports\n\n7. Quality Metrics:\n   - Implement BatchQualityAnalyzer to generate metrics across samples\n   - Create comparative analysis between samples in the batch\n   - Generate statistical reports on selection consistency\n   - Provide quality threshold warnings and notifications\n\n8. Well Plate Organization:\n   - Extend WellPlateManager to support multiple plates across samples\n   - Implement intelligent well assignment across plates\n   - Create multi-plate visualization and management UI\n   - Support plate-specific export options\n\n9. Resume Functionality:\n   - Implement checkpoint system for batch operations\n   - Create serializable batch state for persistence\n   - Develop batch recovery from unexpected application termination\n   - Support partial batch processing with resume capabilities\n\nThe implementation should use a producer-consumer pattern with a thread-safe queue and worker threads for parallel processing. Use Task Parallel Library (TPL) for managing concurrent operations with proper cancellation support.",
-        "testStrategy": "1. Unit Testing:\n   - Create unit tests for each component of the BatchProcessingService\n   - Test queue management with various sample configurations\n   - Verify template application consistency across multiple samples\n   - Test error handling with simulated failures at different processing stages\n   - Validate file naming and organization with various batch sizes\n   - Test export functionality with different output configurations\n   - Verify quality metrics calculation accuracy\n   - Test well plate assignment across multiple plates\n   - Validate resume functionality after simulated crashes\n\n2. Integration Testing:\n   - Test end-to-end batch processing with 5, 10, and 15 samples\n   - Verify interaction between batch processing and other system components\n   - Test performance under sustained batch operations\n   - Validate resource management during parallel processing\n   - Test UI responsiveness during batch operations\n\n3. Performance Testing:\n   - Measure processing time for batches of 5, 10, and 15 samples\n   - Test memory usage during large batch operations\n   - Verify CPU utilization during parallel processing\n   - Measure file I/O performance during batch export\n   - Test system stability during 24-hour continuous batch processing\n\n4. User Acceptance Testing:\n   - Create test scenarios mimicking real laboratory workflows\n   - Verify batch status visibility and progress reporting\n   - Test error recovery from a user perspective\n   - Validate batch report readability and usefulness\n   - Test template management from user workflow perspective",
-        "status": "pending",
-        "dependencies": [
-          3,
-          5,
-          10,
-          11,
-          13,
-          14,
-          18
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 20,
-        "title": "Implement Accessibility Features",
-        "description": "Implement comprehensive accessibility features including keyboard navigation, screen reader support, high contrast mode, and responsive accessibility as specified in DESIGN_SPEC.md.",
-        "details": "Implement the following accessibility features across the application:\n\n1. Keyboard Navigation System:\n   - Configure global shortcuts:\n     - Ctrl+O for file open\n     - Ctrl+S for save\n     - Ctrl+E for export\n     - F11 for fullscreen\n     - Tab for element navigation\n   - Implement panel-specific shortcuts:\n     - Arrow keys for navigation within components\n     - +/- for zoom controls\n     - Space for selection/activation\n     - Shift+Click for multi-selection\n     - Escape for cancellation/closing dialogs\n   - Manage tab order:\n     - Set logical TabIndex values across all interactive elements\n     - Implement FocusVisualStyle for clear focus indicators\n     - Create keyboard traps for modal dialogs\n\n2. Screen Reader Support:\n   - Restructure HTML/XAML for semantic clarity:\n     - Use appropriate heading levels (h1-h6)\n     - Implement proper list structures\n     - Group related controls with fieldsets/groups\n   - Add ARIA attributes:\n     - aria-label for unlabeled controls\n     - aria-labelledby for complex components\n     - aria-describedby for additional context\n     - aria-required for mandatory fields\n   - Configure live regions:\n     - aria-live=\"polite\" for status updates\n     - aria-live=\"assertive\" for critical alerts\n   - Create alternative text:\n     - Detailed descriptions for scatter plots\n     - Cell selection summaries\n     - Well plate position announcements\n\n3. High Contrast Mode:\n   - Enhance visual boundaries:\n     - Increase border thickness to 2px minimum\n     - Implement distinct focus indicators (3px solid)\n   - Create alternative color schemes:\n     - Ensure 4.5:1 minimum contrast ratio\n     - Avoid color-only information distinction\n     - Implement Windows high contrast theme detection\n   - Enlarge interaction targets:\n     - Minimum 44x44px touch targets\n     - Increased padding for buttons and controls\n\n4. Responsive Accessibility:\n   - Implement text scaling:\n     - Use relative units (em/rem) for all text\n     - Test with 200% text size increase\n     - Ensure no content clipping occurs\n   - Optimize for magnification:\n     - Use SVG icons that scale cleanly\n     - Maintain layout integrity at 400% zoom\n   - Create touch-friendly controls:\n     - Implement larger hit areas for touch\n     - Add sufficient spacing between interactive elements\n\nIntegrate with existing components:\n- Update ScatterPlotViewModel to support keyboard selection\n- Enhance ImageNavigationController with accessibility shortcuts\n- Modify SelectionManager to announce changes to screen readers\n- Update all UI components to respect system accessibility settings",
-        "testStrategy": "Test the accessibility implementation using the following approach:\n\n1. Keyboard Navigation Testing:\n   - Verify all functionality is accessible without a mouse\n   - Test tab order flows logically through the interface\n   - Confirm all shortcuts work as expected in different contexts\n   - Validate focus indicators are clearly visible in all states\n   - Test keyboard traps in modal dialogs\n\n2. Screen Reader Compatibility:\n   - Test with NVDA and JAWS on Windows\n   - Verify all UI elements are properly announced\n   - Confirm dynamic content changes are announced appropriately\n   - Test navigation through complex components (scatter plot, well plate)\n   - Validate form controls have proper labels and instructions\n\n3. High Contrast Testing:\n   - Test with Windows High Contrast mode enabled\n   - Verify all UI elements remain visible and distinguishable\n   - Confirm focus indicators are clearly visible\n   - Test with color vision deficiency simulators (protanopia, deuteranopia, tritanopia)\n   - Validate that no information is conveyed by color alone\n\n4. Responsive Accessibility Testing:\n   - Test with text size increased to 200%\n   - Verify layout at browser zoom levels of 100%, 200%, and 400%\n   - Test touch interaction on tablets and touch screens\n   - Validate that all controls meet minimum size requirements\n\n5. Automated Testing:\n   - Run automated accessibility audits using Axe or similar tools\n   - Verify WCAG 2.1 AA compliance across all screens\n   - Document any exceptions with justification\n\n6. User Testing:\n   - Conduct testing with users who rely on accessibility features\n   - Document feedback and implement necessary adjustments",
-        "status": "pending",
-        "dependencies": [
-          16
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 21,
-        "title": "Implement Performance Optimization for NFR1 Requirements",
-        "description": "Implement the non-functional performance requirements specified in PRODUCT_REQUIREMENTS.md NFR1, optimizing image loading, CSV parsing, scatter plot rendering, selection highlighting, and memory management.",
-        "details": "Implement comprehensive performance optimizations across the application to meet NFR1 requirements:\n\n1. Image Loading Performance Optimization:\n   - Implement asynchronous loading with progress indicators for files up to 500MB\n   - Use memory-mapped file access for large TIFF files\n   - Implement image tiling and progressive loading techniques\n   - Create a smart caching strategy with LRU (Least Recently Used) policy\n   - Optimize memory usage with on-demand loading of image regions\n   - Target: <5 seconds loading time for 500MB files\n\n2. CSV Parsing Performance Optimization:\n   - Implement streaming parser for CSV files using CsvHelper\n   - Process data in chunks to minimize memory footprint\n   - Move parsing to background thread with progress reporting\n   - Implement lazy loading for non-essential columns\n   - Use memory-efficient data structures for cell records\n   - Target: <3 seconds parsing time for 50,000 records\n\n3. Scatter Plot Rendering Optimization:\n   - Implement GPU acceleration using OxyPlot's hardware acceleration features\n   - Add level-of-detail rendering based on zoom level\n   - Implement viewport-based culling to render only visible points\n   - Use data reduction techniques for dense regions (clustering/binning)\n   - Optimize point rendering with batch operations\n   - Target: <2 seconds rendering for 50,000 points\n\n4. Selection Highlighting Optimization:\n   - Implement spatial indexing (quadtree/R-tree) for efficient point lookup\n   - Use batch update operations for UI elements\n   - Implement visibility culling for off-screen elements\n   - Optimize rendering path for highlighted elements\n   - Use hardware acceleration for rendering overlays\n   - Target: <1 second highlighting for 1,000 cells\n\n5. Memory Management Optimization:\n   - Implement proper object disposal patterns\n   - Add explicit garbage collection hints at appropriate points\n   - Monitor and limit memory usage for large operations\n   - Implement memory pooling for frequently allocated objects\n   - Add memory usage tracking and reporting\n   - Target: Support for images up to 2GB with controlled memory usage\n\nImplementation approach:\n- Create a PerformanceMonitor class to track and log performance metrics\n- Add configuration options for performance tuning\n- Implement progressive enhancement based on available system resources\n- Add detailed performance logging for troubleshooting\n- Create optimization switches to enable/disable specific optimizations",
-        "testStrategy": "Test the performance optimizations using the following approach:\n\n1. Image Loading Performance Testing:\n   - Create test images of various sizes (100MB, 250MB, 500MB)\n   - Measure loading time with and without optimizations\n   - Monitor memory usage during loading process\n   - Verify progress reporting accuracy\n   - Test caching effectiveness with repeated loads\n   - Validate target of <5 seconds for 500MB files\n\n2. CSV Parsing Performance Testing:\n   - Generate test CSV files with 10,000, 25,000, and 50,000 records\n   - Measure parsing time with and without streaming optimizations\n   - Monitor memory usage during parsing\n   - Verify background processing doesn't block UI\n   - Test with various CSV complexity levels\n   - Validate target of <3 seconds for 50,000 records\n\n3. Scatter Plot Rendering Testing:\n   - Create datasets with 10,000, 25,000, and 50,000 points\n   - Measure rendering time with and without optimizations\n   - Test rendering performance at different zoom levels\n   - Verify level-of-detail implementation effectiveness\n   - Measure GPU vs CPU rendering performance\n   - Validate target of <2 seconds for 50,000 points\n\n4. Selection Highlighting Testing:\n   - Create test selections of 100, 500, and 1,000 cells\n   - Measure highlighting time with and without optimizations\n   - Test performance with multiple overlapping selections\n   - Verify spatial indexing effectiveness\n   - Measure batch update performance\n   - Validate target of <1 second for 1,000 cells\n\n5. Memory Management Testing:\n   - Monitor memory usage with large images (1GB, 2GB)\n   - Test for memory leaks using profiling tools\n   - Verify garbage collection optimization effectiveness\n   - Measure peak memory usage during complex operations\n   - Test memory usage with extended application usage\n\nUse automated performance tests where possible and document results in a performance report. Compare results against the baseline performance to quantify improvements.",
-        "status": "pending",
-        "dependencies": [
-          2,
-          3,
-          4,
-          7
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 22,
-        "title": "Implement Tutorial and Help System",
-        "description": "Create a comprehensive tutorial and help system that includes an interactive onboarding experience, contextual help, searchable documentation, and example workflows to meet NFR4.2 requirements.",
-        "details": "Implement a TutorialAndHelpSystem with the following components:\n\n1. Interactive Tutorial System:\n   - Create a step-by-step guided tour that introduces users to core application features\n   - Implement interactive demonstrations of key workflows (image loading, cell selection, data export)\n   - Design progress tracking to allow users to resume tutorials\n   - Build a tutorial framework that highlights UI elements with explanatory overlays\n   - Ensure tutorials can be completed within 30 minutes to achieve productivity\n\n2. Example Datasets and Workflows:\n   - Package sample microscopy images and CSV data files for immediate use\n   - Create pre-configured analysis scenarios demonstrating common use cases:\n     - Basic cell selection workflow\n     - Multi-parameter gating workflow\n     - Calibration and export workflow\n   - Include step-by-step guides for each example workflow\n   - Document best practices for efficient analysis\n\n3. Contextual Help System:\n   - Implement a HelpProvider service that detects current application context\n   - Create tooltips for all UI elements with concise explanations\n   - Build a searchable help database with comprehensive documentation\n   - Integrate video tutorial links where appropriate\n   - Develop a FAQ section covering common questions and troubleshooting\n\n4. User Onboarding Experience:\n   - Create a first-run welcome tour that introduces key application concepts\n   - Implement feature introduction overlays that appear when new features are accessed\n   - Design a progressive disclosure system that introduces advanced features gradually\n   - Build a user preferences system to customize the help experience\n\n5. Technical Implementation:\n   - Use the design system components from Task 16 for consistent UI presentation\n   - Implement help content in Markdown format for easy maintenance\n   - Create a TutorialManager class to coordinate tutorial state and progression\n   - Build a HelpContentRepository to manage and serve help content\n   - Ensure all help features are accessible via keyboard shortcuts",
-        "testStrategy": "1. Tutorial System Testing:\n   - Verify all tutorial steps display correctly and in sequence\n   - Test tutorial interaction with application features\n   - Validate progress tracking and resume functionality\n   - Measure completion time for each tutorial to ensure 30-minute target\n   - Test tutorials across different screen sizes and resolutions\n\n2. Example Dataset Testing:\n   - Verify all sample datasets load correctly\n   - Test each example workflow from start to finish\n   - Validate that example workflows demonstrate key application features\n   - Ensure documentation accurately matches the workflow steps\n\n3. Contextual Help Testing:\n   - Test tooltip display for all UI elements\n   - Verify help content accuracy and relevance to the current context\n   - Test search functionality with various queries\n   - Validate that video tutorial links work correctly\n   - Test FAQ section for completeness and accuracy\n\n4. Onboarding Experience Testing:\n   - Test first-run experience on new installations\n   - Verify feature introduction overlays appear at appropriate times\n   - Test progressive disclosure of advanced features\n   - Validate user preference settings for help system\n\n5. Usability Testing:\n   - Conduct user testing with participants of varying experience levels\n   - Measure time to complete basic tasks with and without tutorial assistance\n   - Collect feedback on help content clarity and usefulness\n   - Test accessibility of help features for users with disabilities",
-        "status": "pending",
-        "dependencies": [
-          15,
-          16
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 23,
-        "title": "Implement Auto-Update and Notification System",
-        "description": "Create a system for automatic updates and notifications that includes background update checking, non-intrusive UI, optional auto-downloads, and release notes display as specified in NFR6.2.",
-        "details": "Implement an AutoUpdateService with the following components:\n\n1. Version Management System:\n   - Implement Semantic Versioning (SemVer) with Major.Minor.Patch format\n   - Create version comparison utilities to determine update eligibility\n   - Implement data file backward compatibility checks\n   - Design incremental upgrade paths for major version changes\n   - Create rollback functionality to restore previous versions\n\n2. Update Detection:\n   - Implement background update checking at configurable intervals\n   - Create a secure connection to update server using HTTPS\n   - Parse update manifests with version information and requirements\n   - Compare local version with server version using SemVer rules\n   - Implement bandwidth-efficient delta checks\n\n3. Notification UI:\n   - Design non-intrusive notification system using toast notifications\n   - Create a notification queue for managing multiple updates\n   - Implement priority system for security updates\n   - Design release notes display with HTML/Markdown support\n   - Add user preference controls for notification frequency\n\n4. Download and Installation:\n   - Implement secure download system with integrity verification\n   - Create incremental/delta update capability to minimize download size\n   - Implement background download with progress reporting\n   - Add pause/resume functionality for large updates\n   - Create offline installation package generator\n\n5. User Communication:\n   - Design update notification templates with severity indicators\n   - Implement feedback collection system for update experience\n   - Create bug reporting interface with automatic system information\n   - Add update history view with installation dates and versions\n\n6. Security Measures:\n   - Implement digital signature verification for all updates\n   - Create secure storage for update credentials\n   - Implement checksum validation for download integrity\n   - Add privilege escalation for installation when required\n\nUse the shadcn/ui and qt-material design systems for consistent UI appearance across the application.",
-        "testStrategy": "1. Version Management Testing:\n   - Test SemVer parsing and comparison with various version strings\n   - Verify correct identification of update eligibility based on version rules\n   - Test backward compatibility checks with different data file versions\n   - Validate rollback functionality restores previous application state\n\n2. Update Detection Testing:\n   - Create mock update server to test connection and manifest parsing\n   - Verify background checking occurs at specified intervals\n   - Test bandwidth usage during update checks\n   - Validate proper handling of server unavailability\n   - Test update detection with various version combinations\n\n3. Notification UI Testing:\n   - Verify notifications appear non-intrusively and can be dismissed\n   - Test notification queue handling with multiple pending updates\n   - Validate priority system correctly elevates security updates\n   - Test release notes display with various content formats\n   - Verify user preference controls affect notification behavior\n\n4. Download and Installation Testing:\n   - Test download integrity verification with valid and tampered packages\n   - Measure download efficiency with incremental updates vs. full updates\n   - Verify progress reporting accuracy during downloads\n   - Test pause/resume functionality with network interruptions\n   - Validate offline installation packages on systems without internet\n\n5. Security Testing:\n   - Verify digital signature validation rejects unsigned updates\n   - Test checksum validation detects corrupted downloads\n   - Validate secure credential storage prevents unauthorized access\n   - Test privilege escalation during installation process\n\n6. Integration Testing:\n   - Perform end-to-end update process from detection to installation\n   - Test update system under various network conditions\n   - Verify application stability after updates\n   - Validate user experience through the complete update workflow",
-        "status": "pending",
-        "dependencies": [
-          1,
-          14,
-          16
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 24,
-        "title": "Implement Modal Dialog and Context Menu System",
-        "description": "Create a comprehensive UI component system for modal dialogs and context menus as specified in DESIGN_SPEC.md, including file loading dialogs, calibration point dialogs, settings dialogs, and context menus for various application elements.",
-        "details": "Implement a unified Modal Dialog and Context Menu System with the following components:\n\n1. Modal Dialog Framework:\n   - Create a base DialogService class to manage dialog creation, display, and lifecycle\n   - Implement dialog stacking with proper z-index management\n   - Design responsive dialog containers that adapt to content size\n   - Add backdrop with configurable opacity and blur effect\n   - Implement keyboard focus trapping within active dialogs\n   - Create smooth entrance/exit animations\n\n2. File Loading Dialog:\n   - Implement tabbed interface for recent files, file browser, and favorites\n   - Create image preview panel with metadata display\n   - Add drag-and-drop support for files\n   - Implement file filtering by type and search functionality\n   - Display file metadata (dimensions, format, creation date)\n\n3. Calibration Point Dialog:\n   - Create form for entering pixel and real-world coordinates\n   - Implement validation for coordinate input\n   - Add visual confirmation of selected calibration points\n   - Include help text and tooltips explaining the calibration process\n\n4. Settings Dialog:\n   - Create tabbed interface for different setting categories\n   - Implement theme selection with preview\n   - Add application preferences section\n   - Create performance settings panel\n   - Implement settings persistence using ConfigurationService\n\n5. Confirmation Dialog:\n   - Create reusable confirmation dialog with customizable messages\n   - Add support for different confirmation levels (info, warning, error)\n   - Implement configurable button options (Yes/No, OK/Cancel, etc.)\n\n6. Progress Dialog:\n   - Create progress indicator with percentage and status text\n   - Implement cancellation functionality for long-running operations\n   - Add estimated time remaining calculation\n   - Create indeterminate progress mode for unknown durations\n\n7. Context Menu System:\n   - Implement a ContextMenuService to manage menu creation and display\n   - Create positioning logic to keep menus within viewport\n   - Add support for nested submenus\n   - Implement keyboard navigation within menus\n   - Create menu item templates with icons, text, and keyboard shortcuts\n\n8. Image Context Menu:\n   - Create menu items for calibration point setting, zoom controls\n   - Add export options for the current view\n   - Implement coordinate copying functionality\n   - Add distance measurement tool activation\n\n9. Selection Context Menu:\n   - Create menu items for property editing, duplication, deletion\n   - Add zoom-to-selection functionality\n   - Implement coordinate export options\n   - Add grouping/ungrouping options for selections\n\n10. Advanced UI Interactions:\n    - Implement drag-and-drop file loading with visual feedback\n    - Create consistent tooltip system with configurable delay and positioning\n    - Add subtle animations for state transitions (150-300ms duration)\n    - Implement keyboard navigation support across all dialogs and menus\n\n11. State Management:\n    - Create DialogStateManager to persist dialog positions and sizes\n    - Implement user preference storage for dialog defaults\n    - Add modal stack management for proper dialog layering\n    - Create focus history to restore focus when dialogs close",
-        "testStrategy": "Test the Modal Dialog and Context Menu System using the following approach:\n\n1. Unit Testing:\n   - Create unit tests for the DialogService and ContextMenuService\n   - Test dialog stacking behavior with multiple open dialogs\n   - Verify proper focus management when opening/closing dialogs\n   - Test keyboard navigation through dialog controls\n   - Verify context menu positioning in various viewport scenarios\n   - Test menu keyboard navigation and shortcuts\n\n2. Integration Testing:\n   - Test file loading dialog with various file types and sizes\n   - Verify calibration point dialog correctly captures and validates coordinates\n   - Test settings dialog saves and loads preferences correctly\n   - Verify confirmation dialogs handle different confirmation scenarios\n   - Test progress dialog with both determinate and indeterminate operations\n   - Verify context menus display correctly in all application areas\n\n3. Accessibility Testing:\n   - Test keyboard navigation through all dialogs and menus\n   - Verify screen reader compatibility using NVDA and JAWS\n   - Test high contrast mode appearance for all UI components\n   - Verify focus indicators are visible and consistent\n   - Test color contrast ratios meet WCAG 2.1 AA standards\n\n4. Performance Testing:\n   - Measure dialog open/close performance (target: <100ms)\n   - Test context menu display performance (target: <50ms)\n   - Verify smooth animations on lower-end hardware\n   - Test memory usage with multiple dialogs open\n   - Verify no memory leaks after repeated dialog open/close cycles\n\n5. User Experience Testing:\n   - Conduct usability testing with representative users\n   - Verify dialogs are intuitive and follow platform conventions\n   - Test responsiveness to different window sizes\n   - Verify animations enhance rather than hinder usability\n   - Test with different input devices (mouse, touchpad, keyboard)",
-        "status": "pending",
-        "dependencies": [
-          16,
-          8,
-          5,
-          7
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 25,
-        "title": "Implement Loading State and Progress Indication System",
-        "description": "Create a comprehensive loading state and progress indication system that provides visual feedback for long-running operations including image loading, CSV processing, scatter plot rendering, and protocol exports.",
-        "details": "Implement a LoadingStateService and corresponding UI components that provide consistent feedback across the application:\n\n1. Loading State System:\n   - Create a centralized LoadingStateService that manages loading states across the application\n   - Implement loading indicators for different operations:\n     - Image loading: Spinner with file size and load percentage\n     - CSV processing: Progress bar with record count and processing rate\n     - Scatter plot rendering: Semi-transparent overlay with rendering progress\n     - Protocol export: Step-by-step progress indicators for complex operations\n   - Design a LoadingStateViewModel that exposes observable properties for UI binding\n   - Create reusable loading indicator components using the design system\n\n2. Progress Indication:\n   - Implement accurate percentage calculation for operations with known total work\n   - Create a time estimation algorithm based on completed work and elapsed time\n   - Add cancellation support for long-running operations via CancellationToken\n   - Design a background task manager for operations that can run in the background\n   - Implement a task queue for sequential operations with individual progress tracking\n   - Create a global application status indicator for the main window\n\n3. Error State Feedback:\n   - Design inline error messages that appear directly in the context of the error\n   - Implement a toast notification system for transient errors and warnings\n   - Add error badges and icons to indicate components with error states\n   - Create actionable error messages with suggested recovery steps\n   - Implement error logging integration with the ErrorHandlingService\n   - Design error state transitions with appropriate visual cues\n\n4. Status Transition Animations:\n   - Create smooth transitions between loading, success, and error states\n   - Implement skeleton loading screens for initial content loading\n   - Design micro-interactions for state changes (subtle animations, color transitions)\n   - Ensure animations are accessible and respect reduced motion preferences\n   - Implement consistent timing and easing functions across all animations\n\nImplementation Guidelines:\n- Use the design system components from Task #16 for visual consistency\n- Follow WCAG 2.1 AA standards for loading indicators (color contrast, motion)\n- Ensure all loading states have keyboard-accessible cancel options\n- Implement loading state persistence for operations that survive app restarts\n- Create a LoadingStateManager singleton that can be injected into ViewModels\n- Use ReactiveUI for reactive programming patterns in loading state management",
-        "testStrategy": "1. Unit Testing:\n   - Create unit tests for the LoadingStateService with mock long-running operations\n   - Test progress calculation accuracy with various operation sizes\n   - Verify time estimation algorithm accuracy within ±20% margin\n   - Test cancellation functionality for all cancellable operations\n   - Validate error state transitions and recovery actions\n\n2. Integration Testing:\n   - Test loading indicators with actual operations (image loading, CSV processing)\n   - Verify progress updates are smooth and accurate during real operations\n   - Test background task management with multiple concurrent operations\n   - Validate error handling integration with the ErrorHandlingService\n   - Test persistence of loading states across simulated application restarts\n\n3. UI Testing:\n   - Create automated UI tests to verify loading indicator visibility and behavior\n   - Test accessibility of loading indicators with screen readers\n   - Verify animations respect system-level reduced motion settings\n   - Test keyboard navigation during loading states\n   - Validate color contrast of loading indicators in both light and dark themes\n\n4. Performance Testing:\n   - Measure CPU and memory overhead of loading indicators during operations\n   - Test with extremely long operations (10+ minutes) to verify stability\n   - Verify UI responsiveness during active loading states\n   - Test with multiple concurrent loading operations to ensure performance\n\n5. User Acceptance Testing:\n   - Create test scenarios for common workflows with loading states\n   - Gather feedback on loading indicator clarity and usefulness\n   - Test with users who have accessibility needs to verify inclusivity\n   - Validate that estimated time remaining is helpful and reasonably accurate",
-        "status": "pending",
-        "dependencies": [
-          14,
-          16,
-          2,
-          3,
-          4,
-          11
-        ],
-        "priority": "medium",
-        "subtasks": []
-      }
-    ],
-    "metadata": {
-      "created": "2025-06-24T09:22:16.549Z",
-      "updated": "2025-06-24T09:54:25.044Z",
-      "description": "Tasks for master context"
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Implement Image Loading Module",
+      "description": "Create the image handler module to load and display TIFF, JPG, JPEG, and PNG files",
+      "type": "feature",
+      "priority": "high",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Support TIFF, JPG, JPEG, PNG formats",
+        "Handle images >50MB efficiently",
+        "Display image in scrollable widget",
+        "Implement zoom/pan functionality",
+        "Show loading progress for large files"
+      ],
+      "technical_notes": "Use OpenCV for image loading, QGraphicsView for display"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Create CSV Parser Module",
+      "description": "Implement CellProfiler CSV parsing with validation",
+      "type": "feature",
+      "priority": "high",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Parse CellProfiler CSV format",
+        "Validate required bounding box columns",
+        "Extract cell coordinates and features",
+        "Handle missing/invalid data gracefully",
+        "Provide clear error messages"
+      ],
+      "technical_notes": "Use pandas for CSV processing, implement robust error handling"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Build Scatter Plot Widget",
+      "description": "Create interactive scatter plot visualization using matplotlib",
+      "type": "feature",
+      "priority": "high",
+      "status": "todo",
+      "effort": "large",
+      "dependencies": ["TASK-002"],
+      "acceptance_criteria": [
+        "Embed matplotlib in Qt widget",
+        "Allow column selection for X/Y axes",
+        "Implement rectangle selection tool",
+        "Support shift+drag for selection",
+        "Real-time highlighting of selected points"
+      ],
+      "technical_notes": "Use matplotlib backend for Qt, implement custom selection handler"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Develop Selection Manager",
+      "description": "Create system for managing cell selections with colors and labels",
+      "type": "feature",
+      "priority": "medium",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": ["TASK-003"],
+      "acceptance_criteria": [
+        "Track multiple selections",
+        "Assign colors from palette",
+        "Support custom labels",
+        "Map to 96-well plate positions",
+        "Provide selection summary table"
+      ],
+      "technical_notes": "Implement as model class with Qt signals for updates"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement Coordinate Calibration",
+      "description": "Build two-point calibration system for coordinate transformation",
+      "type": "feature",
+      "priority": "high",
+      "status": "todo",
+      "effort": "large",
+      "dependencies": ["TASK-001"],
+      "acceptance_criteria": [
+        "Capture two reference points on image",
+        "Input corresponding stage coordinates",
+        "Calculate affine transformation",
+        "Validate transformation accuracy",
+        "Show calibration status"
+      ],
+      "technical_notes": "Use NumPy for matrix calculations, implement validation checks"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Create Protocol Exporter",
+      "description": "Generate .cxprotocol files for CosmoSort hardware",
+      "type": "feature",
+      "priority": "high",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": ["TASK-004", "TASK-005"],
+      "acceptance_criteria": [
+        "Generate INI-style protocol files",
+        "Include transformed coordinates",
+        "Add selection metadata",
+        "Validate output format",
+        "Support batch export"
+      ],
+      "technical_notes": "Use configparser for INI generation, implement format validation"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Design Main Application Window",
+      "description": "Create the main window with menu, toolbar, and layout",
+      "type": "feature",
+      "priority": "high",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Implement menu bar with standard actions",
+        "Create toolbar for common operations",
+        "Design responsive layout",
+        "Add status bar for feedback",
+        "Support dock widgets for panels"
+      ],
+      "technical_notes": "Use QMainWindow, implement proper layout management"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Add Session Management",
+      "description": "Implement save/load functionality for analysis sessions",
+      "type": "feature",
+      "priority": "medium",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": ["TASK-004"],
+      "acceptance_criteria": [
+        "Save session state to JSON",
+        "Restore complete session",
+        "Include all selections and settings",
+        "Support autosave",
+        "Handle version compatibility"
+      ],
+      "technical_notes": "Design extensible session format, implement migration support"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Implement Error Handling System",
+      "description": "Create comprehensive error handling and user feedback",
+      "type": "infrastructure",
+      "priority": "high",
+      "status": "todo",
+      "effort": "medium",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Catch and handle all exceptions",
+        "Show user-friendly error dialogs",
+        "Log errors for debugging",
+        "Implement recovery options",
+        "Prevent data loss on errors"
+      ],
+      "technical_notes": "Use logging module, create custom exception classes"
+    },
+    {
+      "id": "TASK-010",
+      "title": "Create Comprehensive Test Suite",
+      "description": "Develop unit and integration tests for all modules",
+      "type": "testing",
+      "priority": "high",
+      "status": "todo",
+      "effort": "large",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Achieve 85% code coverage",
+        "Test all core functions",
+        "Include GUI component tests",
+        "Add integration test workflows",
+        "Implement performance benchmarks"
+      ],
+      "technical_notes": "Use pytest and pytest-qt, follow TDD principles"
+    },
+    {
+      "id": "TASK-011",
+      "title": "Apply Material Design Theme",
+      "description": "Integrate qt-material for modern UI appearance",
+      "type": "ui",
+      "priority": "medium",
+      "status": "todo",
+      "effort": "small",
+      "dependencies": ["TASK-007"],
+      "acceptance_criteria": [
+        "Apply qt-material theme",
+        "Support light/dark modes",
+        "Ensure consistent styling",
+        "Maintain accessibility",
+        "Test on all platforms"
+      ],
+      "technical_notes": "Use qt-material package, create custom style overrides"
+    },
+    {
+      "id": "TASK-012",
+      "title": "Add Keyboard Shortcuts",
+      "description": "Implement keyboard shortcuts for common operations",
+      "type": "feature",
+      "priority": "low",
+      "status": "todo",
+      "effort": "small",
+      "dependencies": ["TASK-007"],
+      "acceptance_criteria": [
+        "Define standard shortcuts",
+        "Implement action system",
+        "Show shortcuts in menus",
+        "Support customization",
+        "Document all shortcuts"
+      ],
+      "technical_notes": "Use QAction and QShortcut, follow platform conventions"
+    }
+  ],
+  "metadata": {
+    "total_tasks": 12,
+    "by_status": {
+      "todo": 12,
+      "in_progress": 0,
+      "completed": 0
+    },
+    "by_priority": {
+      "high": 7,
+      "medium": 4,
+      "low": 1
+    },
+    "by_type": {
+      "feature": 9,
+      "infrastructure": 1,
+      "testing": 1,
+      "ui": 1
     }
   }
 }
