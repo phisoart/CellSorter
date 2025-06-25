@@ -1,6 +1,9 @@
 {
-  "currentTag": "master",
-  "lastSwitched": "2025-06-24T09:40:29.285Z",
-  "branchTagMapping": {},
-  "migrationNoticeShown": false
+  "version": "1.0.0",
+  "projectName": "CellSorter",
+  "initialized": "2025-06-25",
+  "currentPhase": "development",
+  "activeTaskIds": [],
+  "completedTaskIds": [],
+  "lastUpdated": "2025-06-25T00:00:00Z"
 }

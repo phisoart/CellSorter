@@ -234,4 +234,7 @@ pytest -k "test_image_loader"
 - Periodic cleanup of obsolete tests
 - Update test data to reflect real-world usage
 
+## Collaboration Notes
+- 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다.
+
 This comprehensive testing strategy ensures robust, reliable software that meets the demanding requirements of pathology research applications.

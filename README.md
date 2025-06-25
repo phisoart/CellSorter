@@ -84,7 +84,9 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
 ├── .cursorignore                   # Cursor IDE용 무시 파일 설정
 ├── .gitignore                      # Git 버전 관리 무시 파일 설정
 │
-├── requirements.txt                # Python 라이브러리 명세
+├── requirements.txt                # Production(런타임) Python 라이브러리 명세
+├── requirements-dev.txt            # 개발 및 테스트 의존성 명세
+├── requirements-build.txt          # 빌드/배포 의존성 명세
 │
 ├── /docs/                          # 문서 및 설계
 │   ├── /design/                    # UI/UX 설계 문서
@@ -147,12 +149,22 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
    conda activate cellsorter
    ```
 
-3. **Install dependencies**
+3. **Install production dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Run the application**
+4. **(Optional) Install development dependencies**
+   ```bash
+   pip install -r requirements-dev.txt
+   ```
+
+5. **(Optional) Install build/deployment dependencies**
+   ```bash
+   pip install -r requirements-build.txt
+   ```
+
+6. **Run the application**
    ```bash
    python src/main.py
    ```
@@ -163,7 +175,7 @@ For development with additional tools:
 
 ```bash
 # Install development dependencies
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 
 # Run tests
 pytest

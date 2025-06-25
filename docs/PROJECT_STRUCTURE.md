@@ -11,7 +11,9 @@
 ├── .cursorignore                   # Cursor IDE용 무시 파일 설정
 ├── .gitignore                      # Git 버전 관리 무시 파일 설정
 │
-├── requirements.txt                # Python 라이브러리 명세
+├── requirements.txt                # Production(런타임) Python 라이브러리 명세
+├── requirements-dev.txt            # 개발 및 테스트 의존성 명세
+├── requirements-build.txt          # 빌드/배포 의존성 명세
 │
 ├── /docs/
 │   ├── /design/
@@ -56,9 +58,9 @@
 - **ARCHITECTURE.md**: 기술 스택, 시스템 아키텍처, 설계 결정사항
 - **CODING_STYLE_GUIDE.md**: 코딩 컨벤션, 네이밍 규칙, 문서화 규칙
 - **TESTING_STRATEGY.md**: 테스트 전략, 도구, 커버리지 기준
-
-### Configuration Files
-- **requirements.txt**: Python 의존성 라이브러리 명세
+- **requirements.txt**: Production(런타임) Python 의존성 명세
+- **requirements-dev.txt**: 개발 및 테스트 의존성 명세
+- **requirements-build.txt**: 빌드/배포 의존성 명세
 - **.cursorignore**: Cursor IDE가 무시할 파일/디렉토리 패턴
 - **.gitignore**: Git 버전 관리에서 제외할 파일/디렉토리 패턴
 
@@ -95,6 +97,9 @@
 ### Development Configuration
 - **.cursorignore**: Cursor IDE가 분석에서 제외할 파일/폴더 패턴 정의
 - **.gitignore**: Git 버전 관리에서 제외할 파일/폴더 패턴 정의
+
+### Note on CONTRIBUTING.md, RELEASE_PLAN.md
+- 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않습니다. 관련 규칙 및 워크플로우는 README.md 및 기타 문서에 통합되어 관리됩니다.
 
 ### Note on IDE Configuration
 현재 프로젝트는 Cursor IDE의 기본 설정을 사용하며, 별도의 `.cursor/` 디렉토리 구성 없이 `.cursorignore` 파일을 통해 필요한 설정을 관리합니다. 향후 프로젝트 복잡도가 증가하면 별도의 Cursor 설정 디렉토리 구성을 고려할 수 있습니다. 
