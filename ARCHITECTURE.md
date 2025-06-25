@@ -12,6 +12,8 @@ CellSorter is a sophisticated GUI-based software application designed to work in
 - **Visualization**: Matplotlib (embedded in Qt)
 - **File I/O**: Python standard libraries
 - **Coordinate Mathematics**: NumPy for affine transformations
+- **Development/Testing**: pytest, black, flake8, mypy 등은 requirements-dev.txt에 분리 관리
+- **Build/Deployment**: pyinstaller 등은 requirements-build.txt에 분리 관리
 
 ### Integration Context
 
@@ -375,5 +377,8 @@ Each point entry (P_1, P_2, etc.) contains semicolon-separated values:
 - **CSV Injection Prevention**: Safe parsing of user-provided CSV data
 - **Path Traversal Protection**: Secure file path handling
 - **Resource Limits**: Memory and CPU usage constraints
+
+## Development & Collaboration Notes
+- 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다.
 
 This architecture provides a robust, scalable foundation for the CellSorter application while maintaining the flexibility needed for research applications and future enhancements. 

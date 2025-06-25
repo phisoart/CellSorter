@@ -509,4 +509,8 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 - Performance testing under maximum load conditions
 - Security audit for data handling procedures
 
-This product requirements document provides the foundation for developing CellSorter as a robust, user-friendly tool that meets the specific needs of pathology researchers while maintaining the precision required for automated cell sorting applications. 
+This product requirements document provides the foundation for developing CellSorter as a robust, user-friendly tool that meets the specific needs of pathology researchers while maintaining the precision required for automated cell sorting applications.
+
+## Development & Documentation Notes
+- 개발/테스트 의존성은 requirements-dev.txt, 빌드/배포 의존성은 requirements-build.txt에 분리 관리합니다.
+- 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다. 

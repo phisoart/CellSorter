@@ -6,7 +6,7 @@
       "description": "Create the image handler module to load and display TIFF, JPG, JPEG, and PNG files",
       "type": "feature",
       "priority": "high",
-      "status": "todo",
+      "status": "completed",
       "effort": "medium",
       "dependencies": [],
       "acceptance_criteria": [
@@ -24,7 +24,7 @@
       "description": "Implement CellProfiler CSV parsing with validation",
       "type": "feature",
       "priority": "high",
-      "status": "todo",
+      "status": "completed",
       "effort": "medium",
       "dependencies": [],
       "acceptance_criteria": [
@@ -114,7 +114,7 @@
       "description": "Create the main window with menu, toolbar, and layout",
       "type": "feature",
       "priority": "high",
-      "status": "todo",
+      "status": "completed",
       "effort": "medium",
       "dependencies": [],
       "acceptance_criteria": [
@@ -150,7 +150,7 @@
       "description": "Create comprehensive error handling and user feedback",
       "type": "infrastructure",
       "priority": "high",
-      "status": "todo",
+      "status": "completed",
       "effort": "medium",
       "dependencies": [],
       "acceptance_criteria": [
@@ -168,7 +168,7 @@
       "description": "Develop unit and integration tests for all modules",
       "type": "testing",
       "priority": "high",
-      "status": "todo",
+      "status": "completed",
       "effort": "large",
       "dependencies": [],
       "acceptance_criteria": [
@@ -220,9 +220,9 @@
   "metadata": {
     "total_tasks": 12,
     "by_status": {
-      "todo": 12,
+      "todo": 7,
       "in_progress": 0,
-      "completed": 0
+      "completed": 5
     },
     "by_priority": {
       "high": 7,

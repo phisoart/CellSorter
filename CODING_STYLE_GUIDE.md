@@ -463,30 +463,17 @@ error_msg = "Failed to process " + str(file_count) + " files"
 ## Tools and Enforcement
 
 ### Recommended Tools
-- **Black**: Code formatting
-- **flake8**: Linting and style checking
-- **mypy**: Type checking
-- **pytest**: Testing framework
-- **pytest-qt**: Qt testing utilities
+- **Black**: Code formatting (requirements-dev.txt)
+- **flake8**: Linting and style checking (requirements-dev.txt)
+- **mypy**: Type checking (requirements-dev.txt)
+- **pytest**: Testing framework (requirements-dev.txt)
+- **pytest-qt**: Qt testing utilities (requirements-dev.txt)
+- **pyinstaller**: Build/deployment (requirements-build.txt)
 
 ### Pre-commit Hooks
-Configure pre-commit hooks to enforce style automatically:
+- 개발/테스트/코드 품질 도구는 requirements-dev.txt에, 빌드/배포 도구는 requirements-build.txt에 분리 관리합니다.
 
-```yaml
-# .pre-commit-config.yaml
-repos:
-  - repo: https://github.com/psf/black
-    rev: 22.3.0
-    hooks:
-      - id: black
-  - repo: https://github.com/pycqa/flake8
-    rev: 4.0.1
-    hooks:
-      - id: flake8
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.950
-    hooks:
-      - id: mypy
-```
+## Collaboration Notes
+- 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다.
 
 Following these guidelines will ensure consistent, maintainable, and readable code across the CellSorter project. 
