@@ -409,29 +409,44 @@ class ImageHandler(QWidget, LoggerMixin):
             # Grayscale image
             height, width = image.shape
             bytes_per_line = width
-            
+
             if image.dtype == np.uint8:
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
             else:
-                # Convert to uint8
-                image_uint8 = ((image - image.min()) / (image.max() - image.min()) * 255).astype(np.uint8)
+                # Convert to uint8, handle uniform value (no division by zero)
+                min_val = image.min()
+                max_val = image.max()
+                if max_val == min_val:
+                    image_uint8 = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
+                else:
+                    image_uint8 = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
                 return QImage(image_uint8.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
         
         elif len(image.shape) == 3:
             # Color image
             height, width, channels = image.shape
             bytes_per_line = width * channels
-            
+
             if channels == 3:
                 # RGB image
                 if image.dtype != np.uint8:
-                    image = ((image - image.min()) / (image.max() - image.min()) * 255).astype(np.uint8)
+                    min_val = image.min()
+                    max_val = image.max()
+                    if max_val == min_val:
+                        image = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
+                    else:
+                        image = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888)
             
             elif channels == 4:
                 # RGBA image
                 if image.dtype != np.uint8:
-                    image = ((image - image.min()) / (image.max() - image.min()) * 255).astype(np.uint8)
+                    min_val = image.min()
+                    max_val = image.max()
+                    if max_val == min_val:
+                        image = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
+                    else:
+                        image = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_RGBA8888)
         
         raise ValueError(f"Unsupported image shape: {image.shape}")

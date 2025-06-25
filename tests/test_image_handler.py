@@ -277,6 +277,40 @@ class TestImageHandler:
         assert qimage_gray.width() == sample_grayscale_image.shape[1]
         assert qimage_gray.height() == sample_grayscale_image.shape[0]
     
+    def test_numpy_to_qimage_uniform_image(self, qapp):
+        """Test QImage conversion for uniform (solid color) numpy arrays (no division by zero)."""
+        handler = ImageHandler()
+
+        # 단색 그레이스케일
+        uniform_gray = np.full((32, 32), 128, dtype=np.uint16)
+        try:
+            qimage_gray = handler._numpy_to_qimage(uniform_gray)
+            assert isinstance(qimage_gray, QImage)
+            assert qimage_gray.width() == 32
+            assert qimage_gray.height() == 32
+        except ZeroDivisionError:
+            pytest.fail("Division by zero occurred for uniform grayscale image")
+
+        # 단색 RGB
+        uniform_rgb = np.full((16, 16, 3), 77, dtype=np.uint16)
+        try:
+            qimage_rgb = handler._numpy_to_qimage(uniform_rgb)
+            assert isinstance(qimage_rgb, QImage)
+            assert qimage_rgb.width() == 16
+            assert qimage_rgb.height() == 16
+        except ZeroDivisionError:
+            pytest.fail("Division by zero occurred for uniform RGB image")
+
+        # 단색 RGBA
+        uniform_rgba = np.full((8, 8, 4), 255, dtype=np.uint16)
+        try:
+            qimage_rgba = handler._numpy_to_qimage(uniform_rgba)
+            assert isinstance(qimage_rgba, QImage)
+            assert qimage_rgba.width() == 8
+            assert qimage_rgba.height() == 8
+        except ZeroDivisionError:
+            pytest.fail("Division by zero occurred for uniform RGBA image")
+    
     def test_get_image_info(self, qapp, sample_image_data):
         """Test image information retrieval."""
         handler = ImageHandler()
