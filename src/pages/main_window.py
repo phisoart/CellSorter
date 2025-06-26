@@ -31,11 +31,13 @@ from models.coordinate_transformer import CoordinateTransformer
 from models.selection_manager import SelectionManager
 from models.extractor import Extractor
 from models.session_manager import SessionManager
+from models.template_manager import TemplateManager
 from components.widgets.scatter_plot import ScatterPlotWidget
 from components.widgets.selection_panel import SelectionPanel
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
 from components.dialogs.batch_process_dialog import BatchProcessDialog
+from components.dialogs.template_management_dialog import TemplateManagementDialog
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -76,6 +78,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_manager = SelectionManager(self)
         self.extractor = Extractor(self)
         self.session_manager = SessionManager(self)
+        self.template_manager = TemplateManager(parent=self)
         self.scatter_plot_widget = ScatterPlotWidget(self)
         self.selection_panel = SelectionPanel(self)
         
@@ -242,6 +245,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_batch_process.setShortcut(QKeySequence("Ctrl+B"))
         self.action_batch_process.setStatusTip("Process multiple image/CSV file pairs")
         
+        # Template actions
+        self.action_manage_templates = QAction("&Manage Templates...", self)
+        self.action_manage_templates.setShortcut(QKeySequence("Ctrl+T"))
+        self.action_manage_templates.setStatusTip("Manage analysis templates")
+        
         # Help actions
         self.action_about = QAction("&About CellSorter", self)
         self.action_about.setStatusTip("About this application")
@@ -279,6 +287,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         tools_menu = menubar.addMenu("&Tools")
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
+        tools_menu.addSeparator()
+        tools_menu.addAction(self.action_manage_templates)
         
         # Analysis menu
         analysis_menu = menubar.addMenu("&Analysis")
@@ -383,6 +393,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Tools actions
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
+        self.action_manage_templates.triggered.connect(self.manage_templates)
         
         # Analysis actions
         self.action_batch_process.triggered.connect(self.batch_process)
@@ -399,6 +410,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.image_handler.image_loaded.connect(self._on_image_loaded)
         self.image_handler.image_load_failed.connect(self._on_image_load_failed)
         self.scatter_plot_widget.selection_made.connect(self._on_selection_made)
+        
+        # Connect expression filter specific signals if available
+        if hasattr(self.scatter_plot_widget, 'expression_selection_made'):
+            self.scatter_plot_widget.expression_selection_made.connect(self._on_expression_selection_made)
+        
         self.coordinate_transformer.calibration_updated.connect(self._on_calibration_updated)
         self.selection_manager.selection_added.connect(self._on_selection_added)
         self.selection_manager.selection_updated.connect(self._on_selection_updated)
@@ -563,6 +579,18 @@ class MainWindow(QMainWindow, LoggerMixin):
     def clear_selections(self) -> None:
         """Clear all cell selections."""
         self.update_status("All selections cleared")
+    
+    @error_handler("Opening template management")
+    def manage_templates(self) -> None:
+        """Open template management dialog."""
+        dialog = TemplateManagementDialog(self.template_manager, self)
+        dialog.template_applied.connect(self.on_template_applied)
+        dialog.exec()
+    
+    def on_template_applied(self, template_type: str, template_id: str, config: dict) -> None:
+        """Handle template application."""
+        self.update_status(f"Applied {template_type} template: {config.get('metadata', {}).get('name', 'Unknown')}")
+        self.log_info(f"Template applied: {template_type} - {template_id}")
     
     def toggle_theme(self) -> None:
         """Toggle between light and dark themes."""
@@ -743,20 +771,59 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.log_error(f"CSV loading failed: {error_message}")
     
     def _on_selection_made(self, indices: list) -> None:
-        """Handle cell selection from scatter plot."""
+        """Handle cell selection from scatter plot (rectangle or expression)."""
         if indices:
+            # Determine selection type based on current mode
+            selection_type = getattr(self.scatter_plot_widget, 'current_selection_type', 'rectangle')
+            
             # Add selection to selection manager
+            label_prefix = "Expression" if selection_type == "expression" else "Rectangle"
             selection_id = self.selection_manager.add_selection(
                 cell_indices=indices,
-                label=f"Selection_{len(self.selection_manager.selections) + 1}"
+                label=f"{label_prefix}_{len(self.selection_manager.selections) + 1}"
             )
             
             if selection_id:
-                self.update_status(f"Selected {len(indices)} cells")
+                selection_method = "expression filter" if selection_type == "expression" else "rectangle selection"
+                self.update_status(f"Selected {len(indices)} cells using {selection_method}")
                 self.is_modified = True
                 self.update_window_title()
+                
+                # Log expression details if available
+                if selection_type == "expression" and hasattr(self.scatter_plot_widget, 'get_current_expression'):
+                    expression = self.scatter_plot_widget.get_current_expression()
+                    if expression:
+                        self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
         else:
             self.update_status("No cells selected")
+    
+    def _on_expression_selection_made(self, indices: list) -> None:
+        """Handle cell selection specifically from expression filter."""
+        if indices:
+            # Add selection to selection manager with expression prefix
+            selection_id = self.selection_manager.add_selection(
+                cell_indices=indices,
+                label=f"Expression_{len(self.selection_manager.selections) + 1}"
+            )
+            
+            if selection_id:
+                # Get expression details if available
+                expression = ""
+                if hasattr(self.scatter_plot_widget, 'get_current_expression'):
+                    expression = self.scatter_plot_widget.get_current_expression()
+                
+                self.update_status(f"Expression filter selected {len(indices)} cells")
+                self.is_modified = True
+                self.update_window_title()
+                
+                # Store expression in selection metadata
+                selection = self.selection_manager.get_selection(selection_id)
+                if selection and expression:
+                    selection.metadata['expression'] = expression
+                    selection.metadata['selection_method'] = 'expression_filter'
+                    self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
+        else:
+            self.update_status("No cells selected by expression filter")
     
     def _on_calibration_updated(self, is_valid: bool) -> None:
         """Handle calibration update."""
