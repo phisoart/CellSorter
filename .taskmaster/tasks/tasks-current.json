@@ -423,8 +423,8 @@
         "✅ Integration with startup sequence",
         "✅ User preference controls"
       ],
-<<<<<<< feature/advanced-expression-filtering
-      "technical_notes": "Required for 100% NFR6.2 compliance"
+      "implementation_file": "src/utils/update_checker.py",
+      "technical_notes": "Complete implementation with GitHub API integration and user preferences"
     },
     {
       "id": "TASK-020",
@@ -448,21 +448,13 @@
       ],
       "implementation_file": "src/utils/expression_parser.py, src/components/widgets/expression_filter.py",
       "technical_notes": "Complete implementation with AST-based safe parsing, vectorized operations, syntax highlighting UI, and ScatterPlotWidget integration. Enables Dr. Sarah Chen's advanced filtering requirements."
-=======
-      "implementation_file": "src/utils/update_checker.py",
-      "technical_notes": "Complete implementation with GitHub API integration and user preferences"
->>>>>>> main
     }
   ],
   "metadata": {
     "total_tasks": 20,
     "by_status": {
       "completed": 16,
-<<<<<<< feature/advanced-expression-filtering
       "pending": 4,
-=======
-      "pending": 3,
->>>>>>> main
       "in_progress": 0
     },
     "by_priority": {
@@ -476,17 +468,10 @@
       "testing": 1,
       "ui": 1
     },
-<<<<<<< feature/advanced-expression-filtering
     "completion_percentage": 80,
     "requirements_compliance": {
       "functional_requirements": "98%",
       "non_functional_requirements": "95%", 
-=======
-    "completion_percentage": 84,
-    "requirements_compliance": {
-      "functional_requirements": "95%",
-      "non_functional_requirements": "97%", 
->>>>>>> main
       "overall": "98%"
     },
     "production_status": "Ready for production use with advanced filtering capabilities"

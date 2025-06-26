@@ -417,11 +417,15 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.csv_parser.csv_load_failed.connect(self._on_csv_load_failed)
         self.image_handler.image_loaded.connect(self._on_image_loaded)
         self.image_handler.image_load_failed.connect(self._on_image_load_failed)
+        
+        # Selection handling - connect to unified handler
         self.scatter_plot_widget.selection_made.connect(self._on_selection_made)
         
         # Connect expression filter specific signals if available
-        if hasattr(self.scatter_plot_widget, 'expression_selection_made'):
-            self.scatter_plot_widget.expression_selection_made.connect(self._on_expression_selection_made)
+        if hasattr(self.scatter_plot_widget, 'expression_filter_widget'):
+            expression_filter = self.scatter_plot_widget.expression_filter_widget
+            if hasattr(expression_filter, 'selection_requested'):
+                expression_filter.selection_requested.connect(self._on_expression_filter_selection)
         
         self.coordinate_transformer.calibration_updated.connect(self._on_calibration_updated)
         self.selection_manager.selection_added.connect(self._on_selection_added)
@@ -767,33 +771,23 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.log_error(f"CSV loading failed: {error_message}")
     
     def _on_selection_made(self, indices: list) -> None:
-        """Handle cell selection from scatter plot (rectangle or expression)."""
+        """Handle cell selection from scatter plot (rectangle selection only)."""
         if indices:
-            # Determine selection type based on current mode
-            selection_type = getattr(self.scatter_plot_widget, 'current_selection_type', 'rectangle')
-            
-            # Add selection to selection manager
-            label_prefix = "Expression" if selection_type == "expression" else "Rectangle"
+            # This handler only processes rectangle selections from the scatter plot
             selection_id = self.selection_manager.add_selection(
                 cell_indices=indices,
-                label=f"{label_prefix}_{len(self.selection_manager.selections) + 1}"
+                label=f"Rectangle_{len(self.selection_manager.selections) + 1}"
             )
             
             if selection_id:
-                selection_method = "expression filter" if selection_type == "expression" else "rectangle selection"
-                self.update_status(f"Selected {len(indices)} cells using {selection_method}")
+                self.update_status(f"Selected {len(indices)} cells using rectangle selection")
                 self.is_modified = True
                 self.update_window_title()
-                
-                # Log expression details if available
-                if selection_type == "expression" and hasattr(self.scatter_plot_widget, 'get_current_expression'):
-                    expression = self.scatter_plot_widget.get_current_expression()
-                    if expression:
-                        self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
+                self.log_info(f"Rectangle selection: {len(indices)} cells")
         else:
             self.update_status("No cells selected")
     
-    def _on_expression_selection_made(self, indices: list) -> None:
+    def _on_expression_filter_selection(self, indices: list) -> None:
         """Handle cell selection specifically from expression filter."""
         if indices:
             # Add selection to selection manager with expression prefix
@@ -803,10 +797,12 @@ class MainWindow(QMainWindow, LoggerMixin):
             )
             
             if selection_id:
-                # Get expression details if available
+                # Get expression details from the expression filter widget
                 expression = ""
-                if hasattr(self.scatter_plot_widget, 'get_current_expression'):
-                    expression = self.scatter_plot_widget.get_current_expression()
+                if hasattr(self.scatter_plot_widget, 'expression_filter_widget'):
+                    expression_filter = self.scatter_plot_widget.expression_filter_widget
+                    if hasattr(expression_filter, 'get_current_expression'):
+                        expression = expression_filter.get_current_expression()
                 
                 self.update_status(f"Expression filter selected {len(indices)} cells")
                 self.is_modified = True
@@ -818,6 +814,8 @@ class MainWindow(QMainWindow, LoggerMixin):
                     selection.metadata['expression'] = expression
                     selection.metadata['selection_method'] = 'expression_filter'
                     self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
+                else:
+                    self.log_info(f"Expression selection: {len(indices)} cells (no expression details)")
         else:
             self.update_status("No cells selected by expression filter")
     
@@ -926,7 +924,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         calibration_data = {
             'points': [],
             'transformation_matrix': None,
-            'is_calibrated': self.coordinate_transformer.is_calibrated()
+            'is_calibrated': self.coordinate_transformer.is_calibrated
         }
         
         for point in self.coordinate_transformer.calibration_points:
@@ -1050,7 +1048,7 @@ class MainWindow(QMainWindow, LoggerMixin):
                 
                 # Check if we have enough points for calibration
                 if len(self.coordinate_transformer.calibration_points) >= 2:
-                    if self.coordinate_transformer.is_calibrated():
+                    if self.coordinate_transformer.is_calibrated:
                         self.update_status("Coordinate calibration completed successfully!")
                         # Exit calibration mode
                         self.image_handler.set_calibration_mode(False)
