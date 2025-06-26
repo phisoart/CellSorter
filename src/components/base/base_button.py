@@ -13,6 +13,7 @@ from PySide6.QtGui import QIcon
 
 from utils.design_tokens import DesignTokens
 from utils.theme_manager import ThemeManager
+from utils.style_converter import convert_css_to_qt
 
 
 class ButtonVariant(Enum):
@@ -103,6 +104,9 @@ class BaseButton(QPushButton):
         # Get size configuration
         size_config = tokens.BUTTON_SIZES.get(self._size.value, tokens.BUTTON_SIZES['default'])
         
+        # Get theme colors
+        color_vars = self._get_theme_colors()
+        
         # Base styles common to all variants
         base_style = f"""
         QPushButton {{
@@ -111,7 +115,6 @@ class BaseButton(QPushButton):
             font-weight: {tokens.TYPOGRAPHY['font_medium']};
             border-radius: {tokens.BORDER_RADIUS['radius_default']}px;
             min-height: {size_config['height']}px;
-            transition: {tokens.TRANSITIONS['default']};
         }}
         
         QPushButton:focus {{
@@ -121,7 +124,6 @@ class BaseButton(QPushButton):
         
         QPushButton:disabled {{
             opacity: 0.5;
-            cursor: not-allowed;
         }}
         """
         
@@ -197,9 +199,10 @@ class BaseButton(QPushButton):
             """,
         }
         
-        # Apply combined styles
-        style = base_style + variant_styles.get(self._variant, variant_styles[ButtonVariant.DEFAULT])
-        self.setStyleSheet(style)
+        # Combine styles and convert CSS variables to Qt values
+        raw_style = base_style + variant_styles.get(self._variant, variant_styles[ButtonVariant.DEFAULT])
+        qt_style = convert_css_to_qt(raw_style, color_vars)
+        self.setStyleSheet(qt_style)
     
     def set_theme_manager(self, theme_manager: ThemeManager) -> None:
         """
@@ -214,6 +217,44 @@ class BaseButton(QPushButton):
     def _on_theme_changed(self, theme_name: str) -> None:
         """Handle theme change."""
         self._apply_style()
+    
+    def _get_theme_colors(self) -> Dict[str, str]:
+        """
+        Get theme color variables for style conversion.
+        
+        Returns:
+            Dictionary mapping color variable names to their values
+        """
+        if self._theme_manager:
+            # Get colors from theme manager
+            return {
+                'primary': self._theme_manager.get_color('primary'),
+                'primary_foreground': self._theme_manager.get_color('primary_foreground'),
+                'secondary': self._theme_manager.get_color('secondary'),
+                'secondary_foreground': self._theme_manager.get_color('secondary_foreground'),
+                'foreground': self._theme_manager.get_color('foreground'),
+                'accent': self._theme_manager.get_color('accent'),
+                'accent_foreground': self._theme_manager.get_color('accent_foreground'),
+                'destructive': self._theme_manager.get_color('destructive'),
+                'destructive_foreground': self._theme_manager.get_color('destructive_foreground'),
+                'border': self._theme_manager.get_color('border'),
+                'ring': self._theme_manager.get_color('ring'),
+            }
+        else:
+            # Default light theme colors as fallback
+            return {
+                'primary': 'hsl(222.2, 47.4%, 11.2%)',
+                'primary_foreground': 'hsl(210, 40%, 98%)',
+                'secondary': 'hsl(210, 40%, 96%)',
+                'secondary_foreground': 'hsl(222.2, 84%, 4.9%)',
+                'foreground': 'hsl(222.2, 84%, 4.9%)',
+                'accent': 'hsl(210, 40%, 96%)',
+                'accent_foreground': 'hsl(222.2, 84%, 4.9%)',
+                'destructive': 'hsl(0, 84.2%, 60.2%)',
+                'destructive_foreground': 'hsl(210, 40%, 98%)',
+                'border': 'hsl(214.3, 31.8%, 91.4%)',
+                'ring': 'hsl(222.2, 84%, 4.9%)',
+            }
     
     # Properties
     @property

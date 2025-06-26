@@ -4,7 +4,7 @@ Base Input Component
 Modern input field component with validation states following the design system.
 """
 
-from typing import Optional
+from typing import Optional, Dict
 from enum import Enum
 
 from PySide6.QtWidgets import QLineEdit, QWidget
@@ -13,6 +13,7 @@ from PySide6.QtGui import QPalette
 
 from utils.design_tokens import DesignTokens
 from utils.theme_manager import ThemeManager
+from utils.style_converter import convert_css_to_qt
 
 
 class InputState(Enum):
@@ -80,6 +81,9 @@ class BaseInput(QLineEdit):
         """Apply the appropriate style based on state."""
         tokens = DesignTokens()
         
+        # Get theme colors
+        color_vars = self._get_theme_colors()
+        
         # Base styles
         base_style = f"""
         QLineEdit {{
@@ -90,7 +94,6 @@ class BaseInput(QLineEdit):
             border-radius: {tokens.BORDER_RADIUS['radius_default']}px;
             padding: {tokens.SPACING['spacing_2']}px {tokens.SPACING['spacing_3']}px;
             min-height: {tokens.DIMENSIONS['input_height']}px;
-            transition: {tokens.TRANSITIONS['default']};
         }}
         
         QLineEdit:focus {{
@@ -103,7 +106,6 @@ class BaseInput(QLineEdit):
             background-color: var(--muted);
             color: var(--muted-foreground);
             opacity: 0.5;
-            cursor: not-allowed;
         }}
         
         QLineEdit[hasError="true"] {{
@@ -116,7 +118,9 @@ class BaseInput(QLineEdit):
         }}
         """
         
-        self.setStyleSheet(base_style)
+        # Convert CSS variables to Qt values
+        qt_style = convert_css_to_qt(base_style, color_vars)
+        self.setStyleSheet(qt_style)
         
         # Update dynamic properties
         self.setProperty("hasError", self._has_error)
@@ -138,6 +142,32 @@ class BaseInput(QLineEdit):
     def _on_theme_changed(self, theme_name: str) -> None:
         """Handle theme change."""
         self._apply_style()
+    
+    def _get_theme_colors(self) -> Dict[str, str]:
+        """
+        Get theme color variables for style conversion.
+        
+        Returns:
+            Dictionary mapping color variable names to their values
+        """
+        if self._theme_manager:
+            # Get colors from theme manager
+            return {
+                'border': self._theme_manager.get_color('border'),
+                'ring': self._theme_manager.get_color('ring'),
+                'muted': self._theme_manager.get_color('muted'),
+                'muted_foreground': self._theme_manager.get_color('muted_foreground'),
+                'destructive': self._theme_manager.get_color('destructive'),
+            }
+        else:
+            # Default light theme colors as fallback
+            return {
+                'border': 'hsl(214.3, 31.8%, 91.4%)',
+                'ring': 'hsl(222.2, 84%, 4.9%)',
+                'muted': 'hsl(210, 40%, 96%)',
+                'muted_foreground': 'hsl(215.4, 16.3%, 46.9%)',
+                'destructive': 'hsl(0, 84.2%, 60.2%)',
+            }
     
     # State management
     def set_error(self, has_error: bool, error_message: str = "") -> None:

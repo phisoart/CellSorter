@@ -305,10 +305,8 @@ class CellAnalyzer:
 ### Comments
 - Use inline comments sparingly, prefer self-documenting code
 - Add comments for complex algorithms or non-obvious logic
-- Use TODO comments for future improvements
 
 ```python
-# TODO: Implement batch processing for multiple images
 def process_image(self, image: np.ndarray) -> dict:
     # Apply Gaussian blur to reduce noise before detection
     blurred = cv2.GaussianBlur(image, (5, 5), 0)
