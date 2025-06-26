@@ -61,7 +61,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.update_ui_state()
         
         self.log_info("Enhanced calibration wizard dialog initialized")
-    
+        
     def setup_ui(self) -> None:
         """Set up the enhanced wizard UI."""
         self.setWindowTitle("Calibration Wizard - CellSorter")
