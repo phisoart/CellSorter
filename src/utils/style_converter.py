@@ -70,7 +70,7 @@ def hsl_to_hex(hsl_string: str) -> str:
 
 def convert_css_to_qt(css_string: str, color_vars: Dict[str, str]) -> str:
     """
-    Convert CSS with variables to Qt stylesheet.
+    Convert CSS with variables to Qt stylesheet with comprehensive compatibility.
     
     Args:
         css_string: CSS string with var() references
@@ -82,7 +82,7 @@ def convert_css_to_qt(css_string: str, color_vars: Dict[str, str]) -> str:
     # Replace CSS variables with actual values
     qt_style = css_string
     
-    # Replace var(--name) with actual color values
+    # First, replace var(--name) with actual color values
     for var_name, var_value in color_vars.items():
         css_var_name = var_name.replace('_', '-')
         
@@ -90,22 +90,70 @@ def convert_css_to_qt(css_string: str, color_vars: Dict[str, str]) -> str:
         if var_value.startswith('hsl('):
             var_value = hsl_to_hex(var_value)
         
-        # Replace all occurrences
+        # Replace var(--name) format
         qt_style = qt_style.replace(f'var(--{css_var_name})', var_value)
     
-    # Remove any remaining CSS-specific syntax
+    # Also replace CSS custom properties declarations (--name: value;)
+    for var_name, var_value in color_vars.items():
+        css_var_name = var_name.replace('_', '-')
+        if var_value.startswith('hsl('):
+            var_value = hsl_to_hex(var_value)
+        # Remove CSS variable declarations
+        qt_style = re.sub(f'--{css_var_name}:[^;]+;', '', qt_style)
+    
+    # Remove CSS-specific syntax that Qt doesn't support
     qt_style = qt_style.replace(':root', '')
     qt_style = qt_style.replace('[data-theme="dark"]', '')
+    qt_style = qt_style.replace('* {', 'QWidget {')
+    qt_style = qt_style.replace('body {', 'QMainWindow {')
     
-    # Fix pseudo-selectors for Qt
-    qt_style = qt_style.replace(':!disabled', ':enabled')
-    qt_style = qt_style.replace('cursor: pointer', '')  # Qt doesn't support cursor in stylesheets
-    qt_style = qt_style.replace('cursor: not-allowed', '')
+    # Remove @-rules that Qt doesn't support
+    qt_style = re.sub(r'@keyframes[^{]*{[^{}]*(?:{[^{}]*}[^{}]*)*}', '', qt_style)
+    qt_style = re.sub(r'@media[^{]*{[^{}]*(?:{[^{}]*}[^{}]*)*}', '', qt_style)
+    qt_style = re.sub(r'@import[^;]*;', '', qt_style)
     
     # Remove unsupported properties
     qt_style = re.sub(r'transition:[^;]+;', '', qt_style)
-    qt_style = re.sub(r'box-shadow:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'animation:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'transform:[^;]+;', '', qt_style)
     qt_style = re.sub(r'backdrop-filter:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'cursor:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'z-index:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'position:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'overflow:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'clip:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'white-space:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'-webkit-[^:]+:[^;]+;', '', qt_style)
+    qt_style = re.sub(r'-moz-[^:]+:[^;]+;', '', qt_style)
+    
+    # Handle box-shadow (Qt has limited support)
+    qt_style = re.sub(r'box-shadow:\s*0\s+[^;]+;', '', qt_style)
+    
+    # Remove calc() functions
+    qt_style = re.sub(r'calc\([^)]+\)', '8px', qt_style)
+    
+    # Fix pseudo-selectors for Qt
+    qt_style = qt_style.replace(':!disabled', ':enabled')
+    qt_style = qt_style.replace(':focus-visible', ':focus')
+    qt_style = re.sub(r':not\([^)]+\)', '', qt_style)
+    
+    # Convert opacity values in colors
+    qt_style = re.sub(r'hsl\([^)]+\)\s*/\s*[\d.]+', lambda m: m.group(0).split('/')[0], qt_style)
+    qt_style = re.sub(r'rgb\([^)]+\)\s*/\s*[\d.]+', lambda m: m.group(0).split('/')[0], qt_style)
+    
+    # Remove utility classes that Qt doesn't use
+    qt_style = re.sub(r'\.sr-only\s*{[^}]*}', '', qt_style)
+    qt_style = re.sub(r'\.text-[^{]*{[^}]*}', '', qt_style)
+    qt_style = re.sub(r'\.font-[^{]*{[^}]*}', '', qt_style)
+    qt_style = re.sub(r'\.p-[^{]*{[^}]*}', '', qt_style)
+    qt_style = re.sub(r'\.m-[^{]*{[^}]*}', '', qt_style)
+    qt_style = re.sub(r'\.rounded[^{]*{[^}]*}', '', qt_style)
+    qt_style = re.sub(r'\.shadow[^{]*{[^}]*}', '', qt_style)
+    
+    # Clean up empty rules and extra whitespace
+    qt_style = re.sub(r'{[\s]*}', '', qt_style)
+    qt_style = re.sub(r'\n\s*\n+', '\n\n', qt_style)
+    qt_style = re.sub(r'/\*.*?\*/', '', qt_style, flags=re.DOTALL)
     
     return qt_style
 
