@@ -5,6 +5,7 @@ Enhanced Calibration Dialog for CellSorter (TASK-022)
 from typing import Optional, Tuple, Dict, Any
 from enum import Enum
 from pathlib import Path
+from datetime import datetime
 import json
 
 from PySide6.QtWidgets import (
@@ -764,7 +765,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         template_data = {
             'name': template_name,
             'calibration_data': self.coordinate_transformer.export_calibration(),
-            'created_date': str(Path().absolute()),  # Simplified
+            'created_date': datetime.now().isoformat(),
             'description': f"Calibration template: {template_name}"
         }
         
