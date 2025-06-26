@@ -24,7 +24,7 @@ from pages.main_window import MainWindow
 def main() -> None:
     """Main application entry point."""
     # Set up logging
-    setup_logging()
+    setup_logging(console_level=LOG_LEVEL)
     logger = logging.getLogger(__name__)
     logger.info(f"Starting {APP_NAME} v{APP_VERSION}")
 
