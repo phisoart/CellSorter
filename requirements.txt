@@ -15,3 +15,6 @@ scipy>=1.11.0
 
 # Material Design Theme
 qt-material>=2.14
+
+# Version Management
+packaging>=23.0
