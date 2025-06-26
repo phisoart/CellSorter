@@ -422,7 +422,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.scatter_plot_widget.selection_made.connect(self._on_selection_made)
         
         # Connect expression filter specific signals if available
-        if hasattr(self.scatter_plot_widget, 'expression_filter_widget'):
+        if hasattr(self.scatter_plot_widget, 'expression_filter_widget') and self.scatter_plot_widget.expression_filter_widget:
             expression_filter = self.scatter_plot_widget.expression_filter_widget
             if hasattr(expression_filter, 'selection_requested'):
                 expression_filter.selection_requested.connect(self._on_expression_filter_selection)
@@ -740,7 +740,7 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def _on_csv_loaded(self, file_path: str) -> None:
         """Handle successful CSV loading."""
-        # Load data into scatter plot widget
+        # Load data into scatter plot widget (includes expression filter)
         if self.csv_parser.data is not None:
             self.scatter_plot_widget.load_data(self.csv_parser.data)
             

@@ -263,6 +263,9 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         self.dataframe: Optional[pd.DataFrame] = None
         self.numeric_columns: List[str] = []
         
+        # Expression filter widget
+        self.expression_filter_widget: Optional = None
+        
         self.setup_ui()
         self.connect_signals()
         
@@ -306,17 +309,32 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         controls_layout.addWidget(self.clear_button)
         controls_layout.addStretch()
         
+        # Main content area with tabs
+        self.tab_widget = QTabWidget()
+        
+        # Plot tab
+        plot_tab = QWidget()
+        plot_layout = QVBoxLayout(plot_tab)
+        
         # Canvas
         self.canvas = ScatterPlotCanvas(self)
+        plot_layout.addWidget(self.canvas)
         
         # Status label
         self.status_label = QLabel("No data loaded")
         self.status_label.setStyleSheet("color: #6c757d; font-style: italic;")
+        plot_layout.addWidget(self.status_label)
+        
+        self.tab_widget.addTab(plot_tab, "Scatter Plot")
+        
+        # Expression filter tab (if available)
+        if EXPRESSION_FILTER_AVAILABLE:
+            self.expression_filter_widget = ExpressionFilterWidget()
+            self.tab_widget.addTab(self.expression_filter_widget, "Expression Filter")
         
         # Add to main layout
         layout.addLayout(controls_layout)
-        layout.addWidget(self.canvas)
-        layout.addWidget(self.status_label)
+        layout.addWidget(self.tab_widget)
     
     def connect_signals(self) -> None:
         """Connect widget signals."""
@@ -324,6 +342,10 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         self.select_button.toggled.connect(self.toggle_selection)
         self.clear_button.clicked.connect(self.clear_selection)
         self.canvas.selection_changed.connect(self._on_selection_changed)
+        
+        # Connect expression filter signals if available
+        if self.expression_filter_widget:
+            self.expression_filter_widget.selection_requested.connect(self._on_expression_selection)
     
     @error_handler("Loading data for scatter plot")
     def load_data(self, dataframe: pd.DataFrame) -> None:
@@ -356,6 +378,10 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
             self.status_label.setText("No numeric columns found for plotting")
         
         self.log_info(f"Loaded data: {len(dataframe):,} rows, {len(self.numeric_columns)} numeric columns")
+        
+        # Load data into expression filter if available
+        if self.expression_filter_widget:
+            self.expression_filter_widget.load_data(dataframe)
     
     @error_handler("Creating scatter plot")
     def create_plot(self) -> None:
@@ -475,3 +501,31 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
             True if successful, False otherwise
         """
         return self.canvas.export_plot(file_path)
+    
+    def _on_expression_selection(self, indices: List[int]) -> None:
+        """
+        Handle selection from expression filter.
+        
+        Args:
+            indices: Selected data point indices
+        """
+        # Highlight points on canvas
+        if indices:
+            self.canvas.highlight_points(indices, self.canvas.expression_color)
+            self.status_label.setText(f"Expression filter selected {len(indices):,} points")
+        else:
+            self.canvas.clear_selection()
+            self.status_label.setText("No points matched expression filter")
+        
+        self.log_info(f"Expression filter selection: {len(indices)} points")
+    
+    def get_current_expression(self) -> str:
+        """
+        Get current expression from expression filter.
+        
+        Returns:
+            Current expression string or empty string
+        """
+        if self.expression_filter_widget:
+            return self.expression_filter_widget.get_current_expression()
+        return ""
