@@ -4,13 +4,14 @@ Base Card Component
 Container component for grouped content following the design system.
 """
 
-from typing import Optional
+from typing import Optional, Dict
 
 from PySide6.QtWidgets import QFrame, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PySide6.QtCore import Qt, Signal
 
 from utils.design_tokens import DesignTokens
 from utils.theme_manager import ThemeManager
+from utils.style_converter import convert_css_to_qt
 
 
 class CardHeader(QWidget):
@@ -39,7 +40,8 @@ class CardHeader(QWidget):
         layout.addStretch()
         
         # Style
-        self.setStyleSheet(f"""
+        color_vars = self._get_default_colors()
+        raw_style = f"""
         CardHeader {{
             border-bottom: 1px solid var(--border);
         }}
@@ -50,7 +52,9 @@ class CardHeader(QWidget):
             font-weight: {tokens.TYPOGRAPHY['font_semibold']};
             color: var(--foreground);
         }}
-        """)
+        """
+        qt_style = convert_css_to_qt(raw_style, color_vars)
+        self.setStyleSheet(qt_style)
     
     def set_title(self, title: str) -> None:
         """Update the header title."""
@@ -97,12 +101,15 @@ class CardFooter(QWidget):
         )
         
         # Style
-        self.setStyleSheet("""
+        color_vars = self._get_default_colors()
+        raw_style = """
         CardFooter {
             border-top: 1px solid var(--border);
             background-color: var(--muted);
         }
-        """)
+        """
+        qt_style = convert_css_to_qt(raw_style, color_vars)
+        self.setStyleSheet(qt_style)
 
 
 class BaseCard(QFrame):
@@ -169,22 +176,25 @@ class BaseCard(QFrame):
         """Apply card styling."""
         tokens = DesignTokens()
         
-        style = f"""
+        # Get theme colors
+        color_vars = self._get_theme_colors()
+        
+        raw_style = f"""
         QFrame[role="card"] {{
             background-color: var(--card);
             color: var(--card-foreground);
             border: 1px solid var(--border);
             border-radius: {tokens.BORDER_RADIUS['radius_lg']}px;
-            {tokens.SHADOWS['shadow']};
         }}
         
         QFrame[role="card"][clickable="true"]:hover {{
-            {tokens.SHADOWS['shadow_md']};
-            cursor: pointer;
+            border-color: var(--accent);
         }}
         """
         
-        self.setStyleSheet(style)
+        # Convert CSS variables to Qt values
+        qt_style = convert_css_to_qt(raw_style, color_vars)
+        self.setStyleSheet(qt_style)
     
     def set_theme_manager(self, theme_manager: ThemeManager) -> None:
         """
@@ -199,6 +209,42 @@ class BaseCard(QFrame):
     def _on_theme_changed(self, theme_name: str) -> None:
         """Handle theme change."""
         self._apply_style()
+    
+    def _get_theme_colors(self) -> Dict[str, str]:
+        """
+        Get theme color variables for style conversion.
+        
+        Returns:
+            Dictionary mapping color variable names to their values
+        """
+        if self._theme_manager:
+            # Get colors from theme manager
+            return {
+                'card': self._theme_manager.get_color('card'),
+                'card_foreground': self._theme_manager.get_color('card_foreground'),
+                'border': self._theme_manager.get_color('border'),
+                'accent': self._theme_manager.get_color('accent'),
+                'foreground': self._theme_manager.get_color('foreground'),
+                'muted': self._theme_manager.get_color('muted'),
+            }
+        else:
+            return self._get_default_colors()
+    
+    def _get_default_colors(self) -> Dict[str, str]:
+        """
+        Get default light theme colors as fallback.
+        
+        Returns:
+            Dictionary mapping color variable names to their values
+        """
+        return {
+            'card': 'hsl(0, 0%, 100%)',
+            'card_foreground': 'hsl(222.2, 84%, 4.9%)',
+            'border': 'hsl(214.3, 31.8%, 91.4%)',
+            'accent': 'hsl(210, 40%, 96%)',
+            'foreground': 'hsl(222.2, 84%, 4.9%)',
+            'muted': 'hsl(210, 40%, 96%)',
+        }
     
     # Header management
     def set_header(self, title: str) -> CardHeader:
