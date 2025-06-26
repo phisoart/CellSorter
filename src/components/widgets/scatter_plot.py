@@ -2,14 +2,17 @@
 CellSorter Scatter Plot Widget
 
 Interactive matplotlib scatter plot embedded in Qt widget for cell selection
-and analysis with rectangle selection tool.
+and analysis with rectangle selection tool and expression filtering.
 """
 
 from typing import Optional, List, Tuple, Dict, Any, Callable
 import numpy as np
 import pandas as pd
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QLabel
+from PySide6.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QLabel,
+    QTabWidget, QSplitter
+)
 from PySide6.QtCore import Signal, QObject
 
 import matplotlib
@@ -21,6 +24,13 @@ import matplotlib.pyplot as plt
 
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
+
+# Import expression filter components
+try:
+    from components.widgets.expression_filter import ExpressionFilterWidget
+    EXPRESSION_FILTER_AVAILABLE = True
+except ImportError:
+    EXPRESSION_FILTER_AVAILABLE = False
 
 
 class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
@@ -52,6 +62,7 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.theme_manager = None  # Will be injected
         self.default_color = '#1f77b4'  # matplotlib default blue
         self.selected_color = '#ff7f0e'  # orange for selected points
+        self.expression_color = '#2ca02c'  # green for expression selection
         self.point_size = 20
         self.point_alpha = 0.6
         
