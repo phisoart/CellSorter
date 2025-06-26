@@ -7,11 +7,12 @@ status bar, and dockable panels for the CellSorter application.
 
 from typing import Optional, Dict, Any
 from pathlib import Path
+from datetime import datetime
 
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
     QMenuBar, QToolBar, QStatusBar, QDockWidget, QLabel, QPushButton,
-    QFileDialog, QMessageBox, QApplication, QFrame, QSizePolicy
+    QFileDialog, QMessageBox, QApplication, QFrame, QSizePolicy, QDialog
 )
 from PySide6.QtCore import Qt, Signal, QTimer, QSettings
 from PySide6.QtGui import QAction, QKeySequence, QIcon
@@ -23,6 +24,17 @@ from config.settings import (
 )
 from utils.error_handler import ErrorHandler, error_handler
 from utils.logging_config import LoggerMixin
+from models.image_handler import ImageHandler
+from models.csv_parser import CSVParser
+from models.coordinate_transformer import CoordinateTransformer
+from models.selection_manager import SelectionManager
+from models.extractor import Extractor
+from models.session_manager import SessionManager
+from components.widgets.scatter_plot import ScatterPlotWidget
+from components.widgets.selection_panel import SelectionPanel
+from components.dialogs.calibration_dialog import CalibrationDialog
+from components.dialogs.export_dialog import ExportDialog
+from components.dialogs.batch_process_dialog import BatchProcessDialog
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -53,6 +65,16 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.current_image_path: Optional[str] = None
         self.current_csv_path: Optional[str] = None
         self.is_modified: bool = False
+        
+        # Initialize core components
+        self.image_handler = ImageHandler(self)
+        self.csv_parser = CSVParser(self)
+        self.coordinate_transformer = CoordinateTransformer(self)
+        self.selection_manager = SelectionManager(self)
+        self.extractor = Extractor(self)
+        self.session_manager = SessionManager(self)
+        self.scatter_plot_widget = ScatterPlotWidget(self)
+        self.selection_panel = SelectionPanel(self)
         
         # UI setup
         self.setup_ui()
@@ -86,14 +108,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.main_splitter = QSplitter(Qt.Horizontal)
         main_layout.addWidget(self.main_splitter)
         
-        # Create placeholder panels
-        self.image_panel = self.create_placeholder_panel("Image Panel", "📷")
-        self.plot_panel = self.create_placeholder_panel("Scatter Plot Panel", "📊") 
-        self.selection_panel = self.create_placeholder_panel("Selection Panel", "📋")
-        
-        # Add panels to splitter
-        self.main_splitter.addWidget(self.image_panel)
-        self.main_splitter.addWidget(self.plot_panel)
+        # Add real components to splitter
+        self.main_splitter.addWidget(self.image_handler)
+        self.main_splitter.addWidget(self.scatter_plot_widget)
         self.main_splitter.addWidget(self.selection_panel)
         
         # Set initial panel sizes
@@ -217,6 +234,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_clear_selections.setShortcut(QKeySequence("Ctrl+Shift+C"))
         self.action_clear_selections.setEnabled(False)
         
+        # Analysis actions
+        self.action_batch_process = QAction("&Batch Process...", self)
+        self.action_batch_process.setShortcut(QKeySequence("Ctrl+B"))
+        self.action_batch_process.setStatusTip("Process multiple image/CSV file pairs")
+        
         # Help actions
         self.action_about = QAction("&About CellSorter", self)
         self.action_about.setStatusTip("About this application")
@@ -255,10 +277,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
         
-        # Analysis menu (placeholder)
+        # Analysis menu
         analysis_menu = menubar.addMenu("&Analysis")
         analysis_menu.addAction("Generate Statistics...")
-        analysis_menu.addAction("Batch Process...")
+        analysis_menu.addAction(self.action_batch_process)
         
         # Help menu
         help_menu = menubar.addMenu("&Help")
@@ -359,11 +381,31 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
         
+        # Analysis actions
+        self.action_batch_process.triggered.connect(self.batch_process)
+        
         # Help actions
         self.action_about.triggered.connect(self.show_about)
         
         # Theme button
         self.theme_button.clicked.connect(self.toggle_theme)
+        
+        # Component connections
+        self.csv_parser.csv_loaded.connect(self._on_csv_loaded)
+        self.csv_parser.csv_load_failed.connect(self._on_csv_load_failed)
+        self.image_handler.image_loaded.connect(self._on_image_loaded)
+        self.image_handler.image_load_failed.connect(self._on_image_load_failed)
+        self.scatter_plot_widget.selection_made.connect(self._on_selection_made)
+        self.coordinate_transformer.calibration_updated.connect(self._on_calibration_updated)
+        self.selection_manager.selection_added.connect(self._on_selection_added)
+        self.selection_manager.selection_updated.connect(self._on_selection_updated)
+        self.selection_manager.selection_removed.connect(self._on_selection_removed)
+        self.selection_panel.selection_deleted.connect(self._on_panel_selection_deleted)
+        self.selection_panel.export_requested.connect(self.export_protocol)
+        
+        # Image handler connections
+        self.image_handler.coordinates_changed.connect(self.update_coordinates)
+        self.image_handler.calibration_point_clicked.connect(self._on_calibration_point_clicked)
     
     @error_handler("Opening image file")
     def open_image_file(self) -> None:
@@ -377,11 +419,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         if file_path:
             self.current_image_path = file_path
-            self.image_loaded.emit(file_path)
-            self.update_status(f"Loaded image: {Path(file_path).name}")
+            self.image_handler.load_image(file_path)  # Use actual image handler
+            self.update_status(f"Loading image: {Path(file_path).name}")
             self.update_window_title()
-            self.enable_image_actions()
-            self.log_info(f"Image loaded: {file_path}")
+            self.log_info(f"Loading image: {file_path}")
     
     @error_handler("Opening CSV file")
     def open_csv_file(self) -> None:
@@ -395,11 +436,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         if file_path:
             self.current_csv_path = file_path
-            self.csv_loaded.emit(file_path)
-            self.update_status(f"Loaded CSV: {Path(file_path).name}")
+            self.csv_parser.load_csv(file_path)  # Use actual CSV parser
+            self.update_status(f"Loading CSV: {Path(file_path).name}")
             self.update_window_title()
-            self.enable_analysis_actions()
-            self.log_info(f"CSV loaded: {file_path}")
+            self.log_info(f"Loading CSV: {file_path}")
     
     @error_handler("Saving session")
     def save_session(self) -> None:
@@ -412,10 +452,18 @@ class MainWindow(QMainWindow, LoggerMixin):
         )
         
         if file_path:
-            self.session_saved.emit(file_path)
-            self.update_status(f"Session saved: {Path(file_path).name}")
-            self.is_modified = False
-            self.log_info(f"Session saved: {file_path}")
+            # Collect current session data
+            session_data = self._collect_session_data()
+            
+            # Save using session manager
+            if self.session_manager.save_session(file_path, session_data):
+                self.session_saved.emit(file_path)
+                self.update_status(f"Session saved: {Path(file_path).name}")
+                self.is_modified = False
+                self.log_info(f"Session saved: {file_path}")
+            else:
+                QMessageBox.warning(self, "Save Failed", "Failed to save session file.")
+                self.log_error(f"Failed to save session: {file_path}")
     
     @error_handler("Loading session")
     def load_session(self) -> None:
@@ -428,25 +476,42 @@ class MainWindow(QMainWindow, LoggerMixin):
         )
         
         if file_path:
-            self.session_loaded.emit(file_path)
-            self.update_status(f"Session loaded: {Path(file_path).name}")
-            self.update_window_title()
-            self.log_info(f"Session loaded: {file_path}")
+            # Load using session manager
+            session_data = self.session_manager.load_session(file_path)
+            
+            if session_data:
+                # Restore session data
+                self._restore_session_data(session_data)
+                self.session_loaded.emit(file_path)
+                self.update_status(f"Session loaded: {Path(file_path).name}")
+                self.update_window_title()
+                self.log_info(f"Session loaded: {file_path}")
+            else:
+                QMessageBox.warning(self, "Load Failed", "Failed to load session file.")
+                self.log_error(f"Failed to load session: {file_path}")
     
-    @error_handler("Exporting protocol")
+    @error_handler("Exporting analysis results")
     def export_protocol(self) -> None:
-        """Export .cxprotocol file for CosmoSort."""
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Export Protocol",
-            "",
-            "CosmoSort Protocol (*.cxprotocol)"
-        )
+        """Export analysis results with comprehensive options."""
+        if not self.current_csv_path and not self.current_image_path:
+            QMessageBox.warning(self, "No Data", "Please load data before exporting.")
+            return
         
-        if file_path:
+        # Show export dialog
+        export_dialog = ExportDialog(self)
+        if export_dialog.exec() == QDialog.Accepted:
             self.export_requested.emit()
-            self.update_status(f"Protocol exported: {Path(file_path).name}")
-            self.log_info(f"Protocol exported: {file_path}")
+            self.update_status("Export completed successfully")
+            self.log_info("Analysis results exported")
+    
+    @error_handler("Starting batch processing")
+    def batch_process(self) -> None:
+        """Open batch processing dialog for multiple file pairs."""
+        # Show batch processing dialog
+        batch_dialog = BatchProcessDialog(self)
+        if batch_dialog.exec() == QDialog.Accepted:
+            self.update_status("Batch processing completed")
+            self.log_info("Batch processing completed")
     
     def undo(self) -> None:
         """Undo last action."""
@@ -475,7 +540,22 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def calibrate_coordinates(self) -> None:
         """Start coordinate calibration process."""
-        self.update_status("Coordinate calibration mode activated")
+        if not self.current_image_path:
+            QMessageBox.warning(self, "No Image", "Please load an image first.")
+            return
+        
+        # Toggle calibration mode
+        current_mode = getattr(self.image_handler, 'calibration_mode', False)
+        new_mode = not current_mode
+        
+        self.image_handler.set_calibration_mode(new_mode)
+        
+        if new_mode:
+            self.update_status("Calibration mode: Click on reference points on the image")
+            self.action_calibrate.setText("Exit &Calibration")
+        else:
+            self.update_status("Calibration mode disabled")
+            self.action_calibrate.setText("&Calibrate Coordinates")
     
     def clear_selections(self) -> None:
         """Clear all cell selections."""
@@ -614,3 +694,309 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Accept close event
         self.log_info("CellSorter application closing")
         event.accept()
+    
+    # Component callback methods
+    def _on_image_loaded(self, file_path: str) -> None:
+        """Handle successful image loading."""
+        self.image_loaded.emit(file_path)
+        self.update_status(f"Image loaded: {Path(file_path).name}")
+        self.enable_image_actions()
+        self.log_info(f"Image successfully loaded: {file_path}")
+    
+    def _on_image_load_failed(self, error_message: str) -> None:
+        """Handle failed image loading."""
+        self.update_status(f"Image loading failed: {error_message}")
+        self.log_error(f"Image loading failed: {error_message}")
+    
+    def _on_csv_loaded(self, file_path: str) -> None:
+        """Handle successful CSV loading."""
+        # Load data into scatter plot widget
+        if self.csv_parser.data is not None:
+            self.scatter_plot_widget.load_data(self.csv_parser.data)
+            
+            # Extract bounding boxes for cell highlighting
+            bounding_box_data = self.csv_parser.get_bounding_box_data()
+            if bounding_box_data is not None:
+                bounding_boxes = []
+                for _, row in bounding_box_data.iterrows():
+                    bbox = (
+                        int(row['AreaShape_BoundingBoxMinimum_X']),
+                        int(row['AreaShape_BoundingBoxMinimum_Y']),
+                        int(row['AreaShape_BoundingBoxMaximum_X']),
+                        int(row['AreaShape_BoundingBoxMaximum_Y'])
+                    )
+                    bounding_boxes.append(bbox)
+                
+                self.image_handler.set_bounding_boxes(bounding_boxes)
+                self.log_info(f"Set {len(bounding_boxes)} bounding boxes for cell highlighting")
+        
+        self.csv_loaded.emit(file_path)
+        self.update_status(f"CSV loaded: {Path(file_path).name}")
+        self.enable_analysis_actions()
+        self.log_info(f"CSV successfully loaded: {file_path}")
+    
+    def _on_csv_load_failed(self, error_message: str) -> None:
+        """Handle failed CSV loading."""
+        self.update_status(f"CSV loading failed: {error_message}")
+        self.log_error(f"CSV loading failed: {error_message}")
+    
+    def _on_selection_made(self, indices: list) -> None:
+        """Handle cell selection from scatter plot."""
+        if indices:
+            # Add selection to selection manager
+            selection_id = self.selection_manager.add_selection(
+                cell_indices=indices,
+                label=f"Selection_{len(self.selection_manager.selections) + 1}"
+            )
+            
+            if selection_id:
+                self.update_status(f"Selected {len(indices)} cells")
+                self.is_modified = True
+                self.update_window_title()
+        else:
+            self.update_status("No cells selected")
+    
+    def _on_calibration_updated(self, is_valid: bool) -> None:
+        """Handle calibration update."""
+        if is_valid:
+            self.update_status("Coordinate calibration updated")
+        else:
+            self.update_status("Calibration cleared")
+        
+        self.is_modified = True
+        self.update_window_title()
+    
+    def _on_selection_added(self, selection_id: str) -> None:
+        """Handle new selection added."""
+        selection = self.selection_manager.get_selection(selection_id)
+        if selection:
+            # Highlight cells on image
+            self.image_handler.highlight_cells(
+                selection_id, 
+                selection.cell_indices, 
+                selection.color,
+                alpha=0.4
+            )
+            
+            # Update selection panel display
+            selection_data = {
+                'id': selection.id,
+                'label': selection.label,
+                'color': selection.color,
+                'well_position': selection.well_position,
+                'cell_indices': selection.cell_indices,
+                'enabled': selection.status.value == 'active'
+            }
+            self.selection_panel.add_selection(selection_data)
+            
+            self.update_status(f"Added selection: {selection.label}")
+            self.is_modified = True
+            self.update_window_title()
+    
+    def _on_selection_updated(self, selection_id: str) -> None:
+        """Handle selection update."""
+        selection = self.selection_manager.get_selection(selection_id)
+        if selection:
+            # Update selection panel
+            selection_data = {
+                'id': selection.id,
+                'label': selection.label,
+                'color': selection.color,
+                'well_position': selection.well_position,
+                'cell_indices': selection.cell_indices,
+                'enabled': selection.status.value == 'active'
+            }
+            self.selection_panel.update_selection(selection_id, selection_data)
+            
+            # Update image highlights
+            self.image_handler.highlight_cells(
+                selection_id, 
+                selection.cell_indices, 
+                selection.color,
+                alpha=0.4
+            )
+            
+            self.is_modified = True
+            self.update_window_title()
+    
+    def _on_selection_removed(self, selection_id: str) -> None:
+        """Handle selection removal."""
+        # Remove image highlights
+        self.image_handler.remove_cell_highlights(selection_id)
+        
+        self.is_modified = True
+        self.update_window_title()
+    
+    def _on_panel_selection_deleted(self, selection_id: str) -> None:
+        """Handle selection deletion from panel."""
+        # Remove from selection manager
+        self.selection_manager.remove_selection(selection_id)
+        
+        # Remove image highlights
+        self.image_handler.remove_cell_highlights(selection_id)
+    
+    def _collect_session_data(self) -> Dict[str, Any]:
+        """
+        Collect current session data for saving.
+        
+        Returns:
+            Session data dictionary
+        """
+        # Get current selections
+        selections_data = []
+        for selection in self.selection_manager.get_all_selections():
+            selection_data = {
+                'id': selection.id,
+                'label': selection.label,
+                'color': selection.color,
+                'cell_indices': selection.cell_indices,
+                'well_position': selection.well_position,
+                'status': selection.status.value,
+                'created_at': datetime.fromtimestamp(selection.created_timestamp).isoformat(),
+                'metadata': selection.metadata
+            }
+            selections_data.append(selection_data)
+        
+        # Get calibration data
+        calibration_data = {
+            'points': [],
+            'transformation_matrix': None,
+            'is_calibrated': self.coordinate_transformer.is_calibrated()
+        }
+        
+        for point in self.coordinate_transformer.calibration_points:
+            point_data = {
+                'pixel_x': point.pixel_x,
+                'pixel_y': point.pixel_y,
+                'stage_x': point.stage_x,
+                'stage_y': point.stage_y,
+                'label': point.label
+            }
+            calibration_data['points'].append(point_data)
+        
+        if self.coordinate_transformer.transform_matrix is not None:
+            calibration_data['transformation_matrix'] = self.coordinate_transformer.transform_matrix.tolist()
+        
+        # Get well assignments
+        well_assignments = {}
+        for selection in self.selection_manager.get_all_selections():
+            if selection.well_position:
+                well_assignments[selection.well_position] = {
+                    'selection_id': selection.id,
+                    'label': selection.label,
+                    'color': selection.color
+                }
+        
+        # Create session data
+        session_data = self.session_manager.create_new_session()
+        session_data['data'].update({
+            'image_file': self.current_image_path,
+            'csv_file': self.current_csv_path,
+            'calibration': calibration_data,
+            'selections': selections_data,
+            'well_assignments': well_assignments,
+            'settings': {
+                'zoom_level': getattr(self.image_handler, 'zoom_level', 1.0),
+                'show_overlays': getattr(self.image_handler, 'show_overlays', True),
+                'overlay_alpha': 0.5
+            }
+        })
+        
+        return session_data
+    
+    def _restore_session_data(self, session_data: Dict[str, Any]) -> None:
+        """
+        Restore session data after loading.
+        
+        Args:
+            session_data: Session data to restore
+        """
+        data = session_data.get('data', {})
+        
+        # Clear current state
+        self.selection_manager.clear_all_selections()
+        self.coordinate_transformer.clear_calibration()
+        self.image_handler.clear_all_cell_highlights()
+        
+        # Restore files
+        image_file = data.get('image_file')
+        csv_file = data.get('csv_file')
+        
+        if image_file and Path(image_file).exists():
+            self.current_image_path = image_file
+            self.image_handler.load_image(image_file)
+        
+        if csv_file and Path(csv_file).exists():
+            self.current_csv_path = csv_file
+            self.csv_parser.load_csv(csv_file)
+        
+        # Restore calibration
+        calibration_data = data.get('calibration', {})
+        for point_data in calibration_data.get('points', []):
+            self.coordinate_transformer.add_calibration_point(
+                point_data['pixel_x'],
+                point_data['pixel_y'],
+                point_data['stage_x'],
+                point_data['stage_y'],
+                point_data['label']
+            )
+        
+        # Restore selections
+        for selection_data in data.get('selections', []):
+            selection_id = self.selection_manager.add_selection(
+                cell_indices=selection_data['cell_indices'],
+                color=selection_data.get('color'),
+                label=selection_data['label']
+            )
+            
+            # Restore well assignment
+            well_position = selection_data.get('well_position')
+            if well_position and selection_id:
+                selection = self.selection_manager.get_selection(selection_id)
+                if selection:
+                    selection.well_position = well_position
+        
+        # Restore settings
+        settings = data.get('settings', {})
+        if hasattr(self.image_handler, 'zoom_level'):
+            self.image_handler.zoom_level = settings.get('zoom_level', 1.0)
+        if hasattr(self.image_handler, 'show_overlays'):
+            self.image_handler.show_overlays = settings.get('show_overlays', True)
+        
+        self.is_modified = False
+        self.log_info("Session data restored successfully")
+    
+    def _on_calibration_point_clicked(self, image_x: int, image_y: int, point_label: str) -> None:
+        """Handle calibration point clicked on image."""
+        # Show dialog to enter stage coordinates
+        dialog = CalibrationDialog(image_x, image_y, point_label, self)
+        
+        if dialog.exec() == QDialog.Accepted:
+            stage_x, stage_y = dialog.get_stage_coordinates()
+            
+            # Add calibration point to coordinate transformer
+            success = self.coordinate_transformer.add_calibration_point(
+                image_x, image_y, stage_x, stage_y, point_label
+            )
+            
+            if success:
+                self.update_status(f"Added calibration point: {point_label} "
+                                 f"({image_x}, {image_y}) → ({stage_x:.3f}, {stage_y:.3f})")
+                
+                # Check if we have enough points for calibration
+                if len(self.coordinate_transformer.calibration_points) >= 2:
+                    if self.coordinate_transformer.is_calibrated():
+                        self.update_status("Coordinate calibration completed successfully!")
+                        # Exit calibration mode
+                        self.image_handler.set_calibration_mode(False)
+                        self.action_calibrate.setText("&Calibrate Coordinates")
+                    else:
+                        self.update_status("Calibration points too close. Please select points further apart.")
+            else:
+                self.update_status("Failed to add calibration point")
+        else:
+            # Remove the point from image handler if dialog was cancelled
+            if hasattr(self.image_handler, 'calibration_points'):
+                if self.image_handler.calibration_points:
+                    self.image_handler.calibration_points.pop()
+                    self.image_handler._update_display()

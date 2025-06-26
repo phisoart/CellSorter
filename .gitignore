@@ -253,4 +253,10 @@ cache/
 
 # Temporary files
 temp/
-tmp/ 
+tmp/
+
+# CellSorter specific temporary files
+taskmaster_*.png
+taskmaster_*.md
+generate_progress_chart.py
+REQUIREMENTS_COMPLIANCE_REPORT_UPDATED.md 
