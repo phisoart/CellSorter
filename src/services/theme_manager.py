@@ -5,12 +5,25 @@ Manages theme switching between custom shadcn/ui inspired themes and qt-material
 Based on the design system specifications in docs/design/.
 """
 
+import platform
 from typing import Optional, Dict, Any
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QObject, Signal, QSettings
-from PySide6.QtGui import QPalette, QColor
+from pathlib import Path
+
+try:
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtCore import QObject, Signal, QSettings
+    from PySide6.QtGui import QPalette, QColor
+except ImportError:
+    # Fallback for development environment
+    QApplication = object
+    QObject = object
+    Signal = lambda x: lambda: None
+    QSettings = object
+    QPalette = object
+    QColor = object
 
 from utils.logging_config import LoggerMixin
+from utils.style_converter import convert_css_to_qt
 
 
 class ThemeManager(QObject, LoggerMixin):
@@ -117,12 +130,37 @@ class ThemeManager(QObject, LoggerMixin):
     
     def apply_custom_theme(self, theme_name: str) -> None:
         """Apply custom shadcn/ui inspired theme."""
-        colors = self.COLORS_LIGHT if theme_name == "light" else self.COLORS_DARK
-        
-        # Generate stylesheet
-        stylesheet = self._generate_stylesheet(colors)
-        self.app.setStyleSheet(stylesheet)
-        
+        try:
+            colors = self.COLORS_LIGHT if theme_name == "light" else self.COLORS_DARK
+            
+            # Generate stylesheet
+            stylesheet = self._generate_stylesheet(colors)
+            
+            # Log stylesheet length for debugging
+            self.log_info(f"Generated stylesheet length: {len(stylesheet)} characters")
+            
+            # Apply to application
+            self.app.setStyleSheet(stylesheet)
+            
+            self.log_info(f"Successfully applied custom theme: {theme_name}")
+            
+        except Exception as e:
+            self.log_error(f"Failed to apply custom theme {theme_name}: {e}")
+            # Try fallback
+            try:
+                colors = self.COLORS_LIGHT if theme_name == "light" else self.COLORS_DARK
+                hex_colors = {}
+                for key, hsl in colors.items():
+                    qcolor = self._hsl_to_qcolor(hsl)
+                    hex_colors[key] = qcolor.name()
+                fallback_stylesheet = self._generate_fallback_stylesheet(hex_colors)
+                self.app.setStyleSheet(fallback_stylesheet)
+                self.log_info(f"Applied fallback stylesheet for theme: {theme_name}")
+            except Exception as fallback_error:
+                self.log_error(f"Even fallback failed: {fallback_error}")
+                # Clear stylesheet to avoid parsing errors
+                self.app.setStyleSheet("")
+    
     def apply_qt_material_theme(self, theme_name: str) -> None:
         """Apply qt-material theme."""
         try:
@@ -168,52 +206,171 @@ class ThemeManager(QObject, LoggerMixin):
             qcolor = self._hsl_to_qcolor(hsl)
             hex_colors[key] = qcolor.name()
         
-        # Load the CSS template from design specs
-        from pathlib import Path
-        css_file = Path(__file__).parent.parent.parent / "docs" / "design" / "style.css"
+        # For now, use the fallback stylesheet which is guaranteed to work
+        # Later, we can implement a proper CSS parser when needed
+        self.log_info("Using direct Qt stylesheet generation for compatibility")
+        return self._generate_fallback_stylesheet(hex_colors)
+    
+    def _generate_fallback_stylesheet(self, hex_colors: Dict[str, str]) -> str:
+        """Generate fallback stylesheet when CSS file is not available."""
+        # Platform-specific font families
+        if platform.system() == "Darwin":  # macOS
+            font_family = '"SF Pro Text", "Helvetica Neue", system-ui, sans-serif'
+        elif platform.system() == "Windows":
+            font_family = '"Segoe UI", "Microsoft YaHei", system-ui, sans-serif'
+        else:  # Linux and others
+            font_family = '"Ubuntu", "Roboto", system-ui, sans-serif'
+            
+        return f"""
+        /* CellSorter Fallback Stylesheet - Platform: {platform.system()} */
+        QMainWindow {{
+            background-color: {hex_colors.get('background', '#ffffff')};
+            color: {hex_colors.get('foreground', '#000000')};
+            font-family: {font_family};
+        }}
         
-        if css_file.exists():
-            with open(css_file, 'r') as f:
-                stylesheet = f.read()
-            
-            # Replace CSS variables with actual colors
-            for key, hex_color in hex_colors.items():
-                stylesheet = stylesheet.replace(f'var(--{key.replace("_", "-")})', hex_color)
-            
-            return stylesheet
-        else:
-            # Fallback minimal stylesheet
-            return f"""
-            QMainWindow {{
-                background-color: {hex_colors['background']};
-                color: {hex_colors['foreground']};
-            }}
-            
-            QPushButton {{
-                background-color: {hex_colors['primary']};
-                color: {hex_colors['primary_foreground']};
-                border: none;
-                border-radius: 4px;
-                padding: 8px 16px;
-                font-weight: 500;
-            }}
-            
-            QPushButton:hover {{
-                background-color: {hex_colors['primary']};
-                opacity: 0.9;
-            }}
-            
-            QLineEdit, QTextEdit {{
-                background-color: transparent;
-                border: 1px solid {hex_colors['border']};
-                border-radius: 4px;
-                padding: 8px 12px;
-            }}
-            
-            QLineEdit:focus, QTextEdit:focus {{
-                border-color: {hex_colors['ring']};
-            }}
-            """
+        /* Menu Bar */
+        QMenuBar {{
+            background-color: {hex_colors.get('background', '#ffffff')};
+            border-bottom: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            color: {hex_colors.get('foreground', '#000000')};
+            font-weight: 500;
+        }}
+        
+        QMenuBar::item {{
+            background: transparent;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }}
+        
+        QMenuBar::item:selected {{
+            background-color: {hex_colors.get('accent', '#f5f5f5')};
+            color: {hex_colors.get('accent_foreground', '#000000')};
+        }}
+        
+        /* Toolbar */
+        QToolBar {{
+            background-color: {hex_colors.get('background', '#ffffff')};
+            border-bottom: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            spacing: 8px;
+        }}
+        
+        QToolButton {{
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 8px;
+            min-width: 36px;
+            min-height: 36px;
+        }}
+        
+        QToolButton:hover {{
+            background-color: {hex_colors.get('accent', '#f5f5f5')};
+            border-color: {hex_colors.get('border', '#e5e5e5')};
+        }}
+        
+        QToolButton:pressed {{
+            background-color: {hex_colors.get('muted', '#f0f0f0')};
+        }}
+        
+        /* Buttons */
+        QPushButton {{
+            background-color: {hex_colors.get('primary', '#1f2937')};
+            color: {hex_colors.get('primary_foreground', '#ffffff')};
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 14px;
+            min-height: 40px;
+        }}
+        
+        QPushButton:hover {{
+            background-color: {hex_colors.get('primary', '#1f2937')};
+            opacity: 0.9;
+        }}
+        
+        QPushButton:pressed {{
+            background-color: {hex_colors.get('primary', '#1f2937')};
+            opacity: 0.8;
+        }}
+        
+        QPushButton:disabled {{
+            background-color: {hex_colors.get('muted', '#f0f0f0')};
+            color: {hex_colors.get('muted_foreground', '#6b7280')};
+        }}
+        
+        /* Input Fields */
+        QLineEdit, QTextEdit, QSpinBox, QDoubleSpinBox {{
+            background-color: transparent;
+            border: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            min-height: 40px;
+        }}
+        
+        QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {{
+            border-color: {hex_colors.get('ring', '#1f2937')};
+            outline: 2px solid {hex_colors.get('ring', '#1f2937')};
+            outline-offset: 2px;
+        }}
+        
+        QLineEdit:disabled, QTextEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {{
+            background-color: {hex_colors.get('muted', '#f0f0f0')};
+            color: {hex_colors.get('muted_foreground', '#6b7280')};
+            opacity: 0.5;
+        }}
+        
+        /* Tables */
+        QTableWidget {{
+            background-color: {hex_colors.get('background', '#ffffff')};
+            border: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            border-radius: 4px;
+            gridline-color: {hex_colors.get('border', '#e5e5e5')};
+            selection-background-color: {hex_colors.get('accent', '#f5f5f5')};
+            selection-color: {hex_colors.get('accent_foreground', '#000000')};
+        }}
+        
+        QHeaderView::section {{
+            background-color: {hex_colors.get('muted', '#f0f0f0')};
+            color: {hex_colors.get('muted_foreground', '#6b7280')};
+            padding: 8px 12px;
+            border: none;
+            border-bottom: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            font-weight: 600;
+        }}
+        
+        /* Status Bar */
+        QStatusBar {{
+            background-color: {hex_colors.get('muted', '#f0f0f0')};
+            border-top: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            color: {hex_colors.get('muted_foreground', '#6b7280')};
+            font-size: 12px;
+        }}
+        
+        /* Cards and Frames */
+        QFrame[role="card"] {{
+            background-color: {hex_colors.get('card', '#ffffff')};
+            color: {hex_colors.get('card_foreground', '#000000')};
+            border: 1px solid {hex_colors.get('border', '#e5e5e5')};
+            border-radius: 8px;
+        }}
+        
+        /* Progress Bar */
+        QProgressBar {{
+            background-color: {hex_colors.get('secondary', '#f5f5f5')};
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            height: 8px;
+        }}
+        
+        QProgressBar::chunk {{
+            background-color: {hex_colors.get('primary', '#1f2937')};
+            border-radius: 4px;
+        }}
+        """
     
     def get_color(self, color_name: str) -> str:
         """

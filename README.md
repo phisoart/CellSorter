@@ -1,6 +1,5 @@
 # CellSorter
 
-<<<<<<< feature/apply-design-specifications
 🧬 **Advanced Cell Sorting and Tissue Extraction Software for CosmoSort Hardware Integration**
 
 CellSorter is a sophisticated GUI-based application designed to work in conjunction with the CosmoSort research instrument for precision cell sorting and tissue extraction from pathology slides. The software analyzes microscopy images and CellProfiler-generated data to enable researchers to select specific cell populations and generate extraction protocols for automated tissue harvesting.
@@ -139,80 +138,7 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
 ### Setup Instructions
 
 1. **Clone the repository**
-=======
-🧬 **Advanced Cell Sorting and Tissue Extraction Software for Pathology Research**
 
-CellSorter bridges the gap between cellular image analysis and physical tissue extraction, enabling researchers to identify specific cell populations from microscopy images and generate precise extraction protocols for the CosmoSort hardware platform.
-
-## 🎯 Why CellSorter?
-
-**The Challenge:**  
-Pathology researchers studying cancer and other diseases need to extract specific cell populations from tissue samples for downstream analysis. Traditional manual selection methods are time-consuming, inconsistent, and lack the precision required for modern single-cell studies.
-
-**The Solution:**  
-CellSorter automates and streamlines this critical workflow by:
-- Analyzing microscopy images and CellProfiler data to identify target cells
-- Providing intuitive visual selection tools for cell population identification  
-- Converting pixel coordinates to precise stage coordinates for automated extraction
-- Generating compatible protocol files for CosmoSort hardware execution
-
-## 👥 Who Uses CellSorter?
-
-### **Dr. Sarah Chen** - Senior Research Pathologist
-*Cancer research specialist with 10+ years experience*
-- Identifies cancer cell subpopulations based on protein markers
-- Requires sub-micrometer extraction precision for single-cell analysis
-- Processes 15-20 complex tissue samples weekly
-
-### **Michael Rodriguez** - Laboratory Technician  
-*Research lab operator with 5 years experience*
-- Executes standardized protocols for drug discovery studies
-- Needs consistent, reproducible results across sample batches
-- Processes 20-30 samples daily following established procedures
-
-### **Lisa Park** - Graduate Student
-*PhD student in Cell Biology*
-- Learning quantitative analysis techniques for thesis research
-- Studies rare cell populations like circulating tumor cells
-- Requires guided workflows and clear validation feedback
-
-## 🚀 Key Features
-
-### 🔬 **Intelligent Cell Analysis**
-- **Multi-format Image Support**: Load TIFF, JPG, JPEG, and PNG microscopy images
-- **CellProfiler Integration**: Parse and visualize CSV data from CellProfiler analysis
-- **Interactive Scatter Plots**: Generate plots from any CSV columns for cell feature analysis
-- **Smart Selection Tools**: Rectangle selection with real-time cell highlighting
-
-### 🎯 **Precision Coordinate Mapping** 
-- **Two-Point Calibration**: Click reference points to establish pixel-to-stage transformation
-- **Sub-micrometer Accuracy**: Achieve 0.1 μm precision in coordinate conversion
-- **Real-time Validation**: Visual feedback and accuracy metrics during calibration
-
-### 🧪 **Laboratory Integration**
-- **CosmoSort Compatibility**: Generate .cxprotocol files for direct hardware execution
-- **96-Well Plate Management**: Organize selections with automatic well assignment
-- **Batch Processing**: Process multiple samples with consistent criteria
-- **Session Management**: Save and restore complete analysis workflows
-
-### 🎨 **Modern Interface**
-- **Intuitive Design**: Three-panel layout optimized for research workflows
-- **Real-time Feedback**: Immediate visual confirmation of selections and actions
-- **Cross-Platform**: Works seamlessly on Windows and macOS
-- **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation support
-
-## 📋 Quick Start
-
-### System Requirements
-- **Operating System**: Windows 10/11 (64-bit) or macOS 10.14+
-- **Memory**: 8GB RAM minimum, 16GB recommended
-- **Storage**: 2GB available space
-- **Display**: 1920×1080 resolution minimum
-
-### Installation
-
-1. **Download CellSorter**
->>>>>>> main
    ```bash
    git clone https://github.com/phisoart/CellSorter.git
    cd CellSorter
@@ -249,7 +175,6 @@ CellSorter automates and streamlines this critical workflow by:
 4. **Export Protocol**
    - Review selections and well assignments
    - Generate .cxprotocol file for CosmoSort
-<<<<<<< feature/apply-design-specifications
    - Export additional analysis data as needed
 
 ### Advanced Features
@@ -277,61 +202,16 @@ pytest --cov=src
 pytest tests/components/  # UI component tests
 pytest tests/models/      # Business logic tests
 ```
-=======
-   - Save session for future use
-
-## 🔬 Real-World Examples
-
-### Cancer Research
-Dr. Chen analyzes colon cancer tissue to identify adenocarcinoma cells expressing specific markers (CK7+/CK20+). Using CellSorter, she:
-- Loads H&E stained slide images and CellProfiler marker intensity data
-- Creates scatter plots to visualize CK7 vs CK20 expression
-- Selects distinct cell populations using visual clustering
-- Generates extraction protocols for 150-300 cells per population
-- Achieves ±2 μm coordinate accuracy for downstream single-cell RNA sequencing
-
-### Drug Discovery  
-Michael processes 20 tissue samples daily for drug efficacy studies. His standardized workflow:
-- Applies consistent selection criteria across sample batches
-- Uses pre-defined color schemes and labeling conventions
-- Generates 96-well plate assignments for systematic processing
-- Maintains <5% error rate across different sample types
-- Completes protocols 30 minutes per sample vs 2 hours manually
-
-### Rare Cell Studies
-Lisa identifies circulating tumor cells in blood samples for her dissertation:
-- Analyzes 50,000+ cells to find 10-20 rare CTCs
-- Uses morphological features (area, eccentricity) for detection
-- Achieves >90% sensitivity with <5% false positive rate
-- Documents selection criteria for reproducible methodology
-
-## 🛠️ Technology
-
-CellSorter is built with modern, reliable technologies:
-- **PySide6**: Cross-platform GUI framework
-- **OpenCV & NumPy**: High-performance image processing
-- **Pandas**: Efficient data analysis and CSV handling
-- **Matplotlib**: Interactive scientific visualization
-- **Python 3.11+**: Latest language features and performance
-
-For detailed technical information, see [Architecture Guide](ARCHITECTURE.md).
-
-## 📖 Documentation
->>>>>>> main
 
 - **[User Guide](docs/USER_SCENARIOS.md)**: Detailed usage scenarios and workflows
 - **[Installation Guide](docs/INSTALLATION.md)**: Complete setup instructions
 - **[Technical Documentation](ARCHITECTURE.md)**: System architecture and APIs
 - **[Development Guide](CODING_STYLE_GUIDE.md)**: Contributing guidelines
 
-<<<<<<< feature/apply-design-specifications
 - **Unit Tests**: Individual component and function testing
 - **Integration Tests**: End-to-end workflow validation
 - **GUI Tests**: User interface interaction testing
 - **Regression Tests**: Bug fix verification
-=======
-## 🤝 Support & Community
->>>>>>> main
 
 - **Issues**: [GitHub Issues](https://github.com/phisoart/CellSorter/issues)
 - **Documentation**: [Project Wiki](https://github.com/phisoart/CellSorter/wiki)  
