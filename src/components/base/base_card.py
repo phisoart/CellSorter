@@ -12,6 +12,7 @@ from PySide6.QtCore import Qt, Signal
 from utils.design_tokens import DesignTokens
 from utils.theme_manager import ThemeManager
 from utils.style_converter import convert_css_to_qt
+from utils.card_colors import get_default_card_colors
 
 
 class CardHeader(QWidget):
@@ -40,7 +41,7 @@ class CardHeader(QWidget):
         layout.addStretch()
         
         # Style
-        color_vars = self._get_default_colors()
+        color_vars = get_default_card_colors()
         raw_style = f"""
         CardHeader {{
             border-bottom: 1px solid var(--border);
@@ -101,7 +102,7 @@ class CardFooter(QWidget):
         )
         
         # Style
-        color_vars = self._get_default_colors()
+        color_vars = get_default_card_colors()
         raw_style = """
         CardFooter {
             border-top: 1px solid var(--border);
@@ -228,23 +229,7 @@ class BaseCard(QFrame):
                 'muted': self._theme_manager.get_color('muted'),
             }
         else:
-            return self._get_default_colors()
-    
-    def _get_default_colors(self) -> Dict[str, str]:
-        """
-        Get default light theme colors as fallback.
-        
-        Returns:
-            Dictionary mapping color variable names to their values
-        """
-        return {
-            'card': 'hsl(0, 0%, 100%)',
-            'card_foreground': 'hsl(222.2, 84%, 4.9%)',
-            'border': 'hsl(214.3, 31.8%, 91.4%)',
-            'accent': 'hsl(210, 40%, 96%)',
-            'foreground': 'hsl(222.2, 84%, 4.9%)',
-            'muted': 'hsl(210, 40%, 96%)',
-        }
+            return get_default_card_colors()
     
     # Header management
     def set_header(self, title: str) -> CardHeader:
