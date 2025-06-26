@@ -1,9 +1,5 @@
 # Testing Strategy
 
-## Current Status: ✅ **94% Test Success Rate** (84/89 tests passing)
-
-CellSorter maintains excellent test coverage with a comprehensive test suite validating all core functionality.
-
 ## 1. Test Philosophy
 We follow a **Test-Driven Development (TDD)** approach.
 - Every feature starts with a failing test.
@@ -17,12 +13,12 @@ We follow a **Test-Driven Development (TDD)** approach.
 - Framework: `pytest`
 - Location: `tests/unit/`
 
-#### Key Unit Test Areas: ✅ IMPLEMENTED
-- **Image Processing**: Test image loading, validation, and format conversion ✅
-- **CSV Parsing**: Validate CellProfiler data parsing and column validation ✅
-- **Coordinate Transformation**: Test affine transformation calculations ✅
-- **Data Models**: Test cell selection, bounding box calculations ✅
-- **Export Logic**: Test .cxprotocol file generation and validation ✅
+#### Key Unit Test Areas:
+- **Image Processing**: Test image loading, validation, and format conversion
+- **CSV Parsing**: Validate CellProfiler data parsing and column validation
+- **Coordinate Transformation**: Test affine transformation calculations
+- **Data Models**: Test cell selection, bounding box calculations
+- **Export Logic**: Test .cxprotocol file generation and validation
 
 ### 2.2 GUI Component Tests
 - Target: Individual PySide6 widgets and dialogs
@@ -30,12 +26,12 @@ We follow a **Test-Driven Development (TDD)** approach.
 - Strategy: Use `QTest` or `qtbot` for interaction simulation
 - Location: `tests/gui/`
 
-#### GUI Test Scenarios: ✅ IMPLEMENTED
-- **Scatter Plot Widget**: Test plot generation, selection interactions ✅
-- **Image Viewer**: Test zoom, pan, overlay rendering ✅
-- **Well Plate Widget**: Test well assignment and visualization ✅
-- **Dialog Components**: Test modal behavior and validation ✅
-- **Menu and Toolbar**: Test action triggers and state management ✅
+#### GUI Test Scenarios:
+- **Scatter Plot Widget**: Test plot generation, selection interactions
+- **Image Viewer**: Test zoom, pan, overlay rendering
+- **Well Plate Widget**: Test well assignment and visualization
+- **Dialog Components**: Test modal behavior and validation
+- **Menu and Toolbar**: Test action triggers and state management
 
 ### 2.3 Integration Tests
 - Target: End-to-end workflows involving multiple components
@@ -43,35 +39,35 @@ We follow a **Test-Driven Development (TDD)** approach.
 - Strategy: Mimic user behavior (e.g. open image → process → export)
 - Location: `tests/integration/`
 
-#### Integration Test Workflows: ✅ IMPLEMENTED
-1. **Complete Analysis Workflow**: ✅ PASSING
-   - Load microscopy image and CSV data ✅
-   - Generate scatter plot visualization ✅
-   - Perform cell selection via rectangle tool ✅
-   - Execute coordinate calibration ✅
-   - Export .cxprotocol file ✅
-   - Validate output integrity ✅
+#### Integration Test Workflows:
+1. **Complete Analysis Workflow**:
+   - Load microscopy image and CSV data
+   - Generate scatter plot visualization
+   - Perform cell selection via rectangle tool
+   - Execute coordinate calibration
+   - Export .cxprotocol file
+   - Validate output integrity
 
-2. **Batch Processing Workflow**: ⚠️ PARTIAL
-   - Process multiple image/CSV pairs ✅
-   - Apply consistent selection criteria ✅
-   - Validate coordinate transformation accuracy ✅
-   - Test export file naming and organization ⚠️
+2. **Batch Processing Workflow**:
+   - Process multiple image/CSV pairs
+   - Apply consistent selection criteria
+   - Validate coordinate transformation accuracy
+   - Test export file naming and organization
 
-3. **Error Recovery Scenarios**: ✅ COMPREHENSIVE
-   - Invalid file format handling ✅
-   - Corrupted CSV data processing ✅
-   - Failed calibration recovery ✅
-   - Memory management under large datasets ✅
+3. **Error Recovery Scenarios**:
+   - Invalid file format handling
+   - Corrupted CSV data processing
+   - Failed calibration recovery
+   - Memory management under large datasets
 
-### 2.4 Performance Tests ✅ IMPLEMENTED
-- Target: Large dataset handling and memory management ✅
-- Tool: `pytest-benchmark`, custom memory profilers ✅
-- Focus Areas: ✅ ALL TARGETS MET
-  - Image loading performance (>50MB TIFF files) ✅ <5s target achieved
-  - CSV processing speed (>10,000 cell records) ✅ <3s target achieved
-  - UI responsiveness during heavy operations ✅
-  - Memory usage optimization ✅ <4GB limit maintained
+### 2.4 Performance Tests
+- Target: Large dataset handling and memory management
+- Tool: `pytest-benchmark`, custom memory profilers
+- Focus Areas:
+  - Image loading performance (>50MB TIFF files)
+  - CSV processing speed (>10,000 cell records)
+  - UI responsiveness during heavy operations
+  - Memory usage optimization
 
 ### 2.5 Regression Tests
 - Every resolved bug must have a test that reproduces the issue and verifies the fix.
