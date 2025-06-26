@@ -201,8 +201,8 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 
 #### NFR2.1: Operating System Support
 - **Primary**: Windows 10 and Windows 11 (64-bit)
-- **Secondary**: Future macOS support consideration
-- No Linux support required for initial release
+- **Secondary**: macOS 10.14+ (full support implemented)
+- **Future**: Linux support consideration for later releases
 
 #### NFR2.2: Hardware Requirements
 - **Minimum**: 8GB RAM, Intel i5 or equivalent, 1GB available storage

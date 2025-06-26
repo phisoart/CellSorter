@@ -46,14 +46,14 @@ CellSorter successfully addresses the core needs of both primary user personas w
 
 ---
 
-## Persona 2: Alex Rodriguez - Laboratory Technician ⚠️ MOSTLY SUPPORTED
+## Persona 2: Michael Rodriguez - Laboratory Technician ⚠️ MOSTLY SUPPORTED
 
 ### Background
 - **Role**: Research Laboratory Technician
-- **Affiliation**: Biotechnology startup focusing on drug discovery
-- **Age**: 26
-- **Education**: Bachelor's in Biology with 1.5 years lab experience
-- **CosmoSort Experience**: 8 months using standardized protocols
+- **Affiliation**: Research laboratory in biotechnology company
+- **Age**: 28
+- **Education**: Bachelor's in Biology with 5 years lab experience
+- **CosmoSort Experience**: 2 years using standardized protocols and instrument operation
 
 ### Technical Expertise
 - **Data Handling**: Comfortable with Excel, basic CSV manipulation
