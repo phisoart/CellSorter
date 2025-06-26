@@ -8,6 +8,9 @@ Main entry point for the CellSorter application with design system integration.
 import sys
 from pathlib import Path
 import logging
+from config.settings import APP_NAME, APP_VERSION, APP_ORGANIZATION, LOG_LEVEL
+from utils.logging_config import setup_logging
+from services.theme_manager import ThemeManager
 
 # Add src to Python path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -17,73 +20,38 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QFont
 
 from pages.main_window import MainWindow
-from services.theme_manager import ThemeManager
-
-def setup_application() -> QApplication:
-    """
-    Set up and configure the Qt application.
-    
-    Returns:
-        Configured QApplication instance
-    """
-    # Enable high DPI scaling
-    QApplication.setHighDpiScaleFactorRoundingPolicy(
-        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-    )
-    
-    # Create application
-    app = QApplication(sys.argv)
-    app.setApplicationName(APP_NAME)
-    app.setApplicationVersion(APP_VERSION)
-    app.setOrganizationName("CellSorter")
-    
-    # Set default font
-    tokens = DesignTokens()
-    font = QFont()
-    font.setFamily(tokens.get_font_string('sans'))
-    font.setPixelSize(tokens.TYPOGRAPHY['text_base'])
-    app.setFont(font)
-    
-    # Initialize theme manager and apply default theme
-    theme_manager = ThemeManager(app)
-    theme_manager.apply_theme(theme_manager.THEME_LIGHT)
-    
-    return app
-
 
 def main() -> None:
     """Main application entry point."""
     # Set up logging
-    setup_logging(LOG_LEVEL)
+    setup_logging()
     logger = logging.getLogger(__name__)
     logger.info(f"Starting {APP_NAME} v{APP_VERSION}")
-    
+
     try:
+        # High DPI attributes must be set before QApplication instantiation
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
         # Create QApplication instance
         app = QApplication(sys.argv)
         app.setApplicationName(APP_NAME)
         app.setApplicationVersion(APP_VERSION)
         app.setOrganizationName(APP_ORGANIZATION)
-        
-        # Set application properties
         app.setApplicationDisplayName(f"{APP_NAME} - Cell Sorting and Analysis")
-        # Enable high DPI support for better display on high-resolution screens
-        app.setAttribute(Qt.AA_EnableHighDpiScaling, True)
-        app.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
-        
+
         # Initialize theme manager before creating main window
-        # This ensures proper theming is applied from the start
         theme_manager = ThemeManager(app)
         theme_manager.apply_theme("light")  # Default theme
 
-        
-        # Create and show main window
-        window = MainWindow()
+        # Create and show main window, injecting the theme manager
+        from pages.main_window import MainWindow
+        window = MainWindow(theme_manager=theme_manager)
         window.show()
-        
+
         # Start event loop
         sys.exit(app.exec())
-        
+
     except Exception as e:
         logger.critical(f"Critical error during application startup: {e}", exc_info=True)
         sys.exit(1)
