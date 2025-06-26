@@ -7,6 +7,7 @@ status bar, and dockable panels for the CellSorter application.
 
 from typing import Optional, Dict, Any
 from pathlib import Path
+from datetime import datetime
 
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
@@ -851,7 +852,7 @@ class MainWindow(QMainWindow, LoggerMixin):
                 'cell_indices': selection.cell_indices,
                 'well_position': selection.well_position,
                 'status': selection.status.value,
-                'created_at': selection.created_at.isoformat(),
+                'created_at': datetime.fromtimestamp(selection.created_timestamp).isoformat(),
                 'metadata': selection.metadata
             }
             selections_data.append(selection_data)
@@ -999,24 +1000,3 @@ class MainWindow(QMainWindow, LoggerMixin):
                 if self.image_handler.calibration_points:
                     self.image_handler.calibration_points.pop()
                     self.image_handler._update_display()
-    
-    def enable_image_actions(self) -> None:
-        """Enable actions that require a loaded image."""
-        # Enable zoom actions
-        if hasattr(self, 'action_zoom_in'):
-            self.action_zoom_in.setEnabled(True)
-            self.action_zoom_out.setEnabled(True)
-            self.action_zoom_fit.setEnabled(True)
-            self.action_toggle_overlays.setEnabled(True)
-    
-    def enable_analysis_actions(self) -> None:
-        """Enable actions that require loaded CSV data."""
-        # Enable analysis-related actions
-        if hasattr(self, 'action_calibrate'):
-            self.action_calibrate.setEnabled(True)
-            self.action_clear_selections.setEnabled(True)
-        
-        # Enable export if both image and CSV are loaded
-        if self.current_image_path and self.current_csv_path:
-            if hasattr(self, 'action_export_protocol'):
-                self.action_export_protocol.setEnabled(True)

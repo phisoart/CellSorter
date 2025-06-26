@@ -768,34 +768,54 @@ class ImageHandler(QWidget, LoggerMixin):
     
     def _label_to_image_coords(self, label_x: int, label_y: int) -> Tuple[int, int]:
         """
-        Convert label coordinates to image coordinates.
-        
+        Convert label coordinates to image coordinates, accounting for Qt.KeepAspectRatio scaling and label padding.
+
         Args:
             label_x: X coordinate in label
             label_y: Y coordinate in label
-        
+
         Returns:
             Tuple of (image_x, image_y)
         """
         if self.image_data is None:
             return (0, 0)
-        
-        # Account for image scaling in the label
+
         label_size = self.image_label.size()
         image_height, image_width = self.image_data.shape[:2]
-        
-        # Calculate scale factors
-        scale_x = image_width / label_size.width()
-        scale_y = image_height / label_size.height()
-        
-        # Convert coordinates
-        image_x = int(label_x * scale_x)
-        image_y = int(label_y * scale_y)
-        
-        # Clamp to image bounds
+        label_width, label_height = label_size.width(), label_size.height()
+
+        # ZeroDivisionError 방지
+        if label_width == 0 or label_height == 0:
+            return (0, 0)
+
+        # 이미지와 라벨의 종횡비 계산
+        image_aspect = image_width / image_height
+        label_aspect = label_width / label_height
+
+        # QLabel 내 실제 이미지 표시 영역 크기 계산 (aspect ratio 유지)
+        if image_aspect > label_aspect:
+            scaled_width = label_width
+            scaled_height = int(label_width / image_aspect)
+        else:
+            scaled_height = label_height
+            scaled_width = int(label_height * image_aspect)
+
+        offset_x = (label_width - scaled_width) // 2
+        offset_y = (label_height - scaled_height) // 2
+
+        # 이미지 표시 영역 내에 있는지 확인
+        if not (offset_x <= label_x < offset_x + scaled_width and offset_y <= label_y < offset_y + scaled_height):
+            return (0, 0)
+
+        # 라벨 내 이미지 표시 영역 좌표 → 원본 이미지 좌표
+        rel_x = label_x - offset_x
+        rel_y = label_y - offset_y
+        image_x = int(rel_x * image_width / scaled_width)
+        image_y = int(rel_y * image_height / scaled_height)
+
+        # Clamp
         image_x = max(0, min(image_x, image_width - 1))
         image_y = max(0, min(image_y, image_height - 1))
-        
         return (image_x, image_y)
     
     def update_status(self, message: str) -> None:
