@@ -9,7 +9,7 @@ from pathlib import Path
 
 # Application Information
 APP_NAME = "CellSorter"
-APP_VERSION = "1.0.0"
+APP_VERSION = "2.0.0"
 APP_ORGANIZATION = "CellSorter Team"
 APP_DESCRIPTION = "Advanced Cell Sorting and Tissue Extraction Software"
 

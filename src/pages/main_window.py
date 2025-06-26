@@ -55,7 +55,7 @@ class MainWindow(QMainWindow, LoggerMixin):
     session_loaded = Signal(str) # File path
     export_requested = Signal() # Export protocol request
     
-    def __init__(self, theme_manager: ThemeManager, parent: Optional[QWidget] = None):
+    def __init__(self, theme_manager: ThemeManager, update_checker=None, parent: Optional[QWidget] = None):
         super().__init__(parent)
         
         # Initialize error handler
@@ -65,6 +65,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.theme_manager = theme_manager
         self.settings = QSettings(APP_NAME, APP_VERSION)
         self.theme_manager.apply_theme(self.settings.value("theme", "light"))
+        
+        # Initialize update checker
+        self.update_checker = update_checker
+        if self.update_checker:
+            self.update_checker.update_available.connect(self._on_update_available)
         
         # State tracking
         self.current_image_path: Optional[str] = None
@@ -253,6 +258,12 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Help actions
         self.action_about = QAction("&About CellSorter", self)
         self.action_about.setStatusTip("About this application")
+        
+        self.action_check_updates = QAction("Check for &Updates...", self)
+        self.action_check_updates.setStatusTip("Check for new versions of CellSorter")
+        
+        self.action_update_preferences = QAction("Update &Preferences...", self)
+        self.action_update_preferences.setStatusTip("Configure automatic update checking")
     
     def setup_menu_bar(self) -> None:
         """Create and configure the menu bar."""
@@ -297,6 +308,12 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Help menu
         help_menu = menubar.addMenu("&Help")
+        help_menu.addAction("User &Guide")
+        help_menu.addAction("&Tutorial")
+        help_menu.addSeparator()
+        help_menu.addAction(self.action_check_updates)
+        help_menu.addAction(self.action_update_preferences)
+        help_menu.addSeparator()
         help_menu.addAction(self.action_about)
     
     def setup_toolbar(self) -> None:
@@ -400,6 +417,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Help actions
         self.action_about.triggered.connect(self.show_about)
+        self.action_check_updates.triggered.connect(self.check_for_updates)
+        self.action_update_preferences.triggered.connect(self.show_update_preferences)
         
         # Theme button
         self.theme_button.clicked.connect(self.toggle_theme)
@@ -1069,3 +1088,54 @@ class MainWindow(QMainWindow, LoggerMixin):
                 if self.image_handler.calibration_points:
                     self.image_handler.calibration_points.pop()
                     self.image_handler._update_display()
+    
+    def check_for_updates(self) -> None:
+        """Manually check for application updates."""
+        if self.update_checker:
+            self.update_checker.check_for_updates(force=True)
+            self.update_status("Checking for updates...")
+        else:
+            QMessageBox.information(self, "Update Check", 
+                                  "Update checking is not available in this version.")
+    
+    def show_update_preferences(self) -> None:
+        """Show update preferences dialog."""
+        if not self.update_checker:
+            return
+            
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Update Preferences")
+        dialog.setFixedSize(400, 200)
+        
+        layout = QVBoxLayout(dialog)
+        
+        # Auto-check checkbox
+        from PySide6.QtWidgets import QCheckBox, QDialogButtonBox
+        auto_check = QCheckBox("Automatically check for updates")
+        auto_check.setChecked(self.update_checker.auto_check_enabled)
+        layout.addWidget(auto_check)
+        
+        # Info label
+        info_label = QLabel("CellSorter will check for updates once a week when this option is enabled.")
+        info_label.setWordWrap(True)
+        info_label.setStyleSheet("color: #666; margin: 10px 0;")
+        layout.addWidget(info_label)
+        
+        # Current version info
+        version_label = QLabel(f"Current version: {APP_VERSION}")
+        layout.addWidget(version_label)
+        
+        # Buttons
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        
+        if dialog.exec() == QDialog.Accepted:
+            self.update_checker.auto_check_enabled = auto_check.isChecked()
+            self.log_info(f"Update auto-check set to: {auto_check.isChecked()}")
+    
+    def _on_update_available(self, current_version: str, latest_version: str, download_url: str) -> None:
+        """Handle update available notification."""
+        if self.update_checker:
+            self.update_checker.show_update_dialog(self, current_version, latest_version, download_url)
