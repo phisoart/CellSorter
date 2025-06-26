@@ -201,8 +201,8 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 
 #### NFR2.1: Operating System Support
 - **Primary**: Windows 10 and Windows 11 (64-bit)
-- **Secondary**: Future macOS support consideration
-- No Linux support required for initial release
+- **Secondary**: macOS 10.14+ (full support implemented)
+- **Future**: Linux support consideration for later releases
 
 #### NFR2.2: Hardware Requirements
 - **Minimum**: 8GB RAM, Intel i5 or equivalent, 1GB available storage
@@ -509,7 +509,7 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 - Performance testing under maximum load conditions
 - Security audit for data handling procedures
 
-This product requirements document provides the foundation for developing CellSorter as a robust, user-friendly tool that meets the specific needs of pathology researchers while maintaining the precision required for automated cell sorting applications.
+This product requirements document provides the foundation for developing CellSorter as a robust, user-friendly tool that meets the specific needs of pathology researchers while maintaining the precision required for automated cell sorting applications. 
 
 ## Development & Documentation Notes
 - 개발/테스트 의존성은 requirements-dev.txt, 빌드/배포 의존성은 requirements-build.txt에 분리 관리합니다.

@@ -24,6 +24,7 @@ from config.settings import (
 )
 from utils.error_handler import ErrorHandler, error_handler
 from utils.logging_config import LoggerMixin
+from utils.theme_manager import ThemeManager
 from models.image_handler import ImageHandler
 from models.csv_parser import CSVParser
 from models.coordinate_transformer import CoordinateTransformer
@@ -58,6 +59,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Initialize error handler
         self.error_handler = ErrorHandler(self)
+        
+        # Initialize theme manager
+        self.theme_manager = ThemeManager(QApplication.instance(), self)
         
         # Initialize settings
         self.settings = QSettings(APP_NAME, APP_VERSION)

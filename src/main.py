@@ -1,36 +1,62 @@
 #!/usr/bin/env python3
 """
-CellSorter - Cell Sorting and Analysis Application
+CellSorter Application Entry Point
 
-Main entry point for the CellSorter application.
+Main entry point for the CellSorter application with design system integration.
 """
 
 import sys
-import os
 from pathlib import Path
+import logging
 
 # Add src to Python path
-src_path = Path(__file__).parent
-sys.path.insert(0, str(src_path))
+sys.path.insert(0, str(Path(__file__).parent))
 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QFont
 
-from config.settings import APP_NAME, APP_VERSION, APP_ORGANIZATION
-from utils.logging_config import setup_logging
 from pages.main_window import MainWindow
 from services.theme_manager import ThemeManager
 
-def main():
+def setup_application() -> QApplication:
     """
-    Main application entry point.
-    """
-    print("Starting CellSorter application...")
+    Set up and configure the Qt application.
     
+    Returns:
+        Configured QApplication instance
+    """
+    # Enable high DPI scaling
+    QApplication.setHighDpiScaleFactorRoundingPolicy(
+        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+    )
+    
+    # Create application
+    app = QApplication(sys.argv)
+    app.setApplicationName(APP_NAME)
+    app.setApplicationVersion(APP_VERSION)
+    app.setOrganizationName("CellSorter")
+    
+    # Set default font
+    tokens = DesignTokens()
+    font = QFont()
+    font.setFamily(tokens.get_font_string('sans'))
+    font.setPixelSize(tokens.TYPOGRAPHY['text_base'])
+    app.setFont(font)
+    
+    # Initialize theme manager and apply default theme
+    theme_manager = ThemeManager(app)
+    theme_manager.apply_theme(theme_manager.THEME_LIGHT)
+    
+    return app
+
+
+def main() -> None:
+    """Main application entry point."""
     # Set up logging
-    logger = setup_logging()
-    logger.info("CellSorter application starting...")
+    setup_logging(LOG_LEVEL)
+    logger = logging.getLogger(__name__)
+    logger.info(f"Starting {APP_NAME} v{APP_VERSION}")
     
     try:
         # Create QApplication instance
@@ -49,24 +75,19 @@ def main():
         # This ensures proper theming is applied from the start
         theme_manager = ThemeManager(app)
         theme_manager.apply_theme("light")  # Default theme
+
         
         # Create and show main window
-        main_window = MainWindow()
-        main_window.show()
+        window = MainWindow()
+        window.show()
         
-        logger.info("CellSorter main window displayed")
-        print("CellSorter application window opened.")
-        print("Close the window to exit the application.")
-        
-        # Start the application event loop
-        result = app.exec()
-        logger.info("CellSorter application shutting down")
-        return result
+        # Start event loop
+        sys.exit(app.exec())
         
     except Exception as e:
-        logger.error(f"Failed to start CellSorter: {e}", exc_info=True)
-        print(f"Error starting CellSorter: {e}")
-        return 1
+        logger.critical(f"Critical error during application startup: {e}", exc_info=True)
+        sys.exit(1)
+
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
