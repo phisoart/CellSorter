@@ -24,7 +24,7 @@ from config.settings import (
 )
 from utils.error_handler import ErrorHandler, error_handler
 from utils.logging_config import LoggerMixin
-from utils.theme_manager import ThemeManager
+from services.theme_manager import ThemeManager
 from models.image_handler import ImageHandler
 from models.csv_parser import CSVParser
 from models.coordinate_transformer import CoordinateTransformer
@@ -53,17 +53,16 @@ class MainWindow(QMainWindow, LoggerMixin):
     session_loaded = Signal(str) # File path
     export_requested = Signal() # Export protocol request
     
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, theme_manager: ThemeManager, parent: Optional[QWidget] = None):
         super().__init__(parent)
         
         # Initialize error handler
         self.error_handler = ErrorHandler(self)
         
         # Initialize theme manager
-        self.theme_manager = ThemeManager(QApplication.instance(), self)
-        
-        # Initialize settings
+        self.theme_manager = theme_manager
         self.settings = QSettings(APP_NAME, APP_VERSION)
+        self.theme_manager.apply_theme(self.settings.value("theme", "light"))
         
         # State tracking
         self.current_image_path: Optional[str] = None
@@ -568,15 +567,9 @@ class MainWindow(QMainWindow, LoggerMixin):
     def toggle_theme(self) -> None:
         """Toggle between light and dark themes."""
         self.theme_manager.toggle_theme()
-        
-        # Update theme button icon
         current_theme = self.theme_manager.get_current_theme()
-        if current_theme == self.theme_manager.THEME_DARK:
-            self.theme_button.setText("☀️")
-        else:
-            self.theme_button.setText("🌙")
-        
-        self.log_info(f"Theme toggled to: {current_theme}")
+        self.theme_button.setText("☀️" if current_theme == "dark" else "🌙")
+        self.update_status(f"Theme switched to: {current_theme}")
     
     def show_about(self) -> None:
         """Show about dialog."""

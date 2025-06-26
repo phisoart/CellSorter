@@ -48,7 +48,8 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.rectangle_selector: Optional[RectangleSelector] = None
         self.selection_enabled = False
         
-        # Color configuration
+        # Color configuration - will be set by theme manager
+        self.theme_manager = None  # Will be injected
         self.default_color = '#1f77b4'  # matplotlib default blue
         self.selected_color = '#ff7f0e'  # orange for selected points
         self.point_size = 20
