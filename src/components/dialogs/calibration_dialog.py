@@ -580,14 +580,15 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         x_val = self.point2_x_input.value()
         y_val = self.point2_y_input.value()
         
-        # Check minimum distance
-        if hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y'):
-            pixel_distance = ((self.pixel2_x - self.initial_pixel_x)**2 + 
-                            (self.pixel2_y - self.initial_pixel_y)**2)**0.5
-            
-            return (x_val != 0.0 or y_val != 0.0) and pixel_distance >= 50
+        # Pixel coordinates must be set before validation
+        if not (hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y')):
+            return False
         
-        return x_val != 0.0 or y_val != 0.0
+        # Check minimum distance
+        pixel_distance = ((self.pixel2_x - self.initial_pixel_x)**2 + 
+                        (self.pixel2_y - self.initial_pixel_y)**2)**0.5
+        
+        return (x_val != 0.0 or y_val != 0.0) and pixel_distance >= 50
     
     def validate_point1(self) -> None:
         """Validate first point input."""
@@ -602,7 +603,11 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
     
     def validate_point2(self) -> None:
         """Validate second point input."""
-        if hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y'):
+        if not (hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y')):
+            self.distance_label.setText("Distance from first point: Click on image to set second point")
+            self.point2_status.setText("⚠️ Please click second point on the image first")
+            self.point2_status.setStyleSheet("QLabel { color: #856404; background: #fff3cd; padding: 8px; border: 1px solid #ffeaa7; border-radius: 4px; }")
+        else:
             pixel_distance = ((self.pixel2_x - self.initial_pixel_x)**2 + 
                             (self.pixel2_y - self.initial_pixel_y)**2)**0.5
             
@@ -895,9 +900,14 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
 class CalibrationDialog(CalibrationWizardDialog):
     """Legacy wrapper for backward compatibility."""
     
-    def __init__(self, pixel_x: int, pixel_y: int, point_label: str, parent=None):
-        from models.coordinate_transformer import CoordinateTransformer
-        transformer = CoordinateTransformer()
+    def __init__(self, pixel_x: int, pixel_y: int, point_label: str, parent=None, coordinate_transformer=None):
+        # Use existing transformer if provided, otherwise create new one
+        if coordinate_transformer is None:
+            from models.coordinate_transformer import CoordinateTransformer
+            transformer = CoordinateTransformer()
+        else:
+            transformer = coordinate_transformer
+            
         super().__init__(transformer, pixel_x, pixel_y, point_label, parent)
         
         # For legacy compatibility, start at first point step
@@ -906,8 +916,16 @@ class CalibrationDialog(CalibrationWizardDialog):
     
     def get_stage_coordinates(self) -> Tuple[float, float]:
         """Legacy method for getting coordinates."""
+        # Return actual user input values from the first point
+        if hasattr(self, 'point1_x_input') and hasattr(self, 'point1_y_input'):
+            return (self.point1_x_input.value(), self.point1_y_input.value())
         return (0.0, 0.0)
     
     def set_stage_coordinates(self, stage_x: float, stage_y: float) -> None:
         """Legacy method for setting coordinates."""
-        pass
+        # Set the stage coordinates in the first point input fields
+        if hasattr(self, 'point1_x_input') and hasattr(self, 'point1_y_input'):
+            self.point1_x_input.setValue(stage_x)
+            self.point1_y_input.setValue(stage_y)
+            # Trigger validation to update UI state
+            self.validate_point1()
