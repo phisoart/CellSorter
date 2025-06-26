@@ -20,6 +20,7 @@ from PySide6.QtGui import QIcon
 from config.settings import APP_NAME, APP_VERSION, APP_ORGANIZATION
 from utils.logging_config import setup_logging
 from pages.main_window import MainWindow
+from services.theme_manager import ThemeManager
 
 def main():
     """
@@ -41,20 +42,13 @@ def main():
         # Set application properties
         app.setApplicationDisplayName(f"{APP_NAME} - Cell Sorting and Analysis")
         # Enable high DPI support for better display on high-resolution screens
+        app.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+        app.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
         
-        # Apply basic styling
-        app.setStyleSheet("""
-            QMainWindow {
-                background-color: #f8f9fa;
-            }
-            QToolBar {
-                border: none;
-                spacing: 4px;
-            }
-            QStatusBar {
-                border-top: 1px solid #dee2e6;
-            }
-        """)
+        # Initialize theme manager before creating main window
+        # This ensures proper theming is applied from the start
+        theme_manager = ThemeManager(app)
+        theme_manager.apply_theme("light")  # Default theme
         
         # Create and show main window
         main_window = MainWindow()

@@ -35,6 +35,7 @@ from components.widgets.selection_panel import SelectionPanel
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
 from components.dialogs.batch_process_dialog import BatchProcessDialog
+from services.theme_manager import ThemeManager
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -60,6 +61,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Initialize settings
         self.settings = QSettings(APP_NAME, APP_VERSION)
+        
+        # Initialize theme manager
+        self.theme_manager = ThemeManager(QApplication.instance(), self)
+        self.theme_manager.apply_theme(self.settings.value("theme", "light"))
         
         # State tracking
         self.current_image_path: Optional[str] = None
@@ -563,11 +568,10 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def toggle_theme(self) -> None:
         """Toggle between light and dark themes."""
-        # TODO: Implement theme switching
-        current_text = self.theme_button.text()
-        new_text = "☀️" if current_text == "🌙" else "🌙"
-        self.theme_button.setText(new_text)
-        self.update_status("Theme toggled")
+        self.theme_manager.toggle_theme()
+        current_theme = self.theme_manager.get_current_theme()
+        self.theme_button.setText("☀️" if current_theme == "dark" else "🌙")
+        self.update_status(f"Theme switched to: {current_theme}")
     
     def show_about(self) -> None:
         """Show about dialog."""

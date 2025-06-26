@@ -40,34 +40,34 @@ IMAGE_PANEL_WIDTH = 40
 PLOT_PANEL_WIDTH = 35
 SELECTION_PANEL_WIDTH = 25
 
-# Color Palette for Selections
+# Color Palette for Selections (Based on design system)
 SELECTION_COLORS: Dict[str, str] = {
-    "Red": "#FF0000",
-    "Green": "#00FF00", 
-    "Blue": "#0000FF",
-    "Yellow": "#FFFF00",
-    "Magenta": "#FF00FF",
-    "Cyan": "#00FFFF",
-    "Orange": "#FFA500",
-    "Purple": "#800080",
-    "Pink": "#FFC0CB",
-    "Brown": "#A52A2A",
-    "Gray": "#808080",
-    "Lime": "#00FF80",
-    "Navy": "#000080",
-    "Maroon": "#800000",
-    "Olive": "#808000",
-    "Teal": "#008080"
+    "Red": "hsl(0, 84.2%, 60.2%)",         # Destructive color
+    "Green": "hsl(142.1, 76.2%, 36.3%)",   # Normal tissue color
+    "Blue": "hsl(221.2, 83.2%, 53.3%)",    # Stroma color
+    "Yellow": "hsl(47.9, 95.8%, 53.1%)",   # Necrosis color
+    "Magenta": "hsl(300, 100%, 50%)",
+    "Cyan": "hsl(180, 100%, 50%)",
+    "Orange": "hsl(24.6, 95%, 53.1%)",     # Blood vessels color
+    "Purple": "hsl(262.1, 83.3%, 57.8%)",  # Immune cells color
+    "Pink": "hsl(350, 100%, 88%)",
+    "Brown": "hsl(25, 76%, 47%)",
+    "Gray": "hsl(0, 0%, 50%)",
+    "Lime": "hsl(150, 100%, 50%)",
+    "Navy": "hsl(240, 100%, 25%)",
+    "Maroon": "hsl(0, 100%, 25%)",
+    "Olive": "hsl(60, 100%, 25%)",
+    "Teal": "hsl(180, 100%, 25%)"
 }
 
-# Medical/Scientific Colors
+# Medical/Scientific Colors (Based on design system)
 MEDICAL_COLORS: Dict[str, str] = {
-    "cancer_primary": "#E53E3E",    # Red
-    "normal_tissue": "#38A169",     # Green  
-    "stroma": "#3182CE",            # Blue
-    "immune_cells": "#805AD5",      # Purple
-    "blood_vessels": "#DD6B20",     # Orange
-    "necrosis": "#D69E2E"           # Yellow
+    "cancer_primary": "hsl(0, 84.2%, 60.2%)",       # Red
+    "normal_tissue": "hsl(142.1, 76.2%, 36.3%)",   # Green  
+    "stroma": "hsl(221.2, 83.2%, 53.3%)",          # Blue
+    "immune_cells": "hsl(262.1, 83.3%, 57.8%)",    # Purple
+    "blood_vessels": "hsl(24.6, 95%, 53.1%)",      # Orange
+    "necrosis": "hsl(47.9, 95.8%, 53.1%)"          # Yellow
 }
 
 # Well Plate Configuration
