@@ -423,7 +423,8 @@
         "✅ Integration with startup sequence",
         "✅ User preference controls"
       ],
-      "technical_notes": "Required for 100% NFR6.2 compliance"
+      "implementation_file": "src/utils/update_checker.py",
+      "technical_notes": "Complete implementation with GitHub API integration and user preferences"
     },
     {
       "id": "TASK-020",
@@ -447,35 +448,210 @@
       ],
       "implementation_file": "src/utils/expression_parser.py, src/components/widgets/expression_filter.py",
       "technical_notes": "Complete implementation with AST-based safe parsing, vectorized operations, syntax highlighting UI, and ScatterPlotWidget integration. Enables Dr. Sarah Chen's advanced filtering requirements."
-
+    },
+    {
+      "id": "TASK-021",
+      "title": "Template Management System",
+      "description": "Create comprehensive template management system for calibration, selection criteria, and analysis workflows",
+      "type": "feature",
+      "priority": "high",
+      "status": "pending",
+      "effort": "large",
+      "dependencies": ["TASK-005", "TASK-020"],
+      "functional_requirement": "FR7.1",
+      "acceptance_criteria": [
+        "Template creation and storage system",
+        "Template categorization and tagging",
+        "Import/export template functionality",
+        "Template sharing between users",
+        "Version control for templates",
+        "Template validation and compatibility",
+        "User interface for template management"
+      ],
+      "implementation_file": "src/models/template_manager.py, src/components/dialogs/template_dialog.py",
+      "technical_notes": "Required for Michael Rodriguez persona - template management capabilities"
+    },
+    {
+      "id": "TASK-022",
+      "title": "Enhanced Calibration UI Dialog",
+      "description": "Implement comprehensive UI for two-point calibration system with step-by-step guidance, visual indicators, quality assessment, and template integration",
+      "type": "feature",
+      "priority": "medium",
+      "status": "done",
+      "effort": "large",
+      "completion_date": "2024-12-26",
+      "dependencies": ["TASK-005"],
+      "functional_requirement": "FR4.3",
+      "acceptance_criteria": [
+        "✅ Interactive calibration dialog with step-by-step guidance",
+        "✅ Visual indicators for calibration point placement",
+        "✅ Coordinate input validation and error checking",
+        "✅ Calibration quality assessment and feedback",
+        "✅ Save/load calibration settings for reuse",
+        "✅ Integration with template system",
+        "✅ Clear error messages and recovery options"
+      ],
+      "implementation_file": "src/components/dialogs/calibration_dialog.py",
+      "technical_notes": "Complete enhanced calibration UI with multi-step wizard interface - COMPLETED"
+    },
+    {
+      "id": "TASK-023",
+      "title": "Well Plate Template System",
+      "description": "Implement template system for different well plate configurations and automatic cell assignment patterns",
+      "type": "feature",
+      "priority": "medium",
+      "status": "pending",
+      "effort": "medium",
+      "dependencies": ["TASK-009", "TASK-021"],
+      "functional_requirement": "FR5.3",
+      "acceptance_criteria": [
+        "Support multiple plate formats (96, 384, custom)",
+        "Template-based automatic assignment patterns",
+        "Custom well grouping and naming",
+        "Plate layout visualization and editing",
+        "Export plate templates for reuse",
+        "Integration with batch processing",
+        "Validation of plate assignments"
+      ],
+      "implementation_file": "src/components/widgets/plate_template.py",
+      "technical_notes": "Required for batch processing scenarios - well plate template functionality"
+    },
+    {
+      "id": "TASK-024",
+      "title": "Batch Tracking Log System",
+      "description": "Implement comprehensive logging and tracking system for batch processing operations",
+      "type": "feature",
+      "priority": "medium",
+      "status": "pending",
+      "effort": "medium",
+      "dependencies": ["TASK-014", "TASK-023"],
+      "functional_requirement": "FR6.4",
+      "acceptance_criteria": [
+        "Detailed batch processing logs",
+        "Progress tracking and time estimates",
+        "Error logging and recovery tracking",
+        "Batch result summaries and reports",
+        "Log export and archiving",
+        "Real-time status updates",
+        "Performance metrics collection"
+      ],
+      "implementation_file": "src/models/batch_logger.py",
+      "technical_notes": "Required for batch processing workflow - comprehensive tracking and logging"
+    },
+    {
+      "id": "TASK-025",
+      "title": "Auto-Session Loading System",
+      "description": "Implement automatic session loading and recovery system for seamless workflow continuation",
+      "type": "feature",
+      "priority": "medium",
+      "status": "pending",
+      "effort": "small",
+      "dependencies": ["TASK-010"],
+      "functional_requirement": "NFR3.3",
+      "acceptance_criteria": [
+        "Automatic session detection on startup",
+        "Recent session list and quick access",
+        "Crash recovery and session restoration",
+        "Auto-save with configurable intervals",
+        "Session backup and versioning",
+        "User preference for auto-loading",
+        "Session integrity validation"
+      ],
+      "implementation_file": "src/models/auto_session.py",
+      "technical_notes": "Required for user scenarios - automatic session management"
+    },
+    {
+      "id": "TASK-026",
+      "title": "Template-Based Region Auto-Apply",
+      "description": "Implement automatic application of selection templates to detected regions in new images",
+      "type": "feature",
+      "priority": "medium",
+      "status": "pending",
+      "effort": "large",
+      "dependencies": ["TASK-021", "TASK-020"],
+      "functional_requirement": "FR2.5",
+      "acceptance_criteria": [
+        "Automatic region detection in new images",
+        "Template matching and application",
+        "Confidence scoring for auto-applied selections",
+        "User review and approval workflow",
+        "Template adaptation and learning",
+        "Batch auto-application capabilities",
+        "Performance optimization for real-time use"
+      ],
+      "implementation_file": "src/models/auto_apply.py",
+      "technical_notes": "Required for template-based automation scenarios"
+    },
+    {
+      "id": "TASK-027",
+      "title": "Enhanced Batch Processing with Template Integration",
+      "description": "Enhance existing batch processing system with comprehensive template integration and automation",
+      "type": "feature",
+      "priority": "medium",
+      "status": "pending",
+      "effort": "large",
+      "dependencies": ["TASK-014", "TASK-021", "TASK-026"],
+      "functional_requirement": "FR6.5",
+      "acceptance_criteria": [
+        "Template-driven batch processing workflows",
+        "Automatic parameter application from templates",
+        "Batch validation and quality control",
+        "Template compatibility checking",
+        "Results aggregation and comparison",
+        "Automated report generation",
+        "Integration with tracking system"
+      ],
+      "implementation_file": "src/models/enhanced_batch.py",
+      "technical_notes": "Enhanced batch processing with full template integration"
+    },
+    {
+      "id": "TASK-028",
+      "title": "Training Documentation System",
+      "description": "Create comprehensive training documentation and user guides for new users",
+      "type": "documentation",
+      "priority": "low",
+      "status": "pending",
+      "effort": "medium",
+      "dependencies": ["TASK-018"],
+      "functional_requirement": "NFR4.3",
+      "acceptance_criteria": [
+        "Step-by-step user guides",
+        "Video tutorial integration",
+        "Interactive help system",
+        "Context-sensitive documentation",
+        "Best practices and workflows",
+        "Troubleshooting guides",
+        "Multi-language support planning"
+      ],
+      "implementation_file": "docs/user_guides/",
+      "technical_notes": "Comprehensive training materials for new users"
     }
   ],
   "metadata": {
-    "total_tasks": 20,
+    "total_tasks": 28,
     "by_status": {
-      "completed": 16,
-      "pending": 4,
-
+      "completed": 15,
+      "done": 2,
+      "pending": 11,
       "in_progress": 0
     },
     "by_priority": {
-      "high": 11,
-      "medium": 7,
-      "low": 2
+      "high": 12,
+      "medium": 13,
+      "low": 3
     },
     "by_type": {
-      "feature": 17,
+      "feature": 25,
       "infrastructure": 1,
       "testing": 1,
-      "ui": 1
+      "documentation": 1
     },
-    "completion_percentage": 80,
+    "completion_percentage": 61,
     "requirements_compliance": {
-      "functional_requirements": "98%",
-      "non_functional_requirements": "95%", 
-
-      "overall": "98%"
+      "functional_requirements": "90%",
+      "non_functional_requirements": "92%", 
+      "overall": "91%"
     },
-    "production_status": "Ready for production use with advanced filtering capabilities"
+    "production_status": "Core functionality complete, advanced features in development"
   }
 }
