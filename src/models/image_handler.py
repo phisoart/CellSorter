@@ -406,8 +406,27 @@ class ImageHandler(QWidget, LoggerMixin):
             if self.show_overlays and (self.overlays or self.cell_overlays):
                 pixmap = self._draw_overlays(pixmap)
             
+            # Get widget size, ensuring minimum dimensions of 1x1
+            label_width = max(1, self.image_label.width())
+            label_height = max(1, self.image_label.height())
+            
+            # Create a new pixmap for the view that includes pan offset
+            view_pixmap = QPixmap(label_width, label_height)
+            
+            # Ensure pixmap is valid before proceeding
+            if view_pixmap.isNull():
+                self.log_error("Failed to create valid pixmap - invalid dimensions")
+                return
+                
+            view_pixmap.fill(Qt.gray)  # Fill with background color
+            
+            # Draw the image pixmap with pan offset
+            painter = QPainter(view_pixmap)
+            painter.drawPixmap(self.pan_offset[0], self.pan_offset[1], pixmap)
+            painter.end()
+            
             # Update label
-            self.image_label.setPixmap(pixmap)
+            self.image_label.setPixmap(view_pixmap)
             
         except Exception as e:
             self.log_error(f"Failed to update display: {e}")
@@ -415,13 +434,13 @@ class ImageHandler(QWidget, LoggerMixin):
     
     def _numpy_to_qimage(self, image: np.ndarray) -> QImage:
         """
-        Convert numpy array to QImage.
+        Convert numpy array to QImage with proper dtype conversion and C-contiguous handling.
         
         Args:
-            image: Image as numpy array
+            image: Image as numpy array of any dtype
         
         Returns:
-            QImage object
+            QImage object suitable for display
         """
         if len(image.shape) == 2:
             # Grayscale image
@@ -429,15 +448,26 @@ class ImageHandler(QWidget, LoggerMixin):
             bytes_per_line = width
 
             if image.dtype == np.uint8:
+                # Ensure C-contiguous for QImage
+                if not image.flags['C_CONTIGUOUS']:
+                    image = np.ascontiguousarray(image)
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
             else:
-                # Convert to uint8, handle uniform value (no division by zero)
+                # Convert to uint8 with proper normalization
                 min_val = image.min()
                 max_val = image.max()
+                
                 if max_val == min_val:
+                    # Uniform image - avoid division by zero
                     image_uint8 = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
                 else:
+                    # Normalize to 0-255 range
                     image_uint8 = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+                
+                # Ensure C-contiguous for QImage
+                if not image_uint8.flags['C_CONTIGUOUS']:
+                    image_uint8 = np.ascontiguousarray(image_uint8)
+                    
                 return QImage(image_uint8.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
         
         elif len(image.shape) == 3:
@@ -450,10 +480,16 @@ class ImageHandler(QWidget, LoggerMixin):
                 if image.dtype != np.uint8:
                     min_val = image.min()
                     max_val = image.max()
+                    
                     if max_val == min_val:
                         image = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
                     else:
                         image = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+                
+                # Ensure C-contiguous
+                if not image.flags['C_CONTIGUOUS']:
+                    image = np.ascontiguousarray(image)
+                    
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888)
             
             elif channels == 4:
@@ -461,13 +497,21 @@ class ImageHandler(QWidget, LoggerMixin):
                 if image.dtype != np.uint8:
                     min_val = image.min()
                     max_val = image.max()
+                    
                     if max_val == min_val:
                         image = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
                     else:
                         image = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+                
+                # Ensure C-contiguous
+                if not image.flags['C_CONTIGUOUS']:
+                    image = np.ascontiguousarray(image)
+                    
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_RGBA8888)
         
-        raise ValueError(f"Unsupported image shape: {image.shape}")
+        # Unsupported format - return empty image
+        self.log_warning(f"Unsupported image shape for QImage conversion: {image.shape}")
+        return QImage()
     
     def _draw_overlays(self, pixmap: QPixmap) -> QPixmap:
         """
@@ -555,19 +599,145 @@ class ImageHandler(QWidget, LoggerMixin):
         self.set_zoom(self.zoom_level * 0.8)
     
     def zoom_fit(self) -> None:
-        """Fit image to widget size."""
+        """Fit image to window size."""
         if self.image_data is None:
             return
         
-        widget_size = self.image_label.size()
-        image_size = self.image_data.shape[:2]  # (height, width)
+        # Get widget and image dimensions
+        widget_width = self.image_label.width()
+        widget_height = self.image_label.height()
         
-        # Calculate zoom to fit
-        zoom_x = widget_size.width() / image_size[1]
-        zoom_y = widget_size.height() / image_size[0]
-        zoom_fit = min(zoom_x, zoom_y, 1.0)  # Don't zoom in beyond 100%
+        if widget_width <= 0 or widget_height <= 0:
+            return
         
-        self.set_zoom(zoom_fit)
+        image_height, image_width = self.image_data.shape[:2]
+        
+        if image_width <= 0 or image_height <= 0:
+            return
+        
+        # Calculate zoom level to fit image in widget
+        zoom_x = widget_width / image_width
+        zoom_y = widget_height / image_height
+        
+        # Use the smaller zoom level to ensure the entire image fits
+        fit_zoom = min(zoom_x, zoom_y)
+        
+        # Apply some padding (95% of available space)
+        fit_zoom *= 0.95
+        
+        # Reset pan offset to center the image
+        self.pan_offset = (0, 0)
+        
+        # Set the calculated zoom level
+        self.set_zoom(fit_zoom)
+        
+        self.log_info(f"Fitted image to window with zoom level: {fit_zoom:.2f}")
+    
+    def fit_to_window(self) -> None:
+        """Alias for zoom_fit for consistency."""
+        self.zoom_fit()
+    
+    def reset_view(self) -> None:
+        """Reset view to default state."""
+        self.zoom_level = 1.0
+        self.pan_offset = (0, 0)
+        self._update_display()
+        self.zoom_changed.emit(self.zoom_level)
+    
+    def pan(self, dx: int, dy: int) -> None:
+        """
+        Pan the image view.
+        
+        Args:
+            dx: Horizontal pan distance in pixels
+            dy: Vertical pan distance in pixels
+        """
+        if self.image_data is None:
+            return
+        
+        # Update pan offset
+        self.pan_offset = (
+            self.pan_offset[0] + dx,
+            self.pan_offset[1] + dy
+        )
+        
+        # Apply the panning by updating the display
+        self._update_display()
+    
+    def set_selection_mode(self, enabled: bool) -> None:
+        """
+        Enable or disable selection mode.
+        
+        Args:
+            enabled: Whether to enable selection mode
+        """
+        # TODO: Implement selection mode
+        self.log_info(f"Selection mode: {'enabled' if enabled else 'disabled'}")
+    
+    def get_visible_rect(self) -> Tuple[int, int, int, int]:
+        """
+        Get the currently visible rectangle in image coordinates.
+        
+        Returns:
+            Tuple of (x, y, width, height) in image coordinates
+        """
+        if self.image_data is None:
+            return (0, 0, 0, 0)
+        
+        # Calculate visible area based on widget size and zoom
+        widget_width = max(1, self.image_label.width())  # Prevent division by zero
+        widget_height = max(1, self.image_label.height())  # Prevent division by zero
+        
+        # Image dimensions
+        img_height, img_width = self.image_data.shape[:2]
+        
+        # Ensure zoom level is never zero to prevent division by zero
+        safe_zoom = max(0.01, self.zoom_level)
+        
+        # Visible dimensions in image coordinates
+        visible_width = min(widget_width / safe_zoom, img_width)
+        visible_height = min(widget_height / safe_zoom, img_height)
+        
+        # Calculate position based on pan offset
+        x = max(0, -self.pan_offset[0] / safe_zoom)
+        y = max(0, -self.pan_offset[1] / safe_zoom)
+        
+        return (int(x), int(y), int(visible_width), int(visible_height))
+    
+    def navigate_to_position(self, norm_x: float, norm_y: float) -> None:
+        """
+        Navigate to a normalized position in the image.
+        
+        Args:
+            norm_x: Normalized X position (0-1)
+            norm_y: Normalized Y position (0-1)
+        """
+        if self.image_data is None:
+            return
+        
+        # Get image dimensions
+        img_height, img_width = self.image_data.shape[:2]
+        
+        # Calculate target position in image coordinates
+        target_x = int(norm_x * img_width)
+        target_y = int(norm_y * img_height)
+        
+        # Calculate pan offset to center on target
+        widget_width = max(1, self.image_label.width())  # Prevent division by zero
+        widget_height = max(1, self.image_label.height())  # Prevent division by zero
+        
+        # Ensure zoom level is never zero
+        safe_zoom = max(0.01, self.zoom_level)
+        
+        # Calculate offset to center the target point
+        # Negative values move the image in the opposite direction to center the target
+        self.pan_offset = (
+            int(widget_width / 2 - target_x * safe_zoom),
+            int(widget_height / 2 - target_y * safe_zoom)
+        )
+        
+        self._update_display()
+        self.log_info(f"Navigated to position: ({norm_x:.2f}, {norm_y:.2f})")
     
     def add_overlay(self, overlay_type: str, x: float, y: float, 
                    width: float, height: float, color: str = '#FF0000', 
