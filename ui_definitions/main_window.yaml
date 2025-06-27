@@ -1,0 +1,392 @@
+# CellSorter Main Window UI Definition
+# This YAML file defines the complete structure of the main application window
+# for both GUI and headless development modes.
+
+name: "MainWindow"
+type: "QMainWindow"
+title: "CellSorter - 2.0.0"
+geometry:
+  width: 1400
+  height: 900
+  min_width: 1000
+  min_height: 700
+
+properties:
+  windowTitle: "CellSorter - 2.0.0"
+  centralWidget:
+    type: "QWidget"
+    layout:
+      type: "QHBoxLayout"
+      margins: [4, 4, 4, 4]
+      children:
+        - type: "QSplitter"
+          name: "main_splitter"
+          orientation: "horizontal"
+          sizes: [490, 560, 350]  # Image, Plot, Selection panel widths
+          children:
+            - type: "ImageHandler"
+              name: "image_handler"
+              objectName: "image_panel"
+              properties:
+                minimumWidth: 300
+                sizePolicy: ["Expanding", "Expanding"]
+            
+            - type: "ScatterPlotWidget"
+              name: "scatter_plot_widget"
+              objectName: "plot_panel"
+              properties:
+                minimumWidth: 400
+                sizePolicy: ["Expanding", "Expanding"]
+            
+            - type: "SelectionPanel"
+              name: "selection_panel"
+              objectName: "selection_panel"
+              properties:
+                minimumWidth: 250
+                maximumWidth: 400
+                sizePolicy: ["Fixed", "Expanding"]
+
+menuBar:
+  type: "QMenuBar"
+  menus:
+    - name: "File"
+      text: "&File"
+      actions:
+        - name: "action_open_image"
+          text: "Open &Image..."
+          shortcut: "Ctrl+O"
+          statusTip: "Open microscopy image file"
+          enabled: true
+          
+        - name: "action_open_csv"
+          text: "Open &CSV..."
+          shortcut: "Ctrl+Shift+O"
+          statusTip: "Open CellProfiler CSV data file"
+          enabled: true
+          
+        - type: "separator"
+        
+        - name: "action_save_session"
+          text: "&Save Session"
+          shortcut: "Ctrl+S"
+          statusTip: "Save current analysis session"
+          enabled: false
+          
+        - name: "action_load_session"
+          text: "&Load Session..."
+          shortcut: "Ctrl+L"
+          statusTip: "Load previous analysis session"
+          enabled: true
+          
+        - type: "separator"
+        
+        - name: "action_export_protocol"
+          text: "&Export Protocol..."
+          shortcut: "Ctrl+E"
+          statusTip: "Export CosmoSort protocol file"
+          enabled: false
+          
+        - name: "action_batch_process"
+          text: "&Batch Process..."
+          shortcut: "Ctrl+B"
+          statusTip: "Process multiple files at once"
+          enabled: true
+          
+        - type: "separator"
+        
+        - name: "action_exit"
+          text: "E&xit"
+          shortcut: "Ctrl+Q"
+          statusTip: "Exit CellSorter application"
+          role: "QuitRole"
+
+    - name: "Edit"
+      text: "&Edit"
+      actions:
+        - name: "action_undo"
+          text: "&Undo"
+          shortcut: "Ctrl+Z"
+          statusTip: "Undo last action"
+          enabled: false
+          
+        - name: "action_redo"
+          text: "&Redo"
+          shortcut: "Ctrl+Y"
+          statusTip: "Redo last undone action"
+          enabled: false
+          
+        - type: "separator"
+        
+        - name: "action_select_all"
+          text: "Select &All"
+          shortcut: "Ctrl+A"
+          statusTip: "Select all cells"
+          enabled: false
+          
+        - name: "action_clear_selections"
+          text: "&Clear Selections"
+          shortcut: "Ctrl+D"
+          statusTip: "Clear all current selections"
+          enabled: false
+          
+        - name: "action_delete_selection"
+          text: "&Delete Selection"
+          shortcut: "Delete"
+          statusTip: "Delete current selection"
+          enabled: false
+
+    - name: "View"
+      text: "&View"
+      actions:
+        - name: "action_zoom_in"
+          text: "Zoom &In"
+          shortcut: "Ctrl+Plus"
+          statusTip: "Zoom in on image"
+          enabled: false
+          
+        - name: "action_zoom_out"
+          text: "Zoom &Out"
+          shortcut: "Ctrl+Minus"
+          statusTip: "Zoom out on image"
+          enabled: false
+          
+        - name: "action_zoom_fit"
+          text: "&Fit to Window"
+          shortcut: "Ctrl+0"
+          statusTip: "Fit image to window"
+          enabled: false
+          
+        - name: "action_reset_view"
+          text: "&Reset View"
+          shortcut: "Ctrl+R"
+          statusTip: "Reset image view to original size"
+          enabled: false
+          
+        - type: "separator"
+        
+        - name: "action_toggle_overlays"
+          text: "Toggle &Overlays"
+          shortcut: "Ctrl+H"
+          statusTip: "Show/hide cell overlays"
+          enabled: false
+          checkable: true
+          
+        - name: "action_toggle_theme"
+          text: "Toggle &Theme"
+          shortcut: "Ctrl+T"
+          statusTip: "Switch between light and dark themes"
+          enabled: true
+
+    - name: "Tools"
+      text: "&Tools"
+      actions:
+        - name: "action_calibrate"
+          text: "&Calibrate Coordinates..."
+          shortcut: "Ctrl+K"
+          statusTip: "Calibrate image coordinate system"
+          enabled: false
+          
+        - name: "action_manage_templates"
+          text: "&Manage Templates..."
+          shortcut: "Ctrl+M"
+          statusTip: "Manage selection templates"
+          enabled: true
+          
+        - type: "separator"
+        
+        - name: "action_selection_tool"
+          text: "&Selection Tool"
+          shortcut: "S"
+          statusTip: "Activate selection tool"
+          enabled: false
+          checkable: true
+          
+        - name: "action_calibration_tool"
+          text: "&Calibration Tool"
+          shortcut: "C"
+          statusTip: "Activate calibration tool"
+          enabled: false
+          checkable: true
+
+    - name: "Help"
+      text: "&Help"
+      actions:
+        - name: "action_check_updates"
+          text: "Check for &Updates..."
+          statusTip: "Check for application updates"
+          enabled: true
+          
+        - name: "action_update_preferences"
+          text: "Update &Preferences..."
+          statusTip: "Configure update settings"
+          enabled: true
+          
+        - type: "separator"
+        
+        - name: "action_about"
+          text: "&About CellSorter"
+          statusTip: "Show application information"
+          enabled: true
+          role: "AboutRole"
+
+toolBar:
+  type: "QToolBar"
+  name: "main_toolbar"
+  movable: false
+  floatable: false
+  actions:
+    - name: "action_open_image"
+      icon: "document-open"
+      
+    - name: "action_open_csv"
+      icon: "document-open-data"
+      
+    - type: "separator"
+    
+    - name: "action_save_session"
+      icon: "document-save"
+      
+    - name: "action_export_protocol"
+      icon: "document-export"
+      
+    - type: "separator"
+    
+    - name: "action_zoom_in"
+      icon: "zoom-in"
+      
+    - name: "action_zoom_out"
+      icon: "zoom-out"
+      
+    - name: "action_zoom_fit"
+      icon: "zoom-fit-best"
+      
+    - type: "separator"
+    
+    - name: "action_calibrate"
+      icon: "crosshairs"
+      
+    - name: "action_selection_tool"
+      icon: "edit-select"
+
+statusBar:
+  type: "QStatusBar"
+  widgets:
+    - type: "QLabel"
+      name: "status_label"
+      text: "Ready"
+      properties:
+        minimumWidth: 200
+        
+    - type: "QLabel"
+      name: "cell_count_label"
+      text: "Cells: 0"
+      properties:
+        minimumWidth: 80
+        
+    - type: "QLabel"
+      name: "zoom_label"
+      text: "Zoom: 100%"
+      properties:
+        minimumWidth: 100
+        
+    - type: "QLabel"
+      name: "coordinates_label"
+      text: "Coordinates: (0, 0)"
+      properties:
+        minimumWidth: 150
+
+dockWidgets: []
+
+# Signal connections for headless mode
+signals:
+  # File operations
+  image_loaded: "str"  # file_path
+  csv_loaded: "str"    # file_path
+  session_saved: "str" # file_path
+  session_loaded: "str" # file_path
+  export_requested: ""
+  
+  # Internal widget signals
+  image_handler:
+    image_loaded: "_on_image_loaded"
+    image_load_failed: "_on_image_load_failed"
+    calibration_point_clicked: "_on_calibration_point_clicked"
+    
+  scatter_plot_widget:
+    selection_made: "_on_selection_made"
+    
+  selection_panel:
+    selection_deleted: "_on_panel_selection_deleted"
+    
+  selection_manager:
+    selection_added: "_on_selection_added"
+    selection_updated: "_on_selection_updated"
+    selection_removed: "_on_selection_removed"
+    
+  coordinate_transformer:
+    calibration_updated: "_on_calibration_updated"
+
+# Action connections
+action_connections:
+  action_open_image: "open_image_file"
+  action_open_csv: "open_csv_file"
+  action_save_session: "save_session"
+  action_load_session: "load_session"
+  action_export_protocol: "export_protocol"
+  action_batch_process: "batch_process"
+  action_exit: "close"
+  action_undo: "undo"
+  action_redo: "redo"
+  action_select_all: "select_all"
+  action_clear_selections: "clear_selections"
+  action_delete_selection: "delete_selection"
+  action_zoom_in: "zoom_in"
+  action_zoom_out: "zoom_out"
+  action_zoom_fit: "zoom_fit"
+  action_reset_view: "reset_view"
+  action_toggle_overlays: "toggle_overlays"
+  action_toggle_theme: "toggle_theme"
+  action_calibrate: "calibrate_coordinates"
+  action_manage_templates: "manage_templates"
+  action_selection_tool: "activate_selection_tool"
+  action_calibration_tool: "activate_calibration_tool"
+  action_check_updates: "check_for_updates"
+  action_update_preferences: "show_update_preferences"
+  action_about: "show_about"
+
+# Settings management
+settings:
+  group: "MainWindow"
+  keys:
+    geometry: "geometry"
+    windowState: "windowState"
+    splitter_sizes: "splitter/sizes"
+    theme: "theme"
+    recent_files: "recent_files"
+    auto_save: "auto_save"
+
+# Component initialization order
+initialization_order:
+  - "error_handler"
+  - "theme_manager"
+  - "settings"
+  - "image_handler"
+  - "csv_parser"
+  - "coordinate_transformer"
+  - "selection_manager"
+  - "extractor"
+  - "session_manager"
+  - "template_manager"
+  - "scatter_plot_widget"
+  - "selection_panel"
+  - "ui_setup"
+  - "connections"
+  - "restore_settings"
+
+# Headless mode specific configurations
+headless:
+  enabled: true
+  mode_detection: "auto"  # auto, force_gui, force_headless
+  serialization_format: "yaml"
+  auto_export_on_change: false
+  validation: "strict"

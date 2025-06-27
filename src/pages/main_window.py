@@ -3,9 +3,11 @@ CellSorter Main Application Window
 
 This module implements the main application window with menu bar, toolbar,
 status bar, and dockable panels for the CellSorter application.
+
+Supports both traditional GUI mode and headless development mode.
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
 from pathlib import Path
 from datetime import datetime
 
@@ -18,6 +20,11 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal, QTimer, QSettings
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QImage, QRect, QSize
+
+# Headless mode imports
+from headless.mode_manager import is_dev_mode, get_mode_info
+from headless.main_window_adapter import MainWindowAdapter
+from headless.ui_compatibility import UI
 
 from config.settings import (
     APP_NAME, APP_VERSION, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
@@ -50,6 +57,9 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     Provides the primary interface with menu bar, toolbar, status bar,
     and dockable panels for image viewing, data visualization, and selection management.
+    
+    Supports both traditional GUI mode and headless development mode through
+    the MainWindowAdapter pattern.
     """
     
     # Signals
