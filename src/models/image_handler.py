@@ -406,8 +406,17 @@ class ImageHandler(QWidget, LoggerMixin):
             if self.show_overlays and (self.overlays or self.cell_overlays):
                 pixmap = self._draw_overlays(pixmap)
             
+            # Create a new pixmap for the view that includes pan offset
+            view_pixmap = QPixmap(self.image_label.width(), self.image_label.height())
+            view_pixmap.fill(Qt.gray)  # Fill with background color
+            
+            # Draw the image pixmap with pan offset
+            painter = QPainter(view_pixmap)
+            painter.drawPixmap(self.pan_offset[0], self.pan_offset[1], pixmap)
+            painter.end()
+            
             # Update label
-            self.image_label.setPixmap(pixmap)
+            self.image_label.setPixmap(view_pixmap)
             
         except Exception as e:
             self.log_error(f"Failed to update display: {e}")
@@ -556,8 +565,38 @@ class ImageHandler(QWidget, LoggerMixin):
     
     def zoom_fit(self) -> None:
         """Fit image to window size."""
-        # TODO: Calculate zoom to fit window
-        self.set_zoom(1.0)
+        if self.image_data is None:
+            return
+        
+        # Get widget and image dimensions
+        widget_width = self.image_label.width()
+        widget_height = self.image_label.height()
+        
+        if widget_width <= 0 or widget_height <= 0:
+            return
+        
+        image_height, image_width = self.image_data.shape[:2]
+        
+        if image_width <= 0 or image_height <= 0:
+            return
+        
+        # Calculate zoom level to fit image in widget
+        zoom_x = widget_width / image_width
+        zoom_y = widget_height / image_height
+        
+        # Use the smaller zoom level to ensure the entire image fits
+        fit_zoom = min(zoom_x, zoom_y)
+        
+        # Apply some padding (95% of available space)
+        fit_zoom *= 0.95
+        
+        # Reset pan offset to center the image
+        self.pan_offset = (0, 0)
+        
+        # Set the calculated zoom level
+        self.set_zoom(fit_zoom)
+        
+        self.log_info(f"Fitted image to window with zoom level: {fit_zoom:.2f}")
     
     def fit_to_window(self) -> None:
         """Alias for zoom_fit for consistency."""
@@ -587,7 +626,7 @@ class ImageHandler(QWidget, LoggerMixin):
             self.pan_offset[1] + dy
         )
         
-        # TODO: Implement actual panning in display
+        # Apply the panning by updating the display
         self._update_display()
     
     def set_selection_mode(self, enabled: bool) -> None:
@@ -611,19 +650,22 @@ class ImageHandler(QWidget, LoggerMixin):
             return (0, 0, 0, 0)
         
         # Calculate visible area based on widget size and zoom
-        widget_width = self.image_label.width()
-        widget_height = self.image_label.height()
+        widget_width = max(1, self.image_label.width())  # Prevent division by zero
+        widget_height = max(1, self.image_label.height())  # Prevent division by zero
         
         # Image dimensions
         img_height, img_width = self.image_data.shape[:2]
         
+        # Ensure zoom level is never zero to prevent division by zero
+        safe_zoom = max(0.01, self.zoom_level)
+        
         # Visible dimensions in image coordinates
-        visible_width = min(widget_width / self.zoom_level, img_width)
-        visible_height = min(widget_height / self.zoom_level, img_height)
+        visible_width = min(widget_width / safe_zoom, img_width)
+        visible_height = min(widget_height / safe_zoom, img_height)
         
         # Calculate position based on pan offset
-        x = max(0, -self.pan_offset[0] / self.zoom_level)
-        y = max(0, -self.pan_offset[1] / self.zoom_level)
+        x = max(0, -self.pan_offset[0] / safe_zoom)
+        y = max(0, -self.pan_offset[1] / safe_zoom)
         
         return (int(x), int(y), int(visible_width), int(visible_height))
     
@@ -646,13 +688,17 @@ class ImageHandler(QWidget, LoggerMixin):
         target_y = int(norm_y * img_height)
         
         # Calculate pan offset to center on target
-        widget_width = self.image_label.width()
-        widget_height = self.image_label.height()
+        widget_width = max(1, self.image_label.width())  # Prevent division by zero
+        widget_height = max(1, self.image_label.height())  # Prevent division by zero
+        
+        # Ensure zoom level is never zero
+        safe_zoom = max(0.01, self.zoom_level)
         
         # Calculate offset to center the target point
+        # Negative values move the image in the opposite direction to center the target
         self.pan_offset = (
-            int(widget_width / 2 - target_x * self.zoom_level),
-            int(widget_height / 2 - target_y * self.zoom_level)
+            int(widget_width / 2 - target_x * safe_zoom),
+            int(widget_height / 2 - target_y * safe_zoom)
         )
         
         self._update_display()
