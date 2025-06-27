@@ -237,10 +237,10 @@ class HeadlessCLI:
             return 1
 
 
-def main() -> int:
+def main(args: Optional[List[str]] = None) -> int:
     """Main entry point for the CLI."""
     cli = HeadlessCLI()
-    return cli.run()
+    return cli.run(args)
 
 
 if __name__ == '__main__':
