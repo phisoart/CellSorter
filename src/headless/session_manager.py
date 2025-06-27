@@ -7,7 +7,7 @@ application settings, and user data persistence.
 
 import json
 import logging
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Callable
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass, field, asdict
@@ -53,19 +53,40 @@ class SessionData:
 
 
 class HeadlessSessionManager:
-    """Manages application sessions in headless mode."""
+    """
+    Manages headless UI development sessions.
     
-    def __init__(self, mode_manager: ModeManager):
-        """Initialize session manager."""
-        self.mode_manager = mode_manager
+    Features:
+    - Session persistence and restoration
+    - Command history tracking
+    - State management
+    - Multi-session support
+    """
+    
+    def __init__(self, mode_manager: Optional[ModeManager] = None):
+        """
+        Initialize session manager.
+        
+        Args:
+            mode_manager: Mode manager instance (creates new if None)
+        """
+        self.mode_manager = mode_manager or ModeManager()
+        self.sessions: Dict[str, Dict[str, Any]] = {}
+        self.active_session: Optional[str] = None
+        self.command_history: List[Dict[str, Any]] = []
+        self.session_dir = Path.home() / '.cellsorter' / 'sessions'
+        self.session_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Command callbacks
+        self.command_callbacks: Dict[str, Callable] = {}
+        
+        # Load existing sessions
+        self._load_sessions()
+        
         self.current_session: Optional[SessionData] = None
         self.session_file_path: Optional[Path] = None
         self.auto_save_enabled: bool = True
         self.auto_save_interval: int = 300  # seconds
-        
-        # Session storage directory
-        self.sessions_dir = Path.home() / ".cellsorter" / "sessions"
-        self.sessions_dir.mkdir(parents=True, exist_ok=True)
         
         logger.info("Session manager initialized")
     
@@ -94,7 +115,7 @@ class HeadlessSessionManager:
             if self.session_file_path:
                 file_path = self.session_file_path
             else:
-                file_path = self.sessions_dir / f"{self.current_session.session_id}.json"
+                file_path = self.session_dir / f"{self.current_session.session_id}.json"
         
         file_path = Path(file_path)
         
@@ -247,3 +268,7 @@ class HeadlessSessionManager:
         self.current_session = None
         self.session_file_path = None
         logger.info("Current session cleared")
+
+    def _load_sessions(self):
+        # Implementation of _load_sessions method
+        pass

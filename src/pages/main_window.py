@@ -22,7 +22,7 @@ from PySide6.QtCore import Qt, Signal, QTimer, QSettings
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QImage, QRect, QSize
 
 # Headless mode imports
-from headless.mode_manager import is_dev_mode, get_mode_info
+from headless.mode_manager import is_dev_mode, is_dual_mode, get_mode_info
 from headless.main_window_adapter import MainWindowAdapter
 from headless.ui_compatibility import UI
 
