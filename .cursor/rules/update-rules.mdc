@@ -5,6 +5,19 @@ alwaysApply: false
 ---
 # Project Update Rules for CellSorter
 
+## Mandatory Headless Development Rules
+
+### CRITICAL: All development MUST be done in headless mode
+- **NEVER show GUI during development unless explicitly specified**
+- **ALL UI operations MUST work without display server**
+- **Use `--headless` flag or virtual display (Xvfb) for any GUI testing**
+- **Every test MUST include comprehensive UI interaction simulation**
+
+### Interactive Testing Requirements
+- **MUST test ALL clicks, drags, keyboard inputs in terminal/headless mode**
+- **MUST simulate complete user workflows without display**
+- **Run `pytest tests/ --headless --interactive-sim` before any updates**
+
 ## Project Structure Update Rules
 
 ### When updating project structure files

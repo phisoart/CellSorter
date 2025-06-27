@@ -11,10 +11,13 @@ This guide provides comprehensive instructions for developing CellSorter's GUI i
 
 ## Core Principles
 
-### 1. Development Mode First
+### 1. Mandatory Headless Development
 - **ALWAYS** use `--dev-mode` flag when developing
 - **NEVER** create QApplication in development mode
+- **NEVER** show GUI during development unless explicitly specified**
+- **ALL UI operations MUST work without display server**
 - Use YAML/JSON for all UI definitions
+- Use virtual display (Xvfb) if GUI testing is absolutely required
 
 ### 2. Terminal-Only Development
 - All UI development must be possible via terminal
@@ -77,11 +80,19 @@ python run.py load-ui ui_definition.yaml
 
 #### Test Changes
 ```bash
-# Run headless tests
-pytest tests/headless/
+# Run headless tests with full interaction simulation
+pytest tests/headless/ --interactive-sim
 
-# Test with display (if available)
-CELLSORTER_DEV_MODE=false python run.py
+# MANDATORY: Test ALL user interactions in headless mode
+pytest tests/test_ui_interactions.py --headless --test-all-clicks
+pytest tests/test_ui_interactions.py --headless --test-all-drags
+pytest tests/test_ui_interactions.py --headless --test-keyboard-nav
+
+# Test complete user workflows without display
+pytest tests/test_user_workflows.py --headless --simulate-user
+
+# Test with display ONLY when explicitly needed
+CELLSORTER_DEV_MODE=false python run.py  # Use sparingly
 ```
 
 ### 3. File Organization
@@ -679,15 +690,100 @@ NEVER:
 - Use undocumented properties
 - Break backward compatibility
 
+## Interactive Testing Requirements
+
+### MANDATORY: All UI interactions MUST be tested in terminal/headless mode
+
+```python
+class HeadlessUITester:
+    """Simulate all user interactions without display"""
+    
+    def test_all_clicks(self):
+        """Test every clickable element"""
+        # MUST test all buttons
+        self.click_button('submitButton')
+        self.click_button('cancelButton')
+        self.click_button('helpButton')
+        
+        # MUST test all menu items
+        self.click_menu_item('File', 'Open')
+        self.click_menu_item('Edit', 'Preferences')
+        
+        # MUST test all toolbar actions
+        self.click_toolbar_action('saveAction')
+        self.click_toolbar_action('printAction')
+    
+    def test_all_drags(self):
+        """Test every drag operation"""
+        # MUST test drag-and-drop
+        self.drag_from_to('sourceList', 'targetList')
+        self.drag_file_to_widget('file.txt', 'dropArea')
+        
+        # MUST test sliders and scrollbars
+        self.drag_slider('volumeSlider', target_value=75)
+        self.drag_scrollbar('contentArea', scroll_percent=50)
+        
+        # MUST test splitter resizing
+        self.drag_splitter('mainSplitter', new_position=300)
+    
+    def test_keyboard_navigation(self):
+        """Test all keyboard interactions"""
+        # MUST test tab navigation
+        self.press_key('Tab')
+        self.verify_focus_moved()
+        
+        # MUST test shortcuts
+        self.press_key_combination('Ctrl+S')  # Save
+        self.press_key_combination('Ctrl+O')  # Open
+        self.press_key_combination('F1')      # Help
+        
+        # MUST test input fields
+        self.type_text('searchField', 'test query')
+        self.press_key('Enter')
+        self.verify_search_executed()
+    
+    def test_user_workflows(self):
+        """Test complete user workflows end-to-end"""
+        # MUST test primary workflows
+        self.simulate_file_open_workflow()
+        self.simulate_data_analysis_workflow()
+        self.simulate_export_workflow()
+        
+        # MUST test error scenarios
+        self.simulate_invalid_file_workflow()
+        self.simulate_network_error_workflow()
+```
+
+### Terminal Testing Commands
+
+```bash
+# MANDATORY: Run all interaction tests in headless mode
+pytest tests/test_ui_interactions.py --headless --verbose
+
+# Test specific interaction types
+pytest tests/test_clicks.py --headless
+pytest tests/test_drags.py --headless  
+pytest tests/test_keyboard.py --headless
+
+# Test user workflows
+pytest tests/test_workflows.py --headless --simulate-user
+
+# Verify all interactions work without display
+python -m pytest tests/ -m "interactive" --headless
+```
+
 ## Success Criteria
 
 Every development session must:
 - ✅ Pass validation
-- ✅ Work in headless mode
+- ✅ Work in headless mode  
+- ✅ **Test ALL UI interactions in terminal**
+- ✅ **Simulate complete user workflows without display**
 - ✅ Maintain UI consistency
 - ✅ Update documentation
-- ✅ Pass all tests
+- ✅ Pass all tests (including interaction tests)
 - ✅ Be reviewable in text format
+- ✅ **Verify every click, drag, and keyboard action works headless**
 
 ## Resources
 

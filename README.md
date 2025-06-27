@@ -187,20 +187,34 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
 
 ## 🧪 Testing
 
-CellSorter follows Test-Driven Development (TDD) principles:
+### CRITICAL: All tests run in headless mode by default
+
+CellSorter follows Test-Driven Development (TDD) with **mandatory headless testing**:
+- **NEVER shows GUI during testing unless explicitly specified**
+- **ALL UI tests work without display server**
+- **Comprehensive interaction simulation in terminal mode**
 
 ### Running Tests
 
 ```bash
-# Run all tests
-pytest
+# Run all tests (headless by default)
+pytest tests/ --headless
+
+# Run with full interactive simulation
+pytest tests/ --headless --interactive-sim
 
 # Run with coverage
-pytest --cov=src
+pytest --cov=src --headless
 
-# Run specific test categories
-pytest tests/components/  # UI component tests
-pytest tests/models/      # Business logic tests
+# Test all UI interactions without display
+pytest tests/test_ui_interactions.py --headless --test-all-clicks
+pytest tests/test_ui_interactions.py --headless --test-all-drags
+pytest tests/test_ui_interactions.py --headless --test-keyboard-nav
+
+# Run specific test categories (all headless)
+pytest tests/components/ --headless  # UI component tests (no display)
+pytest tests/models/ --headless      # Business logic tests
+pytest tests/integration/ --headless --simulate-user  # User workflow tests
 ```
 
 - **[User Guide](docs/USER_SCENARIOS.md)**: Detailed usage scenarios and workflows
