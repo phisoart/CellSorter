@@ -235,6 +235,170 @@ class HeadlessCLI:
         except Exception as e:
             print(f"Failed to get mode info: {e}", file=sys.stderr)
             return 1
+    
+    def dump_ui(self, output: Optional[str] = None, format: str = 'yaml') -> None:
+        """
+        Dump current UI definition to file or stdout.
+        
+        Args:
+            output: Output file path (None for stdout)
+            format: Output format ('yaml' or 'json')
+        """
+        try:
+            # Get current UI state
+            if not self.ui_model:
+                self.ui_model = UIModel()
+                
+            # Serialize UI
+            if format == 'yaml':
+                from ..serializers.yaml_serializer import YAMLSerializer
+                serializer = YAMLSerializer()
+            else:
+                from ..serializers.json_serializer import JSONSerializer
+                serializer = JSONSerializer()
+                
+            serialized = serializer.serialize(self.ui_model)
+            
+            # Output
+            if output:
+                with open(output, 'w') as f:
+                    f.write(serialized)
+                print(f"UI definition dumped to {output}")
+            else:
+                print(serialized)
+                
+        except Exception as e:
+            print(f"Error dumping UI: {e}")
+            raise
+    
+    def load_ui(self, input_path: str) -> None:
+        """
+        Load UI definition from file.
+        
+        Args:
+            input_path: Path to UI definition file
+        """
+        try:
+            # Determine format from extension
+            if input_path.endswith('.yaml') or input_path.endswith('.yml'):
+                from ..serializers.yaml_serializer import YAMLSerializer
+                serializer = YAMLSerializer()
+            else:
+                from ..serializers.json_serializer import JSONSerializer
+                serializer = JSONSerializer()
+            
+            # Load and deserialize
+            with open(input_path, 'r') as f:
+                content = f.read()
+                
+            self.ui_model = serializer.deserialize(content)
+            
+            # Apply to adapter if available
+            if self.adapter:
+                self.adapter.apply_ui_model(self.ui_model)
+                
+            print(f"UI definition loaded from {input_path}")
+            
+        except Exception as e:
+            print(f"Error loading UI: {e}")
+            raise
+    
+    def validate_ui(self, input_path: str) -> None:
+        """
+        Validate UI definition file.
+        
+        Args:
+            input_path: Path to UI definition file
+        """
+        try:
+            from ..validators.schema_validator import SchemaValidator
+            from ..validators.semantic_validator import SemanticValidator
+            
+            # Load UI definition
+            with open(input_path, 'r') as f:
+                content = f.read()
+            
+            # Validate schema
+            schema_validator = SchemaValidator()
+            schema_errors = schema_validator.validate(content)
+            
+            if schema_errors:
+                print("Schema validation errors:")
+                for error in schema_errors:
+                    print(f"  - {error}")
+                return
+                
+            print("✓ Schema validation passed")
+            
+            # Validate semantics
+            semantic_validator = SemanticValidator()
+            semantic_errors = semantic_validator.validate(content)
+            
+            if semantic_errors:
+                print("Semantic validation errors:")
+                for error in semantic_errors:
+                    print(f"  - {error}")
+                return
+                
+            print("✓ Semantic validation passed")
+            print("UI definition is valid!")
+            
+        except Exception as e:
+            print(f"Error validating UI: {e}")
+            raise
+    
+    def interactive_mode(self) -> None:
+        """
+        Start interactive headless session.
+        """
+        print("CellSorter Interactive Headless Mode")
+        print("Type 'help' for available commands or 'exit' to quit")
+        
+        while True:
+            try:
+                command = input("\ncellsorter> ").strip()
+                
+                if command == 'exit':
+                    break
+                elif command == 'help':
+                    self._show_help()
+                elif command.startswith('dump'):
+                    parts = command.split()
+                    output = parts[1] if len(parts) > 1 else None
+                    self.dump_ui(output)
+                elif command.startswith('load'):
+                    parts = command.split()
+                    if len(parts) > 1:
+                        self.load_ui(parts[1])
+                    else:
+                        print("Usage: load <file_path>")
+                elif command.startswith('validate'):
+                    parts = command.split()
+                    if len(parts) > 1:
+                        self.validate_ui(parts[1])
+                    else:
+                        print("Usage: validate <file_path>")
+                else:
+                    print(f"Unknown command: {command}")
+                    print("Type 'help' for available commands")
+                    
+            except KeyboardInterrupt:
+                print("\nUse 'exit' to quit")
+            except Exception as e:
+                print(f"Error: {e}")
+    
+    def _show_help(self) -> None:
+        """Show available commands in interactive mode."""
+        print("""
+Available commands:
+  dump [output_file]      - Dump current UI definition
+  load <input_file>       - Load UI definition from file  
+  validate <file>         - Validate UI definition file
+  help                    - Show this help message
+  exit                    - Exit interactive mode
+        """)
+    
+    def run_command(self, args: List[str]) -> int:
 
 
 def main(args: Optional[List[str]] = None) -> int:

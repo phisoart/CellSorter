@@ -17,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 class AppMode(Enum):
     """Application operation modes."""
-    GUI = "gui"
-    DEV = "dev"
-    AUTO = "auto"
+    GUI = "gui"                           # 실제사용모드(only gui mode)
+    DEV = "dev"                          # 디버깅모드(only headless mode) 
+    DUAL = "dual"                        # 디버깅모드(both headless mode & gui mode)
+    AUTO = "auto"                        # 자동 감지 모드
 
 
 class ModeManager:
@@ -78,23 +79,54 @@ class ModeManager:
         return self._mode_locked
     
     def is_dev_mode(self) -> bool:
-        """Check if currently in development mode."""
+        """Check if currently in development mode (headless only)."""
         return self.get_mode() == AppMode.DEV
     
     def is_gui_mode(self) -> bool:
         """Check if currently in GUI mode."""
         return self.get_mode() == AppMode.GUI
     
+    def is_dual_mode(self) -> bool:
+        """Check if currently in dual mode (both headless and GUI)."""
+        return self.get_mode() == AppMode.DUAL
+    
+    def requires_gui(self) -> bool:
+        """Check if current mode requires GUI."""
+        mode = self.get_mode()
+        return mode in (AppMode.GUI, AppMode.DUAL)
+    
+    def requires_headless(self) -> bool:
+        """Check if current mode requires headless functionality."""
+        mode = self.get_mode()
+        return mode in (AppMode.DEV, AppMode.DUAL)
+    
     def _detect_mode(self) -> AppMode:
         """Auto-detect appropriate mode based on environment."""
-        # Check explicit environment variable
-        env_mode = os.environ.get('CELLSORTER_DEV_MODE', '').lower()
-        if env_mode in ('true', '1', 'yes', 'on'):
-            logger.info("Dev mode set by CELLSORTER_DEV_MODE environment variable")
-            return AppMode.DEV
-        elif env_mode in ('false', '0', 'no', 'off'):
-            logger.info("GUI mode set by CELLSORTER_DEV_MODE environment variable")
+        # Check explicit mode environment variable first
+        env_mode = os.environ.get('CELLSORTER_MODE', '').lower()
+        if env_mode in ('gui', 'production'):
+            logger.info("GUI mode set by CELLSORTER_MODE environment variable")
             return AppMode.GUI
+        elif env_mode in ('dev', 'headless'):
+            logger.info("Dev mode set by CELLSORTER_MODE environment variable")
+            return AppMode.DEV
+        elif env_mode in ('dual', 'both', 'debug'):
+            logger.info("Dual mode set by CELLSORTER_MODE environment variable")
+            return AppMode.DUAL
+        
+        # Legacy environment variable support
+        env_mode_legacy = os.environ.get('CELLSORTER_DEV_MODE', '').lower()
+        if env_mode_legacy in ('true', '1', 'yes', 'on'):
+            logger.info("Dev mode set by CELLSORTER_DEV_MODE environment variable (legacy)")
+            return AppMode.DEV
+        elif env_mode_legacy in ('false', '0', 'no', 'off'):
+            logger.info("GUI mode set by CELLSORTER_DEV_MODE environment variable (legacy)")
+            return AppMode.GUI
+        
+        # Check for dual mode flag
+        if os.environ.get('CELLSORTER_DUAL_MODE'):
+            logger.info("Dual mode forced by CELLSORTER_DUAL_MODE")
+            return AppMode.DUAL
         
         # Check for dev mode indicators
         if os.environ.get('CELLSORTER_FORCE_HEADLESS'):
@@ -130,10 +162,22 @@ class ModeManager:
         
         return {
             'mode': current_mode.value if current_mode else 'unknown',
+            'mode_description': {
+                AppMode.GUI: "실제사용모드(only GUI mode)",
+                AppMode.DEV: "디버깅모드(only headless mode)",
+                AppMode.DUAL: "디버깅모드(both headless mode & GUI mode)",
+                AppMode.AUTO: "자동 감지 모드"
+            }.get(current_mode, "알 수 없는 모드"),
             'dev_mode': self.is_dev_mode(),
+            'gui_mode': self.is_gui_mode(),
+            'dual_mode': self.is_dual_mode(),
+            'requires_gui': self.requires_gui(),
+            'requires_headless': self.requires_headless(),
             'display_available': has_display(),
             'environment': {
+                'CELLSORTER_MODE': os.environ.get('CELLSORTER_MODE', 'not set'),
                 'CELLSORTER_DEV_MODE': os.environ.get('CELLSORTER_DEV_MODE', 'not set'),
+                'CELLSORTER_DUAL_MODE': os.environ.get('CELLSORTER_DUAL_MODE', 'not set'),
                 'CELLSORTER_FORCE_HEADLESS': os.environ.get('CELLSORTER_FORCE_HEADLESS', 'not set'),
                 'CI': os.environ.get('CI', 'not set'),
                 'DISPLAY': os.environ.get('DISPLAY', 'not set'),
@@ -158,13 +202,28 @@ def set_mode(mode: AppMode, force: bool = False) -> bool:
 
 
 def is_dev_mode() -> bool:
-    """Check if currently in development mode."""
+    """Check if currently in development mode (headless only)."""
     return _mode_manager.is_dev_mode()
 
 
 def is_gui_mode() -> bool:
     """Check if currently in GUI mode."""
     return _mode_manager.is_gui_mode()
+
+
+def is_dual_mode() -> bool:
+    """Check if currently in dual mode (both headless and GUI)."""
+    return _mode_manager.is_dual_mode()
+
+
+def requires_gui() -> bool:
+    """Check if current mode requires GUI."""
+    return _mode_manager.requires_gui()
+
+
+def requires_headless() -> bool:
+    """Check if current mode requires headless functionality."""
+    return _mode_manager.requires_headless()
 
 
 def set_dev_mode(enabled: bool = True) -> bool:
@@ -178,6 +237,20 @@ def set_dev_mode(enabled: bool = True) -> bool:
         True if mode was set successfully
     """
     target_mode = AppMode.DEV if enabled else AppMode.GUI
+    return _mode_manager.set_mode(target_mode)
+
+
+def set_dual_mode(enabled: bool = True) -> bool:
+    """
+    Enable or disable dual mode (both headless and GUI).
+    
+    Args:
+        enabled: True to enable dual mode, False for GUI mode
+        
+    Returns:
+        True if mode was set successfully
+    """
+    target_mode = AppMode.DUAL if enabled else AppMode.GUI
     return _mode_manager.set_mode(target_mode)
 
 

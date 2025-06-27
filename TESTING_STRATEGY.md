@@ -267,3 +267,431 @@ pytest -k "test_image_loader"
 - 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다.
 
 This comprehensive testing strategy ensures robust, reliable software that meets the demanding requirements of pathology research applications.
+
+# CellSorter Testing Strategy
+
+## Overview
+
+This document outlines the comprehensive testing strategy for the CellSorter application, including unit tests, integration tests, and end-to-end tests across all three operation modes.
+
+## Three Mode Testing Strategy
+
+CellSorter supports three distinct operation modes, each requiring specific testing approaches:
+
+### 1. GUI Mode Testing (실제사용모드)
+**Environment**: `CELLSORTER_MODE=gui`
+```bash
+# Run GUI mode tests
+CELLSORTER_MODE=gui pytest tests/gui/
+```
+
+**Focus Areas**:
+- Widget rendering and display
+- User interaction responses
+- Visual feedback correctness
+- GUI-specific features
+
+**Requirements**:
+- Display server available
+- PySide6 properly installed
+- Visual regression tests
+
+### 2. Dev Mode Testing (디버깅모드 - Headless Only)
+**Environment**: `CELLSORTER_MODE=dev`
+```bash
+# Run headless mode tests
+CELLSORTER_MODE=dev pytest tests/headless/
+```
+
+**Focus Areas**:
+- UI model manipulation
+- Serialization/deserialization
+- Command processing
+- No display dependencies
+
+**Requirements**:
+- Works in CI/CD environments
+- No GUI imports or operations
+- Terminal-only validation
+
+### 3. Dual Mode Testing (디버깅모드 - Both)
+**Environment**: `CELLSORTER_MODE=dual`
+```bash
+# Run dual mode integration tests
+CELLSORTER_MODE=dual pytest tests/integration/
+```
+
+**Focus Areas**:
+- Real-time synchronization
+- Bidirectional event flow
+- Consistency between modes
+- Performance overhead
+
+**Requirements**:
+- Both headless and GUI components
+- Synchronization verification
+- Latency measurements
+
+## Test Categories
+
+### 1. Unit Tests
+
+Unit tests focus on individual components in isolation.
+
+#### Structure
+```
+tests/
+├── test_models/           # Business logic tests
+├── test_components/       # UI component tests
+├── test_headless/        # Headless infrastructure tests
+├── test_services/        # Service layer tests
+└── test_utils/           # Utility function tests
+```
+
+#### Mode-Specific Unit Tests
+
+**GUI Mode Unit Tests**:
+```python
+@pytest.mark.gui_mode
+def test_button_click_gui():
+    """Test button click in GUI mode only."""
+    assert requires_gui()
+    button = QPushButton("Test")
+    # ... GUI-specific test
+```
+
+**Dev Mode Unit Tests**:
+```python
+@pytest.mark.dev_mode
+def test_ui_serialization():
+    """Test UI serialization in headless mode."""
+    assert is_dev_mode()
+    ui_model = UIModel()
+    # ... Headless-specific test
+```
+
+**Dual Mode Unit Tests**:
+```python
+@pytest.mark.dual_mode
+def test_sync_operation():
+    """Test synchronization in dual mode."""
+    assert is_dual_mode()
+    # ... Test both components
+```
+
+### 2. Integration Tests
+
+Integration tests verify interactions between components.
+
+#### Key Integration Points
+
+1. **Image Processing Pipeline**
+   - Image loading → CSV parsing → Coordinate transformation
+   - Test in all modes to ensure consistency
+
+2. **Selection Management**
+   - Scatter plot → Selection → Well plate updates
+   - Verify synchronization in dual mode
+
+3. **Template System**
+   - Template creation → Saving → Loading → Application
+   - Test persistence across modes
+
+4. **Mode Switching**
+   - Test transitions between modes
+   - Verify state preservation
+   - Check resource cleanup
+
+### 3. End-to-End Tests
+
+End-to-end tests simulate complete user workflows.
+
+#### Mode-Specific Workflows
+
+**GUI Mode E2E**:
+```python
+def test_complete_analysis_workflow_gui():
+    """Test complete analysis in GUI mode."""
+    # 1. Start application
+    # 2. Load image via file dialog
+    # 3. Load CSV data
+    # 4. Apply filters
+    # 5. Export results
+```
+
+**Dev Mode E2E**:
+```python
+def test_complete_analysis_workflow_headless():
+    """Test complete analysis in headless mode."""
+    # 1. Load UI definition
+    # 2. Execute commands via CLI
+    # 3. Verify state changes
+    # 4. Export results
+```
+
+**Dual Mode E2E**:
+```python
+def test_ai_agent_workflow_dual():
+    """Test AI agent operations with visual feedback."""
+    # 1. Start in dual mode
+    # 2. Execute headless commands
+    # 3. Verify GUI updates
+    # 4. Check synchronization
+```
+
+## Test Implementation Guidelines
+
+### 1. Mode Detection
+
+Always check and respect the current mode:
+
+```python
+from headless.mode_manager import get_mode, AppMode
+
+@pytest.fixture
+def mode_aware_setup():
+    mode = get_mode()
+    if mode == AppMode.GUI:
+        # GUI-specific setup
+        pass
+    elif mode == AppMode.DEV:
+        # Headless-specific setup
+        pass
+    elif mode == AppMode.DUAL:
+        # Dual mode setup
+        pass
+```
+
+### 2. Conditional Imports
+
+Use conditional imports to avoid failures:
+
+```python
+def test_widget_creation():
+    if requires_gui():
+        from PySide6.QtWidgets import QPushButton
+        button = QPushButton("Test")
+        assert button.text() == "Test"
+    else:
+        # Test UI model instead
+        button = {"type": "QPushButton", "text": "Test"}
+        assert button["text"] == "Test"
+```
+
+### 3. Mock Strategies
+
+Different mocking approaches per mode:
+
+**GUI Mode**: Mock external services
+```python
+@patch('requests.get')
+def test_with_mock(mock_get):
+    # Test GUI with mocked network
+```
+
+**Dev Mode**: Mock GUI components
+```python
+@patch('PySide6.QtWidgets.QApplication')
+def test_headless(mock_app):
+    # Test without real GUI
+```
+
+**Dual Mode**: Minimal mocking
+```python
+# Test real synchronization
+# Only mock external dependencies
+```
+
+## Performance Testing
+
+### Mode-Specific Benchmarks
+
+1. **GUI Mode Performance**
+   - Widget rendering time
+   - User interaction responsiveness
+   - Memory usage with large datasets
+
+2. **Dev Mode Performance**
+   - Command processing speed
+   - Serialization efficiency
+   - Memory footprint
+
+3. **Dual Mode Performance**
+   - Synchronization latency
+   - Event propagation time
+   - Overhead comparison
+
+### Performance Test Example
+
+```python
+@pytest.mark.benchmark
+def test_image_loading_performance(benchmark):
+    mode = get_mode()
+    
+    if mode == AppMode.GUI:
+        result = benchmark(load_image_gui, "large_image.tif")
+    elif mode == AppMode.DEV:
+        result = benchmark(load_image_headless, "large_image.tif")
+    elif mode == AppMode.DUAL:
+        result = benchmark(load_image_dual, "large_image.tif")
+    
+    assert result.load_time < 5.0  # 5 seconds max
+```
+
+## Continuous Integration
+
+### CI Configuration
+
+```yaml
+# .github/workflows/test.yml
+name: Test All Modes
+
+jobs:
+  test-gui-mode:
+    runs-on: ubuntu-latest
+    env:
+      CELLSORTER_MODE: gui
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup display
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      - name: Run GUI tests
+        run: pytest tests/gui/
+
+  test-dev-mode:
+    runs-on: ubuntu-latest
+    env:
+      CELLSORTER_MODE: dev
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run headless tests
+        run: pytest tests/headless/
+
+  test-dual-mode:
+    runs-on: ubuntu-latest
+    env:
+      CELLSORTER_MODE: dual
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup display
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      - name: Run integration tests
+        run: pytest tests/integration/
+```
+
+## Test Coverage Requirements
+
+### Minimum Coverage by Mode
+
+1. **GUI Mode**: 80% coverage
+   - Focus on user-facing features
+   - Visual components
+   - Event handlers
+
+2. **Dev Mode**: 90% coverage
+   - Core business logic
+   - Data processing
+   - Serialization
+
+3. **Dual Mode**: 85% coverage
+   - Synchronization logic
+   - Event propagation
+   - State consistency
+
+### Coverage Report Generation
+
+```bash
+# Generate coverage for specific mode
+CELLSORTER_MODE=dev pytest --cov=src --cov-report=html
+
+# Combined coverage report
+pytest --cov=src --cov-report=html --cov-report=term
+```
+
+## Test Data Management
+
+### Mode-Specific Test Data
+
+1. **GUI Mode**: Visual test data
+   - Sample images
+   - UI screenshots
+   - Visual regression baselines
+
+2. **Dev Mode**: Structured data
+   - UI definition files
+   - Command sequences
+   - State snapshots
+
+3. **Dual Mode**: Synchronization data
+   - Event logs
+   - State transitions
+   - Timing information
+
+## Debugging Failed Tests
+
+### Mode-Specific Debugging
+
+1. **GUI Mode Debugging**
+   ```bash
+   # Enable GUI debugging
+   export QT_DEBUG_PLUGINS=1
+   pytest -vv --pdb tests/gui/test_failing.py
+   ```
+
+2. **Dev Mode Debugging**
+   ```bash
+   # Enable headless debugging
+   export CELLSORTER_DEBUG=true
+   pytest -vv --pdb tests/headless/test_failing.py
+   ```
+
+3. **Dual Mode Debugging**
+   ```bash
+   # Enable sync debugging
+   export CELLSORTER_SYNC_DEBUG=true
+   pytest -vv --pdb tests/integration/test_failing.py
+   ```
+
+## Best Practices
+
+1. **Always specify test mode**
+   - Use pytest markers
+   - Set environment variables
+   - Document mode requirements
+
+2. **Write mode-agnostic tests when possible**
+   - Test business logic separately
+   - Use abstraction layers
+   - Minimize mode-specific code
+
+3. **Maintain mode parity**
+   - Features should work in all applicable modes
+   - Test the same functionality across modes
+   - Document mode-specific limitations
+
+4. **Performance considerations**
+   - Dual mode tests may be slower
+   - Use appropriate timeouts
+   - Consider parallel execution
+
+## Test Maintenance
+
+### Regular Tasks
+
+1. **Weekly**: Run full test suite in all modes
+2. **Daily**: Run mode-specific quick tests
+3. **Per commit**: Run relevant mode tests
+4. **Monthly**: Update visual regression baselines
+
+### Test Review Checklist
+
+- [ ] Tests run in appropriate mode(s)
+- [ ] Mode detection is correct
+- [ ] No hardcoded mode assumptions
+- [ ] Synchronization tests for dual mode
+- [ ] Performance benchmarks updated
+- [ ] Documentation reflects mode support

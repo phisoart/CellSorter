@@ -124,6 +124,71 @@ class MainWindowAdapter:
         
         logger.info("MainWindow adapter initialized")
     
+    def connect_to_window(self, window) -> None:
+        """
+        Connect adapter to actual MainWindow for dual mode operation.
+        This enables real-time synchronization between headless and GUI.
+        
+        Args:
+            window: The actual MainWindow instance
+        """
+        logger.info("Connecting MainWindow adapter to GUI window for dual mode")
+        
+        # Store reference to actual window
+        self.window = window
+        
+        # Connect state changes to window updates
+        self.state.property_changed.connect(self._sync_to_window)
+        
+        # Connect window signals to adapter state
+        if hasattr(window, 'image_loaded'):
+            window.image_loaded.connect(lambda path: self._sync_from_window('image_loaded', path))
+        if hasattr(window, 'csv_loaded'):
+            window.csv_loaded.connect(lambda path: self._sync_from_window('csv_loaded', path))
+        if hasattr(window, 'selection_changed'):
+            window.selection_changed.connect(lambda sel: self._sync_from_window('selection_changed', sel))
+            
+        logger.info("Dual mode synchronization established")
+    
+    def _sync_to_window(self, prop_name: str, value: Any) -> None:
+        """
+        Sync adapter state changes to actual window.
+        
+        Args:
+            prop_name: Property name that changed
+            value: New value
+        """
+        if not hasattr(self, 'window'):
+            return
+            
+        logger.debug(f"Syncing to window: {prop_name} = {value}")
+        
+        # Update window based on property
+        if prop_name == 'window_title' and hasattr(self.window, 'setWindowTitle'):
+            self.window.setWindowTitle(value)
+        elif prop_name == 'status_message' and hasattr(self.window, 'update_status'):
+            self.window.update_status(value)
+        elif prop_name == 'current_image_path' and hasattr(self.window, 'image_handler'):
+            self.window.image_handler.load_image(value)
+    
+    def _sync_from_window(self, event_type: str, data: Any) -> None:
+        """
+        Sync window events to adapter state.
+        
+        Args:
+            event_type: Type of event from window
+            data: Event data
+        """
+        logger.debug(f"Syncing from window: {event_type} = {data}")
+        
+        # Update state based on window events
+        if event_type == 'image_loaded':
+            self.state.set_property('current_image_path', data)
+        elif event_type == 'csv_loaded':
+            self.state.set_property('current_csv_path', data)
+        elif event_type == 'selection_changed':
+            self.state.set_property('current_selection', data)
+    
     def _setup_action_handlers(self) -> None:
         """Setup action handlers for headless mode."""
         self.action_handlers = {

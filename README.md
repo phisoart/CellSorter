@@ -268,3 +268,185 @@ CellSorter is licensed under the MIT License. See [LICENSE](LICENSE) for details
 - 🔧 Enhanced calibration UI
 - 📊 Comprehensive batch processing
 - 🎯 Well plate template system
+
+## Three Operation Modes
+
+CellSorter supports three distinct operation modes for different use cases:
+
+### 1. GUI Mode (실제사용모드)
+**Purpose**: Production use by end users  
+**Description**: Standard graphical interface for normal operation
+
+```bash
+# Run in GUI mode
+python run.py --gui-mode
+
+# Or set environment variable
+export CELLSORTER_MODE=gui
+python run.py
+```
+
+### 2. Dev Mode (디버깅모드 - Headless Only)
+**Purpose**: AI agents and headless development  
+**Description**: Terminal-only interface for automated operations and testing
+
+```bash
+# Run in dev mode
+python run.py --dev-mode
+
+# Or set environment variable
+export CELLSORTER_MODE=dev
+python run.py
+
+# Use headless commands
+python run.py --dev-mode dump-ui output.yaml
+python run.py --dev-mode validate-ui ui_definition.yaml
+```
+
+### 3. Dual Mode (디버깅모드 - Both)
+**Purpose**: Real-time debugging and demonstration  
+**Description**: Both headless and GUI running simultaneously - perfect for watching AI agents work
+
+```bash
+# Run in dual mode
+python run.py --dual-mode
+
+# Or set environment variable
+export CELLSORTER_MODE=dual
+python run.py
+```
+
+**특징**: 
+- AI agent가 터미널에서 수행하는 모든 작업이 GUI에 실시간으로 반영됩니다
+- GUI에서의 사용자 조작이 headless 인터페이스에 즉시 동기화됩니다
+- 개발자가 AI agent의 작업을 시각적으로 확인하면서 디버깅할 수 있습니다
+
+## Installation
+
+### Prerequisites
+- Python 3.9 or higher
+- Anaconda or Miniconda
+
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/phisoart/CellSorter.git
+   cd CellSorter
+   ```
+
+2. **Create conda environment**:
+   ```bash
+   conda create -n cellsorter python=3.11
+   conda activate cellsorter
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Quick Start
+
+### Basic Usage
+
+1. **Start the application** (choose your mode):
+   ```bash
+   # GUI mode for regular use
+   python run.py --gui-mode
+   
+   # Dev mode for headless operation
+   python run.py --dev-mode
+   
+   # Dual mode for development/debugging
+   python run.py --dual-mode
+   ```
+
+2. **Load an image**:
+   - Click "Open Image" or press Ctrl+O
+   - Select a microscopy image file
+
+3. **Load cell data**:
+   - Click "Open CSV" or press Ctrl+Shift+O
+   - Select the corresponding CSV file
+
+4. **Analyze cells**:
+   - Use expression filters to identify cell populations
+   - Select cells in the scatter plot
+   - Export results or save templates
+
+### Dual Mode Development Example
+
+```bash
+# Terminal 1: Start in dual mode
+python run.py --dual-mode
+
+# Terminal 2: Run headless commands while watching GUI
+# The GUI will update in real-time!
+python run.py load-ui modified_ui.yaml
+cellsorter-cli add-widget --type=QPushButton --name=analyzeButton
+
+# You can see every change immediately in the GUI window
+```
+
+## Development
+
+### Project Structure
+```
+CellSorter/
+├── src/
+│   ├── components/      # Reusable UI components
+│   ├── headless/       # Headless mode infrastructure
+│   ├── models/         # Core business logic
+│   ├── pages/          # Application views
+│   └── services/       # Application services
+├── tests/              # Test suites
+├── docs/               # Documentation
+└── ui_definitions/     # UI configuration files
+```
+
+### Testing
+
+Run tests in different modes:
+
+```bash
+# Test in dev mode (headless only)
+CELLSORTER_MODE=dev pytest tests/
+
+# Test in GUI mode
+CELLSORTER_MODE=gui pytest tests/
+
+# Test in dual mode (see visual feedback)
+CELLSORTER_MODE=dual pytest tests/ --watch
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test in all three modes
+5. Submit a pull request
+
+## Documentation
+
+- [Architecture Guide](docs/HEADLESS_GUI_ARCHITECTURE.md)
+- [Development Guide](docs/HEADLESS_DEVELOPMENT_GUIDE.md) 
+- [API Reference](docs/API_REFERENCE.md)
+- [User Guide](docs/USER_GUIDE.md)
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/phisoart/CellSorter/issues)
+- **Documentation**: [Wiki](https://github.com/phisoart/CellSorter/wiki)
+- **Contact**: phisoart@gmail.com
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with PySide6 and modern Python
+- Designed for scientific research workflows
+- AI-enhanced for improved productivity
