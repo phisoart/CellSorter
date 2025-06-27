@@ -1,0 +1,385 @@
+# Base UI Component Library
+# Reusable component definitions for CellSorter headless development
+
+components:
+  # Basic Layouts
+  horizontal_layout:
+    type: "QHBoxLayout"
+    description: "Horizontal layout container"
+    properties:
+      margins: [4, 4, 4, 4]
+      spacing: 8
+    usage: "Standard horizontal arrangement of widgets"
+    
+  vertical_layout:
+    type: "QVBoxLayout" 
+    description: "Vertical layout container"
+    properties:
+      margins: [4, 4, 4, 4]
+      spacing: 8
+    usage: "Standard vertical arrangement of widgets"
+    
+  grid_layout:
+    type: "QGridLayout"
+    description: "Grid layout container"
+    properties:
+      margins: [4, 4, 4, 4]
+      horizontalSpacing: 8
+      verticalSpacing: 8
+    usage: "Grid-based widget arrangement"
+
+  # Basic Widgets
+  primary_button:
+    type: "QPushButton"
+    description: "Primary action button with CellSorter styling"
+    properties:
+      minimumHeight: 32
+      styleSheet: |
+        QPushButton {
+          background-color: #0066cc;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 8px 16px;
+          font-weight: bold;
+        }
+        QPushButton:hover {
+          background-color: #0056b3;
+        }
+        QPushButton:pressed {
+          background-color: #004499;
+        }
+        QPushButton:disabled {
+          background-color: #cccccc;
+          color: #666666;
+        }
+    usage: "Primary action buttons (Save, Export, etc.)"
+    
+  secondary_button:
+    type: "QPushButton"
+    description: "Secondary action button"
+    properties:
+      minimumHeight: 32
+      styleSheet: |
+        QPushButton {
+          background-color: #6c757d;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 8px 16px;
+        }
+        QPushButton:hover {
+          background-color: #5a6268;
+        }
+        QPushButton:pressed {
+          background-color: #545b62;
+        }
+    usage: "Secondary actions (Cancel, Reset, etc.)"
+    
+  text_input:
+    type: "QLineEdit"
+    description: "Standard text input field"
+    properties:
+      minimumHeight: 32
+      styleSheet: |
+        QLineEdit {
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          padding: 6px 12px;
+          font-size: 14px;
+        }
+        QLineEdit:focus {
+          border-color: #0066cc;
+          outline: none;
+        }
+    usage: "Text input fields"
+    
+  label_text:
+    type: "QLabel"
+    description: "Standard label text"
+    properties:
+      styleSheet: |
+        QLabel {
+          color: #495057;
+          font-size: 14px;
+          font-weight: normal;
+        }
+    usage: "Standard text labels"
+    
+  title_label:
+    type: "QLabel"
+    description: "Title/header label"
+    properties:
+      styleSheet: |
+        QLabel {
+          color: #212529;
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 8px;
+        }
+    usage: "Section titles and headers"
+
+  # Scientific Widgets
+  parameter_group:
+    type: "QGroupBox"
+    description: "Parameter group container"
+    properties:
+      styleSheet: |
+        QGroupBox {
+          font-weight: bold;
+          border: 2px solid #dee2e6;
+          border-radius: 8px;
+          margin-top: 12px;
+          padding-top: 8px;
+        }
+        QGroupBox::title {
+          subcontrol-origin: margin;
+          left: 10px;
+          padding: 0 5px 0 5px;
+          background-color: white;
+        }
+    usage: "Grouping related parameters"
+    
+  numeric_input:
+    type: "QDoubleSpinBox"
+    description: "Numeric input with validation"
+    properties:
+      minimumHeight: 32
+      decimals: 2
+      minimum: 0.0
+      maximum: 999999.99
+      styleSheet: |
+        QDoubleSpinBox {
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          padding: 6px;
+          font-size: 14px;
+        }
+        QDoubleSpinBox:focus {
+          border-color: #0066cc;
+        }
+    usage: "Numeric parameter inputs"
+    
+  dropdown_selector:
+    type: "QComboBox"
+    description: "Dropdown selection widget"
+    properties:
+      minimumHeight: 32
+      styleSheet: |
+        QComboBox {
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          padding: 6px 12px;
+          font-size: 14px;
+          background-color: white;
+        }
+        QComboBox:focus {
+          border-color: #0066cc;
+        }
+        QComboBox::drop-down {
+          border: none;
+          width: 20px;
+        }
+        QComboBox::down-arrow {
+          width: 12px;
+          height: 12px;
+        }
+    usage: "Dropdown selections"
+
+  # CellSorter Specific Components
+  selection_panel:
+    type: "QFrame"
+    description: "Cell selection management panel"
+    properties:
+      frameStyle: "StyledPanel"
+      minimumWidth: 250
+      maximumWidth: 400
+      styleSheet: |
+        QFrame {
+          background-color: #f8f9fa;
+          border: 1px solid #dee2e6;
+          border-radius: 8px;
+        }
+    layout:
+      type: "QVBoxLayout"
+      margins: [12, 12, 12, 12]
+      spacing: 8
+    usage: "Cell selection management interface"
+    
+  image_viewer:
+    type: "QGraphicsView"
+    description: "Microscopy image viewer"
+    properties:
+      minimumWidth: 300
+      dragMode: "RubberBandDrag"
+      renderHints: ["Antialiasing", "SmoothPixmapTransform"]
+      styleSheet: |
+        QGraphicsView {
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          background-color: #212529;
+        }
+    usage: "Microscopy image display"
+    
+  scatter_plot:
+    type: "QWidget"
+    description: "Interactive scatter plot widget"
+    properties:
+      minimumWidth: 400
+      minimumHeight: 300
+      styleSheet: |
+        QWidget {
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          background-color: white;
+        }
+    usage: "Data visualization scatter plots"
+    
+  parameter_slider:
+    type: "QSlider"
+    description: "Parameter adjustment slider"
+    properties:
+      orientation: "horizontal"
+      minimum: 0
+      maximum: 100
+      value: 50
+      tickPosition: "TicksBelow"
+      tickInterval: 10
+      styleSheet: |
+        QSlider::groove:horizontal {
+          border: 1px solid #ced4da;
+          height: 6px;
+          background: #f8f9fa;
+          border-radius: 3px;
+        }
+        QSlider::handle:horizontal {
+          background: #0066cc;
+          border: 1px solid #004499;
+          width: 16px;
+          height: 16px;
+          border-radius: 8px;
+          margin: -5px 0;
+        }
+        QSlider::handle:horizontal:hover {
+          background: #0056b3;
+        }
+    usage: "Adjustable parameters"
+
+  # Dialog Components
+  dialog_buttons:
+    type: "QDialogButtonBox"
+    description: "Standard dialog buttons"
+    properties:
+      standardButtons: ["Ok", "Cancel"]
+      styleSheet: |
+        QDialogButtonBox QPushButton {
+          min-width: 80px;
+          padding: 6px 12px;
+          border-radius: 4px;
+          font-size: 14px;
+        }
+        QDialogButtonBox QPushButton[text="OK"] {
+          background-color: #0066cc;
+          color: white;
+          border: none;
+        }
+        QDialogButtonBox QPushButton[text="Cancel"] {
+          background-color: #6c757d;
+          color: white;
+          border: none;
+        }
+    usage: "Dialog accept/cancel buttons"
+    
+  progress_indicator:
+    type: "QProgressBar"
+    description: "Progress indicator for long operations"
+    properties:
+      minimumHeight: 24
+      textVisible: true
+      styleSheet: |
+        QProgressBar {
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          background-color: #f8f9fa;
+          text-align: center;
+        }
+        QProgressBar::chunk {
+          background-color: #0066cc;
+          border-radius: 3px;
+        }
+    usage: "Operation progress feedback"
+
+# Component composition patterns
+patterns:
+  labeled_input:
+    description: "Label paired with input field"
+    components:
+      - type: "label_text"
+        properties:
+          text: "{label_text}"
+      - type: "text_input"
+        properties:
+          objectName: "{input_name}"
+          placeholderText: "{placeholder}"
+    layout: "vertical_layout"
+    
+  numeric_parameter:
+    description: "Numeric parameter with label and validation"
+    components:
+      - type: "label_text"
+        properties:
+          text: "{parameter_name}:"
+      - type: "numeric_input"
+        properties:
+          objectName: "{parameter_id}"
+          minimum: "{min_value}"
+          maximum: "{max_value}"
+          value: "{default_value}"
+          suffix: " {unit}"
+    layout: "horizontal_layout"
+    
+  button_row:
+    description: "Row of action buttons"
+    components:
+      - type: "primary_button"
+        properties:
+          text: "{primary_action}"
+          objectName: "{primary_id}"
+      - type: "secondary_button"
+        properties:
+          text: "{secondary_action}"
+          objectName: "{secondary_id}"
+    layout:
+      type: "horizontal_layout"
+      properties:
+        spacing: 12
+
+# Style variants
+variants:
+  dark_theme:
+    label_text:
+      styleSheet: |
+        QLabel {
+          color: #f8f9fa;
+          background-color: transparent;
+        }
+    text_input:
+      styleSheet: |
+        QLineEdit {
+          background-color: #495057;
+          color: #f8f9fa;
+          border: 1px solid #6c757d;
+        }
+  
+  compact:
+    primary_button:
+      properties:
+        minimumHeight: 24
+        styleSheet: |
+          QPushButton {
+            padding: 4px 8px;
+            font-size: 12px;
+          }
+    text_input:
+      properties:
+        minimumHeight: 24 
