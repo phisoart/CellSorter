@@ -1,0 +1,407 @@
+---
+description: # AI Development Rules for CellSorter
+globs: 
+alwaysApply: false
+---
+# AI Development Rules for CellSorter
+
+## Core Principles
+
+### 1. Headless-First Development
+- **ALWAYS** work in `--dev-mode` when developing
+- **NEVER** attempt to instantiate QApplication in development mode
+- **USE** YAML/JSON for all UI definitions
+- **VALIDATE** all UI changes before committing
+
+### 2. Terminal-Only Interaction
+- All development MUST be possible through terminal commands
+- No reliance on GUI designers or visual tools
+- Output must be parseable by both humans and AI
+- Use structured formats (YAML/JSON) for all UI data
+
+### 3. Bidirectional Synchronization
+- Changes in code MUST reflect in UI definitions
+- Changes in UI definitions MUST reflect in code
+- Round-trip editing must preserve all properties
+- Version control friendly (text-based diffs)
+
+## Development Workflow Rules
+
+### Rule 1: Mode Detection
+```python
+# ALWAYS check mode before any GUI operations
+if is_dev_mode():
+    # Work with UI definitions
+    ui_manager = HeadlessUIManager()
+else:
+    # Normal GUI instantiation
+    app = QApplication(sys.argv)
+```
+
+### Rule 2: UI Definition Structure
+```yaml
+# REQUIRED structure for all UI definitions
+version: "1.0"
+metadata:
+  created_by: "AI Agent"
+  timestamp: "2024-01-01T00:00:00Z"
+  description: "Purpose of this UI"
+
+components:
+  # Component definitions
+
+widgets:
+  # Widget hierarchy
+
+events:
+  # Event bindings
+
+resources:
+  # External resources
+```
+
+### Rule 3: Widget Naming
+- **MUST** use camelCase for widget names
+- **MUST** include type suffix (e.g., `submitButton`, `nameEdit`)
+- **MUST** be unique within the UI definition
+- **MUST** be valid Python identifiers
+
+### Rule 4: Property Validation
+```yaml
+# All properties MUST be validated
+properties:
+  text: string          # Type checking
+  enabled: boolean      # Only true/false
+  size: [int, int]      # Array validation
+  color: "#RRGGBB"     # Format validation
+```
+
+### Rule 5: Event Handler Naming
+```yaml
+events:
+  - signal: clicked
+    handler: on_[widget]_[signal]  # Standard pattern
+    # Example: on_submitButton_clicked
+```
+
+## AI Agent Commands
+
+### Essential Commands
+
+```bash
+# 1. Start development session
+python run.py --dev-mode --ai-assist
+
+# 2. Load current UI state
+python run.py --dump-ui --format=yaml > current_ui.yaml
+
+# 3. Make modifications
+# ... edit current_ui.yaml ...
+
+# 4. Validate changes
+python run.py --validate-ui current_ui.yaml
+
+# 5. Apply changes
+python run.py --load-ui current_ui.yaml
+
+# 6. Test in headless mode
+python run.py --test-ui --headless
+
+# 7. Generate Python code
+python run.py --generate-code current_ui.yaml > generated_ui.py
+```
+
+### UI Manipulation Commands
+
+```bash
+# Add widget
+ui-cli add-widget --type=QPushButton --name=newButton --parent=mainPanel
+
+# Modify property
+ui-cli set-property --widget=newButton --property=text --value="Click Me"
+
+# Connect signal
+ui-cli connect --widget=newButton --signal=clicked --handler=on_new_button_clicked
+
+# Remove widget
+ui-cli remove-widget --name=oldButton
+
+# List widgets
+ui-cli list-widgets --type=QPushButton
+```
+
+## Code Generation Rules
+
+### Rule 6: Generated Code Structure
+```python
+# Generated code MUST follow this pattern
+class GeneratedUI:
+    def __init__(self):
+        self.ui_definition = load_ui_definition()
+        self.widgets = {}
+        
+    def create_ui(self):
+        if has_display():
+            return self._create_qt_widgets()
+        else:
+            return self._create_headless_ui()
+    
+    def _create_qt_widgets(self):
+        # Actual PySide6 widget creation
+        pass
+    
+    def _create_headless_ui(self):
+        # Return UI definition for headless mode
+        return self.ui_definition
+```
+
+### Rule 7: Property Mapping
+```python
+# Map YAML properties to Qt properties
+PROPERTY_MAP = {
+    'text': 'setText',
+    'enabled': 'setEnabled',
+    'visible': 'setVisible',
+    'tooltip': 'setToolTip',
+    'geometry': lambda w, v: w.setGeometry(*v),
+    'font': lambda w, v: w.setFont(create_font(v)),
+}
+```
+
+### Rule 8: Layout Management
+```yaml
+# Layouts MUST be explicitly defined
+layout:
+  type: QVBoxLayout
+  properties:
+    margin: 10
+    spacing: 5
+  items:
+    - widget: topLabel
+      stretch: 0
+    - widget: contentArea
+      stretch: 1
+    - widget: bottomPanel
+      stretch: 0
+```
+
+## Testing Rules
+
+### Rule 9: Headless Testing
+```python
+# All UI tests MUST work without display
+def test_ui_structure():
+    ui = load_ui_definition('main_window.yaml')
+    
+    # Test without creating actual widgets
+    assert find_widget(ui, 'mainWindow')
+    assert count_widgets_by_type(ui, 'QPushButton') == 5
+    
+    # Test event connections
+    button = find_widget(ui, 'submitButton')
+    assert has_event_handler(button, 'clicked', 'on_submit_clicked')
+```
+
+### Rule 10: Validation Tests
+```python
+# Validate UI definitions before use
+def validate_ui_definition(ui_def):
+    errors = []
+    
+    # Check required fields
+    if 'version' not in ui_def:
+        errors.append("Missing version field")
+    
+    # Validate widget names
+    for widget in find_all_widgets(ui_def):
+        if not is_valid_identifier(widget['name']):
+            errors.append(f"Invalid widget name: {widget['name']}")
+    
+    return errors
+```
+
+## AI Behavior Rules
+
+### Rule 11: Modification Safety
+- **ALWAYS** create backup before modifications
+- **VALIDATE** after every change
+- **TEST** in headless mode first
+- **COMMIT** only validated changes
+
+### Rule 12: Error Handling
+```python
+# Handle errors gracefully
+try:
+    ui_def = load_ui_definition(file_path)
+except UIDefinitionError as e:
+    print(f"Error loading UI: {e}")
+    print("Suggestions:")
+    print(suggest_fixes(e))
+    return False
+```
+
+### Rule 13: Documentation
+```yaml
+# Document all modifications
+widgets:
+  - type: QPushButton
+    name: newFeatureButton
+    _documentation:
+      added_by: "AI Agent"
+      date: "2024-01-01"
+      reason: "User requested new feature"
+      related_issue: "#123"
+```
+
+## Integration Rules
+
+### Rule 14: Version Control
+```bash
+# Git-friendly practices
+git add ui_definitions/
+git commit -m "feat(ui): Add new analysis panel
+
+- Added analysisPanel widget
+- Connected to data processing signals
+- Validated in headless mode"
+```
+
+### Rule 15: CI/CD Integration
+```yaml
+# .github/workflows/ui-test.yml
+- name: Test UI Definitions
+  run: |
+    python run.py --validate-ui-all
+    python run.py --test-ui --headless
+    python run.py --generate-screenshots --headless
+```
+
+## Performance Rules
+
+### Rule 16: Lazy Loading
+```python
+# Load UI components only when needed
+class LazyUILoader:
+    def __init__(self):
+        self._definitions = {}
+    
+    def get_widget(self, name):
+        if name not in self._definitions:
+            self._definitions[name] = load_widget_definition(name)
+        return self._definitions[name]
+```
+
+### Rule 17: Caching
+```python
+# Cache parsed UI definitions
+@lru_cache(maxsize=100)
+def load_ui_definition(file_path):
+    with open(file_path, 'r') as f:
+        return yaml.safe_load(f)
+```
+
+## Security Rules
+
+### Rule 18: Input Validation
+```python
+# Validate all external input
+def validate_widget_type(widget_type):
+    ALLOWED_WIDGETS = [
+        'QWidget', 'QPushButton', 'QLabel', 'QLineEdit',
+        'QComboBox', 'QTableWidget', 'QTreeWidget'
+    ]
+    if widget_type not in ALLOWED_WIDGETS:
+        raise ValueError(f"Unsafe widget type: {widget_type}")
+```
+
+### Rule 19: Safe Evaluation
+```python
+# Never use eval() on UI definitions
+# Use safe parsing only
+ui_def = yaml.safe_load(ui_text)  # Safe
+# ui_def = eval(ui_text)  # NEVER DO THIS
+```
+
+## Debugging Rules
+
+### Rule 20: Verbose Output
+```bash
+# Enable debugging for AI development
+export CELLSORTER_DEBUG=true
+export CELLSORTER_UI_TRACE=true
+
+# Run with verbose output
+python run.py --dev-mode --verbose --trace-ui-ops
+```
+
+### Rule 21: Error Recovery
+```python
+# Provide recovery mechanisms
+def load_ui_with_fallback(primary_path, fallback_path):
+    try:
+        return load_ui_definition(primary_path)
+    except Exception as e:
+        logger.warning(f"Failed to load {primary_path}: {e}")
+        logger.info(f"Using fallback: {fallback_path}")
+        return load_ui_definition(fallback_path)
+```
+
+## Best Practices for AI Agents
+
+### 1. Incremental Changes
+- Make small, focused changes
+- Test after each modification
+- Maintain working state
+
+### 2. Clear Communication
+```python
+# Log all actions clearly
+logger.info("Adding button 'exportButton' to toolbar")
+logger.debug(f"Properties: {button_properties}")
+logger.info("Validation passed")
+```
+
+### 3. Predictable Patterns
+- Follow established naming conventions
+- Use consistent property values
+- Maintain structural patterns
+
+### 4. Self-Documentation
+```yaml
+# Include context in definitions
+widgets:
+  - type: QPushButton
+    name: analysisButton
+    _meta:
+      purpose: "Triggers data analysis"
+      added_version: "2.1.0"
+      dependencies: ["dataLoaded"]
+```
+
+## Forbidden Practices
+
+### NEVER DO:
+1. Create QApplication in dev mode
+2. Use `exec()` or `eval()` on user input
+3. Hardcode absolute paths
+4. Ignore validation errors
+5. Modify UI without backing up
+6. Use platform-specific code
+7. Assume display availability
+8. Skip testing in headless mode
+9. Use undocumented widget properties
+10. Break backward compatibility
+
+## Success Criteria
+
+### Valid AI Development Session:
+- ✅ All changes validated
+- ✅ Tests pass in headless mode
+- ✅ UI definitions are well-formed
+- ✅ Documentation updated
+- ✅ Version control clean
+- ✅ No hardcoded values
+- ✅ Cross-platform compatible
+- ✅ Error handling present
+- ✅ Performance acceptable
+- ✅ Security validated
