@@ -60,7 +60,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
         
         # Quality metrics
         self.calibration_quality: Dict[str, float] = {}
-        self.is_calibrated = False
+        self._is_calibrated = False
         
         # Configuration
         self.min_distance_pixels = 50  # Minimum distance between calibration points
@@ -114,7 +114,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
             if success:
                 self.transformation_ready.emit()
         
-        self.calibration_updated.emit(self.is_calibrated)
+        self.calibration_updated.emit(self.is_calibrated())
         
         self.log_info(f"Added calibration point {len(self.calibration_points)}: "
                      f"pixel({pixel_x}, {pixel_y}) -> stage({stage_x:.2f}, {stage_y:.2f})")
@@ -215,13 +215,13 @@ class CoordinateTransformer(QObject, LoggerMixin):
             # Validate transformation
             self._validate_transformation()
             
-            self.is_calibrated = True
+            self._is_calibrated = True
             self.log_info("Transformation matrix calculated successfully")
             return True
             
         except Exception as e:
             self.log_error(f"Failed to calculate transformation: {e}")
-            self.is_calibrated = False
+            self._is_calibrated = False
             return False
     
     def _validate_transformation(self) -> None:
@@ -271,7 +271,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
         Returns:
             TransformationResult or None if transformation not available
         """
-        if not self.is_calibrated or self.transform_matrix is None:
+        if not self.is_calibrated() or self.transform_matrix is None:
             return None
         
         try:
@@ -305,7 +305,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
         Returns:
             Tuple of (pixel_x, pixel_y) or None if transformation not available
         """
-        if not self.is_calibrated or self.inverse_transform_matrix is None:
+        if not self.is_calibrated() or self.inverse_transform_matrix is None:
             return None
         
         try:
@@ -329,7 +329,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
         Returns:
             List of (min_x, min_y, max_x, max_y) in stage coordinates
         """
-        if not self.is_calibrated:
+        if not self.is_calibrated():
             return []
         
         transformed_boxes = []
@@ -355,7 +355,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
         self.transform_matrix = None
         self.inverse_transform_matrix = None
         self.calibration_quality = {}
-        self.is_calibrated = False
+        self._is_calibrated = False
         
         self.calibration_cleared.emit()
         self.calibration_updated.emit(False)
@@ -379,12 +379,12 @@ class CoordinateTransformer(QObject, LoggerMixin):
             if len(self.calibration_points) >= 2:
                 self._calculate_transformation()
             else:
-                self.is_calibrated = False
+                self._is_calibrated = False
                 self.transform_matrix = None
                 self.inverse_transform_matrix = None
                 self.calibration_quality = {}
             
-            self.calibration_updated.emit(self.is_calibrated)
+            self.calibration_updated.emit(self.is_calibrated())
             
             self.log_info(f"Removed calibration point {index}: {removed_point}")
             return True
@@ -399,7 +399,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
             Dictionary with calibration information
         """
         info = {
-            'is_calibrated': self.is_calibrated,
+            'is_calibrated': self.is_calibrated(),
             'point_count': len(self.calibration_points),
             'points': [
                 {
@@ -435,7 +435,7 @@ class CoordinateTransformer(QObject, LoggerMixin):
             ],
             'transform_matrix': self.transform_matrix.tolist() if self.transform_matrix is not None else None,
             'calibration_quality': self.calibration_quality.copy(),
-            'is_calibrated': self.is_calibrated
+            'is_calibrated': self.is_calibrated()
         }
         
         return data
@@ -475,11 +475,11 @@ class CoordinateTransformer(QObject, LoggerMixin):
             
             # Import quality metrics
             self.calibration_quality = data.get('calibration_quality', {})
-            self.is_calibrated = data.get('is_calibrated', False)
+            self._is_calibrated = data.get('is_calibrated', False)
             
             # Emit signals
-            self.calibration_updated.emit(self.is_calibrated)
-            if self.is_calibrated:
+            self.calibration_updated.emit(self.is_calibrated())
+            if self.is_calibrated():
                 self.transformation_ready.emit()
             
             self.log_info(f"Imported calibration with {len(self.calibration_points)} points")
@@ -489,3 +489,12 @@ class CoordinateTransformer(QObject, LoggerMixin):
             self.log_error(f"Failed to import calibration: {e}")
             self.clear_calibration()
             return False
+
+    def is_calibrated(self) -> bool:
+        """
+        Check if the coordinate transformer is calibrated.
+        
+        Returns:
+            True if calibrated, False otherwise
+        """
+        return self._is_calibrated

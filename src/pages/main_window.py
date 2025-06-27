@@ -31,11 +31,13 @@ from models.coordinate_transformer import CoordinateTransformer
 from models.selection_manager import SelectionManager
 from models.extractor import Extractor
 from models.session_manager import SessionManager
+from models.template_manager import TemplateManager
 from components.widgets.scatter_plot import ScatterPlotWidget
 from components.widgets.selection_panel import SelectionPanel
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
 from components.dialogs.batch_process_dialog import BatchProcessDialog
+from components.dialogs.template_management_dialog import TemplateManagementDialog
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -81,6 +83,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_manager = SelectionManager(self)
         self.extractor = Extractor(self)
         self.session_manager = SessionManager(self)
+        self.template_manager = TemplateManager(parent=self)
         self.scatter_plot_widget = ScatterPlotWidget(self)
         self.selection_panel = SelectionPanel(self)
         
@@ -247,6 +250,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_batch_process.setShortcut(QKeySequence("Ctrl+B"))
         self.action_batch_process.setStatusTip("Process multiple image/CSV file pairs")
         
+        # Template actions
+        self.action_manage_templates = QAction("&Manage Templates...", self)
+        self.action_manage_templates.setShortcut(QKeySequence("Ctrl+T"))
+        self.action_manage_templates.setStatusTip("Manage analysis templates")
+        
         # Help actions
         self.action_about = QAction("&About CellSorter", self)
         self.action_about.setStatusTip("About this application")
@@ -290,6 +298,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         tools_menu = menubar.addMenu("&Tools")
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
+        tools_menu.addSeparator()
+        tools_menu.addAction(self.action_manage_templates)
         
         # Analysis menu
         analysis_menu = menubar.addMenu("&Analysis")
@@ -400,6 +410,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Tools actions
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
+        self.action_manage_templates.triggered.connect(self.manage_templates)
         
         # Analysis actions
         self.action_batch_process.triggered.connect(self.batch_process)
@@ -592,6 +603,18 @@ class MainWindow(QMainWindow, LoggerMixin):
         """Clear all cell selections."""
         self.update_status("All selections cleared")
     
+    @error_handler("Opening template management")
+    def manage_templates(self) -> None:
+        """Open template management dialog."""
+        dialog = TemplateManagementDialog(self.template_manager, self)
+        dialog.template_applied.connect(self.on_template_applied)
+        dialog.exec()
+    
+    def on_template_applied(self, template_type: str, template_id: str, config: dict) -> None:
+        """Handle template application."""
+        self.update_status(f"Applied {template_type} template: {config.get('metadata', {}).get('name', 'Unknown')}")
+        self.log_info(f"Template applied: {template_type} - {template_id}")
+    
     def toggle_theme(self) -> None:
         """Toggle between light and dark themes."""
         self.theme_manager.toggle_theme()
@@ -783,6 +806,11 @@ class MainWindow(QMainWindow, LoggerMixin):
                 self.update_status(f"Selected {len(indices)} cells using rectangle selection")
                 self.is_modified = True
                 self.update_window_title()
+                
+                # Store selection method in metadata
+                selection = self.selection_manager.get_selection(selection_id)
+                if selection:
+                    selection.metadata['selection_method'] = 'rectangle_selection'
                 self.log_info(f"Rectangle selection: {len(indices)} cells")
         else:
             self.update_status("No cells selected")
@@ -810,8 +838,9 @@ class MainWindow(QMainWindow, LoggerMixin):
                 
                 # Store expression in selection metadata
                 selection = self.selection_manager.get_selection(selection_id)
-                if selection and expression:
-                    selection.metadata['expression'] = expression
+                if selection:
+                    if expression:
+                        selection.metadata['expression'] = expression
                     selection.metadata['selection_method'] = 'expression_filter'
                     self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
                 else:
