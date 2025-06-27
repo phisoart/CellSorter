@@ -1,0 +1,14 @@
+# Task ID: 6
+# Title: Test CSV Processing in Headless Mode
+# Status: pending
+# Dependencies: 4 (Not found)
+# Priority: high
+# Description: Headless 모드에서 CSV 파싱 및 데이터 처리 테스트
+# Details:
+CSVParser가 UI 없이 CellProfiler CSV 파일을 파싱하고, 데이터 검증 및 처리가 올바르게 작동하는지 테스트합니다.
+
+# Test Strategy:
+1. 샘플 CSV 파일 파싱 테스트
+2. 데이터 검증 로직 테스트
+3. 대용량 데이터(50,000+ rows) 처리 성능 테스트
+4. 에러 핸들링 테스트

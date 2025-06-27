@@ -120,6 +120,10 @@ def main():
             logger.info("Initializing GUI...")
             app = QApplication(sys.argv)
             
+            # Initialize theme manager
+            from services.theme_manager import ThemeManager
+            theme_manager = ThemeManager(app)
+            
             # In dual mode, also initialize headless components
             if is_dual_mode():
                 logger.info("Initializing headless components for dual mode...")
@@ -133,7 +137,7 @@ def main():
                 # Connect to real-time synchronization
                 logger.info("Enabling real-time synchronization between headless and GUI...")
                 
-            window = MainWindow()
+            window = MainWindow(theme_manager)
             
             # In dual mode, connect the window to headless adapter
             if is_dual_mode() and 'adapter' in locals():

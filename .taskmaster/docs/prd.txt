@@ -1,0 +1,131 @@
+CellSorter Background + GUI Mode Integration Testing PRD
+
+## Product Overview
+CellSorter application needs comprehensive testing in both background (headless) and GUI modes to ensure all features work correctly without display server dependency.
+
+## Testing Objectives
+1. Verify all UI components work in headless mode
+2. Test data synchronization between modes
+3. Validate user interactions without display
+4. Ensure performance parity between modes
+5. Test mode switching capabilities
+
+## Core Testing Requirements
+
+### 1. Display Detection and Mode Management
+- Test display detection on Windows/Linux/macOS
+- Verify mode switching between dev-mode and gui-mode
+- Test fallback mechanisms when display is unavailable
+- Validate environment variable based control
+
+### 2. MainWindow Adapter Testing
+- Test window state synchronization
+- Verify action execution in headless mode
+- Test model initialization without Qt
+- Validate UI definition generation
+- Test state persistence and recovery
+
+### 3. Image Processing in Headless Mode
+- Load and process images without display
+- Test zoom, pan operations programmatically
+- Verify overlay rendering in virtual mode
+- Test coordinate transformations
+- Validate minimap functionality
+
+### 4. CSV Data Processing
+- Test CSV parsing without UI
+- Verify data validation in headless mode
+- Test selection operations programmatically
+- Validate expression filtering
+- Test batch processing capabilities
+
+### 5. Selection Management
+- Test selection creation/modification
+- Verify color assignment logic
+- Test well plate assignments
+- Validate selection persistence
+- Test multi-selection operations
+
+### 6. Scatter Plot Operations
+- Test plot generation without display
+- Verify interactive selection simulation
+- Test axis selection and updates
+- Validate export functionality
+- Test performance with large datasets
+
+### 7. Coordinate Calibration
+- Test two-point calibration in headless
+- Verify transformation accuracy
+- Test calibration dialog interactions
+- Validate template integration
+- Test calibration persistence
+
+### 8. Export and Protocol Generation
+- Test protocol file generation
+- Verify export dialog functionality
+- Test batch export operations
+- Validate file format compliance
+- Test progress tracking
+
+### 9. Session Management
+- Test session save/load in both modes
+- Verify auto-session functionality
+- Test crash recovery mechanisms
+- Validate session compatibility
+- Test concurrent session handling
+
+### 10. Template System
+- Test template creation and loading
+- Verify template application
+- Test template validation
+- Validate template sharing
+- Test version compatibility
+
+### 11. Error Handling
+- Test error recovery in headless mode
+- Verify error logging mechanisms
+- Test user notification systems
+- Validate data integrity on errors
+- Test fallback operations
+
+### 12. Performance Testing
+- Benchmark operations in both modes
+- Test memory usage patterns
+- Verify threading behavior
+- Test resource cleanup
+- Validate scalability limits
+
+### 13. UI Serialization
+- Test widget to YAML conversion
+- Verify round-trip editing
+- Test schema validation
+- Validate AI agent compatibility
+- Test version control integration
+
+### 14. CLI Tool Integration
+- Test all CLI commands
+- Verify UI manipulation via CLI
+- Test batch operations
+- Validate error reporting
+- Test integration with main app
+
+### 15. Cross-Platform Testing
+- Test on Windows 10/11
+- Test on Ubuntu/Debian Linux
+- Test on macOS (if available)
+- Verify path handling
+- Test platform-specific features
+
+## Test Execution Strategy
+1. Unit tests for each component
+2. Integration tests for workflows
+3. End-to-end tests for complete scenarios
+4. Performance benchmarks
+5. Stress testing with large datasets
+
+## Success Criteria
+- All tests pass in both modes
+- No display dependency in headless mode
+- Performance within 10% between modes
+- Zero data loss on mode switching
+- Complete feature parity 

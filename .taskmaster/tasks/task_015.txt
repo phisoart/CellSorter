@@ -1,0 +1,14 @@
+# Task ID: 15
+# Title: Complete Integration Test Suite
+# Status: pending
+# Dependencies: 11 (Not found), 12 (Not found), 13 (Not found)
+# Priority: high
+# Description: 전체 워크플로우를 headless 모드에서 실행하는 통합 테스트
+# Details:
+이미지 로드부터 프로토콜 내보내기까지 전체 워크플로우를 headless 모드에서 실행하고 검증합니다.
+
+# Test Strategy:
+1. 완전한 분석 워크플로우 시뮬레이션
+2. 모든 중간 단계 검증
+3. 최종 출력 파일 검증
+4. 성능 및 안정성 확인

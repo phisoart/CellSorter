@@ -1,0 +1,14 @@
+# Task ID: 5
+# Title: Test Image Loading Without Display
+# Status: pending
+# Dependencies: 4 (Not found)
+# Priority: high
+# Description: 디스플레이 없이 이미지 로딩 및 처리 테스트
+# Details:
+ImageHandler가 headless 모드에서 TIFF, JPG, PNG 파일을 로드하고 처리할 수 있는지 테스트합니다. 가상 렌더링과 메모리 관리도 검증합니다.
+
+# Test Strategy:
+1. 다양한 포맷의 이미지 로드 테스트
+2. 가상 QPixmap 생성 및 변환 테스트
+3. 메모리 사용량 모니터링
+4. 대용량 이미지 처리 성능 테스트

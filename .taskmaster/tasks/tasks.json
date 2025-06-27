@@ -1,0 +1,195 @@
+{
+  "master": {
+    "tasks": [
+          {
+      "id": "1",
+      "title": "Fix MainWindow Adapter Linter Errors",
+      "description": "MainWindowState 클래스의 property_changed 시그널과 set_property 메서드 관련 linter 에러 수정",
+      "details": "MainWindowAdapter에서 MainWindowState와의 동기화를 위해 필요한 property_changed 시그널과 set_property 메서드를 구현합니다. 이는 headless 모드와 GUI 모드 간의 상태 동기화를 위해 필수적입니다.",
+      "testStrategy": "1. MainWindowState 인스턴스 생성 후 property_changed 시그널 존재 확인\n2. set_property 메서드로 속성 변경 후 시그널 발생 확인\n3. GUI 모드에서 실제 동기화 테스트",
+      "status": "done",
+      "priority": "high",
+      "dependencies": []
+    },
+      {
+        "id": "2",
+        "title": "Test Display Detection System",
+        "description": "Windows, Linux, macOS에서 디스플레이 감지 시스템 테스트",
+        "details": "DisplayDetector 클래스가 각 플랫폼에서 올바르게 디스플레이 존재 여부를 감지하는지 테스트합니다. 환경 변수를 통한 강제 모드 설정도 검증합니다.",
+        "testStrategy": "1. 현재 플랫폼에서 디스플레이 감지 테스트\n2. CELLSORTER_DISPLAY_MODE 환경 변수 설정 테스트\n3. 가상 디스플레이 환경에서의 동작 확인",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ]
+      },
+      {
+        "id": "3",
+        "title": "Test Mode Manager Switching",
+        "description": "dev-mode와 gui-mode 간 전환 테스트",
+        "details": "ModeManager가 디스플레이 상태와 환경 변수에 따라 올바른 모드를 선택하고, 모드 전환이 원활하게 작동하는지 테스트합니다.",
+        "testStrategy": "1. 초기 모드 결정 로직 테스트\n2. 런타임 모드 전환 테스트\n3. 모드별 QApplication 생성 여부 확인",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [
+          "2"
+        ]
+      },
+      {
+        "id": "4",
+        "title": "Test MainWindow Action Execution in Headless",
+        "description": "Headless 모드에서 MainWindow의 모든 액션 실행 테스트",
+        "details": "MainWindowAdapter의 execute_action 메서드를 통해 모든 메뉴 액션들이 headless 모드에서 올바르게 실행되는지 테스트합니다.",
+        "testStrategy": "1. 파일 열기/저장 액션 테스트\n2. 편집 액션(undo/redo/zoom) 테스트\n3. 도구 액션(calibration/selection) 테스트\n4. 패널 토글 액션 테스트",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [
+          "3"
+        ]
+      },
+      {
+        "id": "5",
+        "title": "Test Image Loading Without Display",
+        "description": "디스플레이 없이 이미지 로딩 및 처리 테스트",
+        "details": "ImageHandler가 headless 모드에서 TIFF, JPG, PNG 파일을 로드하고 처리할 수 있는지 테스트합니다. 가상 렌더링과 메모리 관리도 검증합니다.",
+        "testStrategy": "1. 다양한 포맷의 이미지 로드 테스트\n2. 가상 QPixmap 생성 및 변환 테스트\n3. 메모리 사용량 모니터링\n4. 대용량 이미지 처리 성능 테스트",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          "4"
+        ]
+      },
+      {
+        "id": "6",
+        "title": "Test CSV Processing in Headless Mode",
+        "description": "Headless 모드에서 CSV 파싱 및 데이터 처리 테스트",
+        "details": "CSVParser가 UI 없이 CellProfiler CSV 파일을 파싱하고, 데이터 검증 및 처리가 올바르게 작동하는지 테스트합니다.",
+        "testStrategy": "1. 샘플 CSV 파일 파싱 테스트\n2. 데이터 검증 로직 테스트\n3. 대용량 데이터(50,000+ rows) 처리 성능 테스트\n4. 에러 핸들링 테스트",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          "4"
+        ]
+      },
+      {
+        "id": "7",
+        "title": "Test Virtual Scatter Plot Generation",
+        "description": "디스플레이 없이 scatter plot 생성 및 상호작용 테스트",
+        "details": "matplotlib을 백엔드 모드로 사용하여 scatter plot을 생성하고, 가상 선택 작업을 시뮬레이션합니다.",
+        "testStrategy": "1. Agg 백엔드로 plot 생성 테스트\n2. 프로그래밍 방식의 선택 영역 설정\n3. 가상 마우스 이벤트 시뮬레이션\n4. PNG/SVG 내보내기 테스트",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          "6"
+        ]
+      },
+      {
+        "id": "8",
+        "title": "Test Selection Management Synchronization",
+        "description": "Headless와 GUI 모드 간 선택 상태 동기화 테스트",
+        "details": "SelectionManager의 상태가 두 모드 간에 올바르게 동기화되고, 선택 작업이 일관되게 작동하는지 테스트합니다.",
+        "testStrategy": "1. Headless에서 선택 생성 후 GUI 동기화 확인\n2. GUI에서 선택 변경 후 Headless 상태 확인\n3. 색상 및 라벨 일관성 테스트\n4. Well plate 할당 동기화 테스트",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          "7"
+        ]
+      },
+      {
+        "id": "9",
+        "title": "Test Coordinate Calibration Without UI",
+        "description": "UI 없이 좌표 보정 기능 테스트",
+        "details": "CoordinateTransformer가 프로그래밍 방식으로 두 점을 받아 affine 변환을 계산하고 적용하는지 테스트합니다.",
+        "testStrategy": "1. 프로그래밍 방식의 보정점 설정\n2. Affine 변환 매트릭스 계산 검증\n3. 좌표 변환 정확도 테스트\n4. 역변환 테스트",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          "5"
+        ]
+      },
+      {
+        "id": "10",
+        "title": "Test Protocol Export in Headless Mode",
+        "description": "Headless 모드에서 프로토콜 파일 생성 테스트",
+        "details": "Extractor가 UI 없이 .cxprotocol 파일을 생성하고, 올바른 형식과 내용을 포함하는지 테스트합니다.",
+        "testStrategy": "1. 가상 선택 데이터로 프로토콜 생성\n2. INI 형식 검증\n3. 좌표 변환 적용 확인\n4. 파일 무결성 테스트",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          "8",
+          "9"
+        ]
+      },
+      {
+        "id": "11",
+        "title": "Test Session Save/Load in Both Modes",
+        "description": "양쪽 모드에서 세션 저장/로드 기능 테스트",
+        "details": "SessionManager가 headless와 GUI 모드 모두에서 완전한 세션 상태를 저장하고 복원하는지 테스트합니다.",
+        "testStrategy": "1. Headless에서 세션 저장 후 GUI에서 로드\n2. GUI에서 세션 저장 후 Headless에서 로드\n3. 모든 상태 정보 보존 확인\n4. 버전 호환성 테스트",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          "10"
+        ]
+      },
+      {
+        "id": "12",
+        "title": "Test Template System Integration",
+        "description": "템플릿 시스템의 headless 모드 통합 테스트",
+        "details": "TemplateManager가 UI 없이 템플릿을 생성, 저장, 로드, 적용할 수 있는지 테스트합니다.",
+        "testStrategy": "1. 프로그래밍 방식의 템플릿 생성\n2. 템플릿 적용 및 검증\n3. 템플릿 공유 기능 테스트\n4. 기본 템플릿 로드 테스트",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          "11"
+        ]
+      },
+      {
+        "id": "13",
+        "title": "Test Error Handling in Headless Mode",
+        "description": "Headless 모드에서 에러 처리 메커니즘 테스트",
+        "details": "에러가 발생했을 때 UI 대화상자 없이 적절한 로깅과 복구가 이루어지는지 테스트합니다.",
+        "testStrategy": "1. 의도적인 에러 발생 시나리오 테스트\n2. 로깅 출력 검증\n3. 데이터 무결성 확인\n4. 복구 메커니즘 테스트",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          "4"
+        ]
+      },
+      {
+        "id": "14",
+        "title": "Performance Benchmarking Between Modes",
+        "description": "Headless와 GUI 모드 간 성능 비교 테스트",
+        "details": "주요 작업들의 실행 시간과 메모리 사용량을 두 모드에서 측정하고 비교합니다.",
+        "testStrategy": "1. 이미지 로딩 시간 비교\n2. CSV 파싱 성능 비교\n3. 선택 작업 성능 비교\n4. 메모리 사용량 프로파일링",
+        "status": "pending",
+        "priority": "low",
+        "dependencies": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ]
+      },
+      {
+        "id": "15",
+        "title": "Complete Integration Test Suite",
+        "description": "전체 워크플로우를 headless 모드에서 실행하는 통합 테스트",
+        "details": "이미지 로드부터 프로토콜 내보내기까지 전체 워크플로우를 headless 모드에서 실행하고 검증합니다.",
+        "testStrategy": "1. 완전한 분석 워크플로우 시뮬레이션\n2. 모든 중간 단계 검증\n3. 최종 출력 파일 검증\n4. 성능 및 안정성 확인",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          "11",
+          "12",
+          "13"
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-27T09:26:28.915Z",
+      "updated": "2025-06-27T09:26:28.916Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

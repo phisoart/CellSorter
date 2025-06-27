@@ -1,0 +1,14 @@
+# Task ID: 9
+# Title: Test Coordinate Calibration Without UI
+# Status: pending
+# Dependencies: 5 (Not found)
+# Priority: medium
+# Description: UI 없이 좌표 보정 기능 테스트
+# Details:
+CoordinateTransformer가 프로그래밍 방식으로 두 점을 받아 affine 변환을 계산하고 적용하는지 테스트합니다.
+
+# Test Strategy:
+1. 프로그래밍 방식의 보정점 설정
+2. Affine 변환 매트릭스 계산 검증
+3. 좌표 변환 정확도 테스트
+4. 역변환 테스트
