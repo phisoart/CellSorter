@@ -354,18 +354,20 @@
       "description": "Add minimap widget for large image navigation",
       "type": "feature",
       "priority": "medium",
-      "status": "pending",
+      "status": "completed",
       "effort": "medium",
+      "completion_date": "2025-01-02",
       "dependencies": ["TASK-001"],
       "functional_requirement": "FR3.2",
       "acceptance_criteria": [
-        "Create miniature view of full image",
-        "Navigation rectangle overlay",
-        "Click-to-navigate functionality",
-        "Integration with main image view",
-        "Performance optimization for large images"
+        "✅ Create miniature view of full image",
+        "✅ Navigation rectangle overlay",
+        "✅ Click-to-navigate functionality",
+        "✅ Integration with main image view",
+        "✅ Performance optimization for large images"
       ],
-      "technical_notes": "Required for 100% FR3.2 compliance"
+      "implementation_file": "src/components/widgets/minimap.py",
+      "technical_notes": "Complete minimap implementation with drag navigation and performance optimization"
     },
     {
       "id": "TASK-017", 
@@ -527,21 +529,22 @@
       "description": "Implement automatic session loading and recovery system for seamless workflow continuation",
       "type": "feature",
       "priority": "medium",
-      "status": "pending",
+      "status": "completed",
       "effort": "small",
+      "completion_date": "2025-01-02",
       "dependencies": ["TASK-010"],
       "functional_requirement": "NFR3.3",
       "acceptance_criteria": [
-        "Automatic session detection on startup",
-        "Recent session list and quick access",
-        "Crash recovery and session restoration",
-        "Auto-save with configurable intervals",
-        "Session backup and versioning",
-        "User preference for auto-loading",
-        "Session integrity validation"
+        "✅ Automatic session detection on startup",
+        "✅ Recent session list and quick access",
+        "✅ Crash recovery and session restoration",
+        "✅ Auto-save with configurable intervals",
+        "✅ Session backup and versioning",
+        "✅ User preference for auto-loading",
+        "✅ Session integrity validation"
       ],
       "implementation_file": "src/models/auto_session.py",
-      "technical_notes": "Required for user scenarios - automatic session management"
+      "technical_notes": "Complete auto-session system with crash recovery and configurable auto-save"
     },
     {
       "id": "TASK-026",
@@ -591,9 +594,9 @@
   "metadata": {
     "total_tasks": 26,
     "by_status": {
-      "completed": 16,
+      "completed": 18,
       "done": 2,
-      "pending": 8,
+      "pending": 6,
       "in_progress": 0
     },
     "by_priority": {

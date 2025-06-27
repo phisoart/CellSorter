@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
     QFileDialog, QMessageBox, QApplication, QFrame, QSizePolicy, QDialog
 )
 from PySide6.QtCore import Qt, Signal, QTimer, QSettings
-from PySide6.QtGui import QAction, QKeySequence, QIcon
+from PySide6.QtGui import QAction, QKeySequence, QIcon, QImage, QRect, QSize
 
 from config.settings import (
     APP_NAME, APP_VERSION, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
@@ -32,8 +32,10 @@ from models.selection_manager import SelectionManager
 from models.extractor import Extractor
 from models.session_manager import SessionManager
 from models.template_manager import TemplateManager
+from models.auto_session import AutoSessionManager
 from components.widgets.scatter_plot import ScatterPlotWidget
 from components.widgets.selection_panel import SelectionPanel
+from components.widgets.minimap import MinimapWidget
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
 from components.dialogs.batch_process_dialog import BatchProcessDialog
@@ -87,6 +89,12 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.scatter_plot_widget = ScatterPlotWidget(self)
         self.selection_panel = SelectionPanel(self)
         
+        # Initialize auto-session manager
+        self.auto_session_manager = AutoSessionManager(self.session_manager, self)
+        
+        # Initialize minimap widget
+        self.minimap_widget = MinimapWidget(self)
+        
         # UI setup
         self.setup_ui()
         self.setup_actions()
@@ -98,6 +106,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Restore window state
         self.restore_settings()
+        
+        # Initialize auto-session system
+        self.auto_session_manager.initialize()
         
         self.log_info("CellSorter main window initialized")
     
@@ -123,6 +134,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.main_splitter.addWidget(self.image_handler)
         self.main_splitter.addWidget(self.scatter_plot_widget)
         self.main_splitter.addWidget(self.selection_panel)
+        
+        # Create minimap overlay on image handler
+        self.minimap_widget.setParent(self.image_handler)
+        self.minimap_widget.move(10, 10)  # Position in top-left corner
+        self.minimap_widget.raise_()  # Ensure it's on top
         
         # Set initial panel sizes
         total_width = DEFAULT_WINDOW_WIDTH - 50  # Account for margins
@@ -516,6 +532,15 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Image handler connections
         self.image_handler.coordinates_changed.connect(self.update_coordinates)
         self.image_handler.calibration_point_clicked.connect(self._on_calibration_point_clicked)
+        
+        # Minimap connections
+        self.minimap_widget.navigation_requested.connect(self.image_handler.navigate_to_position)
+        self.image_handler.zoom_changed.connect(self._update_minimap_viewport)
+        
+        # Auto-session connections
+        self.auto_session_manager.session_available.connect(self._on_session_available)
+        self.auto_session_manager.recovery_available.connect(self._on_recovery_available)
+        self.auto_session_manager.auto_save_completed.connect(self._on_auto_save_completed)
     
     @error_handler("Opening image file")
     def open_image_file(self) -> None:
@@ -921,6 +946,29 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.update_status(f"Image loaded: {Path(file_path).name}")
         self.enable_image_actions()
         self.log_info(f"Image successfully loaded: {file_path}")
+        
+        # Update minimap with loaded image
+        if self.image_handler.image_data is not None:
+            qimage = self._numpy_to_qimage(self.image_handler.image_data)
+            self.minimap_widget.set_image(qimage)
+            self._update_minimap_viewport()
+    
+    def _numpy_to_qimage(self, image_array) -> QImage:
+        """Convert numpy array to QImage for minimap."""
+        if len(image_array.shape) == 2:
+            # Grayscale
+            height, width = image_array.shape
+            bytes_per_line = width
+            return QImage(image_array.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
+        elif len(image_array.shape) == 3:
+            # Color
+            height, width, channels = image_array.shape
+            bytes_per_line = width * channels
+            if channels == 3:
+                return QImage(image_array.data, width, height, bytes_per_line, QImage.Format_RGB888)
+            elif channels == 4:
+                return QImage(image_array.data, width, height, bytes_per_line, QImage.Format_RGBA8888)
+        return QImage()
     
     def _on_image_load_failed(self, error_message: str) -> None:
         """Handle failed image loading."""
@@ -1093,137 +1141,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Remove image highlights
         self.image_handler.remove_cell_highlights(selection_id)
     
-    def _collect_session_data(self) -> Dict[str, Any]:
-        """
-        Collect current session data for saving.
-        
-        Returns:
-            Session data dictionary
-        """
-        # Get current selections
-        selections_data = []
-        for selection in self.selection_manager.get_all_selections():
-            selection_data = {
-                'id': selection.id,
-                'label': selection.label,
-                'color': selection.color,
-                'cell_indices': selection.cell_indices,
-                'well_position': selection.well_position,
-                'status': selection.status.value,
-                'created_at': datetime.fromtimestamp(selection.created_timestamp).isoformat(),
-                'metadata': selection.metadata
-            }
-            selections_data.append(selection_data)
-        
-        # Get calibration data
-        calibration_data = {
-            'points': [],
-            'transformation_matrix': None,
-            'is_calibrated': self.coordinate_transformer.is_calibrated
-        }
-        
-        for point in self.coordinate_transformer.calibration_points:
-            point_data = {
-                'pixel_x': point.pixel_x,
-                'pixel_y': point.pixel_y,
-                'stage_x': point.stage_x,
-                'stage_y': point.stage_y,
-                'label': point.label
-            }
-            calibration_data['points'].append(point_data)
-        
-        if self.coordinate_transformer.transform_matrix is not None:
-            calibration_data['transformation_matrix'] = self.coordinate_transformer.transform_matrix.tolist()
-        
-        # Get well assignments
-        well_assignments = {}
-        for selection in self.selection_manager.get_all_selections():
-            if selection.well_position:
-                well_assignments[selection.well_position] = {
-                    'selection_id': selection.id,
-                    'label': selection.label,
-                    'color': selection.color
-                }
-        
-        # Create session data
-        session_data = self.session_manager.create_new_session()
-        session_data['data'].update({
-            'image_file': self.current_image_path,
-            'csv_file': self.current_csv_path,
-            'calibration': calibration_data,
-            'selections': selections_data,
-            'well_assignments': well_assignments,
-            'settings': {
-                'zoom_level': getattr(self.image_handler, 'zoom_level', 1.0),
-                'show_overlays': getattr(self.image_handler, 'show_overlays', True),
-                'overlay_alpha': 0.5
-            }
-        })
-        
-        return session_data
-    
-    def _restore_session_data(self, session_data: Dict[str, Any]) -> None:
-        """
-        Restore session data after loading.
-        
-        Args:
-            session_data: Session data to restore
-        """
-        data = session_data.get('data', {})
-        
-        # Clear current state
-        self.selection_manager.clear_all_selections()
-        self.coordinate_transformer.clear_calibration()
-        self.image_handler.clear_all_cell_highlights()
-        
-        # Restore files
-        image_file = data.get('image_file')
-        csv_file = data.get('csv_file')
-        
-        if image_file and Path(image_file).exists():
-            self.current_image_path = image_file
-            self.image_handler.load_image(image_file)
-        
-        if csv_file and Path(csv_file).exists():
-            self.current_csv_path = csv_file
-            self.csv_parser.load_csv(csv_file)
-        
-        # Restore calibration
-        calibration_data = data.get('calibration', {})
-        for point_data in calibration_data.get('points', []):
-            self.coordinate_transformer.add_calibration_point(
-                point_data['pixel_x'],
-                point_data['pixel_y'],
-                point_data['stage_x'],
-                point_data['stage_y'],
-                point_data['label']
-            )
-        
-        # Restore selections
-        for selection_data in data.get('selections', []):
-            selection_id = self.selection_manager.add_selection(
-                cell_indices=selection_data['cell_indices'],
-                color=selection_data.get('color'),
-                label=selection_data['label']
-            )
-            
-            # Restore well assignment
-            well_position = selection_data.get('well_position')
-            if well_position and selection_id:
-                selection = self.selection_manager.get_selection(selection_id)
-                if selection:
-                    selection.well_position = well_position
-        
-        # Restore settings
-        settings = data.get('settings', {})
-        if hasattr(self.image_handler, 'zoom_level'):
-            self.image_handler.zoom_level = settings.get('zoom_level', 1.0)
-        if hasattr(self.image_handler, 'show_overlays'):
-            self.image_handler.show_overlays = settings.get('show_overlays', True)
-        
-        self.is_modified = False
-        self.log_info("Session data restored successfully")
-    
     def _on_calibration_point_clicked(self, image_x: int, image_y: int, point_label: str) -> None:
         """Handle calibration point clicked on image."""
         # Show dialog to enter stage coordinates
@@ -1306,6 +1223,205 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.log_info(f"Update auto-check set to: {auto_check.isChecked()}")
     
     def _on_update_available(self, current_version: str, latest_version: str, download_url: str) -> None:
-        """Handle update available notification."""
-        if self.update_checker:
-            self.update_checker.show_update_dialog(self, current_version, latest_version, download_url)
+        """Handle update availability notification."""
+        reply = QMessageBox.information(
+            self,
+            "Update Available",
+            f"A new version of CellSorter is available!\n\n"
+            f"Current version: {current_version}\n"
+            f"Latest version: {latest_version}\n\n"
+            f"Would you like to download the update?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            import webbrowser
+            webbrowser.open(download_url)
+    
+    def _update_minimap_viewport(self) -> None:
+        """Update minimap viewport rectangle."""
+        if self.image_handler.image_data is not None:
+            visible_rect = self.image_handler.get_visible_rect()
+            x, y, width, height = visible_rect
+            viewport_rect = QRect(x, y, width, height)
+            
+            img_height, img_width = self.image_handler.image_data.shape[:2]
+            image_size = QSize(img_width, img_height)
+            
+            self.minimap_widget.update_viewport(viewport_rect, image_size)
+    
+    def _on_session_available(self, session_info: dict) -> None:
+        """Handle available session notification."""
+        session_name = session_info.get('name', 'Unknown')
+        modified = session_info.get('modified', 'Unknown')
+        
+        reply = QMessageBox.question(
+            self,
+            "Recent Session Available",
+            f"Would you like to load the recent session?\n\n"
+            f"Session: {session_name}\n"
+            f"Modified: {modified}",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            session_path = session_info.get('path')
+            if session_path:
+                session_data = self.session_manager.load_session(session_path)
+                if session_data:
+                    self._restore_session_data(session_data)
+    
+    def _on_recovery_available(self, recovery_path: str) -> None:
+        """Handle crash recovery session."""
+        reply = QMessageBox.warning(
+            self,
+            "Crash Recovery",
+            "A previous session was not closed properly.\n"
+            "Would you like to recover your work?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            session_data = self.session_manager.load_session(recovery_path)
+            if session_data:
+                self._restore_session_data(session_data)
+                self.update_status("Session recovered successfully")
+    
+    def _on_auto_save_completed(self, save_path: str) -> None:
+        """Handle auto-save completion."""
+        self.update_status(f"Auto-saved: {Path(save_path).name}")
+        self.log_info(f"Auto-save completed: {save_path}")
+    
+    def _collect_session_data(self) -> Dict[str, Any]:
+        """
+        Collect current session data for saving.
+        
+        Returns:
+            Session data dictionary
+        """
+        # Get current selections
+        selections_data = []
+        for selection in self.selection_manager.get_all_selections():
+            selection_data = {
+                'id': selection.id,
+                'label': selection.label,
+                'color': selection.color,
+                'cell_indices': selection.cell_indices,
+                'well_position': selection.well_position,
+                'status': selection.status.value,
+                'created_at': datetime.fromtimestamp(selection.created_timestamp).isoformat(),
+                'metadata': selection.metadata
+            }
+            selections_data.append(selection_data)
+        
+        # Get calibration data
+        calibration_data = {
+            'points': [],
+            'transformation_matrix': None,
+            'is_calibrated': self.coordinate_transformer.is_calibrated
+        }
+        
+        for point in self.coordinate_transformer.calibration_points:
+            point_data = {
+                'pixel_x': point.pixel_x,
+                'pixel_y': point.pixel_y,
+                'stage_x': point.stage_x,
+                'stage_y': point.stage_y,
+                'label': point.label
+            }
+            calibration_data['points'].append(point_data)
+        
+        if self.coordinate_transformer.transform_matrix is not None:
+            calibration_data['transformation_matrix'] = self.coordinate_transformer.transform_matrix.tolist()
+        
+        # Get well assignments
+        well_assignments = {}
+        for selection in self.selection_manager.get_all_selections():
+            if selection.well_position:
+                well_assignments[selection.well_position] = {
+                    'selection_id': selection.id,
+                    'label': selection.label,
+                    'color': selection.color
+                }
+        
+        # Create session data
+        session_data = self.session_manager.create_new_session()
+        session_data['data'].update({
+            'image_file': self.current_image_path,
+            'csv_file': self.current_csv_path,
+            'calibration': calibration_data,
+            'selections': selections_data,
+            'well_assignments': well_assignments,
+            'settings': {
+                'zoom_level': getattr(self.image_handler, 'zoom_level', 1.0),
+                'show_overlays': getattr(self.image_handler, 'show_overlays', True),
+                'overlay_alpha': 0.5
+            }
+        })
+        
+        # Update auto-session manager
+        self.auto_session_manager.update_session_data(session_data)
+        
+        return session_data
+    
+    def _restore_session_data(self, session_data: Dict[str, Any]) -> None:
+        """
+        Restore session data after loading.
+        
+        Args:
+            session_data: Session data to restore
+        """
+        data = session_data.get('data', {})
+        
+        # Clear current state
+        self.selection_manager.clear_all_selections()
+        self.coordinate_transformer.clear_calibration()
+        self.image_handler.clear_all_cell_highlights()
+        
+        # Restore files
+        image_file = data.get('image_file')
+        csv_file = data.get('csv_file')
+        
+        if image_file and Path(image_file).exists():
+            self.current_image_path = image_file
+            self.image_handler.load_image(image_file)
+        
+        if csv_file and Path(csv_file).exists():
+            self.current_csv_path = csv_file
+            self.csv_parser.load_csv(csv_file)
+        
+        # Restore calibration
+        calibration_data = data.get('calibration', {})
+        for point_data in calibration_data.get('points', []):
+            self.coordinate_transformer.add_calibration_point(
+                point_data['pixel_x'],
+                point_data['pixel_y'],
+                point_data['stage_x'],
+                point_data['stage_y'],
+                point_data['label']
+            )
+        
+        # Restore selections
+        for selection_data in data.get('selections', []):
+            selection_id = self.selection_manager.add_selection(
+                cell_indices=selection_data['cell_indices'],
+                color=selection_data.get('color'),
+                label=selection_data['label']
+            )
+            
+            # Restore well assignment
+            well_position = selection_data.get('well_position')
+            if well_position and selection_id:
+                selection = self.selection_manager.get_selection(selection_id)
+                if selection:
+                    selection.well_position = well_position
+        
+        # Restore settings
+        settings = data.get('settings', {})
+        if hasattr(self.image_handler, 'zoom_level'):
+            self.image_handler.zoom_level = settings.get('zoom_level', 1.0)
+        if hasattr(self.image_handler, 'show_overlays'):
+            self.image_handler.show_overlays = settings.get('show_overlays', True)
+        
+        self.is_modified = False
+        self.log_info("Session data restored successfully")

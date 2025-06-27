@@ -555,19 +555,108 @@ class ImageHandler(QWidget, LoggerMixin):
         self.set_zoom(self.zoom_level * 0.8)
     
     def zoom_fit(self) -> None:
-        """Fit image to widget size."""
+        """Fit image to window size."""
+        # TODO: Calculate zoom to fit window
+        self.set_zoom(1.0)
+    
+    def fit_to_window(self) -> None:
+        """Alias for zoom_fit for consistency."""
+        self.zoom_fit()
+    
+    def reset_view(self) -> None:
+        """Reset view to default state."""
+        self.zoom_level = 1.0
+        self.pan_offset = (0, 0)
+        self._update_display()
+        self.zoom_changed.emit(self.zoom_level)
+    
+    def pan(self, dx: int, dy: int) -> None:
+        """
+        Pan the image view.
+        
+        Args:
+            dx: Horizontal pan distance in pixels
+            dy: Vertical pan distance in pixels
+        """
         if self.image_data is None:
             return
         
-        widget_size = self.image_label.size()
-        image_size = self.image_data.shape[:2]  # (height, width)
+        # Update pan offset
+        self.pan_offset = (
+            self.pan_offset[0] + dx,
+            self.pan_offset[1] + dy
+        )
         
-        # Calculate zoom to fit
-        zoom_x = widget_size.width() / image_size[1]
-        zoom_y = widget_size.height() / image_size[0]
-        zoom_fit = min(zoom_x, zoom_y, 1.0)  # Don't zoom in beyond 100%
+        # TODO: Implement actual panning in display
+        self._update_display()
+    
+    def set_selection_mode(self, enabled: bool) -> None:
+        """
+        Enable or disable selection mode.
         
-        self.set_zoom(zoom_fit)
+        Args:
+            enabled: Whether to enable selection mode
+        """
+        # TODO: Implement selection mode
+        self.log_info(f"Selection mode: {'enabled' if enabled else 'disabled'}")
+    
+    def get_visible_rect(self) -> Tuple[int, int, int, int]:
+        """
+        Get the currently visible rectangle in image coordinates.
+        
+        Returns:
+            Tuple of (x, y, width, height) in image coordinates
+        """
+        if self.image_data is None:
+            return (0, 0, 0, 0)
+        
+        # Calculate visible area based on widget size and zoom
+        widget_width = self.image_label.width()
+        widget_height = self.image_label.height()
+        
+        # Image dimensions
+        img_height, img_width = self.image_data.shape[:2]
+        
+        # Visible dimensions in image coordinates
+        visible_width = min(widget_width / self.zoom_level, img_width)
+        visible_height = min(widget_height / self.zoom_level, img_height)
+        
+        # Calculate position based on pan offset
+        x = max(0, -self.pan_offset[0] / self.zoom_level)
+        y = max(0, -self.pan_offset[1] / self.zoom_level)
+        
+        return (int(x), int(y), int(visible_width), int(visible_height))
+    
+    def navigate_to_position(self, norm_x: float, norm_y: float) -> None:
+        """
+        Navigate to a normalized position in the image.
+        
+        Args:
+            norm_x: Normalized X position (0-1)
+            norm_y: Normalized Y position (0-1)
+        """
+        if self.image_data is None:
+            return
+        
+        # Get image dimensions
+        img_height, img_width = self.image_data.shape[:2]
+        
+        # Calculate target position in image coordinates
+        target_x = int(norm_x * img_width)
+        target_y = int(norm_y * img_height)
+        
+        # Calculate pan offset to center on target
+        widget_width = self.image_label.width()
+        widget_height = self.image_label.height()
+        
+        # Calculate offset to center the target point
+        self.pan_offset = (
+            int(widget_width / 2 - target_x * self.zoom_level),
+            int(widget_height / 2 - target_y * self.zoom_level)
+        )
+        
+        self._update_display()
+        self.log_info(f"Navigated to position: ({norm_x:.2f}, {norm_y:.2f})")
     
     def add_overlay(self, overlay_type: str, x: float, y: float, 
                    width: float, height: float, color: str = '#FF0000', 
