@@ -77,7 +77,7 @@ class MinimapWidget(QWidget, LoggerMixin):
         Args:
             image: Full resolution image
         """
-        if image.isNull():
+        if image.isNull() or image.width() == 0 or image.height() == 0:
             self.full_image = None
             self.thumbnail = None
             self.update()

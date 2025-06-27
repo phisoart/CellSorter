@@ -311,6 +311,105 @@ class TestImageHandler:
         except ZeroDivisionError:
             pytest.fail("Division by zero occurred for uniform RGBA image")
     
+    def test_numpy_to_qimage_c_contiguous_handling(self, qapp):
+        """Test QImage conversion for non-contiguous arrays and C-contiguous handling."""
+        handler = ImageHandler()
+
+        # Create non-contiguous array by slicing
+        original_array = np.random.randint(0, 256, (64, 64, 3), dtype=np.uint8)
+        non_contiguous = original_array[::2, ::2, :]  # Non-contiguous slice
+        
+        # Verify it's not C-contiguous
+        assert not non_contiguous.flags['C_CONTIGUOUS']
+        
+        # Should still work - method should handle C-contiguous conversion
+        qimage = handler._numpy_to_qimage(non_contiguous)
+        assert isinstance(qimage, QImage)
+        assert qimage.width() == 32  # Half of original width due to slicing
+        assert qimage.height() == 32  # Half of original height due to slicing
+        
+        # Test with grayscale non-contiguous array
+        gray_original = np.random.randint(0, 256, (64, 64), dtype=np.uint8)
+        gray_non_contiguous = gray_original[::2, ::2]
+        
+        assert not gray_non_contiguous.flags['C_CONTIGUOUS']
+        
+        qimage_gray = handler._numpy_to_qimage(gray_non_contiguous)
+        assert isinstance(qimage_gray, QImage)
+        assert qimage_gray.width() == 32
+        assert qimage_gray.height() == 32
+
+    def test_numpy_to_qimage_different_dtypes(self, qapp):
+        """Test QImage conversion for different numpy data types."""
+        handler = ImageHandler()
+
+        # Test uint16 grayscale
+        uint16_gray = np.random.randint(0, 65536, (24, 24), dtype=np.uint16)
+        qimage_u16 = handler._numpy_to_qimage(uint16_gray)
+        assert isinstance(qimage_u16, QImage)
+        
+        # Test float32 RGB
+        float32_rgb = np.random.random((16, 16, 3)).astype(np.float32)
+        qimage_f32 = handler._numpy_to_qimage(float32_rgb)
+        assert isinstance(qimage_f32, QImage)
+        
+        # Test int32 RGBA
+        int32_rgba = np.random.randint(-1000, 1000, (12, 12, 4), dtype=np.int32)
+        qimage_i32 = handler._numpy_to_qimage(int32_rgba)
+        assert isinstance(qimage_i32, QImage)
+
+    def test_numpy_to_qimage_edge_cases(self, qapp):
+        """Test QImage conversion for edge cases."""
+        handler = ImageHandler()
+
+        # Test very small image
+        tiny_image = np.array([[255, 0], [0, 255]], dtype=np.uint8)
+        qimage_tiny = handler._numpy_to_qimage(tiny_image)
+        assert isinstance(qimage_tiny, QImage)
+        assert qimage_tiny.width() == 2
+        assert qimage_tiny.height() == 2
+        
+        # Test single pixel image
+        single_pixel = np.array([[128]], dtype=np.uint8)
+        qimage_single = handler._numpy_to_qimage(single_pixel)
+        assert isinstance(qimage_single, QImage)
+        assert qimage_single.width() == 1
+        assert qimage_single.height() == 1
+        
+        # Test unsupported shape (1D array)
+        unsupported_1d = np.array([1, 2, 3, 4], dtype=np.uint8)
+        qimage_unsupported = handler._numpy_to_qimage(unsupported_1d)
+        assert qimage_unsupported.isNull()  # Should return empty QImage
+        
+        # Test unsupported shape (5-channel image)
+        unsupported_5ch = np.random.randint(0, 256, (10, 10, 5), dtype=np.uint8)
+        qimage_5ch = handler._numpy_to_qimage(unsupported_5ch)
+        assert qimage_5ch.isNull()  # Should return empty QImage
+
+    def test_numpy_to_qimage_memory_layout_preservation(self, qapp):
+        """Test that QImage conversion preserves expected memory layout."""
+        handler = ImageHandler()
+
+        # Create test pattern that's easy to verify
+        test_pattern = np.zeros((4, 4, 3), dtype=np.uint8)
+        test_pattern[0, 0] = [255, 0, 0]  # Red pixel at top-left
+        test_pattern[0, 3] = [0, 255, 0]  # Green pixel at top-right
+        test_pattern[3, 0] = [0, 0, 255]  # Blue pixel at bottom-left
+        test_pattern[3, 3] = [255, 255, 255]  # White pixel at bottom-right
+        
+        qimage = handler._numpy_to_qimage(test_pattern)
+        assert isinstance(qimage, QImage)
+        assert qimage.width() == 4
+        assert qimage.height() == 4
+        
+        # Verify pixel colors (Qt uses QRgb format)
+        from PySide6.QtGui import qRed, qGreen, qBlue
+        
+        top_left = qimage.pixel(0, 0)
+        assert qRed(top_left) == 255
+        assert qGreen(top_left) == 0
+        assert qBlue(top_left) == 0
+    
     def test_get_image_info(self, qapp, sample_image_data):
         """Test image information retrieval."""
         handler = ImageHandler()

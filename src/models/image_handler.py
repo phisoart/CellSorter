@@ -434,13 +434,13 @@ class ImageHandler(QWidget, LoggerMixin):
     
     def _numpy_to_qimage(self, image: np.ndarray) -> QImage:
         """
-        Convert numpy array to QImage.
+        Convert numpy array to QImage with proper dtype conversion and C-contiguous handling.
         
         Args:
-            image: Image as numpy array
+            image: Image as numpy array of any dtype
         
         Returns:
-            QImage object
+            QImage object suitable for display
         """
         if len(image.shape) == 2:
             # Grayscale image
@@ -448,15 +448,26 @@ class ImageHandler(QWidget, LoggerMixin):
             bytes_per_line = width
 
             if image.dtype == np.uint8:
+                # Ensure C-contiguous for QImage
+                if not image.flags['C_CONTIGUOUS']:
+                    image = np.ascontiguousarray(image)
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
             else:
-                # Convert to uint8, handle uniform value (no division by zero)
+                # Convert to uint8 with proper normalization
                 min_val = image.min()
                 max_val = image.max()
+                
                 if max_val == min_val:
+                    # Uniform image - avoid division by zero
                     image_uint8 = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
                 else:
+                    # Normalize to 0-255 range
                     image_uint8 = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+                
+                # Ensure C-contiguous for QImage
+                if not image_uint8.flags['C_CONTIGUOUS']:
+                    image_uint8 = np.ascontiguousarray(image_uint8)
+                    
                 return QImage(image_uint8.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
         
         elif len(image.shape) == 3:
@@ -469,10 +480,16 @@ class ImageHandler(QWidget, LoggerMixin):
                 if image.dtype != np.uint8:
                     min_val = image.min()
                     max_val = image.max()
+                    
                     if max_val == min_val:
                         image = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
                     else:
                         image = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+                
+                # Ensure C-contiguous
+                if not image.flags['C_CONTIGUOUS']:
+                    image = np.ascontiguousarray(image)
+                    
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888)
             
             elif channels == 4:
@@ -480,13 +497,21 @@ class ImageHandler(QWidget, LoggerMixin):
                 if image.dtype != np.uint8:
                     min_val = image.min()
                     max_val = image.max()
+                    
                     if max_val == min_val:
                         image = np.full_like(image, 0 if min_val == 0 else 255, dtype=np.uint8)
                     else:
                         image = ((image - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+                
+                # Ensure C-contiguous
+                if not image.flags['C_CONTIGUOUS']:
+                    image = np.ascontiguousarray(image)
+                    
                 return QImage(image.data, width, height, bytes_per_line, QImage.Format_RGBA8888)
         
-        raise ValueError(f"Unsupported image shape: {image.shape}")
+        # Unsupported format - return empty image
+        self.log_warning(f"Unsupported image shape for QImage conversion: {image.shape}")
+        return QImage()
     
     def _draw_overlays(self, pixmap: QPixmap) -> QPixmap:
         """

@@ -951,88 +951,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Update minimap with loaded image
         if self.image_handler.image_data is not None:
-            qimage = self._numpy_to_qimage(self.image_handler.image_data)
+            # Use the shared method from ImageHandler
+            qimage = self.image_handler._numpy_to_qimage(self.image_handler.image_data)
             self.minimap_widget.set_image(qimage)
             self._update_minimap_viewport()
-    
-    def _numpy_to_qimage(self, image_array) -> QImage:
-        """
-        Convert numpy array to QImage for minimap with proper dtype conversion.
-        
-        Args:
-            image_array: NumPy array of any dtype
-            
-        Returns:
-            QImage object suitable for display
-        """
-        if len(image_array.shape) == 2:
-            # Grayscale image
-            height, width = image_array.shape
-            bytes_per_line = width
-            
-            if image_array.dtype == np.uint8:
-                # Already uint8, use directly
-                return QImage(image_array.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
-            else:
-                # Convert to uint8 with proper normalization
-                min_val = image_array.min()
-                max_val = image_array.max()
-                
-                if max_val == min_val:
-                    # Uniform image - avoid division by zero
-                    image_uint8 = np.full_like(image_array, 0 if min_val == 0 else 255, dtype=np.uint8)
-                else:
-                    # Normalize to 0-255 range
-                    image_uint8 = ((image_array - min_val) / (max_val - min_val) * 255).astype(np.uint8)
-                
-                # Ensure C-contiguous for QImage
-                if not image_uint8.flags['C_CONTIGUOUS']:
-                    image_uint8 = np.ascontiguousarray(image_uint8)
-                    
-                return QImage(image_uint8.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
-        
-        elif len(image_array.shape) == 3:
-            # Color image
-            height, width, channels = image_array.shape
-            bytes_per_line = width * channels
-            
-            if channels == 3:
-                # RGB image
-                if image_array.dtype != np.uint8:
-                    min_val = image_array.min()
-                    max_val = image_array.max()
-                    
-                    if max_val == min_val:
-                        image_array = np.full_like(image_array, 0 if min_val == 0 else 255, dtype=np.uint8)
-                    else:
-                        image_array = ((image_array - min_val) / (max_val - min_val) * 255).astype(np.uint8)
-                
-                # Ensure C-contiguous
-                if not image_array.flags['C_CONTIGUOUS']:
-                    image_array = np.ascontiguousarray(image_array)
-                    
-                return QImage(image_array.data, width, height, bytes_per_line, QImage.Format_RGB888)
-            
-            elif channels == 4:
-                # RGBA image
-                if image_array.dtype != np.uint8:
-                    min_val = image_array.min()
-                    max_val = image_array.max()
-                    
-                    if max_val == min_val:
-                        image_array = np.full_like(image_array, 0 if min_val == 0 else 255, dtype=np.uint8)
-                    else:
-                        image_array = ((image_array - min_val) / (max_val - min_val) * 255).astype(np.uint8)
-                
-                # Ensure C-contiguous
-                if not image_array.flags['C_CONTIGUOUS']:
-                    image_array = np.ascontiguousarray(image_array)
-                    
-                return QImage(image_array.data, width, height, bytes_per_line, QImage.Format_RGBA8888)
-        
-        # Unsupported format - return empty image
-        self.log_warning(f"Unsupported image shape for minimap: {image_array.shape}")
-        return QImage()
     
     def _on_image_load_failed(self, error_message: str) -> None:
         """Handle failed image loading."""

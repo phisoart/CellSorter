@@ -2,6 +2,10 @@
 Tests for Minimap Navigation Widget
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import pytest
 from PySide6.QtCore import Qt, QRect, QSize, QPoint
 from PySide6.QtGui import QImage, QColor
@@ -151,4 +155,24 @@ class TestMinimapWidget:
         # Move outside image - should show arrow
         outside_pos = QPoint(0, 0)
         QTest.mouseMove(minimap_widget, pos=outside_pos)
-        assert minimap_widget.cursor().shape() == Qt.ArrowCursor 
+        assert minimap_widget.cursor().shape() == Qt.ArrowCursor
+    
+    def test_set_zero_sized_image(self, minimap_widget):
+        """width 또는 height가 0인 이미지를 set_image에 전달할 때 안전하게 동작하는지 테스트"""
+        # width=0, height>0
+        zero_width_image = QImage(0, 100, QImage.Format_RGB888)
+        minimap_widget.set_image(zero_width_image)
+        assert minimap_widget.full_image is None
+        assert minimap_widget.thumbnail is None
+
+        # width>0, height=0
+        zero_height_image = QImage(100, 0, QImage.Format_RGB888)
+        minimap_widget.set_image(zero_height_image)
+        assert minimap_widget.full_image is None
+        assert minimap_widget.thumbnail is None
+
+        # width=0, height=0
+        zero_both_image = QImage(0, 0, QImage.Format_RGB888)
+        minimap_widget.set_image(zero_both_image)
+        assert minimap_widget.full_image is None
+        assert minimap_widget.thumbnail is None 
