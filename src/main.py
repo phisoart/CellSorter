@@ -44,7 +44,7 @@ def main() -> None:
         # Initialize theme manager before creating main window
         theme_manager = ThemeManager(app)
         theme_manager.apply_theme("light")  # Default theme
-        
+
         # Initialize update checker
         update_checker = UpdateChecker(APP_VERSION)
 
