@@ -204,46 +204,45 @@ class MainWindowAdapter:
         menu_bar = Widget(
             name="menu_bar",
             type=WidgetType.MENU_BAR,
-            properties={}
+            properties={},
+            parent="main_window"
         )
-        # Set parent after creation since it's a dataclass field
-        object.__setattr__(menu_bar, 'parent_name', 'main_window')
         widgets.append(menu_bar)
         
         # File menu
         file_menu = Widget(
             name="file_menu", 
             type=WidgetType.MENU,
-            properties={"title": "File"}
+            properties={"title": "File"},
+            parent="menu_bar"
         )
-        object.__setattr__(file_menu, 'parent_name', 'menu_bar')
         widgets.append(file_menu)
         
         # Toolbar
         toolbar = Widget(
             name="main_toolbar",
             type=WidgetType.TOOL_BAR,
-            properties={"title": "Main Toolbar"}
+            properties={"title": "Main Toolbar"},
+            parent="main_window"
         )
-        object.__setattr__(toolbar, 'parent_name', 'main_window')
         widgets.append(toolbar)
         
         # Central widget
         central_widget = Widget(
             name="central_widget",
             type=WidgetType.WIDGET,
-            properties={}
+            properties={},
+            parent="main_window"
         )
-        object.__setattr__(central_widget, 'parent_name', 'main_window')
         widgets.append(central_widget)
         
         # Splitter
         splitter = Widget(
             name="main_splitter",
             type=WidgetType.SPLITTER,
-            properties={"orientation": "horizontal"}
+            properties={"orientation": "horizontal"},
+            parent="central_widget"
         )
-        object.__setattr__(splitter, 'parent_name', 'central_widget')
         widgets.append(splitter)
         
         # Panels (only if visible)
@@ -251,36 +250,36 @@ class MainWindowAdapter:
             image_panel = Widget(
                 name="image_panel",
                 type=WidgetType.WIDGET,
-                properties={"title": "Image View", "minimumWidth": 300}
+                properties={"title": "Image View", "minimumWidth": 300},
+                parent="main_splitter"
             )
-            object.__setattr__(image_panel, 'parent_name', 'main_splitter')
             widgets.append(image_panel)
         
         if self.state.plot_panel_visible:
             plot_panel = Widget(
                 name="plot_panel",
                 type=WidgetType.WIDGET,
-                properties={"title": "Scatter Plot", "minimumWidth": 400}
+                properties={"title": "Scatter Plot", "minimumWidth": 400},
+                parent="main_splitter"
             )
-            object.__setattr__(plot_panel, 'parent_name', 'main_splitter')
             widgets.append(plot_panel)
         
         if self.state.selection_panel_visible:
             selection_panel = Widget(
                 name="selection_panel",
                 type=WidgetType.WIDGET,
-                properties={"title": "Selection Manager", "minimumWidth": 250}
+                properties={"title": "Selection Manager", "minimumWidth": 250},
+                parent="main_splitter"
             )
-            object.__setattr__(selection_panel, 'parent_name', 'main_splitter')
             widgets.append(selection_panel)
         
         # Status bar
         status_bar = Widget(
             name="status_bar",
             type=WidgetType.STATUS_BAR,
-            properties={"message": self.state.status_message}
+            properties={"message": self.state.status_message},
+            parent="main_window"
         )
-        object.__setattr__(status_bar, 'parent_name', 'main_window')
         widgets.append(status_bar)
         
         return UI(
