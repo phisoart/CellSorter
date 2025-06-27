@@ -406,8 +406,18 @@ class ImageHandler(QWidget, LoggerMixin):
             if self.show_overlays and (self.overlays or self.cell_overlays):
                 pixmap = self._draw_overlays(pixmap)
             
+            # Get widget size, ensuring minimum dimensions of 1x1
+            label_width = max(1, self.image_label.width())
+            label_height = max(1, self.image_label.height())
+            
             # Create a new pixmap for the view that includes pan offset
-            view_pixmap = QPixmap(self.image_label.width(), self.image_label.height())
+            view_pixmap = QPixmap(label_width, label_height)
+            
+            # Ensure pixmap is valid before proceeding
+            if view_pixmap.isNull():
+                self.log_error("Failed to create valid pixmap - invalid dimensions")
+                return
+                
             view_pixmap.fill(Qt.gray)  # Fill with background color
             
             # Draw the image pixmap with pan offset
