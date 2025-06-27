@@ -255,6 +255,7 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
     plot_created = Signal(str, str)  # x_column, y_column
     selection_made = Signal(list)  # selected_indices
     column_changed = Signal(str, str)  # axis, column_name
+    expression_selection_made = Signal(list)  # selected_indices from expression filter
     
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
@@ -263,8 +264,16 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         self.dataframe: Optional[pd.DataFrame] = None
         self.numeric_columns: List[str] = []
         
+        # Selection type tracking
+        self.current_selection_type = 'rectangle'  # Default selection type: 'rectangle' or 'expression'
+        
         self.setup_ui()
         self.connect_signals()
+        
+        # Initialize expression filter if available
+        self.expression_filter = None
+        if EXPRESSION_FILTER_AVAILABLE:
+            self.setup_expression_filter()
         
         self.log_info("Scatter plot widget initialized")
     
@@ -475,3 +484,69 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
             True if successful, False otherwise
         """
         return self.canvas.export_plot(file_path)
+    
+    def setup_expression_filter(self) -> None:
+        """Set up expression filter if available."""
+        try:
+            from components.widgets.expression_filter import ExpressionFilterWidget
+            
+            # Create tab widget if not already using tabs
+            if not hasattr(self, 'tab_widget'):
+                # Create a tab widget
+                old_layout = self.layout()
+                old_content = QWidget()
+                new_layout = QVBoxLayout(old_content)
+                
+                # Move existing widgets to the new layout
+                while old_layout.count():
+                    item = old_layout.takeAt(0)
+                    if item.widget():
+                        new_layout.addWidget(item.widget())
+                
+                # Create tab widget
+                self.tab_widget = QTabWidget()
+                old_layout.addWidget(self.tab_widget)
+                
+                # Add scatter plot tab
+                self.tab_widget.addTab(old_content, "Scatter Plot")
+            
+            # Create expression filter tab
+            self.expression_filter = ExpressionFilterWidget()
+            self.tab_widget.addTab(self.expression_filter, "Expression Filter")
+            
+            # Connect expression filter signals
+            self.expression_filter.selection_requested.connect(self._on_expression_selection)
+            
+            self.log_info("Expression filter initialized")
+        except ImportError as e:
+            self.log_warning(f"Could not initialize expression filter: {e}")
+    
+    def _on_expression_selection(self, indices: List[int]) -> None:
+        """
+        Handle selection from expression filter.
+        
+        Args:
+            indices: Selected point indices
+        """
+        self.current_selection_type = "expression"
+        
+        # Get current expression for metadata
+        if self.expression_filter:
+            self.current_expression = self.expression_filter.get_current_expression()
+        
+        # Highlight points on scatter plot
+        self.canvas.highlight_points(indices, self.canvas.expression_color)
+        
+        # Emit expression-specific signal
+        self.expression_selection_made.emit(indices)
+        
+        self.log_info(f"Expression selection made: {len(indices)} points")
+    
+    def get_current_expression(self) -> str:
+        """
+        Get current expression used for filtering.
+        
+        Returns:
+            Current expression string
+        """
+        return self.current_expression

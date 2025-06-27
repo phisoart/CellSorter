@@ -790,29 +790,23 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.log_error(f"CSV loading failed: {error_message}")
     
     def _on_selection_made(self, indices: list) -> None:
-        """Handle cell selection from scatter plot (rectangle or expression)."""
+        """Handle cell selection from scatter plot (rectangle selection only)."""
         if indices:
-            # Determine selection type based on current mode
-            selection_type = getattr(self.scatter_plot_widget, 'current_selection_type', 'rectangle')
-            
-            # Add selection to selection manager
-            label_prefix = "Expression" if selection_type == "expression" else "Rectangle"
+            # Add selection to selection manager with rectangle prefix
             selection_id = self.selection_manager.add_selection(
                 cell_indices=indices,
-                label=f"{label_prefix}_{len(self.selection_manager.selections) + 1}"
+                label=f"Rectangle_{len(self.selection_manager.selections) + 1}"
             )
             
             if selection_id:
-                selection_method = "expression filter" if selection_type == "expression" else "rectangle selection"
-                self.update_status(f"Selected {len(indices)} cells using {selection_method}")
+                self.update_status(f"Selected {len(indices)} cells using rectangle selection")
                 self.is_modified = True
                 self.update_window_title()
                 
-                # Log expression details if available
-                if selection_type == "expression" and hasattr(self.scatter_plot_widget, 'get_current_expression'):
-                    expression = self.scatter_plot_widget.get_current_expression()
-                    if expression:
-                        self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
+                # Store selection method in metadata
+                selection = self.selection_manager.get_selection(selection_id)
+                if selection:
+                    selection.metadata['selection_method'] = 'rectangle_selection'
         else:
             self.update_status("No cells selected")
     
@@ -826,10 +820,11 @@ class MainWindow(QMainWindow, LoggerMixin):
             )
             
             if selection_id:
-                # Get expression details if available
+                # Get expression details if available from expression filter
                 expression = ""
-                if hasattr(self.scatter_plot_widget, 'get_current_expression'):
-                    expression = self.scatter_plot_widget.get_current_expression()
+                expression_filter = getattr(self.scatter_plot_widget, 'expression_filter', None)
+                if expression_filter is not None and hasattr(expression_filter, 'get_current_expression'):
+                    expression = expression_filter.get_current_expression()
                 
                 self.update_status(f"Expression filter selected {len(indices)} cells")
                 self.is_modified = True
@@ -837,10 +832,12 @@ class MainWindow(QMainWindow, LoggerMixin):
                 
                 # Store expression in selection metadata
                 selection = self.selection_manager.get_selection(selection_id)
-                if selection and expression:
-                    selection.metadata['expression'] = expression
+                if selection:
+                    if expression:
+                        selection.metadata['expression'] = expression
                     selection.metadata['selection_method'] = 'expression_filter'
-                    self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
+                    if expression:
+                        self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
         else:
             self.update_status("No cells selected by expression filter")
     
@@ -1073,7 +1070,7 @@ class MainWindow(QMainWindow, LoggerMixin):
                 
                 # Check if we have enough points for calibration
                 if len(self.coordinate_transformer.calibration_points) >= 2:
-                    if self.coordinate_transformer.is_calibrated():
+                    if self.coordinate_transformer.is_calibrated:
                         self.update_status("Coordinate calibration completed successfully!")
                         # Exit calibration mode
                         self.image_handler.set_calibration_mode(False)
