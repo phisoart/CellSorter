@@ -9,6 +9,23 @@ alwaysApply: false
 
 This guide provides comprehensive instructions for developing CellSorter's GUI in headless environments using the Code Editing Mode. It enables developers and AI agents to create, modify, and test the user interface without requiring a display server.
 
+## Core Principles
+
+### 1. Development Mode First
+- **ALWAYS** use `--dev-mode` flag when developing
+- **NEVER** create QApplication in development mode
+- Use YAML/JSON for all UI definitions
+
+### 2. Terminal-Only Development
+- All UI development must be possible via terminal
+- No dependency on GUI designers or visual tools
+- Output must be parseable by both humans and AI
+
+### 3. Bidirectional Synchronization
+- Changes in code MUST reflect in UI definitions
+- Changes in UI definitions MUST reflect in code
+- Round-trip editing must preserve all properties
+
 ## Quick Start
 
 ### 1. Environment Setup
@@ -24,20 +41,59 @@ export CELLSORTER_FORCE_HEADLESS=true
 python run.py --dev-mode
 ```
 
-### 2. Basic Commands
+### Mode Detection Pattern
+```python
+# Always check mode before GUI operations
+if is_dev_mode():
+    # Work with UI definitions
+    ui_manager = HeadlessUIManager()
+else:
+    # Normal GUI instantiation
+    app = QApplication(sys.argv)
+```
 
+### 2. Development Workflow
+
+#### Start Development
 ```bash
-# Dump current UI to YAML
-python run.py --dump-ui > ui/main_window.yaml
+export CELLSORTER_DEV_MODE=true
+python run.py --dev-mode
+```
 
-# Load UI from YAML
-python run.py --load-ui ui/main_window.yaml
+#### Modify UI
+```bash
+# Dump current UI
+python run.py dump-ui > ui_definition.yaml
 
-# Validate UI definition
-python run.py --validate-ui ui/main_window.yaml
+# Edit UI definition
+# ... make changes ...
 
-# Interactive UI editor (terminal-based)
-python run.py --ui-editor
+# Validate changes
+python run.py validate-ui ui_definition.yaml
+
+# Load changes
+python run.py load-ui ui_definition.yaml
+```
+
+#### Test Changes
+```bash
+# Run headless tests
+pytest tests/headless/
+
+# Test with display (if available)
+CELLSORTER_DEV_MODE=false python run.py
+```
+
+### 3. File Organization
+```
+ui_definitions/
+├── main_window.yaml
+├── dialogs/
+│   ├── export_dialog.yaml
+│   └── calibration_dialog.yaml
+└── components/
+    ├── scatter_plot.yaml
+    └── selection_panel.yaml
 ```
 
 ## UI Definition Format
@@ -554,6 +610,84 @@ layout.addWidget(button)
 2. Move to panels and widgets
 3. Finally migrate main window
 4. Keep backward compatibility throughout
+
+## Security Rules
+
+### 1. Input Validation
+- Validate all widget types
+- Check property values
+- Prevent code injection
+
+### 2. Safe Parsing
+```python
+# Always use safe loaders
+ui_def = yaml.safe_load(text)  # ✓
+# ui_def = eval(text)  # ✗ NEVER
+```
+
+## Performance Guidelines
+
+### 1. Lazy Loading
+- Load UI components on demand
+- Cache parsed definitions
+- Minimize memory usage
+
+### 2. Efficient Updates
+- Update only changed widgets
+- Batch property changes
+- Avoid full UI rebuilds
+
+## Version Control
+
+### 1. Commit Messages
+- Use conventional commits
+- Reference task numbers
+- Include validation status
+
+### 2. UI Definition Changes
+```bash
+git add ui_definitions/
+git commit -m "feat(ui): Add export toolbar
+
+- Added toolbar definition
+- Validated in headless mode
+- Tests updated"
+```
+
+## Debugging
+
+### 1. Enable Debug Mode
+```bash
+export CELLSORTER_DEBUG=true
+export CELLSORTER_UI_TRACE=true
+```
+
+### 2. Validation Output
+```bash
+python run.py validate-ui --verbose ui_definition.yaml
+```
+
+## Forbidden Practices
+
+NEVER:
+- Create QApplication in dev mode
+- Use eval() on UI definitions
+- Hardcode absolute paths
+- Skip validation
+- Ignore test failures
+- Assume display availability
+- Use undocumented properties
+- Break backward compatibility
+
+## Success Criteria
+
+Every development session must:
+- ✅ Pass validation
+- ✅ Work in headless mode
+- ✅ Maintain UI consistency
+- ✅ Update documentation
+- ✅ Pass all tests
+- ✅ Be reviewable in text format
 
 ## Resources
 
