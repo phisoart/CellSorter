@@ -1,10 +1,19 @@
 # Testing Strategy
 
-## 1. Test Philosophy
-We follow a **Test-Driven Development (TDD)** approach.
-- Every feature starts with a failing test.
-- Tests drive design and modularity.
-- All production code is written to make a test pass.
+## 1. Mandatory Headless Testing Philosophy
+
+### CRITICAL: All tests MUST run in headless mode
+- **NEVER show GUI during testing unless explicitly specified**
+- **ALL UI tests MUST work without display server**
+- **Use virtual display (Xvfb) or `--headless` flag for any GUI testing**
+- **MUST test ALL user interactions (clicks, drags, keyboard) in terminal mode**
+
+### Test-Driven Development (TDD) with Interactive Simulation
+We follow a **Test-Driven Development (TDD)** approach enhanced with comprehensive UI interaction testing.
+- Every feature starts with a failing test that includes UI interaction simulation.
+- Tests drive design and modularity while ensuring headless compatibility.
+- All production code is written to make a test pass in headless environment.
+- **MANDATORY**: Every UI test must simulate real user interactions without display.
 
 ## 2. Test Types
 
@@ -20,18 +29,38 @@ We follow a **Test-Driven Development (TDD)** approach.
 - **Data Models**: Test cell selection, bounding box calculations
 - **Export Logic**: Test .cxprotocol file generation and validation
 
-### 2.2 GUI Component Tests
-- Target: Individual PySide6 widgets and dialogs
-- Tool: `pytest-qt`, `pytest`
-- Strategy: Use `QTest` or `qtbot` for interaction simulation
+### 2.2 Headless GUI Component Tests
+- Target: Individual PySide6 widgets and dialogs **WITHOUT display**
+- Tool: `pytest-qt`, `pytest` with `--headless` flag
+- Strategy: Use `QTest` or `qtbot` for interaction simulation in virtual environment
 - Location: `tests/gui/`
+- **CRITICAL**: All GUI tests MUST run without showing actual windows
 
-#### GUI Test Scenarios:
-- **Scatter Plot Widget**: Test plot generation, selection interactions
-- **Image Viewer**: Test zoom, pan, overlay rendering
-- **Well Plate Widget**: Test well assignment and visualization
-- **Dialog Components**: Test modal behavior and validation
-- **Menu and Toolbar**: Test action triggers and state management
+#### Mandatory Interactive Test Scenarios:
+- **All Clicks**: Test every button, menu item, toolbar action
+- **All Drags**: Test drag-and-drop, slider movement, splitter resizing
+- **Keyboard Navigation**: Test Tab navigation, shortcuts, text input
+- **Mouse Gestures**: Test double-click, right-click, hover effects
+- **User Workflows**: Test complete interaction sequences headlessly
+
+#### GUI Test Examples:
+```python
+def test_scatter_plot_all_interactions(qtbot):
+    \"\"\"Test ALL scatter plot interactions in headless mode\"\"\"
+    widget = ScatterPlotWidget()
+    qtbot.addWidget(widget)  # No window shown
+    
+    # Test all clicks
+    qtbot.mouseClick(widget.zoom_button, QtCore.Qt.LeftButton)
+    qtbot.mouseClick(widget.reset_button, QtCore.Qt.LeftButton)
+    
+    # Test all drags
+    qtbot.mouseDrag(widget.plot_area, QtCore.QPoint(10, 10), QtCore.QPoint(50, 50))
+    
+    # Test keyboard navigation
+    qtbot.keyPress(widget, QtCore.Qt.Key_Tab)
+    qtbot.keyPress(widget, QtCore.Qt.Key_Enter)
+```
 
 ### 2.3 Integration Tests
 - Target: End-to-end workflows involving multiple components

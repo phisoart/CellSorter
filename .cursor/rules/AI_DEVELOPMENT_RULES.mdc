@@ -27,14 +27,19 @@ alwaysApply: false
 
 ## Development Workflow Rules
 
-### Rule 1: Mode Detection
+### Rule 1: Mandatory Headless Mode
+- **ALL development MUST be done in headless mode unless explicitly specified otherwise**
+- **NEVER show GUI during development** - use `--headless` or `DISPLAY=:99` for testing
+- **All UI operations MUST work without display server**
+- **Use virtual display (Xvfb) for any GUI testing if display is required**
+
 ```python
 # ALWAYS check mode before any GUI operations
 if is_dev_mode():
-    # Work with UI definitions
+    # Work with UI definitions - NO DISPLAY
     ui_manager = HeadlessUIManager()
 else:
-    # Normal GUI instantiation
+    # Normal GUI instantiation - ONLY for explicit user interaction
     app = QApplication(sys.argv)
 ```
 
@@ -187,9 +192,9 @@ layout:
 
 ## Testing Rules
 
-### Rule 9: Headless Testing
+### Rule 9: Mandatory Headless Testing with Interactive Simulation
 ```python
-# All UI tests MUST work without display
+# All UI tests MUST work without display AND include interaction simulation
 def test_ui_structure():
     ui = load_ui_definition('main_window.yaml')
     
@@ -200,9 +205,53 @@ def test_ui_structure():
     # Test event connections
     button = find_widget(ui, 'submitButton')
     assert has_event_handler(button, 'clicked', 'on_submit_clicked')
+
+# MANDATORY: All tests MUST include UI interaction simulation
+def test_user_interactions():
+    """Test all user interactions in headless mode"""
+    ui_tester = HeadlessUITester()
+    
+    # MUST test all possible clicks
+    ui_tester.click_button('submitButton')
+    ui_tester.click_button('cancelButton')
+    
+    # MUST test all drag operations
+    ui_tester.drag_from_to('sourceWidget', 'targetWidget')
+    ui_tester.drag_slider('volumeSlider', value=75)
+    
+    # MUST test all input interactions
+    ui_tester.type_text('searchField', 'test query')
+    ui_tester.select_combo_item('optionsCombo', 'Option 2')
+    
+    # MUST test keyboard navigation
+    ui_tester.press_key('Tab')  # Navigate between widgets
+    ui_tester.press_key('Enter')  # Activate focused widget
+    ui_tester.press_key_combination('Ctrl+S')  # Shortcuts
+    
+    # MUST test mouse gestures
+    ui_tester.double_click('fileItem')
+    ui_tester.right_click('contextMenuArea')
+    ui_tester.hover('tooltipWidget')
+    
+    # Verify all interactions work in terminal mode
+    assert ui_tester.all_interactions_successful()
 ```
 
-### Rule 10: Validation Tests
+### Rule 10: Interactive Testing Commands
+```bash
+# ALL tests MUST be runnable from terminal with full interaction simulation
+pytest tests/ --headless --interactive-sim
+
+# Test specific UI interactions
+pytest tests/test_ui_interactions.py::test_all_clicks --headless
+pytest tests/test_ui_interactions.py::test_all_drags --headless
+pytest tests/test_ui_interactions.py::test_keyboard_navigation --headless
+
+# Simulate user workflows in headless mode
+pytest tests/test_user_workflows.py --headless --simulate-user
+```
+
+### Rule 11: Validation Tests
 ```python
 # Validate UI definitions before use
 def validate_ui_definition(ui_def):

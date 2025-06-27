@@ -8,48 +8,57 @@ alwaysApply: true
 ## 1. Cross-Platform Compatibility
 - This project is built using **PySide6** and must function correctly on both **macOS and Windows** environments.
 
-## 2. Test-Driven Development (TDD)
+## 2. Mandatory Headless Development
+- **ALL development MUST be done in headless mode unless explicitly specified otherwise**
+- **NEVER show GUI during development** - use `--headless` or virtual display for testing
+- **All UI operations MUST work without display server**
+- **Use virtual display (Xvfb) for any GUI testing if display is required**
+
+## 3. Test-Driven Development (TDD) with Interactive Testing
 - All development must strictly follow the principles of **Test-Driven Development**.
 - For every new feature or change request, corresponding **test code must be written first** before implementation.
+- **ALL tests MUST include comprehensive UI interaction simulation in headless mode**
+- **MUST test every click, drag, keyboard input, and user workflow without display**
 
-## 3. Feature Development Workflow
+## 4. Feature Development Workflow
 - When a feature is requested:
   - Begin by writing a test that describes the expected behavior.
   - Then implement the functionality to pass the test.
   - The implemented feature must pass all relevant tests before being merged into the codebase.
 
-## 4. Code Integration Criteria
+## 5. Code Integration Criteria
 - Code changes must not be merged into the main codebase unless **all related tests pass successfully**.
 - If a test fails, the issue must be identified and resolved before retrying integration.
+- **ALL interactive UI tests MUST pass in headless mode before integration**
 
-## 5. Code Style and Naming Conventions
+## 6. Code Style and Naming Conventions
 - Follow @PEP8 for Python code style.
 - Use `PascalCase` for class names.
 - Use `snake_case` for function and variable names.
 - Use `UPPER_SNAKE_CASE` for constants.
 - Prefix private members with an underscore `_`.
 
-## 6. Project Structure Rules
+## 7. Project Structure Rules
 - Place all reusable UI components under `src/components/`.
 - Place page-level UIs under `src/pages/`.
 - Avoid putting business logic inside UI components. Abstract business logic into `src/services/` or `src/utils/`.
 
-## 7. File and Directory Naming
+## 8. File and Directory Naming
 - Use lowercase with underscores for all file names (e.g., `image_processor.py`).
 - Each importable module directory should contain an `__init__.py`.
 
-## 8. Documentation Standards
+## 9. Documentation Standards
 - Every public class, function, and module must include a docstring that clearly explains its purpose and usage.
 - Use the @Google Python Style Guide for Docstrings.
 
-## 9. Version Control Standards
+## 10. Version Control Standards
 - Follow @Conventional Commits format for all commit messages.
 - Each pull request must include:
   - At least one reviewer
   - A linked issue or feature ID
-  - A checklist confirming all tests have passed
+  - A checklist confirming all tests have passed (including headless interactive tests)
 
-## 10. Platform Compatibility Coding
+## 11. Platform Compatibility Coding
 - Always use standard libraries such as `os` or `pathlib` for filesystem operations to ensure cross-platform support.
 - For platform-specific behaviors, use explicit conditionals:
   ```python
@@ -61,7 +70,7 @@ alwaysApply: true
       # Windows-specific logic
   ```
 
-## 11. Conda Environment Verification
+## 12. Conda Environment Verification
 - Before running any commands or starting development work, always verify that the correct conda environment is activated.
 - The project uses a dedicated `cellsorter` conda environment. Ensure it is activated before running any Python commands or development tools.
 - If the `cellsorter` environment is not active (check terminal prompt), run `conda activate cellsorter` first.

@@ -1,8 +1,18 @@
 # CellSorter Architecture Documentation
 
+## Mandatory Headless Development Architecture
+
+### CRITICAL: All development MUST be headless-compatible
+- **NEVER show GUI during development unless explicitly specified**
+- **ALL UI operations MUST work without display server**
+- **Comprehensive headless testing infrastructure required**
+- **Virtual display (Xvfb) for GUI testing only when absolutely necessary**
+
 ## System Overview
 
 CellSorter is a sophisticated GUI-based software application designed to work in conjunction with the CosmoSort hardware instrument for advanced cell sorting and tissue extraction from pathology slides. The software serves as the analytical frontend that processes microscopy images and CellProfiler-generated CSV data to enable precise cell selection and coordinate transformation for automated tissue extraction.
+
+**Development Philosophy**: All components must be testable and workable in headless environments while maintaining full GUI functionality for end users.
 
 ### Technology Stack
 
