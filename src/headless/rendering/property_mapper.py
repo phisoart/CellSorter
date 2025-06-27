@@ -102,17 +102,10 @@ class PropertyMapper:
             'ignored': QSizePolicy.Policy.Ignored,
         }
         
-        h_policy = policy_map.get(size_policy.horizontal_policy, QSizePolicy.Policy.Preferred)
-        v_policy = policy_map.get(size_policy.vertical_policy, QSizePolicy.Policy.Preferred)
+        h_policy = policy_map.get(size_policy.horizontal.lower(), QSizePolicy.Policy.Preferred)
+        v_policy = policy_map.get(size_policy.vertical.lower(), QSizePolicy.Policy.Preferred)
         
         qt_size_policy = QSizePolicy(h_policy, v_policy)
-        
-        if size_policy.horizontal_stretch is not None:
-            qt_size_policy.setHorizontalStretch(size_policy.horizontal_stretch)
-        
-        if size_policy.vertical_stretch is not None:
-            qt_size_policy.setVerticalStretch(size_policy.vertical_stretch)
-        
         qt_widget.setSizePolicy(qt_size_policy)
     
     def _apply_widget_specific_properties(self, qt_widget: QWidget, widget_def: Widget) -> None:
