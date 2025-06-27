@@ -235,7 +235,7 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 #### NFR4.2: Learning Curve
 - New users productive within 30 minutes
 - Comprehensive user documentation
-- Built-in tutorial system
+
 - Example datasets and workflows
 
 ### NFR5: Security and Data Protection

@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QFrame, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PySide6.QtCore import Qt, Signal
 
 from utils.design_tokens import DesignTokens
-from utils.theme_manager import ThemeManager
+from services.theme_manager import ThemeManager
 from utils.style_converter import convert_css_to_qt
 from utils.card_colors import get_default_card_colors
 

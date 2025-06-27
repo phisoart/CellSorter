@@ -216,6 +216,16 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_redo.setShortcut(QKeySequence.Redo)
         self.action_redo.setEnabled(False)
         
+        self.action_select_all = QAction("Select &All", self)
+        self.action_select_all.setShortcut(QKeySequence.SelectAll)
+        self.action_select_all.setStatusTip("Select all items")
+        self.action_select_all.setEnabled(False)
+        
+        self.action_delete_selection = QAction("&Delete Selection", self)
+        self.action_delete_selection.setShortcut(QKeySequence.Delete)
+        self.action_delete_selection.setStatusTip("Delete selected items")
+        self.action_delete_selection.setEnabled(False)
+        
         # View actions
         self.action_zoom_in = QAction("Zoom &In", self)
         self.action_zoom_in.setShortcut(QKeySequence.ZoomIn)
@@ -229,6 +239,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_fit.setShortcut(QKeySequence("Ctrl+0"))
         self.action_zoom_fit.setEnabled(False)
         
+        self.action_reset_view = QAction("&Reset View", self)
+        self.action_reset_view.setShortcut(QKeySequence("R"))
+        self.action_reset_view.setStatusTip("Reset view to default")
+        self.action_reset_view.setEnabled(False)
+        
         self.action_toggle_overlays = QAction("Toggle &Overlays", self)
         self.action_toggle_overlays.setShortcut(QKeySequence("Ctrl+Shift+O"))
         self.action_toggle_overlays.setCheckable(True)
@@ -236,6 +251,18 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_toggle_overlays.setEnabled(False)
         
         # Tools actions
+        self.action_selection_tool = QAction("&Selection Tool", self)
+        self.action_selection_tool.setShortcut(QKeySequence("S"))
+        self.action_selection_tool.setStatusTip("Activate selection tool")
+        self.action_selection_tool.setCheckable(True)
+        self.action_selection_tool.setEnabled(False)
+        
+        self.action_calibration_tool = QAction("&Calibration Tool", self)
+        self.action_calibration_tool.setShortcut(QKeySequence("C"))
+        self.action_calibration_tool.setStatusTip("Activate calibration tool")
+        self.action_calibration_tool.setCheckable(True)
+        self.action_calibration_tool.setEnabled(False)
+        
         self.action_calibrate = QAction("&Calibrate Coordinates", self)
         self.action_calibrate.setShortcut(QKeySequence("Ctrl+K"))
         self.action_calibrate.setStatusTip("Set coordinate calibration points")
@@ -244,6 +271,28 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_clear_selections = QAction("&Clear All Selections", self)
         self.action_clear_selections.setShortcut(QKeySequence("Ctrl+Shift+C"))
         self.action_clear_selections.setEnabled(False)
+        
+        # Navigation shortcuts
+        self.action_pan_left = QAction("Pan Left", self)
+        self.action_pan_left.setShortcut(QKeySequence("Left"))
+        self.action_pan_left.setEnabled(False)
+        
+        self.action_pan_right = QAction("Pan Right", self)
+        self.action_pan_right.setShortcut(QKeySequence("Right"))
+        self.action_pan_right.setEnabled(False)
+        
+        self.action_pan_up = QAction("Pan Up", self)
+        self.action_pan_up.setShortcut(QKeySequence("Up"))
+        self.action_pan_up.setEnabled(False)
+        
+        self.action_pan_down = QAction("Pan Down", self)
+        self.action_pan_down.setShortcut(QKeySequence("Down"))
+        self.action_pan_down.setEnabled(False)
+        
+        # Workflow shortcuts
+        self.action_toggle_panel = QAction("Toggle &Panel", self)
+        self.action_toggle_panel.setShortcut(QKeySequence("Space"))
+        self.action_toggle_panel.setStatusTip("Toggle side panel visibility")
         
         # Analysis actions
         self.action_batch_process = QAction("&Batch Process...", self)
@@ -285,17 +334,25 @@ class MainWindow(QMainWindow, LoggerMixin):
         edit_menu = menubar.addMenu("&Edit")
         edit_menu.addAction(self.action_undo)
         edit_menu.addAction(self.action_redo)
+        edit_menu.addSeparator()
+        edit_menu.addAction(self.action_select_all)
+        edit_menu.addAction(self.action_delete_selection)
         
         # View menu
         view_menu = menubar.addMenu("&View")
         view_menu.addAction(self.action_zoom_in)
         view_menu.addAction(self.action_zoom_out)
         view_menu.addAction(self.action_zoom_fit)
+        view_menu.addAction(self.action_reset_view)
         view_menu.addSeparator()
         view_menu.addAction(self.action_toggle_overlays)
+        view_menu.addAction(self.action_toggle_panel)
         
         # Tools menu
         tools_menu = menubar.addMenu("&Tools")
+        tools_menu.addAction(self.action_selection_tool)
+        tools_menu.addAction(self.action_calibration_tool)
+        tools_menu.addSeparator()
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
         tools_menu.addSeparator()
@@ -308,12 +365,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Help menu
         help_menu = menubar.addMenu("&Help")
-        help_menu.addAction("User &Guide")
-        help_menu.addAction("&Tutorial")
+        help_menu.addAction("&About")
+        help_menu.addAction("&Documentation")
         help_menu.addSeparator()
         help_menu.addAction(self.action_check_updates)
         help_menu.addAction(self.action_update_preferences)
-        help_menu.addSeparator()
         help_menu.addAction(self.action_about)
     
     def setup_toolbar(self) -> None:
@@ -400,14 +456,26 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Edit actions
         self.action_undo.triggered.connect(self.undo)
         self.action_redo.triggered.connect(self.redo)
+        self.action_select_all.triggered.connect(self.select_all)
+        self.action_delete_selection.triggered.connect(self.delete_selection)
         
         # View actions
         self.action_zoom_in.triggered.connect(self.zoom_in)
         self.action_zoom_out.triggered.connect(self.zoom_out)
         self.action_zoom_fit.triggered.connect(self.zoom_fit)
+        self.action_reset_view.triggered.connect(self.reset_view)
         self.action_toggle_overlays.triggered.connect(self.toggle_overlays)
+        self.action_toggle_panel.triggered.connect(self.toggle_panel)
+        
+        # Navigation actions
+        self.action_pan_left.triggered.connect(self.pan_left)
+        self.action_pan_right.triggered.connect(self.pan_right)
+        self.action_pan_up.triggered.connect(self.pan_up)
+        self.action_pan_down.triggered.connect(self.pan_down)
         
         # Tools actions
+        self.action_selection_tool.triggered.connect(self.activate_selection_tool)
+        self.action_calibration_tool.triggered.connect(self.activate_calibration_tool)
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
         self.action_manage_templates.triggered.connect(self.manage_templates)
@@ -565,15 +633,27 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def zoom_in(self) -> None:
         """Zoom in on image."""
-        self.update_status("Zoomed in")
+        if self.current_image_path:
+            self.image_handler.zoom_in()
+            zoom_level = getattr(self.image_handler, 'zoom_level', 1.0)
+            self.update_zoom_level(zoom_level)
+            self.update_status(f"Zoomed in to {zoom_level:.0%}")
     
     def zoom_out(self) -> None:
         """Zoom out on image."""
-        self.update_status("Zoomed out")
+        if self.current_image_path:
+            self.image_handler.zoom_out()
+            zoom_level = getattr(self.image_handler, 'zoom_level', 1.0)
+            self.update_zoom_level(zoom_level)
+            self.update_status(f"Zoomed out to {zoom_level:.0%}")
     
     def zoom_fit(self) -> None:
         """Fit image to window."""
-        self.update_status("Fit to window")
+        if self.current_image_path:
+            self.image_handler.fit_to_window()
+            zoom_level = getattr(self.image_handler, 'zoom_level', 1.0)
+            self.update_zoom_level(zoom_level)
+            self.update_status("Fit to window")
     
     def toggle_overlays(self) -> None:
         """Toggle cell overlay visibility."""
@@ -601,7 +681,83 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def clear_selections(self) -> None:
         """Clear all cell selections."""
+        self.selection_manager.clear_all_selections()
+        self.image_handler.clear_all_cell_highlights()
         self.update_status("All selections cleared")
+        self.is_modified = True
+        self.update_window_title()
+    
+    def select_all(self) -> None:
+        """Select all cells in current view."""
+        if hasattr(self.scatter_plot_widget, 'select_all'):
+            self.scatter_plot_widget.select_all()
+            self.update_status("Selected all cells")
+        else:
+            self.update_status("Select all not available")
+    
+    def delete_selection(self) -> None:
+        """Delete currently selected items."""
+        if hasattr(self.selection_panel, 'delete_selected'):
+            self.selection_panel.delete_selected()
+            self.update_status("Deleted selected items")
+        else:
+            self.update_status("No items selected to delete")
+    
+    def reset_view(self) -> None:
+        """Reset view to default state."""
+        if self.current_image_path:
+            self.image_handler.reset_view()
+            self.update_status("View reset to default")
+    
+    def toggle_panel(self) -> None:
+        """Toggle side panel visibility."""
+        if self.selection_panel.isVisible():
+            self.selection_panel.hide()
+            self.update_status("Side panel hidden")
+        else:
+            self.selection_panel.show()
+            self.update_status("Side panel shown")
+    
+    def pan_left(self) -> None:
+        """Pan image view left."""
+        if self.current_image_path:
+            self.image_handler.pan(-50, 0)  # Pan left by 50 pixels
+    
+    def pan_right(self) -> None:
+        """Pan image view right."""
+        if self.current_image_path:
+            self.image_handler.pan(50, 0)  # Pan right by 50 pixels
+    
+    def pan_up(self) -> None:
+        """Pan image view up."""
+        if self.current_image_path:
+            self.image_handler.pan(0, -50)  # Pan up by 50 pixels
+    
+    def pan_down(self) -> None:
+        """Pan image view down."""
+        if self.current_image_path:
+            self.image_handler.pan(0, 50)  # Pan down by 50 pixels
+    
+    def activate_selection_tool(self) -> None:
+        """Activate selection tool mode."""
+        if self.action_selection_tool.isChecked():
+            # Deactivate other tools
+            self.action_calibration_tool.setChecked(False)
+            self.image_handler.set_selection_mode(True)
+            self.update_status("Selection tool activated")
+        else:
+            self.image_handler.set_selection_mode(False)
+            self.update_status("Selection tool deactivated")
+    
+    def activate_calibration_tool(self) -> None:
+        """Activate calibration tool mode."""
+        if self.action_calibration_tool.isChecked():
+            # Deactivate other tools
+            self.action_selection_tool.setChecked(False)
+            self.calibrate_coordinates()
+        else:
+            self.image_handler.set_calibration_mode(False)
+            self.update_status("Calibration tool deactivated")
     
     @error_handler("Opening template management")
     def manage_templates(self) -> None:
@@ -684,12 +840,22 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_in.setEnabled(True)
         self.action_zoom_out.setEnabled(True)
         self.action_zoom_fit.setEnabled(True)
+        self.action_reset_view.setEnabled(True)
         self.action_toggle_overlays.setEnabled(True)
         self.action_calibrate.setEnabled(True)
+        self.action_selection_tool.setEnabled(True)
+        self.action_calibration_tool.setEnabled(True)
+        # Enable navigation shortcuts
+        self.action_pan_left.setEnabled(True)
+        self.action_pan_right.setEnabled(True)
+        self.action_pan_up.setEnabled(True)
+        self.action_pan_down.setEnabled(True)
     
     def enable_analysis_actions(self) -> None:
         """Enable actions that require data to be loaded."""
         self.action_save_session.setEnabled(True)
+        self.action_select_all.setEnabled(True)
+        self.action_delete_selection.setEnabled(True)
         
         # Enable export if both image and CSV are loaded
         if self.current_image_path and self.current_csv_path:

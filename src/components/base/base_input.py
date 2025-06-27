@@ -12,7 +12,7 @@ from PySide6.QtCore import Qt, Signal, Property
 from PySide6.QtGui import QPalette
 
 from utils.design_tokens import DesignTokens
-from utils.theme_manager import ThemeManager
+from services.theme_manager import ThemeManager
 from utils.style_converter import convert_css_to_qt
 
 

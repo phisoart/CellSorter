@@ -17,7 +17,7 @@ import threading
 from PySide6.QtCore import QObject, Signal, QSettings, QTimer
 from PySide6.QtWidgets import QMessageBox, QCheckBox, QWidget
 
-from src.utils.error_handler import handle_errors
+from utils.error_handler import error_handler
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +116,7 @@ class UpdateChecker(QObject):
         days_since_last_check = (datetime.now() - self.last_check_date).days
         return days_since_last_check >= self.CHECK_INTERVAL_DAYS
         
-    @handle_errors
+    @error_handler()
     def check_for_updates(self, force: bool = False):
         """Check for updates in a background thread."""
         if not force and not self.auto_check_enabled:

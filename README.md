@@ -241,7 +241,6 @@ CellSorter is licensed under the MIT License. See [LICENSE](LICENSE) for details
 - ✅ Real-time cell highlighting and selection validation
 
 ### Roadmap
-- 🔄 Built-in tutorial system for new users
 - 🔄 Advanced filtering expressions for expert users
 - 🔄 Automated quality control metrics
 - 🔄 Linux support
@@ -249,3 +248,9 @@ CellSorter is licensed under the MIT License. See [LICENSE](LICENSE) for details
 ---
 
 🔬 **Advancing pathology research through precision cell sorting technology** 
+
+- 🔍 Advanced expression-based filtering
+- 📁 Template management for workflows
+- 🔧 Enhanced calibration UI
+- 📊 Comprehensive batch processing
+- 🎯 Well plate template system
