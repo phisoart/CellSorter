@@ -296,6 +296,11 @@ class MinimapWidget(QWidget, LoggerMixin):
         center_x = self.viewport_rect.center().x() - self.image_rect.x()
         center_y = self.viewport_rect.center().y() - self.image_rect.y()
         
+        # Prevent division by zero
+        if self.image_rect.width() <= 0 or self.image_rect.height() <= 0:
+            self.log_warning("Cannot calculate navigation: invalid image dimensions")
+            return
+            
         norm_x = center_x / self.image_rect.width()
         norm_y = center_y / self.image_rect.height()
         
