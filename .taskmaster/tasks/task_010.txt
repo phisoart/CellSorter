@@ -1,0 +1,14 @@
+# Task ID: 10
+# Title: Test Protocol Export in Headless Mode
+# Status: pending
+# Dependencies: 8 (Not found), 9 (Not found)
+# Priority: medium
+# Description: Headless 모드에서 프로토콜 파일 생성 테스트
+# Details:
+Extractor가 UI 없이 .cxprotocol 파일을 생성하고, 올바른 형식과 내용을 포함하는지 테스트합니다.
+
+# Test Strategy:
+1. 가상 선택 데이터로 프로토콜 생성
+2. INI 형식 검증
+3. 좌표 변환 적용 확인
+4. 파일 무결성 테스트

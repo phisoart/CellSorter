@@ -1,0 +1,14 @@
+# Task ID: 8
+# Title: Test Selection Management Synchronization
+# Status: pending
+# Dependencies: 7 (Not found)
+# Priority: medium
+# Description: Headless와 GUI 모드 간 선택 상태 동기화 테스트
+# Details:
+SelectionManager의 상태가 두 모드 간에 올바르게 동기화되고, 선택 작업이 일관되게 작동하는지 테스트합니다.
+
+# Test Strategy:
+1. Headless에서 선택 생성 후 GUI 동기화 확인
+2. GUI에서 선택 변경 후 Headless 상태 확인
+3. 색상 및 라벨 일관성 테스트
+4. Well plate 할당 동기화 테스트

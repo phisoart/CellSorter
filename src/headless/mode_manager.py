@@ -43,6 +43,19 @@ class ModeManager:
         # Auto-detect mode based on environment
         return self._detect_mode()
     
+    def get_current_mode(self) -> str:
+        """
+        Get current mode as string ('dev-mode' or 'gui-mode').
+        
+        Returns:
+            'dev-mode' if in DEV mode, 'gui-mode' otherwise
+        """
+        mode = self.get_mode()
+        if mode == AppMode.DEV:
+            return 'dev-mode'
+        else:
+            return 'gui-mode'
+    
     def set_mode(self, mode: AppMode, force: bool = False) -> bool:
         """
         Set application mode.

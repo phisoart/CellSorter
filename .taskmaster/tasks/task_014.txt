@@ -1,0 +1,14 @@
+# Task ID: 14
+# Title: Performance Benchmarking Between Modes
+# Status: pending
+# Dependencies: 5 (Not found), 6 (Not found), 7 (Not found), 8 (Not found)
+# Priority: low
+# Description: Headless와 GUI 모드 간 성능 비교 테스트
+# Details:
+주요 작업들의 실행 시간과 메모리 사용량을 두 모드에서 측정하고 비교합니다.
+
+# Test Strategy:
+1. 이미지 로딩 시간 비교
+2. CSV 파싱 성능 비교
+3. 선택 작업 성능 비교
+4. 메모리 사용량 프로파일링

@@ -399,6 +399,28 @@ Available commands:
         """)
     
     def run_command(self, args: List[str]) -> int:
+        """Execute CLI command based on arguments."""
+        try:
+            if not args:
+                self.interactive_mode()
+                return 0
+            
+            command = args[0]
+            if command == "dump-ui":
+                self.dump_ui()
+                return 0
+            elif command == "load-ui" and len(args) > 1:
+                self.load_ui(args[1])
+                return 0
+            elif command == "validate-ui" and len(args) > 1:
+                self.validate_ui(args[1])
+                return 0
+            else:
+                print(f"Unknown command or missing arguments: {command}", file=sys.stderr)
+                return 1
+        except Exception as e:
+            print(f"Command failed: {e}", file=sys.stderr)
+            return 1
 
 
 def main(args: Optional[List[str]] = None) -> int:

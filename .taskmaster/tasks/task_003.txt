@@ -1,0 +1,13 @@
+# Task ID: 3
+# Title: Test Mode Manager Switching
+# Status: pending
+# Dependencies: 2 (Not found)
+# Priority: high
+# Description: dev-mode와 gui-mode 간 전환 테스트
+# Details:
+ModeManager가 디스플레이 상태와 환경 변수에 따라 올바른 모드를 선택하고, 모드 전환이 원활하게 작동하는지 테스트합니다.
+
+# Test Strategy:
+1. 초기 모드 결정 로직 테스트
+2. 런타임 모드 전환 테스트
+3. 모드별 QApplication 생성 여부 확인

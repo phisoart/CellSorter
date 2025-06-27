@@ -30,6 +30,13 @@ class DisplayDetector:
         Returns:
             True if display is available, False otherwise
         """
+        # Check for CELLSORTER_DISPLAY_MODE override first
+        display_mode = os.environ.get('CELLSORTER_DISPLAY_MODE', '').lower()
+        if display_mode == 'headless':
+            return False
+        elif display_mode == 'gui':
+            return True
+        
         if self._cached_result is not None and not force_check:
             return self._cached_result
         
@@ -169,6 +176,93 @@ class DisplayDetector:
         """Clear cached detection result."""
         self._cached_result = None
         self._detection_info.clear()
+    
+    def get_display_mode(self) -> str:
+        """
+        Get the current display mode.
+        
+        Returns:
+            'gui' if display is available, 'headless' otherwise
+        """
+        # Check force mode environment variable
+        force_mode = os.environ.get('CELLSORTER_DISPLAY_MODE', '').lower()
+        if force_mode in ('gui', 'headless'):
+            return force_mode
+        
+        # Check for CI/CD environments
+        ci_indicators = ['CI', 'GITHUB_ACTIONS', 'JENKINS_HOME', 'GITLAB_CI', 'DOCKER_CONTAINER']
+        for indicator in ci_indicators:
+            if os.environ.get(indicator):
+                return 'headless'
+        
+        # Auto-detect based on display availability
+        return 'gui' if self.has_display() else 'headless'
+    
+    def is_virtual_display(self) -> bool:
+        """
+        Check if running on a virtual display (Xvfb, VNC, etc).
+        
+        Returns:
+            True if virtual display detected, False otherwise
+        """
+        # Check for Xvfb (high display numbers)
+        display = os.environ.get('DISPLAY', '')
+        if display.startswith(':'):
+            try:
+                display_num = int(display[1:].split('.')[0])
+                if display_num >= 99:  # Common Xvfb range
+                    return True
+            except ValueError:
+                pass
+        
+        # Check for VNC
+        if os.environ.get('VNC_CONNECTION'):
+            return True
+        
+        # Check detection info
+        if 'virtual' in str(self._detection_info).lower():
+            return True
+        
+        return False
+    
+    def is_ssh_session(self) -> bool:
+        """
+        Check if running in an SSH session.
+        
+        Returns:
+            True if SSH session detected, False otherwise
+        """
+        return bool(os.environ.get('SSH_CLIENT') or 
+                   os.environ.get('SSH_TTY') or 
+                   os.environ.get('SSH_CONNECTION'))
+    
+    def get_display_info(self) -> Dict[str, Any]:
+        """
+        Get comprehensive display information.
+        
+        Returns:
+            Dictionary with display status and metadata
+        """
+        # Ensure detection has run
+        if self._cached_result is None:
+            self.has_display()
+        
+        # Get platform in consistent format
+        system = platform.system()
+        platform_map = {
+            'Windows': 'win32',
+            'Linux': 'linux',
+            'Darwin': 'darwin'
+        }
+        
+        return {
+            'platform': platform_map.get(system, system.lower()),
+            'has_display': self._cached_result or False,
+            'display_mode': self.get_display_mode(),
+            'is_virtual': self.is_virtual_display(),
+            'is_ssh': self.is_ssh_session(),
+            'detection_details': self._detection_info.copy()
+        }
 
 
 # Global instance

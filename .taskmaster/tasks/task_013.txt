@@ -1,0 +1,14 @@
+# Task ID: 13
+# Title: Test Error Handling in Headless Mode
+# Status: pending
+# Dependencies: 4 (Not found)
+# Priority: high
+# Description: Headless 모드에서 에러 처리 메커니즘 테스트
+# Details:
+에러가 발생했을 때 UI 대화상자 없이 적절한 로깅과 복구가 이루어지는지 테스트합니다.
+
+# Test Strategy:
+1. 의도적인 에러 발생 시나리오 테스트
+2. 로깅 출력 검증
+3. 데이터 무결성 확인
+4. 복구 메커니즘 테스트

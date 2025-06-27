@@ -17,6 +17,21 @@ from .mode_manager import ModeManager
 logger = logging.getLogger(__name__)
 
 
+class PropertyChangedSignal:
+    """Simple signal implementation for property changes."""
+    def __init__(self):
+        self.callbacks = []
+    
+    def connect(self, callback):
+        """Connect a callback to the signal."""
+        self.callbacks.append(callback)
+    
+    def emit(self, prop_name: str, value: Any):
+        """Emit the signal with property name and value."""
+        for callback in self.callbacks:
+            callback(prop_name, value)
+
+
 @dataclass
 class MainWindowState:
     """State container for MainWindow."""
@@ -52,6 +67,21 @@ class MainWindowState:
     # Session data
     last_session_path: Optional[str] = None
     
+    # Current selection data (added for synchronization)
+    current_selection: Optional[Any] = None
+    
+    def __post_init__(self):
+        """Initialize property changed signal."""
+        self.property_changed = PropertyChangedSignal()
+    
+    def set_property(self, prop_name: str, value: Any) -> None:
+        """Set a property and emit change signal."""
+        if hasattr(self, prop_name):
+            setattr(self, prop_name, value)
+            self.property_changed.emit(prop_name, value)
+        else:
+            logger.warning(f"Unknown property: {prop_name}")
+    
     def to_dict(self) -> Dict[str, Any]:
         """Convert state to dictionary."""
         return {
@@ -71,7 +101,8 @@ class MainWindowState:
             "active_tool": self.active_tool,
             "overlays_visible": self.overlays_visible,
             "current_theme": self.current_theme,
-            "last_session_path": self.last_session_path
+            "last_session_path": self.last_session_path,
+            "current_selection": self.current_selection
         }
     
     @classmethod
@@ -98,6 +129,7 @@ class MainWindowState:
         state.overlays_visible = data.get("overlays_visible", True)
         state.current_theme = data.get("current_theme", "light")
         state.last_session_path = data.get("last_session_path")
+        state.current_selection = data.get("current_selection")
         
         return state
 

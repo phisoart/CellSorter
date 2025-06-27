@@ -1,0 +1,13 @@
+# Task ID: 2
+# Title: Test Display Detection System
+# Status: pending
+# Dependencies: 1 (Not found)
+# Priority: high
+# Description: Windows, Linux, macOS에서 디스플레이 감지 시스템 테스트
+# Details:
+DisplayDetector 클래스가 각 플랫폼에서 올바르게 디스플레이 존재 여부를 감지하는지 테스트합니다. 환경 변수를 통한 강제 모드 설정도 검증합니다.
+
+# Test Strategy:
+1. 현재 플랫폼에서 디스플레이 감지 테스트
+2. CELLSORTER_DISPLAY_MODE 환경 변수 설정 테스트
+3. 가상 디스플레이 환경에서의 동작 확인

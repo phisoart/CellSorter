@@ -1,0 +1,14 @@
+# Task ID: 12
+# Title: Test Template System Integration
+# Status: pending
+# Dependencies: 11 (Not found)
+# Priority: medium
+# Description: 템플릿 시스템의 headless 모드 통합 테스트
+# Details:
+TemplateManager가 UI 없이 템플릿을 생성, 저장, 로드, 적용할 수 있는지 테스트합니다.
+
+# Test Strategy:
+1. 프로그래밍 방식의 템플릿 생성
+2. 템플릿 적용 및 검증
+3. 템플릿 공유 기능 테스트
+4. 기본 템플릿 로드 테스트
