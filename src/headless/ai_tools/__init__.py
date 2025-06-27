@@ -6,13 +6,13 @@ interaction with the headless UI system.
 """
 
 from .ai_command_parser import AICommandParser
-from .ai_ui_assistant import AIUIAssistant
-from .batch_operations import BatchOperations
-from .change_validator import ChangeValidator
+# from .ai_ui_assistant import AIUIAssistant
+# from .batch_operations import BatchOperations
+# from .change_validator import ChangeValidator
 
 __all__ = [
     'AICommandParser',
-    'AIUIAssistant',
-    'BatchOperations',
-    'ChangeValidator'
+    # 'AIUIAssistant',
+    # 'BatchOperations', 
+    # 'ChangeValidator'
 ] 
