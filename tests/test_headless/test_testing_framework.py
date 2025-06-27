@@ -4,9 +4,12 @@ Tests for Headless Testing Framework
 Tests the mock widgets, assertions, and framework components.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
+
 import unittest
 import tempfile
-import os
 from pathlib import Path
 
 from src.headless.testing import (
