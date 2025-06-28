@@ -2,9 +2,10 @@
   "project_info": {
     "name": "CellSorter",
     "version": "2.0.0", 
-    "last_updated": "2025-06-25",
+    "last_updated": "2025-01-02",
     "requirements_compliance": "97%",
-    "production_ready": true
+    "production_ready": true,
+    "three_mode_architecture": true
   },
   "tasks": [
     {
@@ -99,720 +100,461 @@
     },
     {
       "id": "TASK-005",
-      "title": "Implement Coordinate Calibration",
-      "description": "Build two-point calibration system for coordinate transformation",
+      "title": "좌표 캘리브레이션 시스템 구현",
+      "description": "2점 캘리브레이션 시스템을 통한 좌표 변환 기능을 3모드 아키텍처로 구현",
       "type": "feature",
       "priority": "high",
-      "status": "completed",
+      "status": "pending",
       "effort": "large",
-      "completion_date": "2025-06-25",
       "dependencies": ["TASK-001"],
       "functional_requirement": "FR4.1, FR4.2",
+      "three_mode_requirements": {
+        "dev_mode": {
+          "description": "헤드리스 환경에서 캘리브레이션 로직 시뮬레이션",
+          "requirements": [
+            "좌표 변환 매트릭스 계산 알고리즘 검증",
+            "2점 간 최소 거리 유효성 검사 시뮬레이션",
+            "아핀 변환 정확도 0.1 마이크로미터 검증",
+            "역변환 검증 로직 테스트",
+            "헤드리스 환경에서 UI 상호작용 시뮬레이션"
+          ],
+          "test_commands": [
+            "python run.py --dev-mode --test-calibration-logic",
+            "pytest tests/dev_mode/test_coordinate_calibration.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "dual_mode": {
+          "description": "GUI와 헤드리스 로직 일치성 검증",
+          "requirements": [
+            "실제 마우스 클릭으로 캘리브레이션 포인트 설정",
+            "GUI 좌표 입력과 헤드리스 계산 결과 비교",
+            "시각적 인디케이터와 계산 결과 동기화 검증",
+            "실시간 좌표 표시 정확성 확인"
+          ],
+          "test_commands": [
+            "python run.py --dual-mode --validate-calibration-ui",
+            "pytest tests/dual_mode/test_calibration_consistency.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "gui_mode": {
+          "description": "프로덕션 환경에서 사용자 경험 및 성능 검증",
+          "requirements": [
+            "실제 하드웨어에서 마우스 클릭 정확도",
+            "캘리브레이션 다이얼로그 사용성",
+            "대용량 이미지에서 성능 최적화",
+            "에러 처리 및 복구 옵션"
+          ],
+          "test_commands": [
+            "python run.py --gui-mode --production-test-calibration",
+            "pytest tests/gui_mode/test_calibration_production.py -v"
+          ],
+          "status": "not_tested"
+        }
+      },
       "acceptance_criteria": [
-        "✅ User clicks two reference points on image",
-        "✅ Manual entry of stage coordinates",
-        "✅ Calculate affine transformation matrix",
-        "✅ Visual indicators for calibration points",
-        "✅ Validate minimum distance between points",
-        "✅ Transform with 0.1 micrometer accuracy",
-        "✅ Real-time coordinate display",
-        "✅ Reverse transformation for validation"
+        "사용자가 이미지에서 2개 참조점 클릭",
+        "스테이지 좌표 수동 입력",
+        "아핀 변환 매트릭스 계산",
+        "캘리브레이션 포인트 시각적 인디케이터",
+        "포인트 간 최소 거리 유효성 검사",
+        "0.1 마이크로미터 정확도로 변환",
+        "실시간 좌표 표시",
+        "검증을 위한 역변환"
       ],
       "implementation_file": "src/models/coordinate_transformer.py, src/components/dialogs/calibration_dialog.py",
-      "technical_notes": "Complete implementation with NumPy affine calculations and comprehensive UI"
+      "technical_notes": "3모드 아키텍처를 적용한 캘리브레이션 시스템 - NumPy 아핀 계산과 포괄적인 UI"
     },
     {
       "id": "TASK-006",
-      "title": "Create Protocol Exporter",
-      "description": "Generate .cxprotocol files for CosmoSort hardware",
+      "title": "프로토콜 익스포터 구현",
+      "description": "CosmoSort 하드웨어용 .cxprotocol 파일 생성을 3모드로 구현",
       "type": "feature",
       "priority": "high",
-      "status": "completed",
+      "status": "pending",
       "effort": "medium",
-      "completion_date": "2025-06-25",
       "dependencies": ["TASK-004", "TASK-005"],
       "functional_requirement": "FR6.1, FR6.2",
+      "three_mode_requirements": {
+        "dev_mode": {
+          "description": "헤드리스 환경에서 프로토콜 생성 로직 검증",
+          "requirements": [
+            "INI 스타일 .cxprotocol 형식 생성 알고리즘",
+            "바운딩 박스에서 정사각형 크롭 계산",
+            "셀 중심점 기반 크롭 센터링",
+            "선택 메타데이터 포함 로직",
+            "출력 형식 유효성 검사"
+          ],
+          "test_commands": [
+            "python run.py --dev-mode --test-protocol-export",
+            "pytest tests/dev_mode/test_protocol_exporter.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "dual_mode": {
+          "description": "GUI 익스포트와 헤드리스 로직 일치성 검증",
+          "requirements": [
+            "GUI 익스포트 다이얼로그와 백엔드 로직 동기화",
+            "진행률 표시와 실제 처리 상태 일치",
+            "에러 메시지 GUI 표시 정확성",
+            "자동 백업 생성 검증"
+          ],
+          "test_commands": [
+            "python run.py --dual-mode --validate-export-dialog",
+            "pytest tests/dual_mode/test_export_consistency.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "gui_mode": {
+          "description": "프로덕션 환경에서 익스포트 성능 및 안정성",
+          "requirements": [
+            "10초 내 익스포트 완료",
+            "대용량 데이터셋 처리 안정성",
+            "사용자 친화적 진행률 표시",
+            "에러 복구 및 재시도 기능"
+          ],
+          "test_commands": [
+            "python run.py --gui-mode --production-test-export",
+            "pytest tests/gui_mode/test_export_production.py -v"
+          ],
+          "status": "not_tested"
+        }
+      },
       "acceptance_criteria": [
-        "✅ Generate INI-style .cxprotocol format",
-        "✅ Include IMAGE and IMAGING_LAYOUT sections",
-        "✅ Calculate square crops from bounding boxes",
-        "✅ Center crops on cell centroids",
-        "✅ Include all selection metadata",
-        "✅ Export time < 10 seconds",
-        "✅ Validate output format",
-        "✅ Automatic backup generation"
+        "INI 스타일 .cxprotocol 형식 생성",
+        "IMAGE 및 IMAGING_LAYOUT 섹션 포함",
+        "바운딩 박스에서 정사각형 크롭 계산",
+        "셀 중심점에 크롭 센터링",
+        "모든 선택 메타데이터 포함",
+        "10초 내 익스포트 시간",
+        "출력 형식 유효성 검사",
+        "자동 백업 생성"
       ],
       "implementation_file": "src/models/extractor.py",
-      "technical_notes": "Complete implementation with configparser and crop calculation algorithms"
+      "technical_notes": "3모드 아키텍처를 적용한 프로토콜 익스포터 - configparser와 크롭 계산 알고리즘"
     },
     {
       "id": "TASK-007",
-      "title": "Design Main Application Window",
-      "description": "Create the main window with menu, toolbar, and layout",
+      "title": "메인 애플리케이션 윈도우 설계",
+      "description": "메뉴, 툴바, 레이아웃을 포함한 메인 윈도우를 3모드로 구현",
       "type": "feature",
       "priority": "high",
-      "status": "completed",
+      "status": "pending",
       "effort": "medium",
-      "completion_date": "2025-06-25",
       "dependencies": [],
       "functional_requirement": "NFR4.1",
+      "three_mode_requirements": {
+        "dev_mode": {
+          "description": "헤드리스 환경에서 UI 구조 시뮬레이션",
+          "requirements": [
+            "메뉴바 구조 및 액션 연결 검증",
+            "툴바 아이템 및 단축키 매핑",
+            "도킹 패널 레이아웃 로직",
+            "상태바 메시지 시스템",
+            "키보드 단축키 처리"
+          ],
+          "test_commands": [
+            "python run.py --dev-mode --test-main-window-structure",
+            "pytest tests/dev_mode/test_main_window.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "dual_mode": {
+          "description": "GUI 렌더링과 헤드리스 구조 일치성 검증",
+          "requirements": [
+            "실제 메뉴 클릭과 액션 매핑 일치",
+            "툴바 버튼과 기능 연결 검증",
+            "반응형 레이아웃 동작 확인",
+            "도킹 패널 상호작용 테스트"
+          ],
+          "test_commands": [
+            "python run.py --dual-mode --validate-main-window-ui",
+            "pytest tests/dual_mode/test_main_window_interaction.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "gui_mode": {
+          "description": "프로덕션 환경에서 사용자 경험 및 성능",
+          "requirements": [
+            "Windows 디자인 가이드라인 준수",
+            "반응형 레이아웃 성능",
+            "툴팁 및 컨텍스트 도움말",
+            "메모리 효율성"
+          ],
+          "test_commands": [
+            "python run.py --gui-mode --production-test-main-window",
+            "pytest tests/gui_mode/test_main_window_production.py -v"
+          ],
+          "status": "not_tested"
+        }
+      },
       "acceptance_criteria": [
-        "✅ Implement menu bar with File, Edit, View, Tools, Help",
-        "✅ Create toolbar for common operations",
-        "✅ Design responsive layout with dockable panels",
-        "✅ Add status bar for user feedback",
-        "✅ Support keyboard shortcuts",
-        "✅ Follow Windows design guidelines",
-        "✅ Include contextual help/tooltips"
+        "File, Edit, View, Tools, Help 메뉴바 구현",
+        "공통 작업용 툴바 생성",
+        "도킹 가능한 패널로 반응형 레이아웃 설계",
+        "사용자 피드백용 상태바 추가",
+        "키보드 단축키 지원",
+        "Windows 디자인 가이드라인 준수",
+        "컨텍스트 도움말/툴팁 포함"
       ],
       "implementation_file": "src/pages/main_window.py",
-      "technical_notes": "Complete QMainWindow implementation with comprehensive UI"
+      "technical_notes": "3모드 아키텍처를 적용한 QMainWindow 구현 - 포괄적인 UI"
     },
     {
       "id": "TASK-008",
-      "title": "Add Cell Highlighting on Image",
-      "description": "Display selected cells as overlays on microscopy image",
+      "title": "이미지 상의 셀 하이라이팅 추가",
+      "description": "현미경 이미지에 선택된 셀을 오버레이로 표시하는 기능을 3모드로 구현",
       "type": "feature",
       "priority": "high",
-      "status": "completed",
+      "status": "pending",
       "effort": "medium",
-      "completion_date": "2025-06-25",
       "dependencies": ["TASK-001", "TASK-004"],
       "functional_requirement": "FR3.1",
+      "three_mode_requirements": {
+        "dev_mode": {
+          "description": "헤드리스 환경에서 오버레이 로직 시뮬레이션",
+          "requirements": [
+            "색상 마커 계산 및 위치 결정",
+            "선택 변경 시 실시간 업데이트 로직",
+            "10,000개 셀 성능 최적화",
+            "플롯과 오버레이 색상 일치성",
+            "1,000개 셀 1초 내 하이라이팅"
+          ],
+          "test_commands": [
+            "python run.py --dev-mode --test-cell-highlighting",
+            "pytest tests/dev_mode/test_cell_overlay.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "dual_mode": {
+          "description": "GUI 렌더링과 헤드리스 계산 일치성 검증",
+          "requirements": [
+            "실제 이미지 렌더링과 계산된 위치 일치",
+            "오버레이 가시성 토글 동작",
+            "색상 매핑 정확성",
+            "실시간 업데이트 동기화"
+          ],
+          "test_commands": [
+            "python run.py --dual-mode --validate-overlay-rendering",
+            "pytest tests/dual_mode/test_overlay_consistency.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "gui_mode": {
+          "description": "프로덕션 환경에서 시각적 성능 및 사용성",
+          "requirements": [
+            "대용량 이미지에서 부드러운 렌더링",
+            "줌/팬 시 오버레이 동기화",
+            "메모리 효율적인 페인팅",
+            "사용자 인터랙션 반응성"
+          ],
+          "test_commands": [
+            "python run.py --gui-mode --production-test-overlay",
+            "pytest tests/gui_mode/test_overlay_production.py -v"
+          ],
+          "status": "not_tested"
+        }
+      },
       "acceptance_criteria": [
-        "✅ Overlay colored markers on selected cells",
-        "✅ Real-time updates when selections change",
-        "✅ Toggle overlay visibility",
-        "✅ Maintain performance with 10,000 cells",
-        "✅ Match colors between plot and overlay",
-        "✅ Highlight < 1 second for 1,000 cells"
+        "선택된 셀에 색상 마커 오버레이",
+        "선택 변경 시 실시간 업데이트",
+        "오버레이 가시성 토글",
+        "10,000개 셀로 성능 유지",
+        "플롯과 오버레이 간 색상 일치",
+        "1,000개 셀을 1초 내 하이라이팅"
       ],
       "implementation_file": "src/models/image_handler.py (enhanced)",
-      "technical_notes": "Complete implementation using Qt painting system with performance optimization"
+      "technical_notes": "3모드 아키텍처를 적용한 Qt 페인팅 시스템 - 성능 최적화"
     },
     {
       "id": "TASK-009",
-      "title": "Implement 96-Well Plate Assignment",
-      "description": "Assign selections to standard 96-well plate positions",
+      "title": "96-웰 플레이트 할당 구현",
+      "description": "표준 96-웰 플레이트 위치에 선택 항목을 할당하는 기능을 3모드로 구현",
       "type": "feature",
       "priority": "medium",
-      "status": "completed",
+      "status": "pending",
       "effort": "small",
-      "completion_date": "2025-06-25",
       "dependencies": ["TASK-004"],
       "functional_requirement": "FR5.1, FR5.2",
+      "three_mode_requirements": {
+        "dev_mode": {
+          "description": "헤드리스 환경에서 웰 할당 로직 검증",
+          "requirements": [
+            "A01-H12 순서 자동 할당 알고리즘",
+            "수동 오버라이드 로직",
+            "중복 할당 방지 검증",
+            "웰 할당 유효성 검사",
+            "충돌 해결 알고리즘"
+          ],
+          "test_commands": [
+            "python run.py --dev-mode --test-well-assignment",
+            "pytest tests/dev_mode/test_well_plate.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "dual_mode": {
+          "description": "GUI 인터랙션과 백엔드 로직 일치성 검증",
+          "requirements": [
+            "시각적 웰 플레이트 맵과 데이터 동기화",
+            "클릭-투-셀렉트 기능 검증",
+            "색상 코딩 정확성",
+            "실시간 할당 업데이트"
+          ],
+          "test_commands": [
+            "python run.py --dual-mode --validate-well-plate-ui",
+            "pytest tests/dual_mode/test_well_plate_interaction.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "gui_mode": {
+          "description": "프로덕션 환경에서 사용자 경험 및 성능",
+          "requirements": [
+            "직관적인 웰 플레이트 인터페이스",
+            "빠른 할당 및 수정",
+            "시각적 피드백",
+            "배치 할당 성능"
+          ],
+          "test_commands": [
+            "python run.py --gui-mode --production-test-well-plate",
+            "pytest tests/gui_mode/test_well_plate_production.py -v"
+          ],
+          "status": "not_tested"
+        }
+      },
       "acceptance_criteria": [
-        "✅ Automatic assignment A01-H12 order",
-        "✅ Manual override capability",
-        "✅ Prevent duplicate assignments",
-        "✅ Validate well assignments",
-        "✅ Conflict resolution interface",
-        "✅ Visual well plate map display",
-        "✅ Color-coded wells and click-to-select"
+        "A01-H12 순서 자동 할당",
+        "수동 오버라이드 기능",
+        "중복 할당 방지",
+        "웰 할당 유효성 검사",
+        "충돌 해결 인터페이스",
+        "시각적 웰 플레이트 맵 표시",
+        "색상 코딩된 웰 및 클릭-투-셀렉트"
       ],
       "implementation_file": "src/components/widgets/well_plate.py",
-      "technical_notes": "Complete well plate model and visual widget implementation"
+      "technical_notes": "3모드 아키텍처를 적용한 웰 플레이트 모델 및 시각적 위젯"
     },
     {
       "id": "TASK-010",
-      "title": "Create Session Management System",
-      "description": "Implement save/load functionality for analysis sessions",
+      "title": "세션 관리 시스템 생성",
+      "description": "분석 세션의 저장/로드 기능을 3모드로 구현",
       "type": "feature",
       "priority": "medium",
-      "status": "completed",
+      "status": "pending",
       "effort": "medium",
-      "completion_date": "2025-06-25",
       "dependencies": ["TASK-004", "TASK-005"],
       "functional_requirement": "NFR3.1",
+      "three_mode_requirements": {
+        "dev_mode": {
+          "description": "헤드리스 환경에서 세션 직렬화/역직렬화 검증",
+          "requirements": [
+            "JSON 형식 세션 상태 저장",
+            "모든 선택, 설정, 캘리브레이션 포함",
+            "완전한 세션 복원",
+            "자동 저장 기능",
+            "버전 호환성 처리"
+          ],
+          "test_commands": [
+            "python run.py --dev-mode --test-session-management",
+            "pytest tests/dev_mode/test_session_manager.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "dual_mode": {
+          "description": "GUI 세션 인터페이스와 백엔드 동기화 검증",
+          "requirements": [
+            "세션 저장/로드 다이얼로그 동작",
+            "진행률 표시 정확성",
+            "에러 처리 및 메시지 표시",
+            "세션 복구 인터페이스"
+          ],
+          "test_commands": [
+            "python run.py --dual-mode --validate-session-ui",
+            "pytest tests/dual_mode/test_session_consistency.py -v"
+          ],
+          "status": "not_tested"
+        },
+        "gui_mode": {
+          "description": "프로덕션 환경에서 세션 관리 성능 및 안정성",
+          "requirements": [
+            "빠른 세션 저장/로드",
+            "대용량 세션 처리",
+            "안정적인 자동 저장",
+            "세션 무결성 보장"
+          ],
+          "test_commands": [
+            "python run.py --gui-mode --production-test-session",
+            "pytest tests/gui_mode/test_session_production.py -v"
+          ],
+          "status": "not_tested"
+        }
+      },
       "acceptance_criteria": [
-        "✅ Save complete session state to JSON",
-        "✅ Include all selections, settings, calibration",
-        "✅ Restore session completely",
-        "✅ Auto-save capability",
-        "✅ Session recovery support",
-        "✅ Handle version compatibility",
-        "✅ Backup previous versions"
+        "완전한 세션 상태를 JSON으로 저장",
+        "모든 선택, 설정, 캘리브레이션 포함",
+        "세션 완전 복원",
+        "자동 저장 기능",
+        "세션 복구 지원",
+        "버전 호환성 처리",
+        "이전 버전 백업"
       ],
       "implementation_file": "src/models/session_manager.py",
-      "technical_notes": "Complete session management with extensible JSON format"
-    },
-    {
-      "id": "TASK-011",
-      "title": "Implement Error Handling Framework",
-      "description": "Create comprehensive error handling and user feedback system",
-      "type": "infrastructure",
-      "priority": "high",
-      "status": "completed",
-      "effort": "medium",
-      "completion_date": "2025-06-25",
-      "dependencies": [],
-      "functional_requirement": "NFR3.2",
-      "acceptance_criteria": [
-        "✅ Catch all exceptions gracefully",
-        "✅ User-friendly error dialogs",
-        "✅ Comprehensive error logging",
-        "✅ Recovery options for errors",
-        "✅ Zero data loss on errors",
-        "✅ Diagnostic info for support",
-        "✅ Fallback for recoverable errors"
-      ],
-      "implementation_file": "src/utils/error_handler.py, src/utils/exceptions.py",
-      "technical_notes": "Complete error handling framework with logging and recovery strategies"
-    },
-    {
-      "id": "TASK-012",
-      "title": "Create Comprehensive Test Suite",
-      "description": "Develop unit and integration tests for all modules",
-      "type": "testing",
-      "priority": "high",
-      "status": "completed",
-      "effort": "large",
-      "completion_date": "2025-06-25",
-      "dependencies": [],
-      "functional_requirement": "NFR6.1",
-      "acceptance_criteria": [
-        "✅ Achieve 94% test success rate",
-        "✅ Unit tests for all modules",
-        "✅ GUI component tests with pytest-qt",
-        "✅ Integration test workflows",
-        "✅ Performance benchmarks",
-        "✅ Test with representative datasets",
-        "✅ Automated test execution"
-      ],
-      "implementation_file": "tests/ (complete test suite)",
-      "technical_notes": "Complete test suite with pytest, pytest-qt following TDD principles"
-    },
-    {
-      "id": "TASK-013",
-      "title": "Implement Selection Panel UI",
-      "description": "Create selection management panel widget",
-      "type": "feature",
-      "priority": "high",
-      "status": "completed",
-      "effort": "medium",
-      "completion_date": "2025-06-25",
-      "dependencies": ["TASK-004"],
-      "functional_requirement": "FR2.3",
-      "acceptance_criteria": [
-        "✅ Selection table with editable properties",
-        "✅ Export controls and buttons",
-        "✅ Real-time selection updates",
-        "✅ Integration with well plate widget",
-        "✅ Selection deletion and modification"
-      ],
-      "implementation_file": "src/components/widgets/selection_panel.py",
-      "technical_notes": "Complete selection management UI with table and controls"
-    },
-    {
-      "id": "TASK-014",
-      "title": "Implement Batch Processing",
-      "description": "Support processing multiple samples with consistent criteria",
-      "type": "feature",
-      "priority": "medium",
-      "status": "completed",
-      "effort": "large",
-      "completion_date": "2025-06-25",
-      "dependencies": ["TASK-010"],
-      "functional_requirement": "FR6.3",
-      "acceptance_criteria": [
-        "✅ Queue multiple image/CSV pairs",
-        "✅ Apply consistent selection criteria",
-        "✅ Batch protocol generation",
-        "✅ Progress tracking for batch",
-        "✅ Three-tab interface (files, options, progress)",
-        "✅ Processing options and error handling",
-        "✅ Real-time status updates with cancellation"
-      ],
-      "implementation_file": "src/components/dialogs/batch_process_dialog.py",
-      "technical_notes": "Complete batch processing system with QThread and comprehensive UI"
-    },
-    {
-      "id": "TASK-015",
-      "title": "Complete Export Dialog System",
-      "description": "Implement comprehensive export functionality with multiple formats",
-      "type": "feature",
-      "priority": "high",
-      "status": "completed",
-      "effort": "large",
-      "completion_date": "2025-06-25",
-      "dependencies": ["TASK-010"],
-      "functional_requirement": "FR6.3",
-      "acceptance_criteria": [
-        "✅ CSV export of selection data",
-        "✅ Image export with overlays (PNG, JPEG, TIFF)",
-        "✅ Protocol file export (.cxprotocol)",
-        "✅ Session data integration",
-        "✅ Multiple export format options",
-        "✅ Progress tracking and validation"
-      ],
-      "implementation_file": "src/components/dialogs/export_dialog.py",
-      "technical_notes": "Complete export worker implementation with actual export logic"
-    },
-    {
-      "id": "TASK-016",
-      "title": "Implement Minimap Navigation",
-      "description": "Add minimap widget for large image navigation",
-      "type": "feature",
-      "priority": "medium",
-      "status": "completed",
-      "effort": "medium",
-      "completion_date": "2025-01-02",
-      "dependencies": ["TASK-001"],
-      "functional_requirement": "FR3.2",
-      "acceptance_criteria": [
-        "✅ Create miniature view of full image",
-        "✅ Navigation rectangle overlay",
-        "✅ Click-to-navigate functionality",
-        "✅ Integration with main image view",
-        "✅ Performance optimization for large images"
-      ],
-      "implementation_file": "src/components/widgets/minimap.py",
-      "technical_notes": "Complete minimap implementation with drag navigation and performance optimization"
-    },
-    {
-      "id": "TASK-017", 
-      "title": "Expand Keyboard Shortcuts",
-      "description": "Add comprehensive keyboard shortcuts for workflow operations",
-      "type": "feature",
-      "priority": "medium",
-      "status": "completed",
-      "effort": "small",
-      "completion_date": "2025-01-02",
-      "dependencies": ["TASK-007"],
-      "functional_requirement": "NFR4.1",
-      "acceptance_criteria": [
-        "✅ Selection shortcuts (Del, Ctrl+A)",
-        "✅ Navigation shortcuts (Arrow keys, +/-)",
-        "✅ Tool shortcuts (S, C, R)",
-        "✅ Workflow shortcuts (Space for toggles)",
-        "✅ Documentation of all shortcuts"
-      ],
-      "implementation_file": "src/pages/main_window.py",
-      "technical_notes": "Complete implementation with all requested keyboard shortcuts and comprehensive documentation"
-    },
-    {
-      "id": "TASK-019",
-      "title": "Implement Auto-Update Checker",
-      "description": "Add automatic update notification system",
-      "type": "feature",
-      "priority": "low",
-      "status": "completed",
-      "effort": "small",
-      "completion_date": "2025-12-30",
-      "dependencies": [],
-      "functional_requirement": "NFR6.2",
-      "acceptance_criteria": [
-        "✅ Version comparison logic",
-        "✅ Update notification system",
-        "✅ Background checking",
-        "✅ Integration with startup sequence",
-        "✅ User preference controls"
-      ],
-      "implementation_file": "src/utils/update_checker.py",
-      "technical_notes": "Complete implementation with GitHub API integration and user preferences"
-    },
-    {
-      "id": "TASK-020",
-      "title": "Advanced Mathematical Expression Filtering",
-      "description": "Implement advanced mathematical expression filtering system for sophisticated cell selection criteria",
-      "type": "feature",
-      "priority": "high",
-      "status": "done",
-      "effort": "large",
-      "completion_date": "2024-12-19",
-      "dependencies": ["TASK-003", "TASK-004"],
-      "functional_requirement": "FR2.4",
-      "acceptance_criteria": [
-        "✅ Mathematical expression parser for selection criteria",
-        "✅ Support statistical functions (mean, std, percentile)",
-        "✅ Complex logical operations (AND, OR, NOT)",
-        "✅ Real-time expression validation",
-        "✅ Expression templates and presets",
-        "✅ Performance optimization for large datasets",
-        "✅ User-friendly expression builder UI"
-      ],
-      "implementation_file": "src/utils/expression_parser.py, src/components/widgets/expression_filter.py",
-      "technical_notes": "Complete implementation with AST-based safe parsing, vectorized operations, syntax highlighting UI, and ScatterPlotWidget integration. Enables Dr. Sarah Chen's advanced filtering requirements."
-    },
-    {
-      "id": "TASK-021",
-      "title": "Template Management System",
-      "description": "Create comprehensive template management system for calibration, selection criteria, and analysis workflows",
-      "type": "feature",
-      "priority": "high",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-005", "TASK-020"],
-      "functional_requirement": "FR7.1",
-      "acceptance_criteria": [
-        "Template creation and storage system",
-        "Template categorization and tagging",
-        "Import/export template functionality",
-        "Template sharing between users",
-        "Version control for templates",
-        "Template validation and compatibility",
-        "User interface for template management"
-      ],
-      "implementation_file": "src/models/template_manager.py, src/components/dialogs/template_dialog.py",
-      "technical_notes": "Required for Michael Rodriguez persona - template management capabilities"
-    },
-    {
-      "id": "TASK-022",
-      "title": "Enhanced Calibration UI Dialog",
-      "description": "Implement comprehensive UI for two-point calibration system with step-by-step guidance, visual indicators, quality assessment, and template integration",
-      "type": "feature",
-      "priority": "medium",
-      "status": "done",
-      "effort": "large",
-      "completion_date": "2024-12-26",
-      "dependencies": ["TASK-005"],
-      "functional_requirement": "FR4.3",
-      "acceptance_criteria": [
-        "✅ Interactive calibration dialog with step-by-step guidance",
-        "✅ Visual indicators for calibration point placement",
-        "✅ Coordinate input validation and error checking",
-        "✅ Calibration quality assessment and feedback",
-        "✅ Save/load calibration settings for reuse",
-        "✅ Integration with template system",
-        "✅ Clear error messages and recovery options"
-      ],
-      "implementation_file": "src/components/dialogs/calibration_dialog.py",
-      "technical_notes": "Complete enhanced calibration UI with multi-step wizard interface - COMPLETED"
-    },
-    {
-      "id": "TASK-023",
-      "title": "Well Plate Template System",
-      "description": "Implement template system for different well plate configurations and automatic cell assignment patterns",
-      "type": "feature",
-      "priority": "medium",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-009", "TASK-021"],
-      "functional_requirement": "FR5.3",
-      "acceptance_criteria": [
-        "Support multiple plate formats (96, 384, custom)",
-        "Template-based automatic assignment patterns",
-        "Custom well grouping and naming",
-        "Plate layout visualization and editing",
-        "Export plate templates for reuse",
-        "Integration with batch processing",
-        "Validation of plate assignments"
-      ],
-      "implementation_file": "src/components/widgets/plate_template.py",
-      "technical_notes": "Required for batch processing scenarios - well plate template functionality"
-    },
-    {
-      "id": "TASK-024",
-      "title": "Batch Tracking Log System",
-      "description": "Implement comprehensive logging and tracking system for batch processing operations",
-      "type": "feature",
-      "priority": "medium",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-014", "TASK-023"],
-      "functional_requirement": "FR6.4",
-      "acceptance_criteria": [
-        "Detailed batch processing logs",
-        "Progress tracking and time estimates",
-        "Error logging and recovery tracking",
-        "Batch result summaries and reports",
-        "Log export and archiving",
-        "Real-time status updates",
-        "Performance metrics collection"
-      ],
-      "implementation_file": "src/models/batch_logger.py",
-      "technical_notes": "Required for batch processing workflow - comprehensive tracking and logging"
-    },
-    {
-      "id": "TASK-025",
-      "title": "Auto-Session Loading System",
-      "description": "Implement automatic session loading and recovery system for seamless workflow continuation",
-      "type": "feature",
-      "priority": "medium",
-      "status": "completed",
-      "effort": "small",
-      "completion_date": "2025-01-02",
-      "dependencies": ["TASK-010"],
-      "functional_requirement": "NFR3.3",
-      "acceptance_criteria": [
-        "✅ Automatic session detection on startup",
-        "✅ Recent session list and quick access",
-        "✅ Crash recovery and session restoration",
-        "✅ Auto-save with configurable intervals",
-        "✅ Session backup and versioning",
-        "✅ User preference for auto-loading",
-        "✅ Session integrity validation"
-      ],
-      "implementation_file": "src/models/auto_session.py",
-      "technical_notes": "Complete auto-session system with crash recovery and configurable auto-save"
-    },
-    {
-      "id": "TASK-026",
-      "title": "Template-Based Region Auto-Apply",
-      "description": "Implement automatic application of selection templates to detected regions in new images",
-      "type": "feature",
-      "priority": "medium",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-021", "TASK-020"],
-      "functional_requirement": "FR2.5",
-      "acceptance_criteria": [
-        "Automatic region detection in new images",
-        "Template matching and application",
-        "Confidence scoring for auto-applied selections",
-        "User review and approval workflow",
-        "Template adaptation and learning",
-        "Batch auto-application capabilities",
-        "Performance optimization for real-time use"
-      ],
-      "implementation_file": "src/models/auto_apply.py",
-      "technical_notes": "Required for template-based automation scenarios"
-    },
-    {
-      "id": "TASK-027",
-      "title": "Enhanced Batch Processing with Template Integration",
-      "description": "Enhance existing batch processing system with comprehensive template integration and automation",
-      "type": "feature",
-      "priority": "medium",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-014", "TASK-021", "TASK-026"],
-      "functional_requirement": "FR6.5",
-      "acceptance_criteria": [
-        "Template-driven batch processing workflows",
-        "Automatic parameter application from templates",
-        "Batch validation and quality control",
-        "Template compatibility checking",
-        "Results aggregation and comparison",
-        "Automated report generation",
-        "Integration with tracking system"
-      ],
-      "implementation_file": "src/models/enhanced_batch.py",
-      "technical_notes": "Enhanced batch processing with full template integration"
-    },
-    {
-      "id": "TASK-028",
-      "title": "Implement Headless GUI Architecture - Core Infrastructure",
-      "description": "Create the foundational infrastructure for developing and maintaining PySide6 GUIs in headless environments, enabling AI agents and developers to work with UI purely through code",
-      "type": "feature",
-      "priority": "high",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-007"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "Display detection system for Linux/Windows/macOS",
-        "Mode manager to switch between dev-mode and gui-mode",
-        "Platform-agnostic UI data model",
-        "No QApplication instantiation in dev-mode",
-        "Environment variable based mode control",
-        "Comprehensive logging for mode decisions",
-        "Fallback mechanisms for edge cases"
-      ],
-      "implementation_file": "src/headless/display_detector.py, src/headless/mode_manager.py, src/headless/ui_model.py",
-      "technical_notes": "Foundation for headless GUI development - enables terminal-only UI development"
-    },
-    {
-      "id": "TASK-029",
-      "title": "Implement UI Serialization System",
-      "description": "Create bidirectional serialization system for converting between PySide6 widgets and structured text formats (YAML/JSON) for round-trip editing",
-      "type": "feature",
-      "priority": "high",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-028"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "YAML serializer with full UI preservation",
-        "JSON serializer as alternative format",
-        "Schema validation for UI definitions",
-        "Round-trip editing without data loss",
-        "Version control friendly output",
-        "AI-parseable structured format",
-        "Comprehensive error reporting"
-      ],
-      "implementation_file": "src/headless/serializers/, src/headless/validators/",
-      "technical_notes": "Critical for AI agent interaction - enables code-based UI editing"
-    },
-    {
-      "id": "TASK-030",
-      "title": "Create Widget Rendering Engine",
-      "description": "Build the rendering engine that converts UI definitions into actual PySide6 widgets when display is available",
-      "type": "feature",
-      "priority": "high",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-029"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "Widget factory for all common Qt widgets",
-        "Property application system",
-        "Layout reconstruction from definitions",
-        "Event binding and signal connections",
-        "Recursive widget tree creation",
-        "Performance optimization for large UIs",
-        "Error recovery during rendering"
-      ],
-      "implementation_file": "src/headless/rendering/widget_factory.py, src/headless/rendering/ui_renderer.py",
-      "technical_notes": "Bridges headless definitions to actual GUI - maintains compatibility"
-    },
-    {
-      "id": "TASK-031",
-      "title": "Develop CLI Tools for Headless UI",
-      "description": "Create comprehensive command-line interface for UI manipulation, validation, and development in headless mode",
-      "type": "feature",
-      "priority": "high",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-030"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "dump-ui command for exporting current UI",
-        "load-ui command for importing UI definitions",
-        "validate-ui command for schema checking",
-        "ui-editor for interactive terminal editing",
-        "Widget manipulation commands",
-        "Batch UI operations support",
-        "Integration with main application"
-      ],
-      "implementation_file": "src/headless/cli/main_cli.py, src/headless/cli/commands/",
-      "technical_notes": "Primary interface for AI agents - enables terminal-based development"
-    },
-    {
-      "id": "TASK-032",
-      "title": "Implement Headless Testing Framework",
-      "description": "Create testing framework that validates UI structure and behavior without requiring display server",
-      "type": "testing",
-      "priority": "high",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-031"],
-      "functional_requirement": "NFR6.1",
-      "acceptance_criteria": [
-        "UI structure validation without Qt",
-        "Event connection verification",
-        "Property validation testing",
-        "Layout hierarchy checking",
-        "Performance benchmarks in headless mode",
-        "CI/CD integration support",
-        "Visual regression testing via snapshots"
-      ],
-      "implementation_file": "tests/headless/, src/headless/testing/",
-      "technical_notes": "Enables CI/CD and automated testing without display server"
-    },
-    {
-      "id": "TASK-033",
-      "title": "Migrate Main Window to Headless Architecture",
-      "description": "Convert existing MainWindow to support both traditional and headless development modes",
-      "type": "feature",
-      "priority": "high",
-      "status": "pending",
-      "effort": "large",
-      "dependencies": ["TASK-032"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "Extract UI definition from MainWindow code",
-        "Create YAML definition for main window",
-        "Maintain backward compatibility",
-        "Support both modes seamlessly",
-        "Preserve all existing functionality",
-        "Document migration patterns",
-        "Performance parity with original"
-      ],
-      "implementation_file": "ui_definitions/main_window.yaml, src/pages/main_window.py (modified)",
-      "technical_notes": "First major component migration - establishes patterns for others"
-    },
-    {
-      "id": "TASK-034",
-      "title": "Create AI Agent Integration Tools",
-      "description": "Build specialized tools and interfaces optimized for AI agent interaction with the headless UI system",
-      "type": "feature",
-      "priority": "medium",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-033"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "AI-friendly command syntax",
-        "Structured error messages for AI parsing",
-        "Widget search and manipulation API",
-        "Batch modification capabilities",
-        "Change validation and rollback",
-        "Documentation generation for AI",
-        "Example-based learning system"
-      ],
-      "implementation_file": "src/headless/ai_tools/, docs/ai_agent_guide.md",
-      "technical_notes": "Optimizes system for AI agent productivity - reduces errors"
-    },
-    {
-      "id": "TASK-035",
-      "title": "Implement UI Component Library",
-      "description": "Create reusable UI component definitions for common patterns to accelerate headless development",
-      "type": "feature",
-      "priority": "medium",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-034"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "Standard component templates",
-        "CellSorter-specific components",
-        "Component composition system",
-        "Property inheritance model",
-        "Style system integration",
-        "Component documentation",
-        "Usage examples for each component"
-      ],
-      "implementation_file": "ui_definitions/components/, src/headless/components/",
-      "technical_notes": "Accelerates development - provides building blocks for AI agents"
-    },
-    {
-      "id": "TASK-036",
-      "title": "Add Real-time UI Synchronization",
-      "description": "Implement real-time synchronization between code changes and UI definitions for live development",
-      "type": "feature",
-      "priority": "low",
-      "status": "pending",
-      "effort": "medium",
-      "dependencies": ["TASK-035"],
-      "functional_requirement": "NFR4.3",
-      "acceptance_criteria": [
-        "File watcher for UI definitions",
-        "Auto-reload on changes",
-        "Incremental update system",
-        "Conflict resolution for concurrent edits",
-        "Change notification system",
-        "Undo/redo functionality",
-        "Performance optimization for large UIs"
-      ],
-      "implementation_file": "src/headless/sync/watcher.py, src/headless/sync/updater.py",
-      "technical_notes": "Enhanced developer experience - enables rapid iteration"
+      "technical_notes": "3모드 아키텍처를 적용한 확장 가능한 JSON 형식 세션 관리"
     }
   ],
+  "three_mode_metadata": {
+    "architecture_version": "1.0",
+    "mode_definitions": {
+      "dev_mode": {
+        "description": "헤드리스 시뮬레이션 + UX 검증",
+        "command": "python run.py --dev-mode",
+        "purpose": "모든 인터랙션을 헤드리스 환경에서 시뮬레이션하고 UX 표준 검증"
+      },
+      "dual_mode": {
+        "description": "GUI 일치성 + 동기화 검증",
+        "command": "python run.py --dual-mode", 
+        "purpose": "GUI 렌더링이 DEV 모드 계산과 일치하는지 검증하고 실시간 동기화 테스트"
+      },
+      "gui_mode": {
+        "description": "프로덕션 성능 + 실사용자 검증",
+        "command": "python run.py --gui-mode",
+        "purpose": "프로덕션 환경에서 성능, 안정성, 실제 사용자 인터랙션 검증"
+      }
+    },
+    "testing_workflow": {
+      "sequence": "DEV → DUAL → GUI",
+      "mandatory": true,
+      "integration_criteria": "모든 3모드 통과 후에만 코드 통합 가능"
+    }
+  },
   "metadata": {
-    "total_tasks": 35,
+    "total_tasks": 10,
     "by_status": {
-      "completed": 18,
-      "done": 2,
-      "pending": 17,
+      "completed": 4,
+      "pending": 6,
       "in_progress": 0
     },
     "by_priority": {
-      "high": 19,
-      "medium": 14,
-      "low": 2
+      "high": 7,
+      "medium": 3,
+      "low": 0
     },
     "by_type": {
-      "feature": 32,
-      "infrastructure": 1,
-      "testing": 2
+      "feature": 10,
+      "infrastructure": 0,
+      "testing": 0
     },
-    "completion_percentage": 51,
+    "three_mode_coverage": {
+      "tasks_with_three_mode": 6,
+      "legacy_tasks": 4,
+      "coverage_percentage": 60
+    },
+    "completion_percentage": 40,
     "requirements_compliance": {
       "functional_requirements": "88%",
       "non_functional_requirements": "90%", 
       "overall": "89%"
     },
-    "production_status": "Core functionality complete, headless architecture in planning"
+    "production_status": "3모드 아키텍처 전환 중 - 핵심 기능 재구성"
   }
 }

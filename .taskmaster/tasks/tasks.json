@@ -51,9 +51,9 @@
         "id": "5",
         "title": "Test Image Loading Without Display",
         "description": "디스플레이 없이 이미지 로딩 및 처리 테스트",
-        "details": "ImageHandler가 headless 모드에서 TIFF, JPG, PNG 파일을 로드하고 처리할 수 있는지 테스트합니다. 가상 렌더링과 메모리 관리도 검증합니다.",
+        "details": "ImageHandler가 headless 모드에서 TIFF, JPG, PNG 파일을 로드하고 처리할 수 있는지 테스트합니다. 가상 렌더링과 메모리 관리도 검증합니다.\n\n✅ 현재 상황:\n- 기존 tests/test_image_handler.py: 50/51 테스트 통과 (1개 zoom 관련 테스트 실패)\n- 이미지 로딩, 변환, 성능 테스트 등 대부분 완료\n- 헤드리스 모드에서의 이미지 처리 기능 검증됨\n\n🔄 남은 작업:\n1. zoom 테스트 1개 수정 필요\n2. 3모드 아키텍처에 맞는 추가 테스트 생성 필요",
         "testStrategy": "1. 다양한 포맷의 이미지 로드 테스트\n2. 가상 QPixmap 생성 및 변환 테스트\n3. 메모리 사용량 모니터링\n4. 대용량 이미지 처리 성능 테스트",
-        "status": "pending",
+        "status": "in-progress",
         "priority": "high",
         "dependencies": [
           "4"
@@ -63,9 +63,9 @@
         "id": "6",
         "title": "Test CSV Processing in Headless Mode",
         "description": "Headless 모드에서 CSV 파싱 및 데이터 처리 테스트",
-        "details": "CSVParser가 UI 없이 CellProfiler CSV 파일을 파싱하고, 데이터 검증 및 처리가 올바르게 작동하는지 테스트합니다.",
+        "details": "CSVParser가 UI 없이 CellProfiler CSV 파일을 파싱하고, 데이터 검증 및 처리가 올바르게 작동하는지 테스트합니다.\n\n✅ 완료된 작업:\n- 기존 tests/test_csv_parser.py: 모든 테스트 통과\n- CSV 파싱, 데이터 검증, 성능 테스트 완료\n- 헤드리스 모드에서의 CSV 처리 기능 검증됨\n\n🔄 남은 작업:\n- 3모드 아키텍처에 맞는 추가 테스트 생성 필요",
         "testStrategy": "1. 샘플 CSV 파일 파싱 테스트\n2. 데이터 검증 로직 테스트\n3. 대용량 데이터(50,000+ rows) 처리 성능 테스트\n4. 에러 핸들링 테스트",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
         "dependencies": [
           "4"
@@ -99,9 +99,9 @@
         "id": "9",
         "title": "Test Coordinate Calibration Without UI",
         "description": "UI 없이 좌표 보정 기능 테스트",
-        "details": "CoordinateTransformer가 프로그래밍 방식으로 두 점을 받아 affine 변환을 계산하고 적용하는지 테스트합니다.",
+        "details": "CoordinateTransformer가 프로그래밍 방식으로 두 점을 받아 affine 변환을 계산하고 적용하는지 테스트합니다.\n\n✅ 완료된 작업:\n1. DEV 모드 테스트 (9개 테스트 모두 통과):\n   - 아핀 변환 매트릭스 계산 검증\n   - 바운딩 박스 변환 테스트\n   - 캘리브레이션 export/import 테스트\n   - 포인트 관리 및 유효성 검사\n   - 에러 핸들링 테스트\n   - 최소 거리 유효성 검사\n   - 역변환 정확도 테스트\n   - 품질 메트릭 검증\n\n2. DUAL 모드 테스트 (7개 테스트 모두 통과):\n   - GUI와 헤드리스 로직 일치성 검증\n   - 좌표 변환 결과 동기화 테스트\n   - 캘리브레이션 다이얼로그 UI 동기화\n   - 품질 메트릭 일치성 검증\n   - Export/Import 크로스 호환성 테스트\n   - 메인 윈도우 통합 테스트\n\n3. GUI 모드 테스트 (8개 테스트 모두 통과):\n   - 캘리브레이션 정확도 검증\n   - 다이얼로그 에러 핸들링\n   - 사용자 경험 및 사용성 테스트\n   - 템플릿 시스템 테스트\n   - 대용량 이미지 성능 테스트\n   - 메모리 효율성 검증\n   - 마우스 클릭 정확도 테스트\n   - 스트레스 테스트\n\n모든 3모드 요구사항이 충족되었으며, 총 24개 테스트가 성공적으로 통과했습니다.",
         "testStrategy": "1. 프로그래밍 방식의 보정점 설정\n2. Affine 변환 매트릭스 계산 검증\n3. 좌표 변환 정확도 테스트\n4. 역변환 테스트",
-        "status": "pending",
+        "status": "done",
         "priority": "medium",
         "dependencies": [
           "5"
@@ -111,9 +111,9 @@
         "id": "10",
         "title": "Test Protocol Export in Headless Mode",
         "description": "Headless 모드에서 프로토콜 파일 생성 테스트",
-        "details": "Extractor가 UI 없이 .cxprotocol 파일을 생성하고, 올바른 형식과 내용을 포함하는지 테스트합니다.",
+        "details": "Extractor가 UI 없이 .cxprotocol 파일을 생성하고, 올바른 형식과 내용을 포함하는지 테스트합니다.\n\n✅ 완료된 작업:\n- DEV 모드: tests/dev_mode/test_protocol_exporter.py (10/10 테스트 통과)\n- DUAL 모드: tests/dual_mode/test_export_consistency.py (6/6 테스트 통과)\n- GUI 모드: tests/gui_mode/test_export_production.py (GUI 초기화 문제로 실행 불가)\n\n🔄 남은 작업:\n- GUI 모드 테스트 수정 필요 (Mock 기반으로 변경)",
         "testStrategy": "1. 가상 선택 데이터로 프로토콜 생성\n2. INI 형식 검증\n3. 좌표 변환 적용 확인\n4. 파일 무결성 테스트",
-        "status": "pending",
+        "status": "in-progress",
         "priority": "medium",
         "dependencies": [
           "8",
@@ -183,6 +183,19 @@
           "11",
           "12",
           "13"
+        ]
+      },
+      {
+        "id": "16",
+        "title": "Test Main Window Integration (3-Mode Architecture)",
+        "description": "메인 윈도우 통합 3모드 테스트",
+        "details": "메인 윈도우의 모든 기능이 3가지 모드(DEV, DUAL, GUI)에서 올바르게 작동하는지 테스트합니다.\n\n✅ 완료된 작업:\n- DEV 모드: tests/dev_mode/test_main_window_integration.py (11/11 테스트 통과)\n- DUAL 모드: tests/dual_mode/test_main_window_sync.py (9/9 테스트 통과)\n- GUI 모드: tests/gui_mode/test_main_window_production.py (GUI 초기화 문제로 실행 불가)\n\n🔄 남은 작업:\n- GUI 모드 테스트 수정 필요 (Mock 기반으로 변경)",
+        "testStrategy": "1. 어댑터 초기화 및 컴포넌트 통신 테스트\n2. 이미지 로딩, 선택 관리, 캘리브레이션 워크플로우\n3. 익스포트 및 세션 관리 테스트\n4. GUI-헤드리스 동기화 검증",
+        "status": "in-progress",
+        "priority": "high",
+        "dependencies": [
+          "5",
+          "6"
         ]
       }
     ],
