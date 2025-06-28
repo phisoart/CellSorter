@@ -1,14 +1,11 @@
 # Task ID: 4
-# Title: Test MainWindow Action Execution in Headless
-# Status: done
-# Dependencies: 3 (Not found)
+# Title: CSV Data Processing Stability
+# Status: pending
+# Dependencies: None
 # Priority: high
-# Description: Headless 모드에서 MainWindow의 모든 액션 실행 테스트
+# Description: Test CSV parsing without UI and verify data validation in headless mode
 # Details:
-MainWindowAdapter의 execute_action 메서드를 통해 모든 메뉴 액션들이 headless 모드에서 올바르게 실행되는지 테스트합니다.
+Test CSV parsing without UI, verify data validation in headless, test selection operations programmatically, validate expression filtering, test batch processing
 
 # Test Strategy:
-1. 파일 열기/저장 액션 테스트
-2. 편집 액션(undo/redo/zoom) 테스트
-3. 도구 액션(calibration/selection) 테스트
-4. 패널 토글 액션 테스트
+DEV Mode: headless CSV processing, DUAL Mode: parsing result validation, GUI Mode: interactive data handling

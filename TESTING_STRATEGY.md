@@ -77,11 +77,12 @@ def test_scatter_plot_all_interactions(qtbot):
    - Export .cxprotocol file
    - Validate output integrity
 
-2. **Batch Processing Workflow**:
-   - Process multiple image/CSV pairs
-   - Apply consistent selection criteria
-   - Validate coordinate transformation accuracy
-   - Test export file naming and organization
+2. **~~Batch Processing Workflow~~ (Removed Feature)**:
+   - ~~Process multiple image/CSV pairs~~
+   - ~~Apply consistent selection criteria~~
+   - ~~Validate coordinate transformation accuracy~~
+   - ~~Test export file naming and organization~~
+   - **Note**: Batch processing is not implemented in CellSorter
 
 3. **Error Recovery Scenarios**:
    - Invalid file format handling
@@ -122,7 +123,7 @@ tests/
 │   └── test_dialogs.py
 ├── integration/
 │   ├── test_complete_workflow.py
-│   ├── test_batch_processing.py
+│   ├── ~~test_batch_processing.py~~ (removed feature)
 │   └── test_error_recovery.py
 ├── fixtures/
 │   ├── sample_images/
@@ -263,12 +264,46 @@ pytest -k "test_image_loader"
 - Periodic cleanup of obsolete tests
 - Update test data to reflect real-world usage
 
+## Excluded Features - Testing Strategy
+
+The following features are **permanently excluded** from CellSorter and require **NO testing implementation**:
+
+### 🚫 Session Management Testing (Not Required)
+- ❌ Session save/load test cases
+- ❌ Auto-save functionality testing
+- ❌ Session recovery testing
+- ❌ Session persistence validation
+
+**Testing Rationale**: No session management features to test.
+
+### 🚫 Edit Operations Testing (Not Required)  
+- ❌ Undo/Redo functionality testing
+- ❌ Copy/Paste operation testing
+- ❌ Edit history validation
+- ❌ Clipboard integration testing
+
+**Testing Rationale**: No edit operations features to test.
+
+### 🚫 Template Management Testing (Not Required)
+- ❌ Template creation/editing tests
+- ❌ Template library testing
+- ❌ Template import/export validation
+- ❌ Workflow template testing
+
+**Testing Rationale**: No template management features to test.
+
+### 🚫 Advanced Analysis Testing (Not Required)
+- ❌ Batch processing workflow tests
+- ❌ Statistical analysis function tests
+- ❌ Multi-format export testing
+- ❌ Comparative analysis validation
+
+**Testing Rationale**: Focus on core cell selection and coordinate transformation only.
+
 ## Collaboration Notes
 - This project does not create separate CONTRIBUTING.md or RELEASE_PLAN.md files; related rules are integrated and managed in README.md and other documents.
 
-This comprehensive testing strategy ensures robust, reliable software that meets the demanding requirements of pathology research applications.
-
-# CellSorter Testing Strategy
+This focused testing strategy ensures robust, reliable software that meets the specific requirements of cell selection and coordinate transformation for pathology research applications.
 
 ## Overview
 
@@ -393,9 +428,10 @@ Integration tests verify interactions between components.
    - Scatter plot → Selection → Well plate updates
    - Verify synchronization in dual mode
 
-3. **Template System**
-   - Template creation → Saving → Loading → Application
-   - Test persistence across modes
+3. **~~Template System~~ (Removed Feature)**
+   - ~~Template creation → Saving → Loading → Application~~
+   - ~~Test persistence across modes~~
+   - **Note**: Template management is not implemented in CellSorter
 
 4. **Mode Switching**
    - Test transitions between modes

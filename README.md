@@ -36,10 +36,8 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
 - **Error Handling**: Graceful degradation with informative user messages
 
 ### 🔧 Research Workflow
-- **Batch Processing**: Handle multiple samples with consistent protocols
-- **Session Management**: Save and restore analysis sessions
 - **Quality Control**: Built-in validation and accuracy metrics
-- **Export Options**: Multiple output formats for downstream analysis
+- **Direct Export**: .cxprotocol files for CosmoSort hardware integration
 
 ## 🛠️ Technology Stack
 
@@ -175,15 +173,13 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
 4. **Export Protocol**
    - Review selections and well assignments
    - Generate .cxprotocol file for CosmoSort
-   - Export additional analysis data as needed
 
 ### Advanced Features
 
 - **Multi-Selection Management**: Create and manage multiple cell populations
 - **Real-time Preview**: See selected cells highlighted on original image
 - **Quality Control**: Built-in validation for coordinate accuracy
-- **Session Persistence**: Save and restore analysis sessions
-- **Batch Processing**: Process multiple samples with consistent criteria
+- **Point/Rectangle Selection**: Flexible cell selection methods
 
 ## 🧪 Testing
 
@@ -255,19 +251,44 @@ CellSorter is licensed under the MIT License. See [LICENSE](LICENSE) for details
 - ✅ Real-time cell highlighting and selection validation
 
 ### Roadmap
-- 🔄 Advanced filtering expressions for expert users
-- 🔄 Automated quality control metrics
-- 🔄 Linux support
+- 🔄 Linux support for cross-platform compatibility
 
 ---
 
-🔬 **Advancing pathology research through precision cell sorting technology** 
+🔬 **Advancing pathology research through precision cell sorting technology**
 
-- 🔍 Advanced expression-based filtering
-- 📁 Template management for workflows
-- 🔧 Enhanced calibration UI
-- 📊 Comprehensive batch processing
-- 🎯 Well plate template system
+## 🚫 Excluded Features - Design Philosophy
+
+CellSorter maintains a **focused, single-purpose design** and the following features are **permanently excluded**:
+
+### ❌ Session Management (Not Implemented)
+- Save/Load Session functionality
+- Auto-save and session recovery
+- Session persistence features
+
+**Rationale**: Direct workflow approach (Image → Analysis → Export) without intermediate save states.
+
+### ❌ Edit Menu Operations (Not Implemented)  
+- Undo/Redo functionality
+- Copy/Paste operations
+- Edit history management
+
+**Rationale**: Specialized analysis tool focused on direct interaction, not general document editing.
+
+### ❌ Template Management (Not Implemented)
+- Template creation and management
+- Workflow templates
+- Template library system
+
+**Rationale**: External documentation preferred for protocol standardization.
+
+### ❌ Advanced Analysis Features (Not Implemented)
+- Batch processing workflows
+- Statistical analysis functions  
+- Multi-format data export
+- Comparative analysis tools
+
+**Rationale**: Focused on cell selection and coordinate generation; complex analysis should use dedicated tools (CellProfiler, R, Python).
 
 ## Three Operation Modes
 

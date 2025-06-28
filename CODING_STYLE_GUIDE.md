@@ -471,7 +471,51 @@ error_msg = "Failed to process " + str(file_count) + " files"
 ### Pre-commit Hooks
 - 개발/테스트/코드 품질 도구는 requirements-dev.txt에, 빌드/배포 도구는 requirements-build.txt에 분리 관리합니다.
 
+## Excluded Features - Coding Guidelines
+
+The following features are **permanently excluded** from CellSorter and should **NOT** be implemented:
+
+### 🚫 Session Management Code (Do Not Implement)
+- ❌ Session save/load mechanisms
+- ❌ Auto-save functionality  
+- ❌ Session recovery systems
+- ❌ State persistence classes
+
+**Coding Rationale**: CellSorter maintains stateless operation focused on direct workflows.
+
+### 🚫 Edit Operations Code (Do Not Implement)
+- ❌ Undo/Redo command patterns
+- ❌ Copy/Paste implementations
+- ❌ Edit history tracking
+- ❌ Clipboard integration
+
+**Coding Rationale**: Specialized tool design avoids general editing complexity.
+
+### 🚫 Template Management Code (Do Not Implement)
+- ❌ Template storage systems
+- ❌ Template processing engines
+- ❌ Template import/export logic
+- ❌ Workflow template classes
+
+**Coding Rationale**: External documentation preferred over built-in template systems.
+
+### 🚫 Advanced Analysis Code (Do Not Implement)
+- ❌ Batch processing frameworks
+- ❌ Statistical analysis functions
+- ❌ Multi-format export systems
+- ❌ Comparative analysis algorithms
+
+**Coding Rationale**: Integration with existing analysis tools (CellProfiler, R, Python) preferred.
+
+### Coding Philosophy for Excluded Features
+
+**DO NOT** create any classes, functions, or modules related to these excluded features:
+- Keep codebase focused on core cell selection and coordinate transformation
+- Avoid feature creep that adds unnecessary complexity
+- Maintain simple, direct workflow implementation
+- Prefer external tool integration over reimplementation
+
 ## Collaboration Notes
 - 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다.
 
-Following these guidelines will ensure consistent, maintainable, and readable code across the CellSorter project. 
+Following these guidelines will ensure **focused, maintainable, and efficient code** that serves CellSorter's specific purpose of cell selection and coordinate transformation. 

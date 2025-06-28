@@ -1,13 +1,11 @@
 # Task ID: 1
-# Title: Fix MainWindow Adapter Linter Errors
-# Status: done
+# Title: Display Detection and Mode Management
+# Status: pending
 # Dependencies: None
 # Priority: high
-# Description: MainWindowState 클래스의 property_changed 시그널과 set_property 메서드 관련 linter 에러 수정
+# Description: Test display detection on Windows/Linux/macOS and verify mode switching between dev-mode and gui-mode
 # Details:
-MainWindowAdapter에서 MainWindowState와의 동기화를 위해 필요한 property_changed 시그널과 set_property 메서드를 구현합니다. 이는 headless 모드와 GUI 모드 간의 상태 동기화를 위해 필수적입니다.
+Test display detection across platforms, verify mode switching mechanisms, test fallback when display unavailable, validate environment variable control
 
 # Test Strategy:
-1. MainWindowState 인스턴스 생성 후 property_changed 시그널 존재 확인
-2. set_property 메서드로 속성 변경 후 시그널 발생 확인
-3. GUI 모드에서 실제 동기화 테스트
+DEV Mode: headless detection testing, DUAL Mode: mode switching validation, GUI Mode: display availability verification

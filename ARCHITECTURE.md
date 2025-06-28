@@ -388,7 +388,43 @@ Each point entry (P_1, P_2, etc.) contains semicolon-separated values:
 - **Path Traversal Protection**: Secure file path handling
 - **Resource Limits**: Memory and CPU usage constraints
 
+## Excluded Features - Architectural Decision
+
+The following features are **permanently excluded** from CellSorter architecture and will **NEVER** be implemented:
+
+### 🚫 Session Management Architecture (Removed)
+- **Session Manager Component**: No persistent session storage
+- **Auto-save System**: No background save operations  
+- **Session Recovery**: No crash recovery mechanisms
+- **State Persistence**: No application state saving between runs
+
+**Architectural Rationale**: Maintains simple, stateless design focused on direct analysis workflows.
+
+### 🚫 Edit Operations System (Removed)
+- **Command Pattern**: No undo/redo command system
+- **State History**: No operation history tracking
+- **Clipboard Integration**: No system clipboard operations
+- **Edit Buffer Management**: No intermediate edit state management
+
+**Architectural Rationale**: Specialized tool design avoids general-purpose editing complexity.
+
+### 🚫 Template Management System (Removed)
+- **Template Engine**: No template processing framework
+- **Template Storage**: No template persistence layer
+- **Template Library**: No browsable template collection
+- **Template Import/Export**: No template sharing mechanisms
+
+**Architectural Rationale**: External documentation and workflow standardization preferred.
+
+### 🚫 Advanced Analysis Framework (Removed)
+- **Batch Processing Engine**: No multi-sample processing system
+- **Statistical Analysis**: No built-in statistics calculations  
+- **Data Export Pipeline**: No multi-format export system
+- **Analysis Plugins**: No extensible analysis framework
+
+**Architectural Rationale**: Integration with existing analysis tools (CellProfiler, R, Python) is preferred over reimplementation.
+
 ## Development & Collaboration Notes
 - This project does not create separate CONTRIBUTING.md or RELEASE_PLAN.md files; related rules are integrated and managed in README.md and other documents.
 
-This architecture provides a robust, scalable foundation for the CellSorter application while maintaining the flexibility needed for research applications and future enhancements. 
+This architecture provides a **focused, lightweight foundation** for the CellSorter application, maintaining simplicity while delivering core cell selection and coordinate transformation functionality. 

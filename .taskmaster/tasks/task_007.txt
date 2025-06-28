@@ -1,14 +1,11 @@
 # Task ID: 7
-# Title: Test Virtual Scatter Plot Generation
-# Status: done
-# Dependencies: 6 (Not found)
+# Title: Coordinate Calibration Testing
+# Status: pending
+# Dependencies: 3 (Not found)
 # Priority: medium
-# Description: 디스플레이 없이 scatter plot 생성 및 상호작용 테스트
+# Description: Test two-point calibration in headless mode and verify transformation accuracy
 # Details:
-matplotlib을 백엔드 모드로 사용하여 scatter plot을 생성하고, 가상 선택 작업을 시뮬레이션합니다.
+Test two-point calibration in headless, verify transformation accuracy, test calibration dialog interactions, validate template integration, test calibration persistence
 
 # Test Strategy:
-1. Agg 백엔드로 plot 생성 테스트
-2. 프로그래밍 방식의 선택 영역 설정
-3. 가상 마우스 이벤트 시뮬레이션
-4. PNG/SVG 내보내기 테스트
+DEV Mode: mathematical calibration testing, DUAL Mode: calibration accuracy validation, GUI Mode: user interaction testing

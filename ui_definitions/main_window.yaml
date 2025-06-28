@@ -313,7 +313,7 @@ signals:
     calibration_point_clicked: "_on_calibration_point_clicked"
     
   scatter_plot_widget:
-    selection_made: "_on_selection_made"
+    selection_made_with_method: "_on_selection_made"
     
   selection_panel:
     selection_deleted: "_on_panel_selection_deleted"

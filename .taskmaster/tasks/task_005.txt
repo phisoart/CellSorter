@@ -1,21 +1,11 @@
 # Task ID: 5
-# Title: Test Image Loading Without Display
-# Status: done
-# Dependencies: 4 (Not found)
-# Priority: high
-# Description: 디스플레이 없이 이미지 로딩 및 처리 테스트
+# Title: Selection Management Testing
+# Status: pending
+# Dependencies: 3 (Not found), 4 (Not found)
+# Priority: medium
+# Description: Test selection creation/modification and verify color assignment logic
 # Details:
-ImageHandler가 headless 모드에서 TIFF, JPG, PNG 파일을 로드하고 처리할 수 있는지 테스트합니다. 가상 렌더링과 메모리 관리도 검증합니다.
-
-✅ 완료된 작업 (2024-12-28):
-1. DEV 모드: tests/dev_mode/test_image_loading.py (10개 테스트 통과)
-2. DUAL 모드: tests/dual_mode/test_image_loading_sync.py (10개 테스트 통과)
-3. GUI 모드: tests/gui_mode/test_image_loading_production.py (11개 테스트 통과)
-
-총 31개 테스트 모두 통과하여 3모드 아키텍처 완전 검증 완료.
+Test selection creation/modification, verify color assignment logic, test well plate assignments, validate selection persistence, test multi-selection operations
 
 # Test Strategy:
-1. 다양한 포맷의 이미지 로드 테스트 ✅
-2. 가상 QPixmap 생성 및 변환 테스트 ✅
-3. 메모리 사용량 모니터링 ✅
-4. 대용량 이미지 처리 성능 테스트 ✅
+DEV Mode: programmatic selection operations, DUAL Mode: selection state consistency, GUI Mode: interactive selection testing

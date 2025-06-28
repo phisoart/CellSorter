@@ -1,14 +1,11 @@
 # Task ID: 11
-# Title: Test Session Save/Load in Both Modes
-# Status: done
-# Dependencies: 10 (Not found)
-# Priority: high
-# Description: 양쪽 모드에서 세션 저장/로드 기능 테스트
+# Title: Error Handling and Recovery
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Test error recovery in headless mode and verify error logging mechanisms
 # Details:
-SessionManager가 headless와 GUI 모드 모두에서 완전한 세션 상태를 저장하고 복원하는지 테스트합니다.
+Test error recovery in headless mode, verify error logging mechanisms, test user notification systems, validate data integrity on errors, test fallback operations
 
 # Test Strategy:
-1. Headless에서 세션 저장 후 GUI에서 로드 ✅
-2. GUI에서 세션 저장 후 Headless에서 로드 ✅
-3. 모든 상태 정보 보존 확인 ✅
-4. 버전 호환성 테스트 ✅
+DEV Mode: error simulation and recovery, DUAL Mode: error handling consistency, GUI Mode: user error experience

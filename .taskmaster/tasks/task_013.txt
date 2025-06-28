@@ -1,21 +1,11 @@
 # Task ID: 13
-# Title: Test Error Handling in Headless Mode
-# Status: done
-# Dependencies: 4 (Not found)
-# Priority: high
-# Description: Headless 모드에서 에러 처리 메커니즘 테스트
+# Title: UI Serialization Testing
+# Status: pending
+# Dependencies: 2 (Not found)
+# Priority: low
+# Description: Test widget to YAML conversion and verify round-trip editing
 # Details:
-에러가 발생했을 때 UI 대화상자 없이 적절한 로깅과 복구가 이루어지는지 테스트합니다.
-
-✅ 완료된 작업 (2024-12-28):
-1. DEV 모드: tests/dev_mode/test_error_handling.py (9개 테스트 통과)
-2. DUAL 모드: tests/dual_mode/test_error_handling_consistency.py (8개 테스트 통과)
-3. GUI 모드: tests/gui_mode/test_error_handling_production.py (10개 테스트 통과)
-
-총 27개 테스트 모두 통과하여 3모드 에러 처리 완전 검증 완료.
+Test widget to YAML conversion, verify round-trip editing, test schema validation, validate AI agent compatibility, test version control integration
 
 # Test Strategy:
-1. 의도적인 에러 발생 시나리오 테스트 ✅
-2. 로깅 출력 검증 ✅
-3. 데이터 무결성 확인 ✅
-4. 복구 메커니즘 테스트 ✅
+DEV Mode: serialization logic testing, DUAL Mode: serialization consistency, GUI Mode: UI-YAML synchronization

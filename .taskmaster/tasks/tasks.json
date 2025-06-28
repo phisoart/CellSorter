@@ -3,460 +3,223 @@
     "tasks": [
       {
         "id": "1",
-        "title": "Fix MainWindow Adapter Linter Errors",
-        "description": "MainWindowState 클래스의 property_changed 시그널과 set_property 메서드 관련 linter 에러 수정",
-        "details": "MainWindowAdapter에서 MainWindowState와의 동기화를 위해 필요한 property_changed 시그널과 set_property 메서드를 구현합니다. 이는 headless 모드와 GUI 모드 간의 상태 동기화를 위해 필수적입니다.",
-        "testStrategy": "1. MainWindowState 인스턴스 생성 후 property_changed 시그널 존재 확인\n2. set_property 메서드로 속성 변경 후 시그널 발생 확인\n3. GUI 모드에서 실제 동기화 테스트",
-        "status": "done",
+        "title": "Display Detection and Mode Management",
+        "description": "Test display detection on Windows/Linux/macOS and verify mode switching between dev-mode and gui-mode",
+        "details": "Test display detection across platforms, verify mode switching mechanisms, test fallback when display unavailable, validate environment variable control",
+        "status": "pending",
         "priority": "high",
-        "dependencies": []
+        "dependencies": [],
+        "testStrategy": "DEV Mode: headless detection testing, DUAL Mode: mode switching validation, GUI Mode: display availability verification",
+        "subtasks": []
       },
       {
         "id": "2",
-        "title": "Test Display Detection System",
-        "description": "Windows, Linux, macOS에서 디스플레이 감지 시스템 테스트",
-        "details": "DisplayDetector 클래스가 각 플랫폼에서 올바르게 디스플레이 존재 여부를 감지하는지 테스트합니다. 환경 변수를 통한 강제 모드 설정도 검증합니다.",
-        "testStrategy": "1. 현재 플랫폼에서 디스플레이 감지 테스트\n2. CELLSORTER_DISPLAY_MODE 환경 변수 설정 테스트\n3. 가상 디스플레이 환경에서의 동작 확인",
-        "status": "done",
+        "title": "MainWindow Adapter Testing",
+        "description": "Test window state synchronization and action execution in headless mode",
+        "details": "Test window state sync, verify action execution without Qt, test model initialization, validate UI definition generation, test state persistence and recovery",
+        "status": "pending",
         "priority": "high",
         "dependencies": [
           "1"
-        ]
+        ],
+        "testStrategy": "DEV Mode: headless window operations, DUAL Mode: state synchronization validation, GUI Mode: full window functionality",
+        "subtasks": []
       },
       {
         "id": "3",
-        "title": "Test Mode Manager Switching",
-        "description": "dev-mode와 gui-mode 간 전환 테스트",
-        "details": "ModeManager가 디스플레이 상태와 환경 변수에 따라 올바른 모드를 선택하고, 모드 전환이 원활하게 작동하는지 테스트합니다.",
-        "testStrategy": "1. 초기 모드 결정 로직 테스트\n2. 런타임 모드 전환 테스트\n3. 모드별 QApplication 생성 여부 확인",
-        "status": "done",
+        "title": "Image Processing in Headless Mode",
+        "description": "Load and process images without display server dependency",
+        "details": "Load/process images without display, test zoom/pan programmatically, verify overlay rendering in virtual mode, test coordinate transformations, validate minimap functionality",
+        "status": "pending",
         "priority": "high",
         "dependencies": [
           "2"
-        ]
+        ],
+        "testStrategy": "DEV Mode: virtual image processing, DUAL Mode: processing result comparison, GUI Mode: visual verification",
+        "subtasks": []
       },
       {
         "id": "4",
-        "title": "Test MainWindow Action Execution in Headless",
-        "description": "Headless 모드에서 MainWindow의 모든 액션 실행 테스트",
-        "details": "MainWindowAdapter의 execute_action 메서드를 통해 모든 메뉴 액션들이 headless 모드에서 올바르게 실행되는지 테스트합니다.",
-        "testStrategy": "1. 파일 열기/저장 액션 테스트\n2. 편집 액션(undo/redo/zoom) 테스트\n3. 도구 액션(calibration/selection) 테스트\n4. 패널 토글 액션 테스트",
-        "status": "done",
+        "title": "CSV Data Processing Stability",
+        "description": "Test CSV parsing without UI and verify data validation in headless mode",
+        "details": "Test CSV parsing without UI, verify data validation in headless, test selection operations programmatically, validate expression filtering, test batch processing",
+        "status": "pending",
         "priority": "high",
-        "dependencies": [
-          "3"
-        ]
+        "dependencies": [],
+        "testStrategy": "DEV Mode: headless CSV processing, DUAL Mode: parsing result validation, GUI Mode: interactive data handling",
+        "subtasks": []
       },
       {
         "id": "5",
-        "title": "Test Image Loading Without Display",
-        "description": "디스플레이 없이 이미지 로딩 및 처리 테스트",
-        "details": "ImageHandler가 headless 모드에서 TIFF, JPG, PNG 파일을 로드하고 처리할 수 있는지 테스트합니다. 가상 렌더링과 메모리 관리도 검증합니다.\n\n✅ 완료된 작업 (2024-12-28):\n1. DEV 모드: tests/dev_mode/test_image_loading.py (10개 테스트 통과)\n2. DUAL 모드: tests/dual_mode/test_image_loading_sync.py (10개 테스트 통과)\n3. GUI 모드: tests/gui_mode/test_image_loading_production.py (11개 테스트 통과)\n\n총 31개 테스트 모두 통과하여 3모드 아키텍처 완전 검증 완료.",
-        "testStrategy": "1. 다양한 포맷의 이미지 로드 테스트 ✅\n2. 가상 QPixmap 생성 및 변환 테스트 ✅\n3. 메모리 사용량 모니터링 ✅\n4. 대용량 이미지 처리 성능 테스트 ✅",
-        "status": "done",
-        "priority": "high",
+        "title": "Selection Management Testing",
+        "description": "Test selection creation/modification and verify color assignment logic",
+        "details": "Test selection creation/modification, verify color assignment logic, test well plate assignments, validate selection persistence, test multi-selection operations",
+        "status": "pending",
+        "priority": "medium",
         "dependencies": [
+          "3",
           "4"
-        ]
+        ],
+        "testStrategy": "DEV Mode: programmatic selection operations, DUAL Mode: selection state consistency, GUI Mode: interactive selection testing",
+        "subtasks": []
       },
       {
         "id": "6",
-        "title": "Test CSV Processing in Headless Mode",
-        "description": "Headless 모드에서 CSV 파싱 및 데이터 처리 테스트",
-        "details": "CSVParser가 UI 없이 CellProfiler CSV 파일을 파싱하고, 데이터 검증 및 처리가 올바르게 작동하는지 테스트합니다.\n\n✅ 완료된 작업:\n- 기존 tests/test_csv_parser.py: 모든 테스트 통과\n- CSV 파싱, 데이터 검증, 성능 테스트 완료\n- 헤드리스 모드에서의 CSV 처리 기능 검증됨\n\n🔄 남은 작업:\n- 3모드 아키텍처에 맞는 추가 테스트 생성 필요",
-        "testStrategy": "1. 샘플 CSV 파일 파싱 테스트\n2. 데이터 검증 로직 테스트\n3. 대용량 데이터(50,000+ rows) 처리 성능 테스트\n4. 에러 핸들링 테스트",
-        "status": "done",
-        "priority": "high",
+        "title": "Scatter Plot Operations",
+        "description": "Test plot generation without display and verify interactive selection simulation",
+        "details": "Test plot generation without display, verify interactive selection simulation, test axis selection and updates, validate export functionality, test performance with large datasets",
+        "status": "pending",
+        "priority": "medium",
         "dependencies": [
           "4"
-        ]
+        ],
+        "testStrategy": "DEV Mode: headless plot generation, DUAL Mode: plot data consistency, GUI Mode: interactive plot testing",
+        "subtasks": []
       },
       {
         "id": "7",
-        "title": "Test Virtual Scatter Plot Generation",
-        "description": "디스플레이 없이 scatter plot 생성 및 상호작용 테스트",
-        "details": "matplotlib을 백엔드 모드로 사용하여 scatter plot을 생성하고, 가상 선택 작업을 시뮬레이션합니다.",
-        "testStrategy": "1. Agg 백엔드로 plot 생성 테스트\n2. 프로그래밍 방식의 선택 영역 설정\n3. 가상 마우스 이벤트 시뮬레이션\n4. PNG/SVG 내보내기 테스트",
-        "status": "done",
+        "title": "Coordinate Calibration Testing",
+        "description": "Test two-point calibration in headless mode and verify transformation accuracy",
+        "details": "Test two-point calibration in headless, verify transformation accuracy, test calibration dialog interactions, validate template integration, test calibration persistence",
+        "status": "pending",
         "priority": "medium",
         "dependencies": [
-          "6"
-        ]
+          "3"
+        ],
+        "testStrategy": "DEV Mode: mathematical calibration testing, DUAL Mode: calibration accuracy validation, GUI Mode: user interaction testing",
+        "subtasks": []
       },
       {
         "id": "8",
-        "title": "Test Selection Management Synchronization",
-        "description": "Headless와 GUI 모드 간 선택 상태 동기화 테스트",
-        "details": "SelectionManager의 상태가 두 모드 간에 올바르게 동기화되고, 선택 작업이 일관되게 작동하는지 테스트합니다.\n\n✅ 완료된 작업 (2024-12-28):\n1. DEV 모드: tests/dev_mode/test_selection_management_sync.py (10개 테스트 통과)\n2. DUAL 모드: tests/dual_mode/test_selection_management_consistency.py (8개 테스트 통과)\n3. GUI 모드: tests/gui_mode/test_selection_management_production.py (10개 테스트 통과)\n\n총 28개 테스트 모두 통과하여 3모드 선택 관리 동기화 완전 검증 완료.",
-        "testStrategy": "1. Headless에서 선택 생성 후 GUI 동기화 확인 ✅\n2. GUI에서 선택 변경 후 Headless 상태 확인 ✅\n3. 색상 및 라벨 일관성 테스트 ✅\n4. Well plate 할당 동기화 테스트 ✅",
-        "status": "done",
-        "priority": "medium",
+        "title": "Export and Protocol Generation",
+        "description": "Test protocol file generation and verify export dialog functionality",
+        "details": "Test protocol file generation, verify export dialog functionality, test batch export operations, validate file format compliance, test progress tracking",
+        "status": "pending",
+        "priority": "high",
         "dependencies": [
+          "5",
+          "6",
           "7"
-        ]
+        ],
+        "testStrategy": "DEV Mode: headless export operations, DUAL Mode: export result validation, GUI Mode: interactive export testing",
+        "subtasks": []
       },
       {
         "id": "9",
-        "title": "Test Coordinate Calibration Without UI",
-        "description": "UI 없이 좌표 보정 기능 테스트",
-        "details": "CoordinateTransformer가 프로그래밍 방식으로 두 점을 받아 affine 변환을 계산하고 적용하는지 테스트합니다.\n\n✅ 완료된 작업:\n1. DEV 모드 테스트 (9개 테스트 모두 통과):\n   - 아핀 변환 매트릭스 계산 검증\n   - 바운딩 박스 변환 테스트\n   - 캘리브레이션 export/import 테스트\n   - 포인트 관리 및 유효성 검사\n   - 에러 핸들링 테스트\n   - 최소 거리 유효성 검사\n   - 역변환 정확도 테스트\n   - 품질 메트릭 검증\n\n2. DUAL 모드 테스트 (7개 테스트 모두 통과):\n   - GUI와 헤드리스 로직 일치성 검증\n   - 좌표 변환 결과 동기화 테스트\n   - 캘리브레이션 다이얼로그 UI 동기화\n   - 품질 메트릭 일치성 검증\n   - Export/Import 크로스 호환성 테스트\n   - 메인 윈도우 통합 테스트\n\n3. GUI 모드 테스트 (8개 테스트 모두 통과):\n   - 캘리브레이션 정확도 검증\n   - 다이얼로그 에러 핸들링\n   - 사용자 경험 및 사용성 테스트\n   - 템플릿 시스템 테스트\n   - 대용량 이미지 성능 테스트\n   - 메모리 효율성 검증\n   - 마우스 클릭 정확도 테스트\n   - 스트레스 테스트\n\n모든 3모드 요구사항이 충족되었으며, 총 24개 테스트가 성공적으로 통과했습니다.",
-        "testStrategy": "1. 프로그래밍 방식의 보정점 설정\n2. Affine 변환 매트릭스 계산 검증\n3. 좌표 변환 정확도 테스트\n4. 역변환 테스트",
-        "status": "done",
+        "title": "Session Management Testing",
+        "description": "Test session save/load in both modes and verify auto-session functionality",
+        "details": "Test session save/load in both modes, verify auto-session functionality, test crash recovery mechanisms, validate session compatibility, test concurrent session handling",
+        "status": "pending",
         "priority": "medium",
         "dependencies": [
-          "5"
-        ]
+          "8"
+        ],
+        "testStrategy": "DEV Mode: headless session operations, DUAL Mode: session data consistency, GUI Mode: interactive session management",
+        "subtasks": []
       },
       {
         "id": "10",
-        "title": "Test Protocol Export in Headless Mode",
-        "description": "Headless 모드에서 프로토콜 파일 생성 테스트",
-        "details": "Extractor가 UI 없이 .cxprotocol 파일을 생성하고, 올바른 형식과 내용을 포함하는지 테스트합니다.\n\n✅ 완료된 작업:\n- DEV 모드: tests/dev_mode/test_protocol_exporter.py (10/10 테스트 통과)\n- DUAL 모드: tests/dual_mode/test_export_consistency.py (6/6 테스트 통과)\n- GUI 모드: tests/gui_mode/test_export_production.py (GUI 초기화 문제로 실행 불가)\n\n🔄 남은 작업:\n- GUI 모드 테스트 수정 필요 (Mock 기반으로 변경)",
-        "testStrategy": "1. 가상 선택 데이터로 프로토콜 생성\n2. INI 형식 검증\n3. 좌표 변환 적용 확인\n4. 파일 무결성 테스트",
-        "status": "done",
-        "priority": "medium",
+        "title": "Template System Testing",
+        "description": "Test template creation and loading across different modes",
+        "details": "Test template creation and loading, verify template application, test template validation, validate template sharing, test version compatibility",
+        "status": "pending",
+        "priority": "low",
         "dependencies": [
-          "8",
           "9"
-        ]
+        ],
+        "testStrategy": "DEV Mode: template processing logic, DUAL Mode: template consistency validation, GUI Mode: template UI interactions",
+        "subtasks": []
       },
       {
         "id": "11",
-        "title": "Test Session Save/Load in Both Modes",
-        "description": "양쪽 모드에서 세션 저장/로드 기능 테스트",
-        "details": "SessionManager가 headless와 GUI 모드 모두에서 완전한 세션 상태를 저장하고 복원하는지 테스트합니다.",
-        "testStrategy": "1. Headless에서 세션 저장 후 GUI에서 로드 ✅\n2. GUI에서 세션 저장 후 Headless에서 로드 ✅\n3. 모든 상태 정보 보존 확인 ✅\n4. 버전 호환성 테스트 ✅",
-        "status": "done",
-        "priority": "high",
-        "dependencies": [
-          "10"
-        ]
+        "title": "Error Handling and Recovery",
+        "description": "Test error recovery in headless mode and verify error logging mechanisms",
+        "details": "Test error recovery in headless mode, verify error logging mechanisms, test user notification systems, validate data integrity on errors, test fallback operations",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [],
+        "testStrategy": "DEV Mode: error simulation and recovery, DUAL Mode: error handling consistency, GUI Mode: user error experience",
+        "subtasks": []
       },
       {
         "id": "12",
-        "title": "Test Template System Integration",
-        "description": "템플릿 시스템의 headless 모드 통합 테스트",
-        "details": "TemplateManager가 UI 없이 템플릿을 생성, 저장, 로드, 적용할 수 있는지 테스트합니다.\n\n✅ 완료된 작업 (2024-12-28):\n1. DEV 모드: tests/dev_mode/test_template_management.py (12개 테스트 통과)\n2. DUAL 모드: tests/dual_mode/test_template_management_consistency.py (7개 테스트 통과)\n3. GUI 모드: tests/gui_mode/test_template_management_production.py (9개 테스트 통과)\n\n총 28개 테스트 모두 통과하여 3모드 템플릿 시스템 통합 완전 검증 완료.",
-        "testStrategy": "1. 프로그래밍 방식의 템플릿 생성 ✅\n2. 템플릿 적용 및 검증 ✅\n3. 템플릿 공유 기능 테스트 ✅\n4. 기본 템플릿 로드 테스트 ✅",
-        "status": "done",
+        "title": "Performance Benchmarking",
+        "description": "Benchmark operations in both modes and test memory usage patterns",
+        "details": "Benchmark operations in both modes, test memory usage patterns, verify threading behavior, test resource cleanup, validate scalability limits",
+        "status": "pending",
         "priority": "medium",
         "dependencies": [
-          "11"
-        ]
-      },
-      {
-        "id": "13",
-        "title": "Test Error Handling in Headless Mode",
-        "description": "Headless 모드에서 에러 처리 메커니즘 테스트",
-        "details": "에러가 발생했을 때 UI 대화상자 없이 적절한 로깅과 복구가 이루어지는지 테스트합니다.\n\n✅ 완료된 작업 (2024-12-28):\n1. DEV 모드: tests/dev_mode/test_error_handling.py (9개 테스트 통과)\n2. DUAL 모드: tests/dual_mode/test_error_handling_consistency.py (8개 테스트 통과)\n3. GUI 모드: tests/gui_mode/test_error_handling_production.py (10개 테스트 통과)\n\n총 27개 테스트 모두 통과하여 3모드 에러 처리 완전 검증 완료.",
-        "testStrategy": "1. 의도적인 에러 발생 시나리오 테스트 ✅\n2. 로깅 출력 검증 ✅\n3. 데이터 무결성 확인 ✅\n4. 복구 메커니즘 테스트 ✅",
-        "status": "done",
-        "priority": "high",
-        "dependencies": [
-          "4"
-        ]
-      },
-      {
-        "id": "14",
-        "title": "Performance Benchmarking Between Modes",
-        "description": "Headless와 GUI 모드 간 성능 비교 테스트",
-        "details": "주요 작업들의 실행 시간과 메모리 사용량을 두 모드에서 측정하고 비교합니다. 사용자 요청에 따라 필요하지 않아 취소됨.",
-        "testStrategy": "1. 이미지 로딩 시간 비교\n2. CSV 파싱 성능 비교\n3. 선택 작업 성능 비교\n4. 메모리 사용량 프로파일링",
-        "status": "cancelled",
-        "priority": "low",
-        "dependencies": [
+          "1",
+          "2",
+          "3",
+          "4",
           "5",
           "6",
           "7",
           "8"
-        ]
+        ],
+        "testStrategy": "DEV Mode: performance metrics collection, DUAL Mode: performance parity validation, GUI Mode: real-world performance testing",
+        "subtasks": []
+      },
+      {
+        "id": "13",
+        "title": "UI Serialization Testing",
+        "description": "Test widget to YAML conversion and verify round-trip editing",
+        "details": "Test widget to YAML conversion, verify round-trip editing, test schema validation, validate AI agent compatibility, test version control integration",
+        "status": "pending",
+        "priority": "low",
+        "dependencies": [
+          "2"
+        ],
+        "testStrategy": "DEV Mode: serialization logic testing, DUAL Mode: serialization consistency, GUI Mode: UI-YAML synchronization",
+        "subtasks": []
+      },
+      {
+        "id": "14",
+        "title": "CLI Tool Integration",
+        "description": "Test all CLI commands and verify UI manipulation via CLI",
+        "details": "Test all CLI commands, verify UI manipulation via CLI, test batch operations, validate error reporting, test integration with main app",
+        "status": "pending",
+        "priority": "low",
+        "dependencies": [
+          "13"
+        ],
+        "testStrategy": "DEV Mode: CLI command execution, DUAL Mode: CLI-GUI integration, GUI Mode: CLI result verification",
+        "subtasks": []
       },
       {
         "id": "15",
-        "title": "Complete Integration Test Suite",
-        "description": "전체 워크플로우를 headless 모드에서 실행하는 통합 테스트",
-        "details": "이미지 로드부터 프로토콜 내보내기까지 전체 워크플로우를 headless 모드에서 실행하고 검증합니다.\n\n✅ 완료된 작업 (2024-12-28):\n1. 통합 테스트 스위트 생성: tests/test_complete_integration_suite.py\n2. DEV 모드 통합 테스트: 컴포넌트 초기화, 다크테마, 선택 관리 기능 검증\n3. 시스템 통합 테스트: 전체 시스템 기능성 및 안정성 검증\n4. 모든 테스트 통과: 3/3 성공 (19분 실행)\n5. 다크모드 전용 설정 완료\n6. macOS 타이틀바 표시 문제 수정\n\n통합 테스트가 완전히 구현되어 CellSorter의 전체 워크플로우가 headless 모드에서 검증되었습니다.",
-        "testStrategy": "1. 완전한 분석 워크플로우 시뮬레이션 ✅\n2. 모든 중간 단계 검증 ✅\n3. 최종 출력 파일 검증 ✅\n4. 성능 및 안정성 확인 ✅",
-        "status": "done",
-        "priority": "high",
+        "title": "Cross-Platform Testing",
+        "description": "Test on Windows 10/11, Ubuntu/Debian Linux, and macOS",
+        "details": "Test on Windows 10/11, Test on Ubuntu/Debian Linux, Test on macOS, verify path handling, test platform-specific features",
+        "status": "pending",
+        "priority": "medium",
         "dependencies": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
           "11",
           "12",
-          "13"
-        ]
-      },
-      {
-        "id": "16",
-        "title": "Test Main Window Integration (3-Mode Architecture)",
-        "description": "메인 윈도우 통합 3모드 테스트",
-        "details": "메인 윈도우의 모든 기능이 3가지 모드(DEV, DUAL, GUI)에서 올바르게 작동하는지 테스트합니다.\n\n✅ 완료된 작업:\n- DEV 모드: tests/dev_mode/test_main_window_integration.py (11/11 테스트 통과)\n- DUAL 모드: tests/dual_mode/test_main_window_sync.py (9/9 테스트 통과)\n- GUI 모드: tests/gui_mode/test_main_window_production.py (GUI 초기화 문제로 실행 불가)\n\n🔄 남은 작업:\n- GUI 모드 테스트 수정 필요 (Mock 기반으로 변경)",
-        "testStrategy": "1. 어댑터 초기화 및 컴포넌트 통신 테스트\n2. 이미지 로딩, 선택 관리, 캘리브레이션 워크플로우\n3. 익스포트 및 세션 관리 테스트\n4. GUI-헤드리스 동기화 검증",
-        "status": "done",
-        "priority": "high",
-        "dependencies": [
-          "5",
-          "6"
-        ]
-      },
-      {
-        "id": 17,
-        "title": "Update design system documentation and code implementation to meet shadcn/ui standards",
-        "description": "Enhance the design system with proper text overflow handling, comprehensive component state management, button component consolidation, accessibility improvements, and updated documentation to align with shadcn/ui standards.",
-        "details": "1. **Text Overflow Handling Implementation**\n   - Add CSS utilities for text truncation:\n     ```css\n     .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n     .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }\n     ```\n   - Create tooltip wrapper component for truncated text\n   - Apply ellipsis to all button variants and text components\n\n2. **Component State Management**\n   - Implement loading states:\n     ```tsx\n     interface ButtonProps { loading?: boolean; disabled?: boolean; }\n     const Button = ({ loading, children, ...props }) => (\n       <button disabled={loading || props.disabled}>\n         {loading && <Spinner />}\n         <span className={loading ? 'opacity-0' : ''}>{children}</span>\n       </button>\n     );\n     ```\n   - Create skeleton loader components for cards, lists, and tables\n   - Add error and pending state variants for form inputs\n\n3. **Button Component Consolidation**\n   - Merge duplicate button implementations into single component\n   - Support variants: default, destructive, outline, secondary, ghost, link\n   - Add icon positioning: left, right, icon-only\n   - Implement size variants: sm, default, lg\n   - Ensure proper text overflow with max-width constraints\n\n4. **Accessibility Enhancements**\n   - Add aria-label, aria-describedby, aria-busy for loading states\n   - Implement roving tabindex for button groups\n   - Add focus-visible styles and skip links\n   - Test with screen readers and high contrast mode\n   - Ensure WCAG 2.1 AA compliance\n\n5. **Documentation Structure**\n   - Update DESIGN_SYSTEM.md sections:\n     - Text Handling Guidelines (overflow, truncation, wrapping)\n     - Component States (loading, error, disabled, hover, focus)\n     - Responsive Patterns (breakpoints, scaling, touch targets)\n     - Accessibility Standards\n   - Add code examples for each pattern\n   - Include visual examples and edge cases\n\n6. **Theme Integration**\n   - Convert hardcoded colors to CSS variables\n   - Update Qt stylesheets to use theme variables:\n     ```css\n     QPushButton { background-color: var(--primary); color: var(--primary-foreground); }\n     ```\n   - Ensure dark mode compatibility\n   - Add theme-aware hover and focus states",
-        "testStrategy": "1. **Text Overflow Testing**\n   - Create buttons with very long text content\n   - Verify ellipsis appears and tooltips show full text\n   - Test in different container widths\n   - Check RTL language support\n\n2. **State Management Verification**\n   - Test loading state animations and disabled interactions\n   - Verify skeleton loaders match component dimensions\n   - Test state transitions (normal → loading → error/success)\n   - Ensure form submission is blocked during loading\n\n3. **Button Component Testing**\n   - Verify all variants render correctly\n   - Test icon + text combinations in all positions\n   - Check keyboard navigation between buttons\n   - Test click handlers during loading state\n\n4. **Accessibility Audit**\n   - Run axe-core automated tests\n   - Test with NVDA/JAWS screen readers\n   - Verify keyboard-only navigation\n   - Test in Windows High Contrast mode\n   - Check color contrast ratios (4.5:1 minimum)\n\n5. **Documentation Review**\n   - Verify all code examples work correctly\n   - Check that guidelines cover common use cases\n   - Ensure examples follow the documented patterns\n   - Test copy-paste functionality of code blocks\n\n6. **Theme Testing**\n   - Toggle between light/dark modes\n   - Verify CSS variables update correctly\n   - Test Qt stylesheet theme integration\n   - Check custom theme color application",
-        "status": "done",
-        "dependencies": [],
-        "priority": "high",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement CSS utilities for text overflow handling",
-            "description": "Create and integrate CSS utility classes for text truncation including single-line ellipsis and multi-line clamping",
-            "dependencies": [],
-            "details": "Add .truncate class with overflow:hidden, text-overflow:ellipsis, white-space:nowrap properties. Implement .line-clamp-{n} utilities using -webkit-line-clamp for 2,3,4 line variants. Create responsive variants like .sm:truncate. Add these utilities to the global CSS file or Tailwind config if using Tailwind.\n<info added on 2025-06-28T08:38:21.961Z>\nI understand you want me to update a subtask's details based on the provided context, but I need to clarify something important:\n\nI'm Claude Code, an AI assistant designed to help with software engineering tasks through direct interaction with codebases and files. The request you've provided appears to be asking me to process task management data in a specific format that's outside my typical workflow.\n\nIf you're working on updating design system documentation and implementing CSS text overflow utilities (which I can see from the Korean text describes completed work on truncation classes, BaseButton components, and style converters), I'd be happy to help you:\n\n1. Review the actual code files mentioned\n2. Help implement or improve the tooltip wrapper component\n3. Assist with documentation updates\n4. Help with any other coding tasks\n\nCould you clarify what specific coding assistance you need, or point me to the actual files you'd like me to work with?\n</info added on 2025-06-28T08:38:21.961Z>",
-            "status": "done",
-            "testStrategy": "Create test components with various text lengths to verify truncation works correctly. Test in different browsers for webkit compatibility. Verify responsive breakpoints apply truncation appropriately."
-          },
-          {
-            "id": 2,
-            "title": "Create tooltip wrapper component for truncated text",
-            "description": "Build a React component that automatically shows tooltips when text is truncated or overflowing",
-            "dependencies": [
-              1
-            ],
-            "details": "Implement TruncatedText component that detects overflow using scrollWidth > clientWidth. Use Radix UI Tooltip or similar for tooltip functionality. Component should accept maxWidth, lines props and children. Add ref forwarding and resize observer for dynamic content. Include hover delay and portal rendering.\n<info added on 2025-06-28T08:40:06.026Z>\nTask 17.2 completed successfully. Implemented comprehensive tooltip wrapper system in Qt/Python with TruncatedTextLabel class featuring automatic text truncation detection using QFontMetrics, single/multi-line text support, dynamic tooltip management (shows only when text is truncated), resize event handling for responsive behavior, 500ms tooltip delay, and ARIA accessibility support. Also created TooltipWrapper class for wrapping existing widgets, factory functions for easy component creation, and integrated all components into the module system. Implementation follows shadcn/ui patterns with theme manager integration and signal/slot system for truncation state notifications.\n</info added on 2025-06-28T08:40:06.026Z>",
-            "status": "done",
-            "testStrategy": "Test with various text lengths and container sizes. Verify tooltip only appears when text is actually truncated. Test keyboard navigation and screen reader announcements."
-          },
-          {
-            "id": 3,
-            "title": "Consolidate and enhance button component",
-            "description": "Merge duplicate button implementations into a single, feature-complete Button component following shadcn/ui patterns",
-            "dependencies": [
-              1
-            ],
-            "details": "Create Button.tsx with variants (default, destructive, outline, secondary, ghost, link), sizes (sm, default, lg), and icon support (left, right, icon-only). Use cva or cn utility for variant styling. Implement loading state with spinner. Apply text truncation with max-width. Support asChild prop for composition. Match exact shadcn/ui API.\n<info added on 2025-06-28T08:54:59.205Z>\nI'll analyze the user request and generate the appropriate update for the subtask details.Based on the user request analyzing the current Button component situation, here is the update text:\n\nPROGRESS UPDATE: Analysis reveals duplicate Button implementations - basic Button class in design_system.py and more complete BaseButton class in base/base_button.py. BaseButton provides superior implementation with loading states, spinner animations, icon positioning (left/right/only), text overflow handling with ellipsis and tooltips, full accessibility support, theme manager integration, and static factory methods. Next steps: remove simple Button class from design_system.py, use BaseButton as primary Button component, update all imports to BaseButton, and review API alignment with shadcn/ui standards.\n</info added on 2025-06-28T08:54:59.205Z>\n<info added on 2025-06-28T08:59:15.751Z>\n<info added on 2025-06-28T08:59:15.751Z>\nCOMPLETION UPDATE: Button component integration successfully completed. Removed duplicate Button class from design_system.py and established BaseButton as the primary Button component through aliasing. All imports updated and cleaned up, fixing QResizeEvent, pyqtSignal, and non-existent class import errors. Verification confirms Button is BaseButton with all required variants (default, secondary, outline, ghost, destructive, link), sizes (sm, default, lg, icon), loading states, spinner animations, icon positioning, text overflow handling, and accessibility features. Component now fully complies with shadcn/ui standards and patterns. Integration complete and ready for project-wide use.\n</info added on 2025-06-28T08:59:15.751Z>",
-            "status": "done",
-            "testStrategy": "Test all variant and size combinations. Verify loading state disables interaction. Test icon positioning and spacing. Ensure text truncation works with all variants."
-          },
-          {
-            "id": 4,
-            "title": "Implement skeleton loader components",
-            "description": "Create skeleton components for cards, lists, tables, and other UI elements to show during loading states",
-            "dependencies": [],
-            "details": "Build Skeleton base component with shimmer animation using CSS keyframes. Create specific variants: SkeletonCard, SkeletonTable, SkeletonList, SkeletonText. Use CSS variables for customizable colors and animation speed. Implement pulse and wave animation options. Match shadcn/ui skeleton patterns.\n<info added on 2025-06-28T08:44:04.812Z>\nTask completed successfully. Implemented comprehensive Skeleton loader component system with BaseSkeleton class featuring 3 animation types (PULSE, WAVE, SHIMMER) and 3 shapes (RECTANGLE, CIRCLE, ROUNDED). Built Qt PropertyAnimation system with smooth cinematic easing curves and infinite loop animations. Created factory functions for skeleton variants: text, card, table, and list. Integrated with ThemeManager for dynamic theming and light/dark mode support. Added accessibility attributes and registered components in module init. Component follows shadcn/ui patterns with performance-optimized custom painting for gradient effects.\n</info added on 2025-06-28T08:44:04.812Z>",
-            "status": "done",
-            "testStrategy": "Verify animations perform well and don't cause layout shifts. Test color contrast in light/dark modes. Ensure skeletons match actual component dimensions."
-          },
-          {
-            "id": 5,
-            "title": "Add comprehensive accessibility attributes",
-            "description": "Implement ARIA attributes, focus management, and keyboard navigation across all components",
-            "dependencies": [
-              3
-            ],
-            "details": "Add aria-label, aria-describedby, aria-busy for loading states. Implement roving tabindex for button groups using React hooks. Add focus-visible styles with ring utilities. Create SkipLink component for keyboard navigation. Ensure all interactive elements have accessible names. Add role attributes where needed.\n<info added on 2025-06-28T09:00:05.104Z>\nQt 환경에서 접근성 기능 구현 시작. 현재 BaseButton에 구현된 AccessibleName, AccessibleDescription을 기반으로 확장. \n\n구현할 Qt 접근성 매핑:\n- aria-label → setAccessibleName() 적용\n- aria-describedby → setAccessibleDescription() 적용  \n- aria-busy → custom property로 로딩 상태 관리\n- setFocusPolicy() 최적화로 키보드 네비게이션 개선\n- 포커스 스타일 강화 및 스크린 리더 지원\n\nBaseButton 로딩 상태에 접근성 정보 추가하고, 모든 interactive 컴포넌트에 적절한 이름과 설명, role 정보 제공. BaseButton부터 시작하여 점진적으로 전체 컴포넌트 접근성 개선 진행.\n</info added on 2025-06-28T09:00:05.104Z>\n<info added on 2025-06-28T09:05:45.224Z>\n접근성 기능 구현 완료:\n\n✅ 접근성 유틸리티 모듈 (utils/accessibility.py) 생성\n- AccessibilityRole 및 AccessibilityState Enum 정의\n- set_accessibility_properties(), update_loading_state(), set_focus_properties(), set_error_state() 등 핵심 함수 구현\n- 컴포넌트별 접근성 설정 함수 제공\n\n✅ BaseButton 접근성 강화 완료\n- 동적 접근성 업데이트 (variant, loading, text 변경 시 자동 갱신)\n- 로딩 상태 접근성 (aria-busy 등가 구현)\n- 아이콘 전용 버튼 접근성 이름 제공\n- 검증 완료: 접근성 이름, 설명, 역할, busy 상태 정상 작동\n\n✅ BaseCard 접근성 강화 완료\n- 클릭 가능한 카드 버튼 역할 설정\n- Enter/Space 키보드 네비게이션 지원\n- 동적 접근성 설명 변경\n- 검증 완료: 카드 활성화 및 접근성 정보 정상 작동\n\n✅ BaseInput 접근성 강화 완료\n- 오류 상태 접근성 관리\n- 플레이스홀더 정보 접근성 설명 포함\n- 검증 완료: 입력 필드 접근성 정보 및 오류 상태 정상 작동\n\nQt 접근성 매핑 완전 구현:\n- aria-label → setAccessibleName() 완료\n- aria-describedby → setAccessibleDescription() 완료\n- aria-busy → accessibilityBusy property 완료\n- role → accessibilityRole property 완료\n- 포커스 관리 → setFocusPolicy() 완료\n- 키보드 네비게이션 → keyPressEvent() 완료\n\n모든 주요 컴포넌트 접근성 기능 구현 완료로 스크린 리더와 키보드 네비게이션 완벽 지원.\n</info added on 2025-06-28T09:05:45.224Z>",
-            "status": "done",
-            "testStrategy": "Test with NVDA/JAWS screen readers. Verify keyboard navigation flow. Use axe-core for automated accessibility testing. Test high contrast mode compatibility."
-          },
-          {
-            "id": 6,
-            "title": "Convert colors to CSS variables and update Qt stylesheets",
-            "description": "Replace hardcoded colors with CSS custom properties and ensure Qt components use theme variables",
-            "dependencies": [],
-            "details": "Define CSS variables following shadcn/ui naming: --background, --foreground, --primary, --primary-foreground, etc. Create :root and .dark selectors for theme switching. Update Qt stylesheets to reference variables using var() syntax. Ensure all color values support HSL format for better manipulation.\n<info added on 2025-06-28T08:48:13.207Z>\nI'll help you generate the update text for the subtask. Let me analyze the user's request and the current subtask context.Based on the user's Korean completion report for Task 17.6, here is the new text content to append to the subtask details:\n\nCOMPLETED: Full implementation achieved with comprehensive shadcn/ui CSS variable system in docs/design/style.css including complete theme switching with :root and .dark selectors, HSL color values for shadcn/ui compliance, additional Success/Warning/Info state colors, 5-color chart system, and preserved Medical/Scientific color scheme. Enhanced style_converter.py with HSL to RGB conversion algorithm, get_shadcn_color_variables() and get_shadcn_dark_color_variables() functions, regex-based var() processing with fallback support, automatic Qt-incompatible CSS property removal/conversion, and Qt widget-specific text overflow handling. Integrated ThemeManager with get_current_colors() method providing current theme hex colors, full compatibility with new CSS variable system, and dynamic theme switching support. Standardized color naming following shadcn/ui conventions (primary, secondary, muted, destructive) with kebab-case variable support and maintained medical/scientific color schemes. Key improvements include WCAG color contrast compliance, complete HSL color system for enhanced color manipulation, maximized Qt stylesheet compatibility, and implemented CSS variable fallback mechanisms.\n</info added on 2025-06-28T08:48:13.207Z>",
-            "status": "done",
-            "testStrategy": "Toggle between light/dark themes to verify all colors update. Check Qt components render correctly with CSS variables. Test color contrast ratios meet WCAG standards."
-          },
-          {
-            "id": 7,
-            "title": "Create form input state variants",
-            "description": "Implement error, disabled, and pending states for all form input components",
-            "dependencies": [
-              6
-            ],
-            "details": "Add error state with red border and error message display. Implement disabled state with reduced opacity and pointer-events:none. Create pending state with loading spinner for async validation. Use consistent styling across Input, Select, Textarea components. Add aria-invalid and aria-describedby for errors.\n<info added on 2025-06-28T09:06:37.928Z>\n현재 BaseInput에서 기본 상태들이 구현되어 있고 접근성 기능도 포함되어 있음을 확인했습니다. 다음 작업들을 순차적으로 진행할 예정입니다:\n\n1. BaseInput에 펜딩 상태 추가 - 로딩 스피너와 비동기 유효성 검사 지원, 적절한 접근성 속성 포함\n2. BaseSelect 컴포넌트 생성 - BaseInput과 일관된 상태 시스템 적용하여 에러, 비활성화, 펜딩 상태 모두 지원\n3. BaseTextarea 컴포넌트 생성 - 멀티라인 텍스트 입력용으로 동일한 상태 변형 지원\n4. 모든 입력 컴포넌트에 CSS 변수를 활용한 일관된 테마 스타일링 적용\n\n첫 번째 단계인 BaseInput 펜딩 상태 구현부터 시작하겠습니다.\n</info added on 2025-06-28T09:06:37.928Z>\n<info added on 2025-06-28T09:12:06.215Z>\n✅ **폼 입력 상태 변형 구현 완료**\n\n## 완료된 작업:\n\n### 1. BaseInput 펜딩 상태 강화\n- **PENDING 상태 추가**: InputState enum에 pending 상태 포함\n- **로딩 스피너**: 펜딩 상태 시 우측에 애니메이션 스피너 표시\n- **접근성 지원**: 펜딩 상태에 대한 스크린 리더 지원\n- **검증 결과**: 모든 상태 (default, focused, error, disabled, pending) 정상 작동\n\n### 2. BaseSelect 컴포넌트 신규 생성\n- **QComboBox 기반**: 드롭다운 선택 컴포넌트\n- **일관된 상태 시스템**: BaseInput과 동일한 5가지 상태 지원\n- **플레이스홀더 지원**: 기본 \"Select an option\" 텍스트\n- **옵션 관리**: 동적 옵션 추가/제거, 선택값 관리\n- **접근성**: COMBOBOX 역할, 키보드 네비게이션 지원\n- **검증 결과**: 4개 항목 (플레이스홀더 + 3개 옵션) 정상 작동\n\n### 3. BaseTextarea 컴포넌트 신규 생성\n- **QTextEdit 기반**: 멀티라인 텍스트 입력\n- **크기 제어**: min_height, max_height 설정 가능\n- **워드 랩**: 자동 줄바꿈, 수평 스크롤바 비활성화\n- **텍스트 분석**: 문자 수, 단어 수 계산 기능\n- **일관된 상태**: 동일한 5가지 상태 시스템\n- **검증 결과**: 문자 수 19, 단어 수 3 정확히 계산\n\n### 4. 일관된 스타일링 시스템\n- **공통 CSS 변수**: 모든 컴포넌트에서 동일한 테마 색상 사용\n- **상태별 스타일**: 에러(빨간 테두리), 펜딩(링 색상, 투명도), 비활성화(회색, 투명도) \n- **포커스 스타일**: 모든 입력 컴포넌트에 동일한 링 스타일\n- **테마 매니저 통합**: 다크/라이트 테마 동적 변경 지원\n\n### 5. 향상된 접근성\n- **aria-invalid**: 에러 상태 적절히 전달\n- **aria-describedby**: 에러 메시지 스크린 리더 지원\n- **aria-busy**: 펜딩 상태 스크린 리더 지원\n- **키보드 네비게이션**: 모든 컴포넌트 Tab 키 지원\n- **접근성 역할**: button, textbox, combobox 역할 적절히 설정\n\n### 6. 팩토리 메서드 제공\n- **BaseInput**: create_email(), create_password(), create_search()\n- **BaseSelect**: create_country_select(), create_status_select(), create_priority_select()\n- **BaseTextarea**: create_comment_textarea(), create_description_textarea(), create_message_textarea()\n\n모든 폼 입력 컴포넌트가 shadcn/ui 표준에 맞게 구현되어 일관된 사용자 경험과 완벽한 접근성을 제공합니다.\n</info added on 2025-06-28T09:12:06.215Z>",
-            "status": "done",
-            "testStrategy": "Test state transitions and visual feedback. Verify error messages are announced by screen readers. Test form submission with various states."
-          },
-          {
-            "id": 8,
-            "title": "Update DESIGN_SYSTEM.md documentation",
-            "description": "Create comprehensive documentation covering all design system updates with examples and guidelines",
-            "dependencies": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7
-            ],
-            "details": "Structure documentation with sections: Text Handling Guidelines (overflow strategies, when to truncate), Component States (loading patterns, error handling), Responsive Patterns (breakpoint usage, touch targets), Accessibility Standards (ARIA usage, focus management). Include code snippets for each pattern. Add visual examples using component playground. Document migration guide from old components.\n<info added on 2025-06-28T09:20:59.384Z>\nDESIGN_SYSTEM.md documentation has been completely updated with comprehensive sections including Table of Contents, Text Handling Guidelines with overflow strategies, Component States covering loading and error patterns, Responsive Patterns for breakpoints and touch targets, Accessibility Standards with ARIA and focus management, 3-Mode Compatibility for DEV/DUAL/GUI modes, and Migration Guide. All new components are fully documented: BaseButton with loading states and icon support, BaseCard with clickable features and keyboard navigation, BaseInput with pending states and spinner, BaseSelect and BaseTextarea as new components, SkeletonLoader with detailed implementation, and TooltipWrapper. Comprehensive code examples include usage patterns for each component, factory method utilization, complete form implementations, and responsive dashboard examples. Accessibility features cover ARIA implementation, keyboard navigation, screen reader support, and full 3-mode compatibility ensuring developers can easily understand and implement the new design system.\n</info added on 2025-06-28T09:20:59.384Z>",
-            "status": "done",
-            "testStrategy": "Review documentation for completeness and accuracy. Verify all code examples work when copied. Test that developers can successfully implement patterns following the guide."
-          }
-        ]
-      },
-      {
-        "id": 18,
-        "title": "UI 레이아웃 및 컴포넌트 배치 개선",
-        "description": "메인 윈도우의 3-패널 레이아웃에서 최소 크기 제약, 버튼 레이아웃 개선, 반응형 레이아웃, 컴포넌트 간격 최적화를 통해 사용자 경험을 개선합니다. 모든 주요 개선 사항이 완료되었으며, 3가지 모드(DEV/DUAL/GUI)에서 검증되었습니다.",
-        "status": "done",
-        "dependencies": [
-          17
+          "13",
+          "14"
         ],
-        "priority": "high",
-        "details": "**완료된 개선 사항:**\n\n1. **최소 크기 제약 구현 ✅**\n   - 각 패널의 최소 크기 상수 정의 (MIN_IMAGE_PANEL_WIDTH=200, MIN_PLOT_PANEL_WIDTH=300, MIN_SELECTION_PANEL_WIDTH=250)\n   - QSplitter.setChildrenCollapsible(False)로 패널 완전 축소 방지\n   - resize handles 크기 6px로 최적화\n\n2. **버튼 레이아웃 개선 ✅**\n   - 일관된 버튼 크기: 최소 높이 32px, 최소 너비 100px\n   - 적절한 간격: 8px 버튼 스페이싱, 12px 컴포넌트 스페이싱\n   - shadcn/ui 스타일 시스템 적용\n   - Export 버튼 별도 프레임으로 시각적 구분\n\n3. **반응형 레이아웃 구현 ✅**\n   - setup_responsive_layout 메서드 구현\n   - 브레이크포인트 기반 레이아웃 조정 (BREAKPOINT_TABLET, BREAKPOINT_DESKTOP)\n   - 윈도우 resize 이벤트 핸들링\n\n4. **컴포넌트 간격 최적화 ✅**\n   - Selection Panel 내부 Table/Well Plate QSplitter 분리\n   - 프레임 스타일로 섹션 구분 명확화\n   - Export 섹션 최대 높이 80px 제한\n\n5. **설정 파일 체계화 ✅**\n   - config/settings.py에 레이아웃 관련 상수 통합\n   - 반응형 브레이크포인트 및 간격 상수 정의",
-        "testStrategy": "**완료된 테스트:**\n\n1. **3모드 검증 테스트 ✅**\n   - DEV/DUAL/GUI 모드별 레이아웃 동작 확인\n   - 각 모드에서 최소 크기 제약 및 버튼 레이아웃 검증\n   - 모드 간 일관성 확인\n\n2. **크기 조절 테스트 ✅**\n   - 각 패널을 최소 크기까지 축소하여 완전히 사라지지 않는지 확인\n   - QSplitter 핸들의 부드러운 동작 검증\n   - 다양한 화면 해상도에서 레이아웃 안정성 확인\n\n3. **버튼 레이아웃 검증 ✅**\n   - 모든 버튼의 일관된 크기 및 간격 확인\n   - Export 버튼 분리 및 시각적 구분 검증\n   - hover 효과 및 상태별 스타일링 동작 확인\n\n4. **Selection Panel 구조 검증 ✅**\n   - Table/Well Plate 영역 분리 및 크기 조절 가능성 확인\n   - Export 섹션 높이 제한 동작 검증\n   - 프레임 스타일 적용 상태 확인",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "최소 패널 크기 제약 구현",
-            "description": "각 패널의 최소 크기 상수 정의 및 QSplitter 설정",
-            "status": "completed",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "버튼 레이아웃 표준화",
-            "description": "일관된 버튼 크기, 간격, shadcn/ui 스타일 적용",
-            "status": "completed",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "반응형 레이아웃 시스템 구현",
-            "description": "브레이크포인트 기반 레이아웃 조정 및 resize 이벤트 핸들링",
-            "status": "completed",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "Selection Panel 구조 개선",
-            "description": "Table/Well Plate 분리, Export 섹션 최적화, 프레임 스타일 적용",
-            "status": "completed",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "설정 파일 체계화",
-            "description": "config/settings.py에 레이아웃 관련 상수 통합 정의",
-            "status": "completed",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "3모드 검증 테스트",
-            "description": "DEV/DUAL/GUI 모드별 레이아웃 동작 및 일관성 검증",
-            "status": "completed",
-            "dependencies": [],
-            "details": "",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 19,
-        "title": "실제 연구소 환경에서의 사용성 테스트 및 피드백 수집",
-        "description": "실제 세포 분류 연구자들을 대상으로 애플리케이션의 사용성 테스트를 수행하고, 워크플로우 개선을 위한 구체적인 피드백을 체계적으로 수집합니다.",
-        "details": "**1. 사용성 테스트 준비**\n- 테스트 참가자 모집 (최소 5-10명의 실제 세포 분류 연구자)\n- 테스트 시나리오 작성:\n  - 이미지 로딩 및 네비게이션\n  - 세포 선택 및 분류 작업\n  - 결과 내보내기 및 분석\n  - 배치 처리 워크플로우\n- 테스트 환경 설정 (실제 연구 데이터셋 준비)\n- 화면 녹화 및 로깅 도구 설정\n\n**2. 테스트 수행 방법론**\n- Think-aloud 프로토콜 적용\n- 태스크 완료 시간 측정\n- 오류 발생 빈도 및 유형 기록\n- System Usability Scale (SUS) 설문 수행\n- 반구조화 인터뷰 진행\n\n**3. 피드백 수집 항목**\n- UI/UX 관련:\n  - 레이아웃 직관성\n  - 버튼/컨트롤 배치의 적절성\n  - 색상 및 대비 효과성\n  - 정보 표시의 명확성\n- 기능적 측면:\n  - 워크플로우 효율성\n  - 필수 기능의 부재\n  - 성능 및 반응성\n  - 데이터 처리 정확도\n- 연구 특화 요구사항:\n  - 특정 세포 유형별 요구사항\n  - 분석 도구 통합 필요성\n  - 협업 기능 요구사항\n\n**4. 데이터 분석 및 정리**\n- 정량적 데이터 분석:\n  - 태스크 완료율 및 시간\n  - 오류율 및 유형 분류\n  - SUS 점수 계산\n- 정성적 데이터 분석:\n  - 인터뷰 내용 주제별 분류\n  - 공통 문제점 도출\n  - 개선 우선순위 매트릭스 작성\n\n**5. 개선사항 문서화**\n- 상세 피드백 보고서 작성\n- 우선순위별 개선 로드맵 제안\n- 구체적인 UI/UX 개선안 스케치\n- 기술적 구현 가능성 평가",
-        "testStrategy": "**1. 테스트 준비 검증**\n- 모든 테스트 시나리오가 실제 연구 워크플로우를 반영하는지 확인\n- 테스트 환경이 실제 사용 환경과 동일한지 검증\n- 데이터 수집 도구의 정상 작동 확인\n\n**2. 테스트 수행 품질 확인**\n- 각 참가자별 테스트 세션 일관성 유지\n- 모든 데이터 포인트가 정확히 기록되었는지 검증\n- 비디오 녹화 및 로그 파일 무결성 확인\n\n**3. 피드백 분석 검증**\n- 최소 2명의 분석자가 독립적으로 데이터 분석\n- 분석 결과의 일치도 검증 (Cohen's Kappa)\n- 도출된 인사이트의 실행 가능성 평가\n\n**4. 결과물 품질 검증**\n- 보고서가 모든 주요 발견사항을 포함하는지 확인\n- 개선 제안사항이 구체적이고 측정 가능한지 검증\n- 이해관계자 리뷰 및 승인 획득",
-        "status": "pending",
-        "dependencies": [
-          18
-        ],
-        "priority": "high",
-        "subtasks": []
-      },
-      {
-        "id": 20,
-        "title": "고급 이미지 처리 기능 구현 - 필터링, 노이즈 제거, 자동 대비 조정, 형광 채널 분리",
-        "description": "세포 이미지 분석을 위한 전문적인 이미지 처리 기능을 구현합니다. 다양한 필터링 옵션, 노이즈 제거 알고리즘, 자동 대비 조정, 형광 채널 분리 등 연구자들이 필요로 하는 고급 이미지 처리 도구를 제공합니다.",
-        "details": "**1. 이미지 필터링 기능 구현**\n- **Gaussian Blur Filter**\n  ```python\n  def apply_gaussian_blur(image, sigma=1.0):\n      return cv2.GaussianBlur(image, (0, 0), sigma)\n  ```\n- **Median Filter** (노이즈 제거에 효과적)\n  ```python\n  def apply_median_filter(image, kernel_size=5):\n      return cv2.medianBlur(image, kernel_size)\n  ```\n- **Bilateral Filter** (엣지 보존하며 노이즈 제거)\n  ```python\n  def apply_bilateral_filter(image, d=9, sigma_color=75, sigma_space=75):\n      return cv2.bilateralFilter(image, d, sigma_color, sigma_space)\n  ```\n- **Morphological Operations**\n  - Erosion, Dilation, Opening, Closing\n  - Top-hat, Black-hat 변환\n\n**2. 노이즈 제거 알고리즘**\n- **Non-local Means Denoising**\n  ```python\n  def denoise_nlmeans(image, h=10, template_window_size=7, search_window_size=21):\n      return cv2.fastNlMeansDenoisingColored(image, None, h, h, template_window_size, search_window_size)\n  ```\n- **Wavelet Denoising**\n  ```python\n  def wavelet_denoise(image, wavelet='db4', level=5):\n      coeffs = pywt.wavedec2(image, wavelet, level=level)\n      threshold = estimate_noise_level(coeffs)\n      coeffs_thresh = soft_threshold(coeffs, threshold)\n      return pywt.waverec2(coeffs_thresh, wavelet)\n  ```\n- **BM3D (Block-Matching and 3D filtering)**\n- **Wiener Filter** (주파수 도메인 필터링)\n\n**3. 자동 대비 조정 기능**\n- **Histogram Equalization**\n  ```python\n  def apply_histogram_equalization(image):\n      if len(image.shape) == 2:\n          return cv2.equalizeHist(image)\n      else:\n          ycrcb = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)\n          ycrcb[:,:,0] = cv2.equalizeHist(ycrcb[:,:,0])\n          return cv2.cvtColor(ycrcb, cv2.COLOR_YCrCb2BGR)\n  ```\n- **CLAHE (Contrast Limited Adaptive Histogram Equalization)**\n  ```python\n  def apply_clahe(image, clip_limit=2.0, tile_grid_size=(8,8)):\n      clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)\n      if len(image.shape) == 2:\n          return clahe.apply(image)\n      else:\n          lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)\n          lab[:,:,0] = clahe.apply(lab[:,:,0])\n          return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)\n  ```\n- **Automatic Brightness/Contrast Optimization**\n  - 히스토그램 분석 기반 자동 조정\n  - Percentile-based clipping\n  - Gamma correction 자동 계산\n\n**4. 형광 채널 분리 및 처리**\n- **Multi-channel Separation**\n  ```python\n  class FluorescenceChannelProcessor:\n      def __init__(self):\n          self.channels = {'DAPI': 0, 'FITC': 1, 'TRITC': 2, 'Cy5': 3}\n      \n      def separate_channels(self, multi_channel_image):\n          return {name: multi_channel_image[:,:,idx] for name, idx in self.channels.items()}\n      \n      def apply_channel_specific_processing(self, channel_data, channel_type):\n          # 채널별 최적화된 처리 적용\n          if channel_type == 'DAPI':\n              return self.process_nuclear_stain(channel_data)\n          elif channel_type in ['FITC', 'TRITC']:\n              return self.process_cytoplasmic_stain(channel_data)\n  ```\n- **Channel Merging with Adjustable Weights**\n- **Spectral Unmixing** (스펙트럼 언믹싱)\n- **Background Subtraction** per channel\n\n**5. 고급 이미지 처리 기능**\n- **Deconvolution** (블러 제거)\n  - Richardson-Lucy deconvolution\n  - Wiener deconvolution\n- **Super-resolution**\n  - Deep learning 기반 업스케일링 (ESRGAN)\n- **Registration** (이미지 정렬)\n  - Feature-based alignment (SIFT, SURF)\n  - Intensity-based registration\n- **Stitching** (타일 이미지 합성)\n\n**6. UI 통합 및 사용자 인터페이스**\n- **실시간 프리뷰**\n  ```python\n  class ImageProcessingPanel(QWidget):\n      def __init__(self):\n          self.preview_enabled = True\n          self.processing_queue = Queue()\n          self.setup_ui()\n      \n      def setup_ui(self):\n          # 필터 선택 드롭다운\n          self.filter_combo = QComboBox()\n          self.filter_combo.addItems(['None', 'Gaussian', 'Median', 'Bilateral'])\n          \n          # 파라미터 슬라이더\n          self.param_sliders = {}\n          self.create_parameter_controls()\n          \n          # Before/After 비교 뷰\n          self.comparison_view = ImageComparisonWidget()\n  ```\n- **Batch Processing Support**\n- **Processing Pipeline Builder**\n  - 드래그 앤 드롭으로 처리 순서 설정\n  - 파이프라인 저장/불러오기\n- **GPU 가속 옵션** (CUDA/OpenCL)\n\n**7. 성능 최적화**\n- **Multi-threading for Real-time Preview**\n  ```python\n  class ImageProcessor(QThread):\n      processed = pyqtSignal(np.ndarray)\n      \n      def __init__(self, processing_func, params):\n          super().__init__()\n          self.processing_func = processing_func\n          self.params = params\n          self.image_queue = Queue()\n      \n      def run(self):\n          while True:\n              image = self.image_queue.get()\n              if image is None:\n                  break\n              result = self.processing_func(image, **self.params)\n              self.processed.emit(result)\n  ```\n- **Caching 전략**\n  - 처리된 이미지 캐싱\n  - 파라미터별 결과 저장\n- **Progressive Processing**\n  - 저해상도 프리뷰 먼저 표시\n  - 백그라운드에서 고해상도 처리",
-        "testStrategy": "**1. 필터링 기능 테스트**\n- 각 필터 타입별 테스트 이미지 세트 준비\n  - 노이즈가 있는 이미지\n  - 저대비 이미지\n  - 블러된 이미지\n- 필터 적용 전후 비교\n  - PSNR (Peak Signal-to-Noise Ratio) 측정\n  - SSIM (Structural Similarity Index) 계산\n- 엣지 케이스 테스트\n  - 극단적인 파라미터 값\n  - 다양한 이미지 포맷 (8-bit, 16-bit, float32)\n\n**2. 노이즈 제거 성능 검증**\n- 인공 노이즈 추가 및 제거 테스트\n  - Gaussian noise\n  - Salt and pepper noise\n  - Poisson noise\n- 정량적 평가\n  ```python\n  def evaluate_denoising(original, noisy, denoised):\n      psnr_noisy = cv2.PSNR(original, noisy)\n      psnr_denoised = cv2.PSNR(original, denoised)\n      improvement = psnr_denoised - psnr_noisy\n      return {'psnr_improvement': improvement, 'ssim': ssim(original, denoised)}\n  ```\n\n**3. 대비 조정 검증**\n- 히스토그램 분석\n  - 조정 전후 히스토그램 분포 비교\n  - Dynamic range 측정\n- 시각적 품질 평가\n  - 과포화 영역 검출\n  - 디테일 손실 확인\n\n**4. 형광 채널 처리 테스트**\n- 멀티채널 테스트 이미지 준비\n  - 각 채널별 ground truth\n  - 채널 간 crosstalk 시뮬레이션\n- 채널 분리 정확도 검증\n  - 채널별 신호 순도 측정\n  - 스펙트럼 언믹싱 정확도\n\n**5. 성능 벤치마킹**\n- 처리 시간 측정\n  ```python\n  def benchmark_processing(func, image, iterations=100):\n      times = []\n      for _ in range(iterations):\n          start = time.perf_counter()\n          func(image)\n          times.append(time.perf_counter() - start)\n      return {'mean': np.mean(times), 'std': np.std(times), 'fps': 1/np.mean(times)}\n  ```\n- 메모리 사용량 모니터링\n- GPU vs CPU 성능 비교\n\n**6. UI 통합 테스트**\n- 실시간 프리뷰 반응성\n  - 슬라이더 조작 시 지연 시간\n  - 프리뷰 업데이트 주기\n- 배치 처리 검증\n  - 100+ 이미지 처리 안정성\n  - 진행률 표시 정확도\n\n**7. 실제 세포 이미지 검증**\n- 연구자 제공 샘플 이미지로 테스트\n- 처리 결과의 생물학적 타당성 검토\n  - 세포 경계 보존\n  - 형광 신호 충실도\n  - 배경 노이즈 제거 효과",
-        "status": "pending",
-        "dependencies": [
-          18
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 21,
-        "title": "AI 기반 자동 세포 인식 및 분류 기능 구현",
-        "description": "머신러닝 모델을 활용하여 세포 이미지에서 자동으로 세포를 감지하고, 형태학적 특징에 따라 분류하며, 이상 세포를 식별하는 AI 기반 분석 시스템을 구현합니다.",
-        "details": "**1. 세포 감지 모델 구현**\n- **YOLOv8 기반 세포 검출기**\n  ```python\n  from ultralytics import YOLO\n  import torch\n  \n  class CellDetector:\n      def __init__(self, model_path='models/cell_yolov8.pt'):\n          self.model = YOLO(model_path)\n          self.device = 'cuda' if torch.cuda.is_available() else 'cpu'\n          \n      def detect_cells(self, image, conf_threshold=0.5):\n          results = self.model(image, conf=conf_threshold)\n          detections = []\n          for r in results:\n              boxes = r.boxes\n              for box in boxes:\n                  x1, y1, x2, y2 = box.xyxy[0]\n                  conf = box.conf[0]\n                  detections.append({\n                      'bbox': [x1, y1, x2, y2],\n                      'confidence': conf\n                  })\n          return detections\n  ```\n\n- **Mask R-CNN을 이용한 세포 세그멘테이션**\n  ```python\n  import detectron2\n  from detectron2.engine import DefaultPredictor\n  \n  class CellSegmenter:\n      def __init__(self, config_file, weights_file):\n          cfg = get_cfg()\n          cfg.merge_from_file(config_file)\n          cfg.MODEL.WEIGHTS = weights_file\n          self.predictor = DefaultPredictor(cfg)\n          \n      def segment_cells(self, image):\n          outputs = self.predictor(image)\n          instances = outputs['instances']\n          masks = instances.pred_masks.cpu().numpy()\n          return masks\n  ```\n\n**2. 형태학적 분류 모델**\n- **특징 추출 및 분류기**\n  ```python\n  import cv2\n  from sklearn.ensemble import RandomForestClassifier\n  from skimage.measure import regionprops\n  \n  class MorphologicalClassifier:\n      def __init__(self):\n          self.classifier = RandomForestClassifier(n_estimators=100)\n          self.feature_names = ['area', 'perimeter', 'eccentricity', \n                               'solidity', 'circularity', 'aspect_ratio']\n          \n      def extract_features(self, mask, image):\n          props = regionprops(mask.astype(int), intensity_image=image)[0]\n          features = [\n              props.area,\n              props.perimeter,\n              props.eccentricity,\n              props.solidity,\n              4 * np.pi * props.area / (props.perimeter ** 2),  # circularity\n              props.major_axis_length / props.minor_axis_length  # aspect ratio\n          ]\n          return np.array(features)\n          \n      def classify_cell_type(self, features):\n          # Classes: normal, elongated, circular, irregular\n          prediction = self.classifier.predict([features])[0]\n          probability = self.classifier.predict_proba([features])[0]\n          return prediction, probability\n  ```\n\n- **Deep Learning 기반 형태 분류**\n  ```python\n  import torch.nn as nn\n  \n  class CellMorphologyNet(nn.Module):\n      def __init__(self, num_classes=5):\n          super().__init__()\n          self.features = nn.Sequential(\n              nn.Conv2d(3, 64, 3, padding=1),\n              nn.ReLU(),\n              nn.MaxPool2d(2),\n              nn.Conv2d(64, 128, 3, padding=1),\n              nn.ReLU(),\n              nn.MaxPool2d(2),\n              nn.Conv2d(128, 256, 3, padding=1),\n              nn.ReLU(),\n              nn.AdaptiveAvgPool2d(1)\n          )\n          self.classifier = nn.Linear(256, num_classes)\n          \n      def forward(self, x):\n          x = self.features(x)\n          x = x.view(x.size(0), -1)\n          return self.classifier(x)\n  ```\n\n**3. 이상 세포 식별 시스템**\n- **Anomaly Detection 알고리즘**\n  ```python\n  from sklearn.ensemble import IsolationForest\n  from sklearn.preprocessing import StandardScaler\n  \n  class AbnormalCellDetector:\n      def __init__(self, contamination=0.1):\n          self.detector = IsolationForest(contamination=contamination)\n          self.scaler = StandardScaler()\n          \n      def train(self, normal_cell_features):\n          scaled_features = self.scaler.fit_transform(normal_cell_features)\n          self.detector.fit(scaled_features)\n          \n      def detect_abnormal(self, cell_features):\n          scaled_features = self.scaler.transform([cell_features])\n          prediction = self.detector.predict(scaled_features)\n          score = self.detector.decision_function(scaled_features)\n          return prediction[0] == -1, score[0]\n  ```\n\n- **특징 기반 이상 세포 규칙**\n  ```python\n  def check_cell_abnormality(features):\n      abnormalities = []\n      \n      # 크기 이상\n      if features['area'] > NORMAL_CELL_MAX_AREA * 1.5:\n          abnormalities.append('enlarged')\n      elif features['area'] < NORMAL_CELL_MIN_AREA * 0.5:\n          abnormalities.append('shrunken')\n          \n      # 형태 이상\n      if features['eccentricity'] > 0.95:\n          abnormalities.append('highly_elongated')\n      if features['solidity'] < 0.8:\n          abnormalities.append('irregular_shape')\n          \n      # 텍스처 이상\n      if features['texture_variance'] > NORMAL_TEXTURE_THRESHOLD:\n          abnormalities.append('abnormal_texture')\n          \n      return abnormalities\n  ```\n\n**4. 통합 AI 파이프라인**\n```python\nclass CellAnalysisAI:\n    def __init__(self):\n        self.detector = CellDetector()\n        self.segmenter = CellSegmenter()\n        self.classifier = MorphologicalClassifier()\n        self.abnormal_detector = AbnormalCellDetector()\n        \n    def analyze_image(self, image):\n        # 1. 세포 검출\n        detections = self.detector.detect_cells(image)\n        \n        # 2. 세포 세그멘테이션\n        masks = self.segmenter.segment_cells(image)\n        \n        results = []\n        for i, (detection, mask) in enumerate(zip(detections, masks)):\n            # 3. 특징 추출\n            features = self.classifier.extract_features(mask, image)\n            \n            # 4. 세포 타입 분류\n            cell_type, confidence = self.classifier.classify_cell_type(features)\n            \n            # 5. 이상 세포 검출\n            is_abnormal, abnormality_score = self.abnormal_detector.detect_abnormal(features)\n            \n            results.append({\n                'id': i,\n                'bbox': detection['bbox'],\n                'mask': mask,\n                'cell_type': cell_type,\n                'confidence': confidence,\n                'is_abnormal': is_abnormal,\n                'abnormality_score': abnormality_score,\n                'features': features\n            })\n            \n        return results\n```\n\n**5. UI 통합 및 시각화**\n```python\nclass AIResultsWidget(QWidget):\n    def __init__(self):\n        super().__init__()\n        self.setup_ui()\n        \n    def display_ai_results(self, results):\n        # 결과 테이블 업데이트\n        self.results_table.setRowCount(len(results))\n        for i, result in enumerate(results):\n            self.results_table.setItem(i, 0, QTableWidgetItem(str(result['id'])))\n            self.results_table.setItem(i, 1, QTableWidgetItem(result['cell_type']))\n            self.results_table.setItem(i, 2, QTableWidgetItem(f\"{result['confidence']:.2f}\"))\n            status = 'Abnormal' if result['is_abnormal'] else 'Normal'\n            self.results_table.setItem(i, 3, QTableWidgetItem(status))\n            \n        # 이미지에 결과 오버레이\n        self.overlay_results_on_image(results)\n        \n    def overlay_results_on_image(self, results):\n        overlay = self.image.copy()\n        for result in results:\n            x1, y1, x2, y2 = result['bbox']\n            color = (255, 0, 0) if result['is_abnormal'] else (0, 255, 0)\n            cv2.rectangle(overlay, (x1, y1), (x2, y2), color, 2)\n            cv2.putText(overlay, result['cell_type'], (x1, y1-10), \n                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)\n        self.display_image(overlay)\n```\n\n**6. 모델 학습 및 미세 조정**\n```python\nclass ModelTrainer:\n    def __init__(self, model, dataset):\n        self.model = model\n        self.dataset = dataset\n        self.optimizer = torch.optim.Adam(model.parameters(), lr=0.001)\n        self.criterion = nn.CrossEntropyLoss()\n        \n    def train_epoch(self):\n        self.model.train()\n        total_loss = 0\n        for batch in self.dataset:\n            images, labels = batch\n            self.optimizer.zero_grad()\n            outputs = self.model(images)\n            loss = self.criterion(outputs, labels)\n            loss.backward()\n            self.optimizer.step()\n            total_loss += loss.item()\n        return total_loss / len(self.dataset)\n        \n    def fine_tune_on_user_data(self, user_annotations):\n        # 사용자 주석 데이터로 모델 미세 조정\n        fine_tune_dataset = create_dataset_from_annotations(user_annotations)\n        for epoch in range(10):\n            loss = self.train_epoch()\n            print(f'Fine-tuning epoch {epoch}: Loss = {loss:.4f}')\n```",
-        "testStrategy": "**1. 모델 정확도 평가**\n- **검출 성능 메트릭**\n  - Precision, Recall, F1-score 계산\n  - mAP (mean Average Precision) @ IoU 0.5, 0.75\n  - 테스트 데이터셋: 최소 1000개의 수동 주석된 세포 이미지\n  ```python\n  def evaluate_detection_model(model, test_dataset):\n      tp, fp, fn = 0, 0, 0\n      for image, ground_truth in test_dataset:\n          predictions = model.detect_cells(image)\n          matched = match_predictions_to_ground_truth(predictions, ground_truth)\n          tp += len(matched)\n          fp += len(predictions) - len(matched)\n          fn += len(ground_truth) - len(matched)\n      precision = tp / (tp + fp)\n      recall = tp / (tp + fn)\n      f1 = 2 * precision * recall / (precision + recall)\n      return precision, recall, f1\n  ```\n\n**2. 분류 정확도 검증**\n- 혼동 행렬(Confusion Matrix) 생성\n- 각 세포 타입별 정확도 분석\n- Cross-validation (5-fold) 수행\n- 클래스 불균형 처리 검증\n\n**3. 이상 세포 검출 성능**\n- True Positive Rate (민감도) 측정\n- False Positive Rate 최소화 검증\n- ROC 곡선 및 AUC 계산\n- 다양한 이상 세포 타입별 검출률\n\n**4. 처리 속도 벤치마크**\n- 이미지 크기별 처리 시간 측정\n  - 512x512, 1024x1024, 2048x2048 픽셀\n- GPU vs CPU 성능 비교\n- 배치 처리 최적화 검증\n- 목표: 1024x1024 이미지 기준 < 2초\n\n**5. 엣지 케이스 테스트**\n- 겹쳐진 세포 분리 능력\n- 흐릿한 이미지에서의 검출 성능\n- 극단적인 조명 조건 처리\n- 다양한 염색 방법별 호환성\n\n**6. 사용자 피드백 통합 테스트**\n- 잘못 분류된 세포 수정 기능\n- 모델 재학습 후 성능 향상 검증\n- 사용자 주석과 AI 예측 일치도\n\n**7. 시스템 통합 테스트**\n- UI에서 AI 결과 표시 정확성\n- 실시간 처리 응답성\n- 메모리 사용량 모니터링\n- 장시간 실행 안정성 (8시간 연속)\n\n**8. 검증 데이터셋 구성**\n- 정상 세포: 500개\n- 각 이상 타입별: 100개씩\n- 다양한 배율 이미지 포함\n- 실제 연구소 데이터 활용",
-        "status": "pending",
-        "dependencies": [
-          18,
-          20
-        ],
-        "priority": "high",
-        "subtasks": []
-      },
-      {
-        "id": 22,
-        "title": "고급 데이터 분석 및 시각화 대시보드 - 통계 분석, 그래프 생성, 실험 결과 리포트 자동 생성, 데이터 품질 검증 기능 구현",
-        "description": "세포 분석 결과를 위한 포괄적인 데이터 분석 및 시각화 대시보드를 구현합니다. 통계 분석, 인터랙티브 그래프 생성, 실험 결과 리포트 자동 생성, 데이터 품질 검증 기능을 포함한 연구자 친화적인 분석 도구를 제공합니다.",
-        "details": "**1. 통계 분석 모듈 구현**\n- **기술 통계 분석**\n  ```python\n  class StatisticalAnalyzer:\n      def __init__(self):\n          self.results = {}\n          \n      def calculate_descriptive_stats(self, cell_data):\n          stats = {\n              'count': len(cell_data),\n              'mean': np.mean(cell_data),\n              'median': np.median(cell_data),\n              'std': np.std(cell_data),\n              'min': np.min(cell_data),\n              'max': np.max(cell_data),\n              'q1': np.percentile(cell_data, 25),\n              'q3': np.percentile(cell_data, 75),\n              'skewness': scipy.stats.skew(cell_data),\n              'kurtosis': scipy.stats.kurtosis(cell_data)\n          }\n          return stats\n  ```\n- **추론 통계 분석**\n  ```python\n  def perform_hypothesis_testing(self, group1, group2, test_type='t-test'):\n      if test_type == 't-test':\n          statistic, p_value = scipy.stats.ttest_ind(group1, group2)\n      elif test_type == 'mann-whitney':\n          statistic, p_value = scipy.stats.mannwhitneyu(group1, group2)\n      elif test_type == 'anova':\n          statistic, p_value = scipy.stats.f_oneway(*groups)\n      return {'statistic': statistic, 'p_value': p_value, 'test': test_type}\n  ```\n- **상관관계 분석**\n  ```python\n  def calculate_correlations(self, features_df):\n      correlation_matrix = features_df.corr(method='pearson')\n      spearman_matrix = features_df.corr(method='spearman')\n      return {\n          'pearson': correlation_matrix,\n          'spearman': spearman_matrix,\n          'p_values': self._calculate_correlation_pvalues(features_df)\n      }\n  ```\n\n**2. 시각화 대시보드 구현**\n- **Plotly 기반 인터랙티브 차트**\n  ```python\n  import plotly.graph_objects as go\n  import plotly.express as px\n  from plotly.subplots import make_subplots\n  \n  class VisualizationDashboard:\n      def create_cell_distribution_plot(self, cell_data):\n          fig = make_subplots(\n              rows=2, cols=2,\n              subplot_titles=('Cell Count Distribution', 'Cell Size Distribution',\n                            'Cell Type Composition', 'Time Series Analysis')\n          )\n          \n          # Histogram\n          fig.add_trace(go.Histogram(x=cell_data['count'], name='Count'),\n                       row=1, col=1)\n          \n          # Box plot\n          fig.add_trace(go.Box(y=cell_data['size'], name='Size'),\n                       row=1, col=2)\n          \n          # Pie chart\n          fig.add_trace(go.Pie(labels=cell_types, values=counts),\n                       row=2, col=1)\n          \n          # Time series\n          fig.add_trace(go.Scatter(x=timestamps, y=values, mode='lines+markers'),\n                       row=2, col=2)\n          \n          fig.update_layout(height=800, showlegend=True)\n          return fig\n  ```\n- **히트맵 및 상관관계 시각화**\n  ```python\n  def create_correlation_heatmap(self, correlation_matrix):\n      fig = px.imshow(correlation_matrix,\n                     labels=dict(x='Features', y='Features', color='Correlation'),\n                     color_continuous_scale='RdBu',\n                     zmin=-1, zmax=1)\n      fig.update_layout(title='Feature Correlation Heatmap')\n      return fig\n  ```\n- **3D 산점도 및 클러스터링 시각화**\n  ```python\n  def create_3d_scatter(self, data, clusters=None):\n      fig = go.Figure(data=[go.Scatter3d(\n          x=data['feature1'],\n          y=data['feature2'],\n          z=data['feature3'],\n          mode='markers',\n          marker=dict(\n              size=5,\n              color=clusters if clusters else 'blue',\n              colorscale='Viridis',\n              showscale=True\n          )\n      )])\n      return fig\n  ```\n\n**3. 실험 결과 리포트 자동 생성**\n- **PDF 리포트 생성기**\n  ```python\n  from reportlab.lib import colors\n  from reportlab.lib.pagesizes import A4\n  from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image\n  \n  class ReportGenerator:\n      def generate_experiment_report(self, analysis_results, output_path):\n          doc = SimpleDocTemplate(output_path, pagesize=A4)\n          elements = []\n          \n          # Title and metadata\n          elements.append(Paragraph(f\"Cell Analysis Report - {datetime.now()}\"))\n          \n          # Summary statistics table\n          stats_table = self._create_statistics_table(analysis_results['stats'])\n          elements.append(stats_table)\n          \n          # Include plots\n          for plot_name, plot_fig in analysis_results['plots'].items():\n              img_path = self._save_plot_as_image(plot_fig)\n              elements.append(Image(img_path, width=400, height=300))\n          \n          # Conclusions and interpretations\n          elements.append(Paragraph(self._generate_conclusions(analysis_results)))\n          \n          doc.build(elements)\n  ```\n- **Excel 리포트 생성**\n  ```python\n  def generate_excel_report(self, analysis_results, output_path):\n      with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:\n          # Raw data sheet\n          analysis_results['raw_data'].to_excel(writer, sheet_name='Raw Data')\n          \n          # Statistics sheet\n          stats_df = pd.DataFrame(analysis_results['stats'])\n          stats_df.to_excel(writer, sheet_name='Statistics')\n          \n          # Add charts\n          workbook = writer.book\n          chart_sheet = workbook.add_worksheet('Charts')\n          \n          # Create and insert charts\n          chart = workbook.add_chart({'type': 'column'})\n          chart.add_series({\n              'categories': ['Statistics', 1, 0, len(stats_df), 0],\n              'values': ['Statistics', 1, 1, len(stats_df), 1]\n          })\n          chart_sheet.insert_chart('A1', chart)\n  ```\n\n**4. 데이터 품질 검증 모듈**\n- **데이터 완전성 검사**\n  ```python\n  class DataQualityValidator:\n      def validate_completeness(self, dataset):\n          missing_values = dataset.isnull().sum()\n          completeness_score = (1 - missing_values / len(dataset)) * 100\n          \n          return {\n              'missing_values': missing_values.to_dict(),\n              'completeness_score': completeness_score.to_dict(),\n              'overall_completeness': completeness_score.mean()\n          }\n  ```\n- **이상치 탐지**\n  ```python\n  def detect_outliers(self, data, method='iqr', threshold=1.5):\n      if method == 'iqr':\n          Q1 = data.quantile(0.25)\n          Q3 = data.quantile(0.75)\n          IQR = Q3 - Q1\n          outliers = (data < (Q1 - threshold * IQR)) | (data > (Q3 + threshold * IQR))\n      elif method == 'zscore':\n          z_scores = np.abs(scipy.stats.zscore(data))\n          outliers = z_scores > threshold\n      \n      return {\n          'outlier_indices': np.where(outliers)[0].tolist(),\n          'outlier_count': outliers.sum(),\n          'outlier_percentage': (outliers.sum() / len(data)) * 100\n      }\n  ```\n- **데이터 일관성 검증**\n  ```python\n  def validate_consistency(self, dataset):\n      consistency_checks = {\n          'duplicate_rows': dataset.duplicated().sum(),\n          'cell_count_validity': self._check_cell_counts(dataset),\n          'timestamp_continuity': self._check_timestamps(dataset),\n          'value_range_validity': self._check_value_ranges(dataset)\n      }\n      return consistency_checks\n  ```\n\n**5. 대시보드 UI 통합**\n- **QT 위젯 기반 분석 패널**\n  ```python\n  class AnalysisDashboardWidget(QWidget):\n      def __init__(self):\n          super().__init__()\n          self.setup_ui()\n          \n      def setup_ui(self):\n          layout = QVBoxLayout()\n          \n          # Tab widget for different analysis views\n          self.tabs = QTabWidget()\n          self.tabs.addTab(self.create_statistics_tab(), \"Statistics\")\n          self.tabs.addTab(self.create_visualization_tab(), \"Visualizations\")\n          self.tabs.addTab(self.create_report_tab(), \"Reports\")\n          self.tabs.addTab(self.create_quality_tab(), \"Data Quality\")\n          \n          layout.addWidget(self.tabs)\n          self.setLayout(layout)\n  ```",
-        "testStrategy": "**1. 통계 분석 정확성 검증**\n- **기술 통계 테스트**\n  - 알려진 분포를 가진 테스트 데이터셋 생성 (정규분포, 균등분포, 이항분포)\n  - 계산된 통계값을 numpy/scipy 결과와 비교\n  - 허용 오차: 0.001% 이내\n  ```python\n  def test_descriptive_stats():\n      test_data = np.random.normal(100, 15, 1000)\n      analyzer = StatisticalAnalyzer()\n      results = analyzer.calculate_descriptive_stats(test_data)\n      \n      assert abs(results['mean'] - np.mean(test_data)) < 0.001\n      assert abs(results['std'] - np.std(test_data)) < 0.001\n  ```\n\n**2. 시각화 렌더링 테스트**\n- **차트 생성 검증**\n  - 각 차트 타입별 렌더링 성공 여부 확인\n  - 대용량 데이터(10,000+ 포인트) 처리 시 성능 측정\n  - 목표: 1초 이내 렌더링\n- **인터랙션 테스트**\n  - 줌, 팬, 호버 기능 동작 확인\n  - 데이터 포인트 선택 시 상세 정보 표시 검증\n\n**3. 리포트 생성 검증**\n- **PDF 생성 테스트**\n  - 생성된 PDF 파일 유효성 검사 (PyPDF2 사용)\n  - 모든 섹션이 올바르게 포함되었는지 확인\n  - 이미지 품질 및 레이아웃 검증\n- **Excel 생성 테스트**\n  - 생성된 Excel 파일을 pandas로 다시 읽어 데이터 무결성 확인\n  - 수식 및 차트가 올바르게 삽입되었는지 검증\n\n**4. 데이터 품질 검증 알고리즘 테스트**\n- **완전성 검사 테스트**\n  - 의도적으로 누락된 값을 포함한 데이터셋 생성\n  - 검출률 100% 확인\n- **이상치 탐지 테스트**\n  - 알려진 이상치를 포함한 데이터셋 사용\n  - IQR 및 Z-score 방법 모두 검증\n  - 정확도 95% 이상 목표\n\n**5. 통합 워크플로우 테스트**\n- **End-to-End 시나리오**\n  1. 실제 세포 분석 데이터 로드\n  2. 통계 분석 수행\n  3. 시각화 생성\n  4. 리포트 자동 생성\n  5. 전체 프로세스 5분 이내 완료 확인\n- **동시성 테스트**\n  - 여러 분석 작업 동시 실행 시 안정성 확인\n  - 메모리 사용량 모니터링 (2GB 이하 유지)",
-        "status": "pending",
-        "dependencies": [
-          20,
-          21
-        ],
-        "priority": "medium",
-        "subtasks": []
-      },
-      {
-        "id": 23,
-        "title": "클라우드 통합 및 협업 기능 - 클라우드 스토리지 연동, 실시간 협업, 프로젝트 공유, 원격 데이터 동기화 기능 구현",
-        "description": "연구팀 간 원활한 협업을 위한 클라우드 기반 통합 시스템을 구현합니다. AWS S3/Google Drive 연동, WebSocket 기반 실시간 협업, 프로젝트 공유 및 권한 관리, 자동 데이터 동기화 기능을 포함한 포괄적인 협업 플랫폼을 제공합니다.",
-        "details": "**1. 클라우드 스토리지 연동 구현**\n- **AWS S3 연동**\n  ```python\n  import boto3\n  from botocore.exceptions import ClientError\n  \n  class S3StorageManager:\n      def __init__(self, bucket_name, region='us-east-1'):\n          self.s3_client = boto3.client('s3', region_name=region)\n          self.bucket_name = bucket_name\n          \n      def upload_image(self, file_path, object_name=None):\n          if object_name is None:\n              object_name = os.path.basename(file_path)\n          try:\n              self.s3_client.upload_file(file_path, self.bucket_name, object_name)\n              return f\"s3://{self.bucket_name}/{object_name}\"\n          except ClientError as e:\n              logging.error(e)\n              return None\n              \n      def download_image(self, object_name, local_path):\n          try:\n              self.s3_client.download_file(self.bucket_name, object_name, local_path)\n              return True\n          except ClientError as e:\n              logging.error(e)\n              return False\n  ```\n\n- **Google Drive 연동**\n  ```python\n  from google.oauth2.credentials import Credentials\n  from googleapiclient.discovery import build\n  from googleapiclient.http import MediaFileUpload\n  \n  class GoogleDriveManager:\n      def __init__(self, credentials_path):\n          self.creds = Credentials.from_authorized_user_file(credentials_path)\n          self.service = build('drive', 'v3', credentials=self.creds)\n          \n      def upload_file(self, file_path, folder_id=None):\n          file_metadata = {\n              'name': os.path.basename(file_path),\n              'parents': [folder_id] if folder_id else []\n          }\n          media = MediaFileUpload(file_path, resumable=True)\n          file = self.service.files().create(\n              body=file_metadata,\n              media_body=media,\n              fields='id'\n          ).execute()\n          return file.get('id')\n  ```\n\n**2. 실시간 협업 기능 구현**\n- **WebSocket 서버 구현**\n  ```python\n  import asyncio\n  import websockets\n  import json\n  \n  class CollaborationServer:\n      def __init__(self):\n          self.clients = {}\n          self.projects = {}\n          \n      async def register_client(self, websocket, project_id, user_id):\n          if project_id not in self.clients:\n              self.clients[project_id] = {}\n          self.clients[project_id][user_id] = websocket\n          \n      async def broadcast_update(self, project_id, update_data, sender_id):\n          if project_id in self.clients:\n              message = json.dumps({\n                  'type': 'update',\n                  'sender': sender_id,\n                  'data': update_data,\n                  'timestamp': datetime.now().isoformat()\n              })\n              \n              disconnected = []\n              for user_id, client in self.clients[project_id].items():\n                  if user_id != sender_id:\n                      try:\n                          await client.send(message)\n                      except websockets.exceptions.ConnectionClosed:\n                          disconnected.append(user_id)\n                          \n              for user_id in disconnected:\n                  del self.clients[project_id][user_id]\n  ```\n\n- **클라이언트 측 실시간 동기화**\n  ```python\n  class CollaborationClient(QObject):\n      update_received = pyqtSignal(dict)\n      \n      def __init__(self, server_url, project_id, user_id):\n          super().__init__()\n          self.server_url = server_url\n          self.project_id = project_id\n          self.user_id = user_id\n          self.websocket = None\n          \n      async def connect(self):\n          self.websocket = await websockets.connect(self.server_url)\n          await self.websocket.send(json.dumps({\n              'type': 'join',\n              'project_id': self.project_id,\n              'user_id': self.user_id\n          }))\n          \n      async def listen_for_updates(self):\n          async for message in self.websocket:\n              data = json.loads(message)\n              self.update_received.emit(data)\n              \n      def send_update(self, update_type, update_data):\n          asyncio.create_task(self._send_update(update_type, update_data))\n          \n      async def _send_update(self, update_type, update_data):\n          message = json.dumps({\n              'type': update_type,\n              'project_id': self.project_id,\n              'user_id': self.user_id,\n              'data': update_data\n          })\n          await self.websocket.send(message)\n  ```\n\n**3. 프로젝트 공유 및 권한 관리**\n- **프로젝트 권한 시스템**\n  ```python\n  class ProjectPermissionManager:\n      PERMISSIONS = {\n          'owner': ['read', 'write', 'delete', 'share', 'manage_permissions'],\n          'editor': ['read', 'write', 'share'],\n          'viewer': ['read'],\n          'commenter': ['read', 'comment']\n      }\n      \n      def __init__(self, db_connection):\n          self.db = db_connection\n          \n      def create_project(self, project_name, owner_id):\n          project_id = str(uuid.uuid4())\n          self.db.execute(\n              \"INSERT INTO projects (id, name, owner_id, created_at) VALUES (?, ?, ?, ?)\",\n              (project_id, project_name, owner_id, datetime.now())\n          )\n          self.add_user_to_project(project_id, owner_id, 'owner')\n          return project_id\n          \n      def share_project(self, project_id, user_id, permission_level):\n          if permission_level not in self.PERMISSIONS:\n              raise ValueError(f\"Invalid permission level: {permission_level}\")\n              \n          self.db.execute(\n              \"INSERT OR REPLACE INTO project_permissions (project_id, user_id, permission_level) VALUES (?, ?, ?)\",\n              (project_id, user_id, permission_level)\n          )\n          \n      def check_permission(self, project_id, user_id, action):\n          result = self.db.execute(\n              \"SELECT permission_level FROM project_permissions WHERE project_id = ? AND user_id = ?\",\n              (project_id, user_id)\n          ).fetchone()\n          \n          if not result:\n              return False\n              \n          user_permissions = self.PERMISSIONS.get(result[0], [])\n          return action in user_permissions\n  ```\n\n**4. 원격 데이터 동기화**\n- **변경 감지 및 동기화 엔진**\n  ```python\n  class DataSyncManager:\n      def __init__(self, local_storage, cloud_storage):\n          self.local_storage = local_storage\n          self.cloud_storage = cloud_storage\n          self.sync_queue = asyncio.Queue()\n          self.file_checksums = {}\n          \n      def calculate_checksum(self, file_path):\n          hasher = hashlib.sha256()\n          with open(file_path, 'rb') as f:\n              while chunk := f.read(8192):\n                  hasher.update(chunk)\n          return hasher.hexdigest()\n          \n      async def monitor_changes(self, directory):\n          observer = Observer()\n          handler = FileSystemEventHandler()\n          handler.on_modified = lambda event: asyncio.create_task(\n              self.handle_file_change(event.src_path)\n          )\n          observer.schedule(handler, directory, recursive=True)\n          observer.start()\n          \n      async def handle_file_change(self, file_path):\n          new_checksum = self.calculate_checksum(file_path)\n          old_checksum = self.file_checksums.get(file_path)\n          \n          if new_checksum != old_checksum:\n              self.file_checksums[file_path] = new_checksum\n              await self.sync_queue.put({\n                  'action': 'upload',\n                  'file_path': file_path,\n                  'timestamp': datetime.now()\n              })\n              \n      async def sync_worker(self):\n          while True:\n              sync_task = await self.sync_queue.get()\n              try:\n                  if sync_task['action'] == 'upload':\n                      await self.upload_file(sync_task['file_path'])\n                  elif sync_task['action'] == 'download':\n                      await self.download_file(sync_task['file_path'])\n              except Exception as e:\n                  logging.error(f\"Sync error: {e}\")\n                  # Retry logic\n                  await asyncio.sleep(5)\n                  await self.sync_queue.put(sync_task)\n  ```\n\n**5. 충돌 해결 메커니즘**\n- **3-way 병합 구현**\n  ```python\n  class ConflictResolver:\n      def __init__(self):\n          self.conflict_handlers = {}\n          \n      def detect_conflict(self, local_version, remote_version, base_version):\n          local_changes = self.diff(base_version, local_version)\n          remote_changes = self.diff(base_version, remote_version)\n          \n          conflicts = []\n          for key in set(local_changes.keys()) & set(remote_changes.keys()):\n              if local_changes[key] != remote_changes[key]:\n                  conflicts.append({\n                      'key': key,\n                      'local': local_changes[key],\n                      'remote': remote_changes[key],\n                      'base': base_version.get(key)\n                  })\n          return conflicts\n          \n      def auto_resolve(self, conflict, strategy='latest'):\n          if strategy == 'latest':\n              return conflict['remote'] if conflict['remote']['timestamp'] > conflict['local']['timestamp'] else conflict['local']\n          elif strategy == 'local_first':\n              return conflict['local']\n          elif strategy == 'remote_first':\n              return conflict['remote']\n          else:\n              return None  # Manual resolution required\n  ```\n\n**6. 오프라인 모드 지원**\n- **로컬 캐싱 및 큐잉**\n  ```python\n  class OfflineSyncQueue:\n      def __init__(self, db_path):\n          self.conn = sqlite3.connect(db_path)\n          self.create_tables()\n          \n      def create_tables(self):\n          self.conn.execute('''\n              CREATE TABLE IF NOT EXISTS sync_queue (\n                  id INTEGER PRIMARY KEY AUTOINCREMENT,\n                  operation TEXT,\n                  file_path TEXT,\n                  data BLOB,\n                  timestamp DATETIME,\n                  retry_count INTEGER DEFAULT 0,\n                  status TEXT DEFAULT 'pending'\n              )\n          ''')\n          \n      def add_operation(self, operation, file_path, data=None):\n          self.conn.execute(\n              \"INSERT INTO sync_queue (operation, file_path, data, timestamp) VALUES (?, ?, ?, ?)\",\n              (operation, file_path, data, datetime.now())\n          )\n          self.conn.commit()\n          \n      async def process_queue(self):\n          while True:\n              if self.is_online():\n                  pending = self.conn.execute(\n                      \"SELECT * FROM sync_queue WHERE status = 'pending' ORDER BY timestamp\"\n                  ).fetchall()\n                  \n                  for op in pending:\n                      success = await self.execute_operation(op)\n                      if success:\n                          self.mark_completed(op['id'])\n                      else:\n                          self.increment_retry(op['id'])\n              await asyncio.sleep(30)  # Check every 30 seconds\n  ```",
-        "testStrategy": "**1. 클라우드 스토리지 연동 테스트**\n- **연결성 테스트**\n  - AWS S3 및 Google Drive API 연결 확인\n  - 인증 토큰 만료 및 갱신 처리 검증\n  - 네트워크 오류 시 재시도 메커니즘 확인\n  ```python\n  def test_s3_connection():\n      manager = S3StorageManager('test-bucket')\n      # 의도적으로 잘못된 자격증명으로 테스트\n      assert manager.test_connection() == False\n      # 올바른 자격증명으로 재시도\n      manager.update_credentials(valid_creds)\n      assert manager.test_connection() == True\n  ```\n\n- **업로드/다운로드 성능 테스트**\n  - 다양한 파일 크기 (1MB ~ 1GB) 업로드 시간 측정\n  - 동시 업로드/다운로드 처리량 테스트 (최소 10개 동시 전송)\n  - 대역폭 제한 상황에서의 동작 검증\n\n**2. 실시간 협업 기능 검증**\n- **WebSocket 연결 안정성**\n  - 100개 이상의 동시 클라이언트 연결 테스트\n  - 연결 끊김 시 자동 재연결 검증 (5초 이내)\n  - 메시지 순서 보장 확인\n  ```python\n  async def test_concurrent_updates():\n      clients = [CollaborationClient(f'user_{i}') for i in range(100)]\n      updates_received = {i: [] for i in range(100)}\n      \n      # 각 클라이언트가 업데이트 전송\n      for i, client in enumerate(clients):\n          await client.send_update({'cell_id': i, 'classification': 'type_A'})\n      \n      # 모든 클라이언트가 99개의 업데이트를 받았는지 확인\n      await asyncio.sleep(2)\n      for i in range(100):\n          assert len(updates_received[i]) == 99\n  ```\n\n- **데이터 일관성 테스트**\n  - 동시 편집 시 최종 상태 일관성 검증\n  - 타임스탬프 기반 순서 보장 확인\n  - 분할된 메시지 재조립 검증\n\n**3. 권한 관리 시스템 테스트**\n- **권한 계층 검증**\n  ```python\n  def test_permission_hierarchy():\n      pm = ProjectPermissionManager(test_db)\n      project_id = pm.create_project('Test Project', 'owner_user')\n      \n      # Owner 권한 테스트\n      assert pm.check_permission(project_id, 'owner_user', 'delete') == True\n      \n      # Editor 권한 테스트\n      pm.share_project(project_id, 'editor_user', 'editor')\n      assert pm.check_permission(project_id, 'editor_user', 'write') == True\n      assert pm.check_permission(project_id, 'editor_user', 'delete') == False\n      \n      # Viewer 권한 테스트\n      pm.share_project(project_id, 'viewer_user', 'viewer')\n      assert pm.check_permission(project_id, 'viewer_user', 'read') == True\n      assert pm.check_permission(project_id, 'viewer_user', 'write') == False\n  ```\n\n- **권한 변경 실시간 반영**\n  - 권한 변경 시 즉시 적용 확인 (1초 이내)\n  - 다중 사용자 환경에서 권한 충돌 방지 검증\n\n**4. 데이터 동기화 정확성 검증**\n- **변경 감지 정확도**\n  - 파일 생성, 수정, 삭제 이벤트 100% 감지 확인\n  - 체크섬 기반 실제 변경 감지 (false positive 방지)\n  - 대용량 파일 변경 시 청크 단위 동기화 검증\n\n- **충돌 해결 테스트**\n  ```python\n  def test_conflict_resolution():\n      resolver = ConflictResolver()\n      \n      # 동일 파일에 대한 동시 수정 시나리오\n      base = {'cells': [{'id': 1, 'class': 'A'}]}\n      local = {'cells': [{'id': 1, 'class': 'B'}]}\n      remote = {'cells': [{'id': 1, 'class': 'C'}]}\n      \n      conflicts = resolver.detect_conflict(local, remote, base)\n      assert len(conflicts) == 1\n      \n      # 자동 해결 전략 테스트\n      resolved = resolver.auto_resolve(conflicts[0], strategy='latest')\n      assert resolved in [local, remote]\n  ```\n\n**5. 오프라인 모드 테스트**\n- **오프라인 작업 큐잉**\n  - 네트워크 단절 시 모든 작업이 로컬 큐에 저장되는지 확인\n  - 큐 크기 제한 및 오래된 항목 정리 검증\n  - 온라인 복귀 시 큐 처리 순서 및 완전성 확인\n\n- **재시도 메커니즘**\n  - 실패한 동기화 작업의 지수 백오프 재시도 확인\n  - 최대 재시도 횟수(5회) 초과 시 사용자 알림 검증\n\n**6. 통합 시나리오 테스트**\n- **End-to-End 워크플로우**\n  1. 사용자 A가 프로젝트 생성 및 이미지 업로드\n  2. 사용자 B 초대 및 권한 부여\n  3. 동시에 서로 다른 세포 분류 작업 수행\n  4. 실시간 업데이트 확인\n  5. 오프라인 전환 후 작업 계속\n  6. 온라인 복귀 시 충돌 해결\n  7. 최종 결과 동기화 확인\n\n- **스트레스 테스트**\n  - 1000개 이상의 이미지 동시 동기화\n  - 50명 이상의 동시 사용자 협업\n  - 네트워크 대역폭 제한 상황에서의 성능 유지",
-        "status": "pending",
-        "dependencies": [
-          18,
-          20,
-          21,
-          22
-        ],
-        "priority": "low",
-        "subtasks": []
-      },
-      {
-        "id": 24,
-        "title": "플러그인 시스템 및 워크플로우 자동화 - 사용자 정의 플러그인 개발 지원, 반복 작업 자동화, 스크립트 기반 배치 처리 기능 구현",
-        "description": "연구자들이 반복적인 세포 분석 작업을 자동화하고 사용자 정의 기능을 추가할 수 있는 확장 가능한 플러그인 시스템을 구현합니다. Python 기반 플러그인 개발 API, 워크플로우 자동화 엔진, 스크립트 기반 배치 처리 기능을 제공하여 연구 효율성을 극대화합니다.",
-        "details": "**1. 플러그인 아키텍처 설계**\n- **플러그인 인터페이스 정의**\n  ```python\n  from abc import ABC, abstractmethod\n  \n  class PluginInterface(ABC):\n      def __init__(self):\n          self.name = \"Unknown Plugin\"\n          self.version = \"1.0.0\"\n          self.description = \"\"\n          self.author = \"\"\n          \n      @abstractmethod\n      def initialize(self, app_context):\n          \"\"\"플러그인 초기화\"\"\"\n          pass\n          \n      @abstractmethod\n      def execute(self, data, params=None):\n          \"\"\"플러그인 실행\"\"\"\n          pass\n          \n      @abstractmethod\n      def get_ui_components(self):\n          \"\"\"플러그인 UI 컴포넌트 반환\"\"\"\n          return None\n  ```\n\n- **플러그인 매니저 구현**\n  ```python\n  class PluginManager:\n      def __init__(self, plugin_dir='plugins'):\n          self.plugin_dir = plugin_dir\n          self.loaded_plugins = {}\n          self.plugin_registry = {}\n          \n      def discover_plugins(self):\n          \"\"\"플러그인 디렉토리에서 플러그인 자동 검색\"\"\"\n          for file in os.listdir(self.plugin_dir):\n              if file.endswith('.py') and file != '__init__.py':\n                  module_name = file[:-3]\n                  self._load_plugin(module_name)\n                  \n      def _load_plugin(self, module_name):\n          \"\"\"동적 플러그인 로딩\"\"\"\n          spec = importlib.util.spec_from_file_location(\n              module_name, \n              os.path.join(self.plugin_dir, f\"{module_name}.py\")\n          )\n          module = importlib.util.module_from_spec(spec)\n          spec.loader.exec_module(module)\n          \n          # PluginInterface를 상속받은 클래스 찾기\n          for name, obj in inspect.getmembers(module):\n              if inspect.isclass(obj) and issubclass(obj, PluginInterface):\n                  plugin_instance = obj()\n                  self.register_plugin(plugin_instance)\n  ```\n\n**2. 워크플로우 자동화 엔진**\n- **워크플로우 정의 시스템**\n  ```python\n  class WorkflowStep:\n      def __init__(self, name, plugin_name, params=None):\n          self.name = name\n          self.plugin_name = plugin_name\n          self.params = params or {}\n          self.next_steps = []\n          self.condition = None\n          \n  class Workflow:\n      def __init__(self, name):\n          self.name = name\n          self.steps = []\n          self.current_step = 0\n          \n      def add_step(self, step):\n          self.steps.append(step)\n          return self\n          \n      def execute(self, initial_data, plugin_manager):\n          \"\"\"워크플로우 실행\"\"\"\n          data = initial_data\n          results = []\n          \n          for step in self.steps:\n              plugin = plugin_manager.get_plugin(step.plugin_name)\n              if plugin:\n                  result = plugin.execute(data, step.params)\n                  results.append({\n                      'step': step.name,\n                      'result': result\n                  })\n                  data = result  # 다음 단계로 데이터 전달\n          return results\n  ```\n\n- **조건부 실행 및 분기 처리**\n  ```python\n  class ConditionalWorkflow(Workflow):\n      def execute(self, initial_data, plugin_manager):\n          data = initial_data\n          results = []\n          step_index = 0\n          \n          while step_index < len(self.steps):\n              step = self.steps[step_index]\n              plugin = plugin_manager.get_plugin(step.plugin_name)\n              \n              if plugin:\n                  result = plugin.execute(data, step.params)\n                  results.append({'step': step.name, 'result': result})\n                  \n                  # 조건 평가\n                  if step.condition:\n                      next_step = step.condition(result)\n                      step_index = self._find_step_index(next_step)\n                  else:\n                      step_index += 1\n                      \n                  data = result\n          return results\n  ```\n\n**3. 스크립트 기반 배치 처리**\n- **스크립트 엔진 구현**\n  ```python\n  class ScriptEngine:\n      def __init__(self, plugin_manager):\n          self.plugin_manager = plugin_manager\n          self.globals = {\n              'load_images': self.load_images,\n              'process_batch': self.process_batch,\n              'export_results': self.export_results,\n              'apply_plugin': self.apply_plugin\n          }\n          \n      def execute_script(self, script_path):\n          \"\"\"Python 스크립트 실행\"\"\"\n          with open(script_path, 'r') as f:\n              script_content = f.read()\n              \n          # 보안을 위한 제한된 실행 환경\n          restricted_globals = self.globals.copy()\n          restricted_globals['__builtins__'] = {\n              'print': print,\n              'len': len,\n              'range': range,\n              'enumerate': enumerate\n          }\n          \n          exec(script_content, restricted_globals)\n          \n      def process_batch(self, image_paths, workflow_name):\n          \"\"\"배치 이미지 처리\"\"\"\n          results = []\n          workflow = self.plugin_manager.get_workflow(workflow_name)\n          \n          for path in image_paths:\n              image = cv2.imread(path)\n              result = workflow.execute(image, self.plugin_manager)\n              results.append({\n                  'image': path,\n                  'results': result\n              })\n          return results\n  ```\n\n**4. 플러그인 개발 API**\n- **이미지 처리 플러그인 예제**\n  ```python\n  class CustomFilterPlugin(PluginInterface):\n      def __init__(self):\n          super().__init__()\n          self.name = \"Custom Edge Detection\"\n          self.version = \"1.0.0\"\n          self.description = \"Advanced edge detection with custom parameters\"\n          \n      def initialize(self, app_context):\n          self.app = app_context\n          \n      def execute(self, image, params=None):\n          threshold1 = params.get('threshold1', 100)\n          threshold2 = params.get('threshold2', 200)\n          \n          edges = cv2.Canny(image, threshold1, threshold2)\n          return edges\n          \n      def get_ui_components(self):\n          return {\n              'type': 'dialog',\n              'fields': [\n                  {'name': 'threshold1', 'type': 'slider', 'min': 0, 'max': 255},\n                  {'name': 'threshold2', 'type': 'slider', 'min': 0, 'max': 255}\n              ]\n          }\n  ```\n\n- **데이터 분석 플러그인 예제**\n  ```python\n  class CellCountPlugin(PluginInterface):\n      def __init__(self):\n          super().__init__()\n          self.name = \"Cell Counter\"\n          self.version = \"1.0.0\"\n          \n      def execute(self, image, params=None):\n          # 세포 검출 알고리즘\n          gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n          _, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)\n          \n          contours, _ = cv2.findContours(\n              binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE\n          )\n          \n          cells = []\n          for contour in contours:\n              area = cv2.contourArea(contour)\n              if params.get('min_area', 100) < area < params.get('max_area', 1000):\n                  cells.append({\n                      'contour': contour,\n                      'area': area,\n                      'center': cv2.moments(contour)\n                  })\n                  \n          return {'count': len(cells), 'cells': cells}\n  ```\n\n**5. 워크플로우 빌더 UI**\n- **드래그 앤 드롭 워크플로우 편집기**\n  ```python\n  class WorkflowBuilder(QWidget):\n      def __init__(self, plugin_manager):\n          super().__init__()\n          self.plugin_manager = plugin_manager\n          self.workflow = Workflow(\"New Workflow\")\n          self.init_ui()\n          \n      def init_ui(self):\n          layout = QVBoxLayout()\n          \n          # 플러그인 목록\n          self.plugin_list = QListWidget()\n          for plugin_name in self.plugin_manager.get_all_plugins():\n              self.plugin_list.addItem(plugin_name)\n          self.plugin_list.setDragEnabled(True)\n          \n          # 워크플로우 캔버스\n          self.canvas = WorkflowCanvas()\n          self.canvas.setAcceptDrops(True)\n          \n          # 실행 버튼\n          self.run_button = QPushButton(\"Run Workflow\")\n          self.run_button.clicked.connect(self.run_workflow)\n          \n          layout.addWidget(QLabel(\"Available Plugins:\"))\n          layout.addWidget(self.plugin_list)\n          layout.addWidget(QLabel(\"Workflow:\"))\n          layout.addWidget(self.canvas)\n          layout.addWidget(self.run_button)\n          \n          self.setLayout(layout)\n  ```\n\n**6. 플러그인 마켓플레이스 통합**\n- **플러그인 배포 시스템**\n  ```python\n  class PluginMarketplace:\n      def __init__(self, api_endpoint):\n          self.api_endpoint = api_endpoint\n          \n      def search_plugins(self, query):\n          \"\"\"플러그인 검색\"\"\"\n          response = requests.get(\n              f\"{self.api_endpoint}/search\",\n              params={'q': query}\n          )\n          return response.json()\n          \n      def install_plugin(self, plugin_id, install_path):\n          \"\"\"플러그인 다운로드 및 설치\"\"\"\n          # 플러그인 메타데이터 가져오기\n          metadata = requests.get(\n              f\"{self.api_endpoint}/plugins/{plugin_id}\"\n          ).json()\n          \n          # 플러그인 파일 다운로드\n          plugin_url = metadata['download_url']\n          response = requests.get(plugin_url)\n          \n          # 플러그인 설치\n          plugin_file = os.path.join(install_path, metadata['filename'])\n          with open(plugin_file, 'wb') as f:\n              f.write(response.content)\n              \n          # 의존성 설치\n          if 'dependencies' in metadata:\n              subprocess.run([\n                  sys.executable, '-m', 'pip', 'install'\n              ] + metadata['dependencies'])\n              \n          return True\n  ```",
-        "testStrategy": "**1. 플러그인 시스템 테스트**\n- **플러그인 로딩 테스트**\n  - 정상적인 플러그인 로딩 확인\n  - 잘못된 플러그인 파일 처리\n  - 의존성 누락 시 에러 처리\n  - 플러그인 버전 충돌 해결\n  ```python\n  def test_plugin_loading():\n      manager = PluginManager('test_plugins')\n      manager.discover_plugins()\n      assert len(manager.loaded_plugins) > 0\n      assert 'CustomFilter' in manager.loaded_plugins\n  ```\n\n- **플러그인 실행 테스트**\n  - 다양한 입력 데이터로 플러그인 실행\n  - 파라미터 전달 및 검증\n  - 예외 처리 및 에러 복구\n  - 메모리 누수 확인\n\n**2. 워크플로우 엔진 테스트**\n- **순차 실행 테스트**\n  - 단순 선형 워크플로우 실행\n  - 데이터 전달 정확성 확인\n  - 각 단계별 실행 시간 측정\n  ```python\n  def test_sequential_workflow():\n      workflow = Workflow(\"Test\")\n      workflow.add_step(WorkflowStep(\"Load\", \"ImageLoader\"))\n      workflow.add_step(WorkflowStep(\"Filter\", \"GaussianBlur\"))\n      workflow.add_step(WorkflowStep(\"Detect\", \"CellDetector\"))\n      \n      results = workflow.execute(test_image, plugin_manager)\n      assert len(results) == 3\n      assert results[-1]['result']['count'] > 0\n  ```\n\n- **조건부 분기 테스트**\n  - 조건 평가 정확성\n  - 복잡한 분기 로직 처리\n  - 무한 루프 방지 메커니즘\n\n**3. 스크립트 엔진 보안 테스트**\n- **샌드박스 환경 검증**\n  - 시스템 접근 제한 확인\n  - 파일 시스템 접근 제어\n  - 네트워크 접근 차단\n  - 실행 시간 제한 적용\n  ```python\n  def test_script_security():\n      engine = ScriptEngine(plugin_manager)\n      # 악의적인 코드 시도\n      malicious_script = \"import os; os.system('rm -rf /')\"\n      with pytest.raises(NameError):\n          engine.execute_script_string(malicious_script)\n  ```\n\n**4. 배치 처리 성능 테스트**\n- **대용량 처리 테스트**\n  - 1000개 이상의 이미지 배치 처리\n  - 메모리 사용량 모니터링\n  - 병렬 처리 효율성 측정\n  - 진행률 표시 정확성\n\n- **오류 복구 테스트**\n  - 중간 실패 시 재시작 기능\n  - 부분 결과 저장 및 복구\n  - 오류 로그 생성 확인\n\n**5. UI 통합 테스트**\n- **워크플로우 빌더 테스트**\n  - 드래그 앤 드롭 기능 동작\n  - 연결선 그리기 및 삭제\n  - 파라미터 설정 대화상자\n  - 워크플로우 저장/불러오기\n\n**6. 플러그인 개발자 경험 테스트**\n- **API 사용성 테스트**\n  - 샘플 플러그인 개발 시간 측정\n  - API 문서 완성도 확인\n  - 디버깅 도구 효과성\n  - 플러그인 템플릿 유용성\n\n**7. 통합 시나리오 테스트**\n- **실제 연구 워크플로우 재현**\n  ```python\n  def test_real_world_scenario():\n      # 형광 이미지 배치 처리 시나리오\n      workflow = Workflow(\"Fluorescence Analysis\")\n      workflow.add_step(WorkflowStep(\"Load\", \"MultiChannelLoader\"))\n      workflow.add_step(WorkflowStep(\"Split\", \"ChannelSplitter\"))\n      workflow.add_step(WorkflowStep(\"Denoise\", \"NoiseReduction\", \n                                     {'method': 'bilateral'}))\n      workflow.add_step(WorkflowStep(\"Detect\", \"CellDetector\"))\n      workflow.add_step(WorkflowStep(\"Classify\", \"AIClassifier\"))\n      workflow.add_step(WorkflowStep(\"Export\", \"ResultExporter\"))\n      \n      # 100개 이미지 배치 처리\n      batch_results = engine.process_batch(test_images, workflow)\n      \n      # 결과 검증\n      assert len(batch_results) == 100\n      assert all(r['results'][-1]['success'] for r in batch_results)\n      assert os.path.exists('exports/batch_results.csv')\n  ```",
-        "status": "pending",
-        "dependencies": [
-          18,
-          20,
-          21,
-          22
-        ],
-        "priority": "medium",
+        "testStrategy": "DEV Mode: cross-platform compatibility, DUAL Mode: platform-specific validation, GUI Mode: platform UI testing",
         "subtasks": []
       }
     ],
     "metadata": {
-      "created": "2025-06-27T09:26:28.915Z",
-      "updated": "2025-06-28T10:17:41.608Z",
-      "description": "Tasks for master context"
+      "created": "2024-12-28",
+      "project": "CellSorter Background + GUI Mode Testing",
+      "version": "1.0",
+      "totalTasks": 15,
+      "focus": "현재 기능 안정성과 3모드 테스트 완성도 향상"
     }
   }
 }

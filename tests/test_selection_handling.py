@@ -18,11 +18,12 @@ class TestSelectionHandling:
     """Test cases for selection handling bug fix."""
     
     @pytest.fixture
-    def main_window(self):
+    def main_window(self, qapp):
         """Create main window instance for testing."""
-        theme_manager = Mock(spec=ThemeManager)
-        theme_manager.apply_theme = Mock()
-        theme_manager.get_current_theme = Mock(return_value="light")
+        from src.services.theme_manager import ThemeManager
+        
+        # Use real theme manager instead of mock
+        theme_manager = ThemeManager(qapp)
         
         # Mock QSettings to avoid file system operations
         with patch('src.pages.main_window.QSettings'):
@@ -47,7 +48,7 @@ class TestSelectionHandling:
         
         # Simulate rectangle selection
         selected_indices = [0, 1, 2]
-        main_window._on_selection_made(selected_indices)
+        main_window._on_selection_made(selected_indices, "rectangle_selection")
         
         # Verify single selection was created
         final_count = len(main_window.selection_manager.selections)
@@ -109,7 +110,7 @@ class TestSelectionHandling:
         
         # Verify that calling rectangle selection handler separately 
         # would create a different selection (not a duplicate)
-        main_window._on_selection_made(selected_indices)
+        main_window._on_selection_made(selected_indices, "rectangle_selection")
         final_count = len(main_window.selection_manager.selections)
         
         # Should now have 2 selections (expression + rectangle)
@@ -161,7 +162,7 @@ class TestSelectionHandling:
         initial_count = len(main_window.selection_manager.selections)
         
         # Test empty rectangle selection
-        main_window._on_selection_made([])
+        main_window._on_selection_made([], "rectangle_selection")
         assert len(main_window.selection_manager.selections) == initial_count
         
         # Test empty expression selection
@@ -175,7 +176,7 @@ class TestSelectionHandling:
         main_window.update_status = Mock()
         
         # Test rectangle selection status
-        main_window._on_selection_made([0, 1, 2])
+        main_window._on_selection_made([0, 1, 2], "rectangle_selection")
         main_window.update_status.assert_called_with("Selected 3 cells using rectangle selection")
         
         # Reset mock
@@ -189,7 +190,7 @@ class TestSelectionHandling:
         main_window.update_status.reset_mock()
         
         # Test empty selection status
-        main_window._on_selection_made([])
+        main_window._on_selection_made([], "rectangle_selection")
         main_window.update_status.assert_called_with("No cells selected")
         
         main_window.update_status.reset_mock()

@@ -1,21 +1,11 @@
 # Task ID: 8
-# Title: Test Selection Management Synchronization
-# Status: done
-# Dependencies: 7 (Not found)
-# Priority: medium
-# Description: Headless와 GUI 모드 간 선택 상태 동기화 테스트
+# Title: Export and Protocol Generation
+# Status: pending
+# Dependencies: 5 (Not found), 6 (Not found), 7 (Not found)
+# Priority: high
+# Description: Test protocol file generation and verify export dialog functionality
 # Details:
-SelectionManager의 상태가 두 모드 간에 올바르게 동기화되고, 선택 작업이 일관되게 작동하는지 테스트합니다.
-
-✅ 완료된 작업 (2024-12-28):
-1. DEV 모드: tests/dev_mode/test_selection_management_sync.py (10개 테스트 통과)
-2. DUAL 모드: tests/dual_mode/test_selection_management_consistency.py (8개 테스트 통과)
-3. GUI 모드: tests/gui_mode/test_selection_management_production.py (10개 테스트 통과)
-
-총 28개 테스트 모두 통과하여 3모드 선택 관리 동기화 완전 검증 완료.
+Test protocol file generation, verify export dialog functionality, test batch export operations, validate file format compliance, test progress tracking
 
 # Test Strategy:
-1. Headless에서 선택 생성 후 GUI 동기화 확인 ✅
-2. GUI에서 선택 변경 후 Headless 상태 확인 ✅
-3. 색상 및 라벨 일관성 테스트 ✅
-4. Well plate 할당 동기화 테스트 ✅
+DEV Mode: headless export operations, DUAL Mode: export result validation, GUI Mode: interactive export testing

@@ -1,14 +1,11 @@
 # Task ID: 15
-# Title: Complete Integration Test Suite
+# Title: Cross-Platform Testing
 # Status: pending
-# Dependencies: 11 (Not found), 12 (Not found), 13 (Not found)
-# Priority: high
-# Description: 전체 워크플로우를 headless 모드에서 실행하는 통합 테스트
+# Dependencies: 1 (Not found), 2 (Not found), 3 (Not found), 4 (Not found), 5 (Not found), 6 (Not found), 7 (Not found), 8 (Not found), 9 (Not found), 10 (Not found), 11 (Not found), 12 (Not found), 13 (Not found), 14 (Not found)
+# Priority: medium
+# Description: Test on Windows 10/11, Ubuntu/Debian Linux, and macOS
 # Details:
-이미지 로드부터 프로토콜 내보내기까지 전체 워크플로우를 headless 모드에서 실행하고 검증합니다.
+Test on Windows 10/11, Test on Ubuntu/Debian Linux, Test on macOS, verify path handling, test platform-specific features
 
 # Test Strategy:
-1. 완전한 분석 워크플로우 시뮬레이션
-2. 모든 중간 단계 검증
-3. 최종 출력 파일 검증
-4. 성능 및 안정성 확인
+DEV Mode: cross-platform compatibility, DUAL Mode: platform-specific validation, GUI Mode: platform UI testing

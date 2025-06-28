@@ -8,7 +8,7 @@ from typing import Optional, List, Dict, Any
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QHeaderView, QPushButton, QLabel, QCheckBox, QFrame, QSplitter,
-    QComboBox, QLineEdit, QMessageBox, QSizePolicy
+    QComboBox, QLineEdit, QMessageBox, QSizePolicy, QColorDialog
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QColor
@@ -295,11 +295,17 @@ class SelectionPanel(QWidget, LoggerMixin):
             label_item.setData(Qt.UserRole, selection_id)
             self.selection_table.setItem(row, 1, label_item)
             
-            # Color display
+            # Color display (clickable)
             color_frame = QFrame()
             color_frame.setFixedSize(40, 20)
             color_hex = data.get('color', '#FF0000')
-            color_frame.setStyleSheet(f"background-color: {color_hex}; border: 1px solid black;")
+            color_frame.setStyleSheet(f"""
+                background-color: {color_hex}; 
+                border: 1px solid black; 
+                border-radius: 3px;
+            """)
+            color_frame.setCursor(Qt.PointingHandCursor)
+            color_frame.mousePressEvent = lambda event, sid=selection_id: self.on_color_clicked(sid)
             self.selection_table.setCellWidget(row, 2, color_frame)
             
             # Well position
@@ -373,9 +379,97 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.delete_button.setEnabled(len(selected_rows) > 0)
     
     def on_well_clicked(self, well_position: str) -> None:
-        """Handle well plate clicks."""
+        """Handle well plate clicks to assign/unassign wells."""
         self.log_info(f"Well {well_position} clicked")
-        # Could implement well assignment dialog here
+        
+        # Get currently selected row in the table
+        selected_rows = self.selection_table.selectionModel().selectedRows()
+        
+        if not selected_rows:
+            # No selection in table - show info message
+            QMessageBox.information(
+                self, 
+                "웰 할당", 
+                "웰을 할당하려면 먼저 테이블에서 선택을 클릭하세요."
+            )
+            return
+        
+        # Get the selected selection ID
+        selected_row = selected_rows[0].row()
+        selection_ids = list(self.selections_data.keys())
+        
+        if selected_row < len(selection_ids):
+            selection_id = selection_ids[selected_row]
+            selection_data = self.selections_data[selection_id]
+            
+            # Check if this well is already assigned to another selection
+            conflicting_selection = None
+            for sid, data in self.selections_data.items():
+                if data.get('well_position') == well_position and sid != selection_id:
+                    conflicting_selection = sid
+                    break
+            
+            if conflicting_selection:
+                # Ask user if they want to reassign the well
+                reply = QMessageBox.question(
+                    self,
+                    "웰 재할당",
+                    f"웰 {well_position}은 이미 다른 선택에 할당되어 있습니다.\n"
+                    f"이 웰을 현재 선택 '{selection_data.get('label', '')}'에 재할당하시겠습니까?",
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.No
+                )
+                
+                if reply == QMessageBox.Yes:
+                    # Clear the well from the conflicting selection
+                    self.selections_data[conflicting_selection]['well_position'] = ''
+                    self.selection_updated.emit(conflicting_selection, {'well_position': ''})
+                else:
+                    return
+            
+            # Check if clicking on the same well that's already assigned
+            current_well = selection_data.get('well_position', '')
+            if current_well == well_position:
+                # Unassign the well
+                self.selections_data[selection_id]['well_position'] = ''
+                self.selection_updated.emit(selection_id, {'well_position': ''})
+                self.log_info(f"Unassigned well {well_position} from selection {selection_id}")
+            else:
+                # Assign the well to this selection
+                self.selections_data[selection_id]['well_position'] = well_position
+                self.selection_updated.emit(selection_id, {'well_position': well_position})
+                self.log_info(f"Assigned well {well_position} to selection {selection_id}")
+            
+            # Refresh UI
+            self.refresh_table()
+            self.refresh_well_plate()
+    
+    def on_color_clicked(self, selection_id: str) -> None:
+        """Handle color frame clicks to open color dialog."""
+        if selection_id not in self.selections_data:
+            return
+        
+        current_color = self.selections_data[selection_id].get('color', '#FF0000')
+        
+        # Open color dialog
+        color_dialog = QColorDialog(self)
+        color_dialog.setCurrentColor(QColor(current_color))
+        
+        if color_dialog.exec() == QColorDialog.Accepted:
+            new_color = color_dialog.currentColor()
+            new_color_hex = new_color.name()
+            
+            # Update selection data
+            self.selections_data[selection_id]['color'] = new_color_hex
+            
+            # Refresh UI
+            self.refresh_table()
+            self.refresh_well_plate()
+            
+            # Emit signal for external updates
+            self.selection_updated.emit(selection_id, {'color': new_color_hex})
+            
+            self.log_info(f"Updated color for selection {selection_id}: {new_color_hex}")
     
     def delete_selected(self) -> None:
         """Delete selected table rows."""
