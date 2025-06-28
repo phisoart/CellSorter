@@ -57,6 +57,10 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         # Selection tool
         self.rectangle_selector: Optional[RectangleSelector] = None
         self.selection_enabled = False
+        self.point_selection_enabled = False
+        
+        # Connect mouse events for point selection
+        self.mpl_connect('button_press_event', self._on_mouse_click)
         
         # Color configuration - will be set by theme manager
         self.theme_manager = None  # Will be injected
@@ -137,12 +141,78 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
                 )
             self.rectangle_selector.set_active(True)
             self.selection_enabled = True
+            self.point_selection_enabled = False  # Disable point selection when rectangle is enabled
             self.log_info("Rectangle selection enabled")
         else:
             if self.rectangle_selector:
                 self.rectangle_selector.set_active(False)
             self.selection_enabled = False
             self.log_info("Rectangle selection disabled")
+    
+    def enable_point_selection(self, enabled: bool = True) -> None:
+        """
+        Enable or disable individual point selection.
+        
+        Args:
+            enabled: Whether to enable point selection
+        """
+        self.point_selection_enabled = enabled
+        if enabled:
+            # Disable rectangle selection when point selection is enabled
+            if self.rectangle_selector:
+                self.rectangle_selector.set_active(False)
+            self.selection_enabled = False
+            self.log_info("Point selection enabled")
+        else:
+            self.log_info("Point selection disabled")
+    
+    def _on_mouse_click(self, event) -> None:
+        """
+        Handle mouse click events for point selection.
+        
+        Args:
+            event: Mouse click event
+        """
+        if not self.point_selection_enabled or event.inaxes != self.axes:
+            return
+        
+        if self.x_data is None or self.y_data is None:
+            return
+        
+        # Find the closest point to the click
+        if event.xdata is None or event.ydata is None:
+            return
+        
+        # Calculate distances to all points
+        distances = np.sqrt((self.x_data - event.xdata)**2 + (self.y_data - event.ydata)**2)
+        
+        # Find the closest point
+        closest_idx = np.argmin(distances)
+        
+        # Check if the click is close enough (within reasonable distance)
+        # Convert to display coordinates for distance check
+        xy_pixels = self.axes.transData.transform(np.column_stack([self.x_data, self.y_data]))
+        click_pixels = self.axes.transData.transform([event.xdata, event.ydata])
+        
+        distances_pixels = np.sqrt(np.sum((xy_pixels - click_pixels)**2, axis=1))
+        
+        # Only select if click is within 10 pixels of the point
+        if distances_pixels[closest_idx] <= 10:
+            # Toggle selection of the clicked point
+            if closest_idx in self.selected_indices:
+                self.selected_indices.remove(closest_idx)
+                self.log_info(f"Deselected point {closest_idx}")
+            else:
+                self.selected_indices.append(closest_idx)
+                self.log_info(f"Selected point {closest_idx}")
+            
+            # Update visual highlighting
+            self._update_selection_visual()
+            
+            # Emit signal
+            self.selection_changed.emit(self.selected_indices)
+            
+            self.log_info(f"Point selection: {len(self.selected_indices)} points selected")
     
     def _on_rectangle_select(self, eclick, erelease) -> None:
         """
@@ -253,7 +323,7 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
     
     # Signals
     plot_created = Signal(str, str)  # x_column, y_column
-    selection_made = Signal(list)  # selected_indices
+    selection_made = Signal(list, str)  # selected_indices, selection_method
     column_changed = Signal(str, str)  # axis, column_name
     
     def __init__(self, parent: Optional[QWidget] = None):
@@ -292,9 +362,13 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         self.plot_button = QPushButton("Create Plot")
         self.plot_button.setEnabled(False)
         
-        self.select_button = QPushButton("Enable Selection")
+        self.select_button = QPushButton("Rectangle Selection")
         self.select_button.setCheckable(True)
         self.select_button.setEnabled(False)
+        
+        self.point_select_button = QPushButton("Point Selection")
+        self.point_select_button.setCheckable(True)
+        self.point_select_button.setEnabled(False)
         
         self.clear_button = QPushButton("Clear Selection")
         self.clear_button.setEnabled(False)
@@ -306,6 +380,7 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         controls_layout.addWidget(self.y_combo)
         controls_layout.addWidget(self.plot_button)
         controls_layout.addWidget(self.select_button)
+        controls_layout.addWidget(self.point_select_button)
         controls_layout.addWidget(self.clear_button)
         controls_layout.addStretch()
         
@@ -339,7 +414,8 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
     def connect_signals(self) -> None:
         """Connect widget signals."""
         self.plot_button.clicked.connect(self.create_plot)
-        self.select_button.toggled.connect(self.toggle_selection)
+        self.select_button.toggled.connect(self.toggle_rectangle_selection)
+        self.point_select_button.toggled.connect(self.toggle_point_selection)
         self.clear_button.clicked.connect(self.clear_selection)
         self.canvas.selection_changed.connect(self._on_selection_changed)
         
@@ -414,6 +490,7 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         
         # Enable controls
         self.select_button.setEnabled(True)
+        self.point_select_button.setEnabled(True)
         self.clear_button.setEnabled(True)
         
         # Update status
@@ -424,23 +501,45 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         
         self.log_info(f"Created scatter plot: {x_column} vs {y_column} ({len(x_data):,} points)")
     
-    def toggle_selection(self, enabled: bool) -> None:
+    def toggle_rectangle_selection(self, enabled: bool) -> None:
         """
         Toggle rectangle selection mode.
         
         Args:
-            enabled: Whether selection is enabled
+            enabled: Whether rectangle selection is enabled
         """
         self.canvas.enable_rectangle_selection(enabled)
         
         if enabled:
-            self.select_button.setText("Disable Selection")
-            self.status_label.setText("Selection mode enabled - drag to select points")
+            # Disable point selection if rectangle selection is enabled
+            self.point_select_button.setChecked(False)
+            self.select_button.setText("Disable Rectangle")
+            self.status_label.setText("Rectangle selection enabled - drag to select points")
         else:
-            self.select_button.setText("Enable Selection")
-            self.status_label.setText("Selection mode disabled")
+            self.select_button.setText("Rectangle Selection")
+            self.status_label.setText("Rectangle selection disabled")
         
-        self.log_info(f"Selection mode {'enabled' if enabled else 'disabled'}")
+        self.log_info(f"Rectangle selection {'enabled' if enabled else 'disabled'}")
+    
+    def toggle_point_selection(self, enabled: bool) -> None:
+        """
+        Toggle individual point selection mode.
+        
+        Args:
+            enabled: Whether point selection is enabled
+        """
+        self.canvas.enable_point_selection(enabled)
+        
+        if enabled:
+            # Disable rectangle selection if point selection is enabled
+            self.select_button.setChecked(False)
+            self.point_select_button.setText("Disable Point")
+            self.status_label.setText("Point selection enabled - click points to select/deselect")
+        else:
+            self.point_select_button.setText("Point Selection")
+            self.status_label.setText("Point selection disabled")
+        
+        self.log_info(f"Point selection {'enabled' if enabled else 'disabled'}")
     
     def clear_selection(self) -> None:
         """Clear current selection."""
@@ -461,8 +560,16 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         else:
             self.status_label.setText("No points selected")
         
-        # Emit signal
-        self.selection_made.emit(indices)
+        # Determine selection method based on current mode
+        if self.canvas.point_selection_enabled:
+            selection_method = "point_selection"
+        elif self.canvas.selection_enabled:
+            selection_method = "rectangle_selection"
+        else:
+            selection_method = "unknown"
+        
+        # Emit signal with method information
+        self.selection_made.emit(indices, selection_method)
     
     def highlight_indices(self, indices: List[int], color: str = None) -> None:
         """

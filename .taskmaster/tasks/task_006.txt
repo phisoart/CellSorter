@@ -1,22 +1,11 @@
 # Task ID: 6
-# Title: Test CSV Processing in Headless Mode
-# Status: done
+# Title: Scatter Plot Operations
+# Status: pending
 # Dependencies: 4 (Not found)
-# Priority: high
-# Description: Headless 모드에서 CSV 파싱 및 데이터 처리 테스트
+# Priority: medium
+# Description: Test plot generation without display and verify interactive selection simulation
 # Details:
-CSVParser가 UI 없이 CellProfiler CSV 파일을 파싱하고, 데이터 검증 및 처리가 올바르게 작동하는지 테스트합니다.
-
-✅ 완료된 작업:
-- 기존 tests/test_csv_parser.py: 모든 테스트 통과
-- CSV 파싱, 데이터 검증, 성능 테스트 완료
-- 헤드리스 모드에서의 CSV 처리 기능 검증됨
-
-🔄 남은 작업:
-- 3모드 아키텍처에 맞는 추가 테스트 생성 필요
+Test plot generation without display, verify interactive selection simulation, test axis selection and updates, validate export functionality, test performance with large datasets
 
 # Test Strategy:
-1. 샘플 CSV 파일 파싱 테스트
-2. 데이터 검증 로직 테스트
-3. 대용량 데이터(50,000+ rows) 처리 성능 테스트
-4. 에러 핸들링 테스트
+DEV Mode: headless plot generation, DUAL Mode: plot data consistency, GUI Mode: interactive plot testing

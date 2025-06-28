@@ -43,16 +43,11 @@ from models.csv_parser import CSVParser
 from models.coordinate_transformer import CoordinateTransformer
 from models.selection_manager import SelectionManager
 from models.extractor import Extractor
-from models.session_manager import SessionManager
-from models.template_manager import TemplateManager
-from models.auto_session import AutoSessionManager
 from components.widgets.scatter_plot import ScatterPlotWidget
 from components.widgets.selection_panel import SelectionPanel
 from components.widgets.minimap import MinimapWidget
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
-from components.dialogs.batch_process_dialog import BatchProcessDialog
-from components.dialogs.template_management_dialog import TemplateManagementDialog
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -69,8 +64,6 @@ class MainWindow(QMainWindow, LoggerMixin):
     # Signals
     image_loaded = Signal(str)  # File path
     csv_loaded = Signal(str)    # File path
-    session_saved = Signal(str) # File path
-    session_loaded = Signal(str) # File path
     export_requested = Signal() # Export protocol request
     
     def __init__(self, theme_manager: ThemeManager, update_checker=None, parent: Optional[QWidget] = None):
@@ -100,13 +93,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.coordinate_transformer = CoordinateTransformer(self)
         self.selection_manager = SelectionManager(self)
         self.extractor = Extractor(self)
-        self.session_manager = SessionManager(self)
-        self.template_manager = TemplateManager(parent=self)
         self.scatter_plot_widget = ScatterPlotWidget(self)
         self.selection_panel = SelectionPanel(self)
-        
-        # Initialize auto-session manager
-        self.auto_session_manager = AutoSessionManager(self.session_manager, self)
         
         # Initialize minimap widget
         self.minimap_widget = MinimapWidget(self)
@@ -122,9 +110,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Restore window state
         self.restore_settings()
-        
-        # Initialize auto-session system
-        self.auto_session_manager.initialize()
         
         self.log_info("CellSorter main window initialized")
     
@@ -276,15 +261,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_open_csv.setShortcut(QKeySequence("Ctrl+Shift+O"))
         self.action_open_csv.setStatusTip("Open CellProfiler CSV data file")
         
-        self.action_save_session = QAction("&Save Session", self)
-        self.action_save_session.setShortcut(QKeySequence.Save)
-        self.action_save_session.setStatusTip("Save current analysis session")
-        self.action_save_session.setEnabled(False)
-        
-        self.action_load_session = QAction("&Load Session...", self)
-        self.action_load_session.setShortcut(QKeySequence("Ctrl+L"))
-        self.action_load_session.setStatusTip("Load previous analysis session")
-        
         self.action_export_protocol = QAction("&Export Protocol...", self)
         self.action_export_protocol.setShortcut(QKeySequence("Ctrl+E"))
         self.action_export_protocol.setStatusTip("Export .cxprotocol file for CosmoSort")
@@ -293,25 +269,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_exit = QAction("E&xit", self)
         self.action_exit.setShortcut(QKeySequence.Quit)
         self.action_exit.setStatusTip("Exit CellSorter")
-        
-        # Edit actions
-        self.action_undo = QAction("&Undo", self)
-        self.action_undo.setShortcut(QKeySequence.Undo)
-        self.action_undo.setEnabled(False)
-        
-        self.action_redo = QAction("&Redo", self)
-        self.action_redo.setShortcut(QKeySequence.Redo)
-        self.action_redo.setEnabled(False)
-        
-        self.action_select_all = QAction("Select &All", self)
-        self.action_select_all.setShortcut(QKeySequence.SelectAll)
-        self.action_select_all.setStatusTip("Select all items")
-        self.action_select_all.setEnabled(False)
-        
-        self.action_delete_selection = QAction("&Delete Selection", self)
-        self.action_delete_selection.setShortcut(QKeySequence.Delete)
-        self.action_delete_selection.setStatusTip("Delete selected items")
-        self.action_delete_selection.setEnabled(False)
         
         # View actions
         self.action_zoom_in = QAction("Zoom &In", self)
@@ -381,16 +338,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_toggle_panel.setShortcut(QKeySequence("Space"))
         self.action_toggle_panel.setStatusTip("Toggle side panel visibility")
         
-        # Analysis actions
-        self.action_batch_process = QAction("&Batch Process...", self)
-        self.action_batch_process.setShortcut(QKeySequence("Ctrl+B"))
-        self.action_batch_process.setStatusTip("Process multiple image/CSV file pairs")
-        
-        # Template actions
-        self.action_manage_templates = QAction("&Manage Templates...", self)
-        self.action_manage_templates.setShortcut(QKeySequence("Ctrl+T"))
-        self.action_manage_templates.setStatusTip("Manage analysis templates")
-        
         # Help actions
         self.action_about = QAction("&About CellSorter", self)
         self.action_about.setStatusTip("About this application")
@@ -410,20 +357,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         file_menu.addAction(self.action_open_image)
         file_menu.addAction(self.action_open_csv)
         file_menu.addSeparator()
-        file_menu.addAction(self.action_save_session)
-        file_menu.addAction(self.action_load_session)
-        file_menu.addSeparator()
         file_menu.addAction(self.action_export_protocol)
         file_menu.addSeparator()
         file_menu.addAction(self.action_exit)
-        
-        # Edit menu
-        edit_menu = menubar.addMenu("&Edit")
-        edit_menu.addAction(self.action_undo)
-        edit_menu.addAction(self.action_redo)
-        edit_menu.addSeparator()
-        edit_menu.addAction(self.action_select_all)
-        edit_menu.addAction(self.action_delete_selection)
         
         # View menu
         view_menu = menubar.addMenu("&View")
@@ -442,13 +378,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         tools_menu.addSeparator()
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
-        tools_menu.addSeparator()
-        tools_menu.addAction(self.action_manage_templates)
-        
-        # Analysis menu
-        analysis_menu = menubar.addMenu("&Analysis")
-        analysis_menu.addAction("Generate Statistics...")
-        analysis_menu.addAction(self.action_batch_process)
         
         # Help menu
         help_menu = menubar.addMenu("&Help")
@@ -469,8 +398,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         toolbar.addAction(self.action_open_csv)
         toolbar.addSeparator()
         
-        # Session operations
-        toolbar.addAction(self.action_save_session)
+        # Export operations
         toolbar.addAction(self.action_export_protocol)
         toolbar.addSeparator()
         
@@ -535,16 +463,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         # File actions
         self.action_open_image.triggered.connect(self.open_image_file)
         self.action_open_csv.triggered.connect(self.open_csv_file)
-        self.action_save_session.triggered.connect(self.save_session)
-        self.action_load_session.triggered.connect(self.load_session)
         self.action_export_protocol.triggered.connect(self.export_protocol)
         self.action_exit.triggered.connect(self.close)
-        
-        # Edit actions
-        self.action_undo.triggered.connect(self.undo)
-        self.action_redo.triggered.connect(self.redo)
-        self.action_select_all.triggered.connect(self.select_all)
-        self.action_delete_selection.triggered.connect(self.delete_selection)
         
         # View actions
         self.action_zoom_in.triggered.connect(self.zoom_in)
@@ -565,10 +485,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_calibration_tool.triggered.connect(self.activate_calibration_tool)
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
-        self.action_manage_templates.triggered.connect(self.manage_templates)
-        
-        # Analysis actions
-        self.action_batch_process.triggered.connect(self.batch_process)
         
         # Help actions
         self.action_about.triggered.connect(self.show_about)
@@ -607,11 +523,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Minimap connections
         self.minimap_widget.navigation_requested.connect(self.image_handler.navigate_to_position)
         self.image_handler.zoom_changed.connect(self._update_minimap_viewport)
-        
-        # Auto-session connections
-        self.auto_session_manager.session_available.connect(self._on_session_available)
-        self.auto_session_manager.recovery_available.connect(self._on_recovery_available)
-        self.auto_session_manager.auto_save_completed.connect(self._on_auto_save_completed)
     
     @error_handler("Opening image file")
     def open_image_file(self) -> None:
@@ -647,54 +558,7 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_window_title()
             self.log_info(f"Loading CSV: {file_path}")
     
-    @error_handler("Saving session")
-    def save_session(self) -> None:
-        """Save current analysis session."""
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Save Session",
-            "",
-            "Session Files (*.cellsession)"
-        )
-        
-        if file_path:
-            # Collect current session data
-            session_data = self._collect_session_data()
-            
-            # Save using session manager
-            if self.session_manager.save_session(file_path, session_data):
-                self.session_saved.emit(file_path)
-                self.update_status(f"Session saved: {Path(file_path).name}")
-                self.is_modified = False
-                self.log_info(f"Session saved: {file_path}")
-            else:
-                QMessageBox.warning(self, "Save Failed", "Failed to save session file.")
-                self.log_error(f"Failed to save session: {file_path}")
-    
-    @error_handler("Loading session")
-    def load_session(self) -> None:
-        """Load a previous analysis session."""
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Load Session",
-            "",
-            "Session Files (*.cellsession)"
-        )
-        
-        if file_path:
-            # Load using session manager
-            session_data = self.session_manager.load_session(file_path)
-            
-            if session_data:
-                # Restore session data
-                self._restore_session_data(session_data)
-                self.session_loaded.emit(file_path)
-                self.update_status(f"Session loaded: {Path(file_path).name}")
-                self.update_window_title()
-                self.log_info(f"Session loaded: {file_path}")
-            else:
-                QMessageBox.warning(self, "Load Failed", "Failed to load session file.")
-                self.log_error(f"Failed to load session: {file_path}")
+
     
     @error_handler("Exporting analysis results")
     def export_protocol(self) -> None:
@@ -710,22 +574,7 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_status("Export completed successfully")
             self.log_info("Analysis results exported")
     
-    @error_handler("Starting batch processing")
-    def batch_process(self) -> None:
-        """Open batch processing dialog for multiple file pairs."""
-        # Show batch processing dialog
-        batch_dialog = BatchProcessDialog(self)
-        if batch_dialog.exec() == QDialog.Accepted:
-            self.update_status("Batch processing completed")
-            self.log_info("Batch processing completed")
-    
-    def undo(self) -> None:
-        """Undo last action."""
-        self.update_status("Undo performed")
-    
-    def redo(self) -> None:
-        """Redo last undone action."""
-        self.update_status("Redo performed")
+
     
     def zoom_in(self) -> None:
         """Zoom in on image."""
@@ -783,21 +632,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.is_modified = True
         self.update_window_title()
     
-    def select_all(self) -> None:
-        """Select all cells in current view."""
-        if hasattr(self.scatter_plot_widget, 'select_all'):
-            self.scatter_plot_widget.select_all()
-            self.update_status("Selected all cells")
-        else:
-            self.update_status("Select all not available")
-    
-    def delete_selection(self) -> None:
-        """Delete currently selected items."""
-        if hasattr(self.selection_panel, 'delete_selected'):
-            self.selection_panel.delete_selected()
-            self.update_status("Deleted selected items")
-        else:
-            self.update_status("No items selected to delete")
+
     
     def reset_view(self) -> None:
         """Reset view to default state."""
@@ -855,17 +690,7 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.image_handler.set_calibration_mode(False)
             self.update_status("Calibration tool deactivated")
     
-    @error_handler("Opening template management")
-    def manage_templates(self) -> None:
-        """Open template management dialog."""
-        dialog = TemplateManagementDialog(self.template_manager, self)
-        dialog.template_applied.connect(self.on_template_applied)
-        dialog.exec()
-    
-    def on_template_applied(self, template_type: str, template_id: str, config: dict) -> None:
-        """Handle template application."""
-        self.update_status(f"Applied {template_type} template: {config.get('metadata', {}).get('name', 'Unknown')}")
-        self.log_info(f"Template applied: {template_type} - {template_id}")
+
     
     def toggle_theme(self) -> None:
         """Toggle between light and dark themes."""
@@ -1062,25 +887,35 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.update_status(f"CSV loading failed: {error_message}")
         self.log_error(f"CSV loading failed: {error_message}")
     
-    def _on_selection_made(self, indices: list) -> None:
-        """Handle cell selection from scatter plot (rectangle selection only)."""
+    def _on_selection_made(self, indices: list, method: str = "rectangle_selection") -> None:
+        """Handle cell selection from scatter plot."""
         if indices:
-            # This handler only processes rectangle selections from the scatter plot
+            # Create label based on selection method
+            if method == "point_selection":
+                label = f"Point_{len(self.selection_manager.selections) + 1}"
+                status_message = f"Selected {len(indices)} cells using point selection"
+            elif method == "rectangle_selection":
+                label = f"Rectangle_{len(self.selection_manager.selections) + 1}"
+                status_message = f"Selected {len(indices)} cells using rectangle selection"
+            else:
+                label = f"Selection_{len(self.selection_manager.selections) + 1}"
+                status_message = f"Selected {len(indices)} cells"
+            
             selection_id = self.selection_manager.add_selection(
                 cell_indices=indices,
-                label=f"Rectangle_{len(self.selection_manager.selections) + 1}"
+                label=label
             )
             
             if selection_id:
-                self.update_status(f"Selected {len(indices)} cells using rectangle selection")
+                self.update_status(status_message)
                 self.is_modified = True
                 self.update_window_title()
                 
                 # Store selection method in metadata
                 selection = self.selection_manager.get_selection(selection_id)
                 if selection:
-                    selection.metadata['selection_method'] = 'rectangle_selection'
-                self.log_info(f"Rectangle selection: {len(indices)} cells")
+                    selection.metadata['selection_method'] = method
+                self.log_info(f"{method}: {len(indices)} cells")
         else:
             self.update_status("No cells selected")
     
@@ -1305,178 +1140,5 @@ class MainWindow(QMainWindow, LoggerMixin):
             
             self.minimap_widget.update_viewport(viewport_rect, image_size)
     
-    def _on_session_available(self, session_info: dict) -> None:
-        """Handle available session notification."""
-        session_name = session_info.get('name', 'Unknown')
-        modified = session_info.get('modified', 'Unknown')
-        
-        reply = QMessageBox.question(
-            self,
-            "Recent Session Available",
-            f"Would you like to load the recent session?\n\n"
-            f"Session: {session_name}\n"
-            f"Modified: {modified}",
-            QMessageBox.Yes | QMessageBox.No
-        )
-        
-        if reply == QMessageBox.Yes:
-            session_path = session_info.get('path')
-            if session_path:
-                session_data = self.session_manager.load_session(session_path)
-                if session_data:
-                    self._restore_session_data(session_data)
+
     
-    def _on_recovery_available(self, recovery_path: str) -> None:
-        """Handle crash recovery session."""
-        reply = QMessageBox.warning(
-            self,
-            "Crash Recovery",
-            "A previous session was not closed properly.\n"
-            "Would you like to recover your work?",
-            QMessageBox.Yes | QMessageBox.No
-        )
-        
-        if reply == QMessageBox.Yes:
-            session_data = self.session_manager.load_session(recovery_path)
-            if session_data:
-                self._restore_session_data(session_data)
-                self.update_status("Session recovered successfully")
-    
-    def _on_auto_save_completed(self, save_path: str) -> None:
-        """Handle auto-save completion."""
-        self.update_status(f"Auto-saved: {Path(save_path).name}")
-        self.log_info(f"Auto-save completed: {save_path}")
-    
-    def _collect_session_data(self) -> Dict[str, Any]:
-        """
-        Collect current session data for saving.
-        
-        Returns:
-            Session data dictionary
-        """
-        # Get current selections
-        selections_data = []
-        for selection in self.selection_manager.get_all_selections():
-            selection_data = {
-                'id': selection.id,
-                'label': selection.label,
-                'color': selection.color,
-                'cell_indices': selection.cell_indices,
-                'well_position': selection.well_position,
-                'status': selection.status.value,
-                'created_at': datetime.fromtimestamp(selection.created_timestamp).isoformat(),
-                'metadata': selection.metadata
-            }
-            selections_data.append(selection_data)
-        
-        # Get calibration data
-        calibration_data = {
-            'points': [],
-            'transformation_matrix': None,
-            'is_calibrated': self.coordinate_transformer.is_calibrated
-        }
-        
-        for point in self.coordinate_transformer.calibration_points:
-            point_data = {
-                'pixel_x': point.pixel_x,
-                'pixel_y': point.pixel_y,
-                'stage_x': point.stage_x,
-                'stage_y': point.stage_y,
-                'label': point.label
-            }
-            calibration_data['points'].append(point_data)
-        
-        if self.coordinate_transformer.transform_matrix is not None:
-            calibration_data['transformation_matrix'] = self.coordinate_transformer.transform_matrix.tolist()
-        
-        # Get well assignments
-        well_assignments = {}
-        for selection in self.selection_manager.get_all_selections():
-            if selection.well_position:
-                well_assignments[selection.well_position] = {
-                    'selection_id': selection.id,
-                    'label': selection.label,
-                    'color': selection.color
-                }
-        
-        # Create session data
-        session_data = self.session_manager.create_new_session()
-        session_data['data'].update({
-            'image_file': self.current_image_path,
-            'csv_file': self.current_csv_path,
-            'calibration': calibration_data,
-            'selections': selections_data,
-            'well_assignments': well_assignments,
-            'settings': {
-                'zoom_level': getattr(self.image_handler, 'zoom_level', 1.0),
-                'show_overlays': getattr(self.image_handler, 'show_overlays', True),
-                'overlay_alpha': 0.5
-            }
-        })
-        
-        # Update auto-session manager
-        self.auto_session_manager.update_session_data(session_data)
-        
-        return session_data
-    
-    def _restore_session_data(self, session_data: Dict[str, Any]) -> None:
-        """
-        Restore session data after loading.
-        
-        Args:
-            session_data: Session data to restore
-        """
-        data = session_data.get('data', {})
-        
-        # Clear current state
-        self.selection_manager.clear_all_selections()
-        self.coordinate_transformer.clear_calibration()
-        self.image_handler.clear_all_cell_highlights()
-        
-        # Restore files
-        image_file = data.get('image_file')
-        csv_file = data.get('csv_file')
-        
-        if image_file and Path(image_file).exists():
-            self.current_image_path = image_file
-            self.image_handler.load_image(image_file)
-        
-        if csv_file and Path(csv_file).exists():
-            self.current_csv_path = csv_file
-            self.csv_parser.load_csv(csv_file)
-        
-        # Restore calibration
-        calibration_data = data.get('calibration', {})
-        for point_data in calibration_data.get('points', []):
-            self.coordinate_transformer.add_calibration_point(
-                point_data['pixel_x'],
-                point_data['pixel_y'],
-                point_data['stage_x'],
-                point_data['stage_y'],
-                point_data['label']
-            )
-        
-        # Restore selections
-        for selection_data in data.get('selections', []):
-            selection_id = self.selection_manager.add_selection(
-                cell_indices=selection_data['cell_indices'],
-                color=selection_data.get('color'),
-                label=selection_data['label']
-            )
-            
-            # Restore well assignment
-            well_position = selection_data.get('well_position')
-            if well_position and selection_id:
-                selection = self.selection_manager.get_selection(selection_id)
-                if selection:
-                    selection.well_position = well_position
-        
-        # Restore settings
-        settings = data.get('settings', {})
-        if hasattr(self.image_handler, 'zoom_level'):
-            self.image_handler.zoom_level = settings.get('zoom_level', 1.0)
-        if hasattr(self.image_handler, 'show_overlays'):
-            self.image_handler.show_overlays = settings.get('show_overlays', True)
-        
-        self.is_modified = False
-        self.log_info("Session data restored successfully")

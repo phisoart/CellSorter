@@ -1,22 +1,11 @@
 # Task ID: 10
-# Title: Test Protocol Export in Headless Mode
-# Status: done
-# Dependencies: 8 (Not found), 9 (Not found)
-# Priority: medium
-# Description: Headless 모드에서 프로토콜 파일 생성 테스트
+# Title: Template System Testing
+# Status: pending
+# Dependencies: 9 (Not found)
+# Priority: low
+# Description: Test template creation and loading across different modes
 # Details:
-Extractor가 UI 없이 .cxprotocol 파일을 생성하고, 올바른 형식과 내용을 포함하는지 테스트합니다.
-
-✅ 완료된 작업:
-- DEV 모드: tests/dev_mode/test_protocol_exporter.py (10/10 테스트 통과)
-- DUAL 모드: tests/dual_mode/test_export_consistency.py (6/6 테스트 통과)
-- GUI 모드: tests/gui_mode/test_export_production.py (GUI 초기화 문제로 실행 불가)
-
-🔄 남은 작업:
-- GUI 모드 테스트 수정 필요 (Mock 기반으로 변경)
+Test template creation and loading, verify template application, test template validation, validate template sharing, test version compatibility
 
 # Test Strategy:
-1. 가상 선택 데이터로 프로토콜 생성
-2. INI 형식 검증
-3. 좌표 변환 적용 확인
-4. 파일 무결성 테스트
+DEV Mode: template processing logic, DUAL Mode: template consistency validation, GUI Mode: template UI interactions

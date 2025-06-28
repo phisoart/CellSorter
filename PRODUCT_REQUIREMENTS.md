@@ -511,6 +511,66 @@ To provide researchers with an intuitive, powerful tool that bridges the gap bet
 
 This product requirements document provides the foundation for developing CellSorter as a robust, user-friendly tool that meets the specific needs of pathology researchers while maintaining the precision required for automated cell sorting applications. 
 
+## Excluded Features - Not Planned for Implementation
+
+The following features are **PERMANENTLY EXCLUDED** from CellSorter and will **NOT** be implemented in any future versions:
+
+### 🚫 Session Management Features (All Removed)
+- ❌ Save Session functionality
+- ❌ Load Session functionality  
+- ❌ Auto Session functionality
+- ❌ Session recovery features
+- ❌ Session persistence across application restarts
+- ❌ Session backup and restore
+- ❌ Session file management
+
+**Rationale**: CellSorter focuses on direct image analysis and protocol generation. Each analysis workflow is designed to be completed in a single session with immediate protocol export.
+
+### 🚫 Edit Menu Features (All Removed)
+- ❌ Undo functionality
+- ❌ Redo functionality
+- ❌ Copy operations
+- ❌ Paste operations
+- ❌ Cut operations
+- ❌ Edit history
+- ❌ Clipboard integration
+- ❌ Text editing operations beyond basic input fields
+
+**Rationale**: CellSorter is a specialized analysis tool, not a general-purpose document editor. Selection modifications are handled through direct interaction with visualization components.
+
+### 🚫 Template Management (Removed)
+- ❌ Tools → Manage Templates functionality
+- ❌ Template creation and editing
+- ❌ Template library management
+- ❌ Template import/export
+- ❌ Workflow templates
+- ❌ Selection templates
+- ❌ Calibration templates
+
+**Rationale**: Direct analysis workflow provides more flexibility and reduces complexity. Users can maintain their own external documentation for protocol standardization.
+
+### 🚫 Analysis Menu Features (All Removed)
+- ❌ Batch processing capabilities
+- ❌ Statistical analysis functions
+- ❌ Data export to multiple formats
+- ❌ Advanced filtering options
+- ❌ Data visualization beyond basic scatter plots
+- ❌ Comparative analysis tools
+- ❌ Quality metrics calculations
+
+**Rationale**: CellSorter focuses specifically on cell selection and coordinate generation for the CosmoSort hardware. Advanced analysis should be performed in specialized tools like CellProfiler or R/Python.
+
+### Design Philosophy for Excluded Features
+
+CellSorter maintains a **focused, single-purpose design philosophy**:
+
+1. **Core Focus**: Cell selection and coordinate transformation for CosmoSort hardware
+2. **Simplicity**: Minimal feature set reduces complexity and training requirements
+3. **External Integration**: Complex analysis workflows should use dedicated tools
+4. **Workflow Efficiency**: Direct path from image → selection → export without intermediate save/load cycles
+
+These excluded features will **NEVER** be reconsidered for implementation, ensuring CellSorter remains a focused, efficient tool for its intended purpose.
+
 ## Development & Documentation Notes
 - 개발/테스트 의존성은 requirements-dev.txt, 빌드/배포 의존성은 requirements-build.txt에 분리 관리합니다.
 - 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다. 
