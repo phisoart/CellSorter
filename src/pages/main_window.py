@@ -501,7 +501,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.image_handler.image_load_failed.connect(self._on_image_load_failed)
         
         # Selection handling - connect to unified handler
-        self.scatter_plot_widget.selection_made.connect(self._on_selection_made)
+        # Use the new signal with method information for enhanced functionality
+        self.scatter_plot_widget.selection_made_with_method.connect(self._on_selection_made)
         
         # Connect expression filter specific signals if available
         if hasattr(self.scatter_plot_widget, 'expression_filter_widget') and self.scatter_plot_widget.expression_filter_widget:

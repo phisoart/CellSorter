@@ -323,7 +323,8 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
     
     # Signals
     plot_created = Signal(str, str)  # x_column, y_column
-    selection_made = Signal(list, str)  # selected_indices, selection_method
+    selection_made = Signal(list)  # selected_indices (for backward compatibility)
+    selection_made_with_method = Signal(list, str)  # selected_indices, selection_method
     column_changed = Signal(str, str)  # axis, column_name
     
     def __init__(self, parent: Optional[QWidget] = None):
@@ -568,8 +569,9 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         else:
             selection_method = "unknown"
         
-        # Emit signal with method information
-        self.selection_made.emit(indices, selection_method)
+        # Emit both signals for backward compatibility and new functionality
+        self.selection_made.emit(indices)  # Legacy signal for backward compatibility
+        self.selection_made_with_method.emit(indices, selection_method)  # New signal with method info
     
     def highlight_indices(self, indices: List[int], color: str = None) -> None:
         """
