@@ -1,0 +1,173 @@
+{
+	"meta": {
+		"generatedAt": "2025-06-28T05:24:38.345Z",
+		"tasksAnalyzed": 10,
+		"totalTasks": 16,
+		"analysisCount": 20,
+		"thresholdScore": 5,
+		"projectName": "Task Master",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 5,
+			"taskTitle": "Test Image Loading Without Display",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the remaining zoom test fix and 3-mode architecture test creation into specific technical subtasks, focusing on the failed zoom functionality and comprehensive headless image processing validation.",
+			"reasoning": "Medium-high complexity due to headless rendering challenges and zoom test debugging. Most work is complete (50/51 tests passing), requiring focused effort on remaining issues."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Test Virtual Scatter Plot Generation",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Create detailed subtasks for matplotlib backend configuration, virtual mouse event simulation, and comprehensive plot generation testing without GUI dependencies.",
+			"reasoning": "High complexity due to matplotlib backend management, virtual interaction simulation, and ensuring plot functionality works identically in headless mode."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Test Selection Management Synchronization",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Design subtasks for state synchronization validation between headless and GUI modes, including selection consistency, color management, and well plate assignment verification.",
+			"reasoning": "High complexity involving cross-mode state management, synchronization protocols, and ensuring data consistency across different execution environments."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Test Protocol Export in Headless Mode",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Focus on fixing the GUI mode test implementation using Mock-based approaches, as DEV and DUAL modes are already complete and passing.",
+			"reasoning": "Medium complexity with most work completed. Primary challenge is GUI test environment setup, which can be resolved through proper mocking strategies."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Test Session Save/Load in Both Modes",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Create subtasks for cross-mode session persistence testing, state serialization/deserialization validation, and version compatibility verification.",
+			"reasoning": "High complexity due to cross-mode compatibility requirements, state preservation challenges, and ensuring complete session restoration across different execution contexts."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Test Template System Integration",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Design subtasks for programmatic template operations, validation of template application without UI, and comprehensive template management testing.",
+			"reasoning": "Medium-high complexity involving template system abstraction from UI components and ensuring programmatic template operations maintain full functionality."
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "Test Error Handling in Headless Mode",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Create subtasks for comprehensive error scenario testing, logging validation, recovery mechanism verification, and data integrity assurance in headless environment.",
+			"reasoning": "High complexity requiring robust error simulation, validation of non-UI error handling paths, and ensuring system stability without user interaction capabilities."
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "Performance Benchmarking Between Modes",
+			"complexityScore": 4,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down into specific performance measurement subtasks for each operation type, memory profiling setup, and comparative analysis implementation.",
+			"reasoning": "Medium complexity involving systematic performance measurement and comparison. Well-defined scope with clear metrics, but requires careful benchmarking methodology."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Complete Integration Test Suite",
+			"complexityScore": 9,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Design comprehensive end-to-end workflow subtasks covering complete analysis pipeline, intermediate validation points, and full system integration verification.",
+			"reasoning": "Very high complexity as it integrates all previous components into a complete workflow test. Requires coordination of multiple subsystems and comprehensive validation."
+		},
+		{
+			"taskId": 16,
+			"taskTitle": "Test Main Window Integration (3-Mode Architecture)",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Focus on GUI mode test fixes using Mock-based approaches, as DEV and DUAL modes are complete. Create subtasks for proper GUI test environment setup and validation.",
+			"reasoning": "Medium-high complexity with significant progress already made (DEV and DUAL modes complete). Main challenge is GUI test environment configuration and mock implementation."
+		},
+		{
+			"taskId": "5",
+			"taskTitle": "Test Image Loading Without Display",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test image loading without display.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "7",
+			"taskTitle": "Test Virtual Scatter Plot Generation",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test virtual scatter plot generation.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "8",
+			"taskTitle": "Test Selection Management Synchronization",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test selection management synchronization.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "10",
+			"taskTitle": "Test Protocol Export in Headless Mode",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test protocol export in headless mode.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "11",
+			"taskTitle": "Test Session Save/Load in Both Modes",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test session save/load in both modes.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "12",
+			"taskTitle": "Test Template System Integration",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test template system integration.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "13",
+			"taskTitle": "Test Error Handling in Headless Mode",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test error handling in headless mode.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "14",
+			"taskTitle": "Performance Benchmarking Between Modes",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on performance benchmarking between modes.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "15",
+			"taskTitle": "Complete Integration Test Suite",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on complete integration test suite.",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": "16",
+			"taskTitle": "Test Main Window Integration (3-Mode Architecture)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on test main window integration (3-mode architecture).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		}
+	]
+}
