@@ -10,6 +10,7 @@ Supports both traditional GUI mode and headless development mode.
 from typing import Optional, Dict, Any, Union
 from pathlib import Path
 from datetime import datetime
+import platform
 
 import numpy as np
 
@@ -132,6 +133,17 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.setWindowTitle(f"{APP_NAME} - {APP_VERSION}")
         self.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT)
+        
+        # Fix titlebar visibility on macOS
+        if platform.system() == "Darwin":  # macOS
+            # Ensure title bar is visible on macOS
+            self.setWindowFlags(Qt.Window | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | 
+                              Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
+            # Set unified title and toolbar look on macOS
+            self.setUnifiedTitleAndToolBarOnMac(True)
+        else:
+            # Standard window flags for Windows/Linux
+            self.setWindowFlags(Qt.Window)
         
         # Central widget with splitter layout
         central_widget = QWidget()

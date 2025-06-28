@@ -106,27 +106,29 @@ class ThemeManager(QObject, LoggerMixin):
         super().__init__(parent)
         self.app = app
         self.settings = QSettings("CellSorter", "Theme")
-        self.current_theme = self.settings.value("theme", "light")
+        # Force dark mode only
+        self.current_theme = "dark"
+        self.settings.setValue("theme", "dark")
+        
+        # Apply dark theme immediately
+        self.apply_theme("dark")
         
     def apply_theme(self, theme_name: str) -> None:
         """
-        Apply a theme to the application.
+        Apply dark theme to the application (only dark mode supported).
         
         Args:
-            theme_name: Name of the theme ("light", "dark", or qt-material theme name)
+            theme_name: Theme name (forced to "dark")
         """
-        if theme_name in ["light", "dark"]:
-            self.apply_custom_theme(theme_name)
-        elif theme_name + ".xml" in self.QT_MATERIAL_THEMES:
-            self.apply_qt_material_theme(theme_name)
-        else:
-            self.log_error(f"Unknown theme: {theme_name}")
-            return
+        # Force dark mode only
+        theme_name = "dark"
+        
+        self.apply_custom_theme(theme_name)
             
         self.current_theme = theme_name
         self.settings.setValue("theme", theme_name)
         self.theme_changed.emit(theme_name)
-        self.log_info(f"Applied theme: {theme_name}")
+        self.log_info(f"Applied dark theme (forced dark mode)")
     
     def apply_custom_theme(self, theme_name: str) -> None:
         """Apply custom shadcn/ui inspired theme."""
@@ -173,15 +175,12 @@ class ThemeManager(QObject, LoggerMixin):
             self.apply_custom_theme("light" if "light" in theme_name else "dark")
     
     def toggle_theme(self) -> None:
-        """Toggle between light and dark themes."""
-        if self.current_theme == "light":
-            self.apply_theme("dark")
-        else:
-            self.apply_theme("light")
-    
+        """No-op: Only dark theme supported."""
+        self.log_info("Theme toggle disabled - dark mode only")
+        
     def get_current_theme(self) -> str:
-        """Get the current theme name."""
-        return self.current_theme
+        """Get the current theme name (always dark)."""
+        return "dark"
     
     def _hsl_to_qcolor(self, hsl_string: str) -> QColor:
         """Convert HSL string to QColor."""
