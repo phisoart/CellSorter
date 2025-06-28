@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QComboBox, QGroupBox, QFrame, QTabWidget, QTableWidget, 
     QTableWidgetItem, QCheckBox, QProgressBar
 )
-from PySide6.QtCore import Qt, Signal, QTimer, QThread, pyqtSignal
+from PySide6.QtCore import Qt, Signal, QTimer, QThread
 from PySide6.QtGui import QFont, QColor, QSyntaxHighlighter, QTextDocument, QTextCharFormat
 
 import pandas as pd
@@ -42,18 +42,18 @@ class ExpressionSyntaxHighlighter(QSyntaxHighlighter):
         
         # Define formats
         self.keyword_format = QTextCharFormat()
-        self.keyword_format.setColor(QColor(137, 89, 168))  # Purple
-        self.keyword_format.setFontWeight(QFont.Bold)
+        self.keyword_format.setForeground(QColor(137, 89, 168))  # Purple
+        self.keyword_format.setFontWeight(QFont.Weight.Bold)
         
         self.function_format = QTextCharFormat()
-        self.function_format.setColor(QColor(46, 125, 50))  # Green
-        self.function_format.setFontWeight(QFont.Bold)
+        self.function_format.setForeground(QColor(46, 125, 50))  # Green
+        self.function_format.setFontWeight(QFont.Weight.Bold)
         
         self.operator_format = QTextCharFormat()
-        self.operator_format.setColor(QColor(244, 67, 54))  # Red
+        self.operator_format.setForeground(QColor(244, 67, 54))  # Red
         
         self.number_format = QTextCharFormat()
-        self.number_format.setColor(QColor(33, 150, 243))  # Blue
+        self.number_format.setForeground(QColor(33, 150, 243))  # Blue
         
         # Define patterns
         self.keywords = ['and', 'or', 'not', 'AND', 'OR', 'NOT']
@@ -97,7 +97,7 @@ class ExpressionSyntaxHighlighter(QSyntaxHighlighter):
 class ExpressionEvaluationWorker(QThread):
     """Worker thread for expression evaluation."""
     
-    evaluation_complete = pyqtSignal(object)  # ExpressionResult
+    evaluation_complete = Signal(object)  # ExpressionResult
     
     def __init__(self, expression: str, data: pd.DataFrame):
         super().__init__()

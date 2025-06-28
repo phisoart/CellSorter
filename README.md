@@ -76,55 +76,55 @@ CellSorter provides researchers with an intuitive, powerful tool that bridges th
 ## 📁 Project Structure
 
 ```
-├── PRODUCT_REQUIREMENTS.md          # 제품 요구사항 명세서 ('무엇'과 '왜')
-├── README.md                        # 프로젝트 개요, 실행 방법, 설치 등
-├── ARCHITECTURE.md                 # 전체 기술 아키텍처 및 기술 스택 설명
-├── CODING_STYLE_GUIDE.md           # 네이밍 규칙, 디렉토리 구조, 문서화 규칙 등
-├── TESTING_STRATEGY.md             # 단위/통합 테스트 계획, 도구, 커버리지 기준
-├── .cursorignore                   # Cursor IDE용 무시 파일 설정
-├── .gitignore                      # Git 버전 관리 무시 파일 설정
+├── PRODUCT_REQUIREMENTS.md          # Product requirements specification ('what' and 'why')
+├── README.md                        # Project overview, execution methods, installation, etc.
+├── ARCHITECTURE.md                 # Overall technical architecture and tech stack description
+├── CODING_STYLE_GUIDE.md           # Naming conventions, directory structure, documentation rules, etc.
+├── TESTING_STRATEGY.md             # Unit/integration test plans, tools, coverage criteria
+├── .cursorignore                   # Cursor IDE ignore file settings
+├── .gitignore                      # Git version control ignore file settings
 │
-├── requirements.txt                # Production(런타임) Python 라이브러리 명세
-├── requirements-dev.txt            # 개발 및 테스트 의존성 명세
-├── requirements-build.txt          # 빌드/배포 의존성 명세
+├── requirements.txt                # Production(runtime) Python library specifications
+├── requirements-dev.txt            # Development and testing dependency specifications
+├── requirements-build.txt          # Build/deployment dependency specifications
 │
-├── /docs/                          # 문서 및 설계
-│   ├── /design/                    # UI/UX 설계 문서
-│   │   ├── DESIGN_SPEC.md          # UI 플로우 및 인터랙션 정의
-│   │   ├── DESIGN_SYSTEM.md        # 컴포넌트 라이브러리 및 디자인 시스템
-│   │   ├── style.css               # shadcn/ui + qt-material 스타일 정의
-│   │   └── assets/                 # 디자인 관련 이미지 및 mockup
+├── /docs/                          # Documentation and design
+│   ├── /design/                    # UI/UX design documents
+│   │   ├── DESIGN_SPEC.md          # UI flow and interaction definitions
+│   │   ├── DESIGN_SYSTEM.md        # Component library and design system
+│   │   ├── style.css               # shadcn/ui + qt-material style definitions
+│   │   └── assets/                 # Design-related images and mockups
 │   │
-│   ├── /examples/                  # 샘플 데이터 및 예제
-│   │   ├── data_FilterObjects_dapi_CK7n_CK20_CDX2.csv  # CellProfiler CSV 예제
-│   │   └── example.cxprotocol      # CosmoSort 프로토콜 예제
+│   ├── /examples/                  # Sample data and examples
+│   │   ├── data_FilterObjects_dapi_CK7n_CK20_CDX2.csv  # CellProfiler CSV example
+│   │   └── example.cxprotocol      # CosmoSort protocol example
 │   │
-│   ├── USER_PERSONAS.md            # 사용자 페르소나 정의
-│   ├── USER_SCENARIOS.md           # 사용자 시나리오 및 워크플로우
-│   └── PROJECT_STRUCTURE.md        # 프로젝트 구조 설명
+│   ├── USER_PERSONAS.md            # User persona definitions
+│   ├── USER_SCENARIOS.md           # User scenarios and workflows
+│   └── PROJECT_STRUCTURE.md        # Project structure description
 │
-├── /src/                           # PySide6 애플리케이션 코드
-│   ├── /components/                # 재사용 가능한 UI 컴포넌트
-│   │   ├── /base/                  # 기본 추상 컴포넌트 클래스
-│   │   ├── /dialogs/               # 모달 다이얼로그 컴포넌트
-│   │   └── /widgets/               # 커스텀 위젯 컴포넌트
-│   ├── /pages/                     # 메인 애플리케이션 화면
-│   ├── /models/                    # 데이터 모델 및 비즈니스 로직
-│   ├── /utils/                     # 유틸리티 함수 및 헬퍼
-│   ├── /config/                    # 설정 파일 및 상수
-│   ├── /assets/                    # 아이콘, 이미지 등 정적 파일
-│   └── main.py                     # 애플리케이션 진입점
+├── /src/                           # PySide6 application code
+│   ├── /components/                # Reusable UI components
+│   │   ├── /base/                  # Basic abstract component classes
+│   │   ├── /dialogs/               # Modal dialog components
+│   │   └── /widgets/               # Custom widget components
+│   ├── /pages/                     # Main application screens
+│   ├── /models/                    # Data models and business logic
+│   ├── /utils/                     # Utility functions and helpers
+│   ├── /config/                    # Configuration files and constants
+│   ├── /assets/                    # Icons, images, and static files
+│   └── main.py                     # Application entry point
 │
-├── /tests/                         # 단위 및 통합 테스트
-│   ├── /components/                # UI 컴포넌트 테스트
-│   ├── /pages/                     # 페이지/뷰 테스트
-│   ├── /models/                    # 비즈니스 로직 테스트
-│   └── /utils/                     # 유틸리티 함수 테스트
+├── /tests/                         # Unit and integration tests
+│   ├── /components/                # UI component tests
+│   ├── /pages/                     # Page/view tests
+│   ├── /models/                    # Business logic tests
+│   └── /utils/                     # Utility function tests
 │
-└── /.cursor/                       # Cursor IDE 설정
-    └── /rules/                     # 프로젝트별 AI 규칙 정의
-        ├── base-rules.mdc          # 기본 개발 규칙
-        └── update-rules.mdc        # 프로젝트 업데이트 규칙
+└── /.cursor/                       # Cursor IDE settings
+    └── /rules/                     # Project-specific AI rule definitions
+        ├── base-rules.mdc          # Basic development rules
+        └── update-rules.mdc        # Project update rules
 ```
 
 ## ⚙️ Installation
@@ -273,7 +273,7 @@ CellSorter is licensed under the MIT License. See [LICENSE](LICENSE) for details
 
 CellSorter supports three distinct operation modes for different use cases:
 
-### 1. GUI Mode (실제사용모드)
+### 1. GUI Mode (Production Mode)
 **Purpose**: Production use by end users  
 **Description**: Standard graphical interface for normal operation
 
@@ -286,7 +286,7 @@ export CELLSORTER_MODE=gui
 python run.py
 ```
 
-### 2. Dev Mode (디버깅모드 - Headless Only)
+### 2. Dev Mode (Debug Mode - Headless Only)
 **Purpose**: AI agents and headless development  
 **Description**: Terminal-only interface for automated operations and testing
 
@@ -303,7 +303,7 @@ python run.py --dev-mode dump-ui output.yaml
 python run.py --dev-mode validate-ui ui_definition.yaml
 ```
 
-### 3. Dual Mode (디버깅모드 - Both)
+### 3. Dual Mode (Debug Mode - Both)
 **Purpose**: Real-time debugging and demonstration  
 **Description**: Both headless and GUI running simultaneously - perfect for watching AI agents work
 
@@ -316,10 +316,10 @@ export CELLSORTER_MODE=dual
 python run.py
 ```
 
-**특징**: 
-- AI agent가 터미널에서 수행하는 모든 작업이 GUI에 실시간으로 반영됩니다
-- GUI에서의 사용자 조작이 headless 인터페이스에 즉시 동기화됩니다
-- 개발자가 AI agent의 작업을 시각적으로 확인하면서 디버깅할 수 있습니다
+**Features**: 
+- All operations performed by AI agents in the terminal are reflected in the GUI in real-time
+- User manipulations in the GUI are immediately synchronized to the headless interface
+- Developers can debug while visually confirming AI agent operations
 
 ## Installation
 

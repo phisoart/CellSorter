@@ -8,12 +8,13 @@ from typing import Optional, Dict
 from enum import Enum
 
 from PySide6.QtWidgets import QLineEdit, QWidget
-from PySide6.QtCore import Qt, Signal, Property
-from PySide6.QtGui import QPalette
+from PySide6.QtCore import Qt, Signal, Property, QPropertyAnimation, QEasingCurve
+from PySide6.QtGui import QPalette, QPainter, QPen, QColor
 
 from utils.design_tokens import DesignTokens
 from services.theme_manager import ThemeManager
 from utils.style_converter import convert_css_to_qt
+from utils.accessibility import setup_input_accessibility, set_error_state, update_loading_state, AccessibilityState
 
 
 class InputState(Enum):
@@ -22,6 +23,7 @@ class InputState(Enum):
     FOCUSED = "focused"
     ERROR = "error"
     DISABLED = "disabled"
+    PENDING = "pending"
 
 
 class BaseInput(QLineEdit):
@@ -29,12 +31,13 @@ class BaseInput(QLineEdit):
     Modern input field with validation states.
     
     Implements the design system's input specifications with proper
-    focus handling, error states, and accessibility features.
+    focus handling, error states, pending states, and accessibility features.
     """
     
     # Signals
     state_changed = Signal(str)
     error_changed = Signal(bool)
+    pending_changed = Signal(bool)
     
     def __init__(
         self,
@@ -52,7 +55,12 @@ class BaseInput(QLineEdit):
         
         self._state = InputState.DEFAULT
         self._has_error = False
+        self._is_pending = False
         self._theme_manager: Optional[ThemeManager] = None
+        
+        # Loading animation properties
+        self._loading_angle = 0.0
+        self._loading_animation: Optional[QPropertyAnimation] = None
         
         if placeholder:
             self.setPlaceholderText(placeholder)
@@ -70,9 +78,12 @@ class BaseInput(QLineEdit):
         # Set dimensions
         self.setMinimumHeight(tokens.DIMENSIONS['input_height'])
         
-        # Set accessible properties
-        self.setAccessibleName(self.placeholderText() or "Input field")
-        self.setAccessibleDescription("Text input field")
+        # Enhanced accessibility using utility functions
+        setup_input_accessibility(
+            self,
+            label=self.placeholderText() or "Input field",
+            placeholder=self.placeholderText()
+        )
         
         # Clear button
         self.setClearButtonEnabled(True)
@@ -116,6 +127,11 @@ class BaseInput(QLineEdit):
             border-color: var(--destructive);
             outline-color: var(--destructive);
         }}
+        
+        QLineEdit[isPending="true"] {{
+            border-color: var(--ring);
+            opacity: 0.8;
+        }}
         """
         
         # Convert CSS variables to Qt values
@@ -124,6 +140,7 @@ class BaseInput(QLineEdit):
         
         # Update dynamic properties
         self.setProperty("hasError", self._has_error)
+        self.setProperty("isPending", self._is_pending)
         
         # Force style update
         self.style().unpolish(self)
@@ -182,11 +199,8 @@ class BaseInput(QLineEdit):
             self._has_error = has_error
             self._state = InputState.ERROR if has_error else InputState.DEFAULT
             
-            # Update accessibility
-            if has_error and error_message:
-                self.setAccessibleDescription(f"Error: {error_message}")
-            else:
-                self.setAccessibleDescription("Text input field")
+            # Update accessibility using utility function
+            set_error_state(self, has_error, error_message)
             
             self._apply_style()
             self.error_changed.emit(has_error)
@@ -212,9 +226,12 @@ class BaseInput(QLineEdit):
             self.state_changed.emit(self._state.value)
     
     def setEnabled(self, enabled: bool) -> None:
-        """Override to handle state changes."""
+        """Override setEnabled to handle state changes."""
         super().setEnabled(enabled)
-        self._state = InputState.DEFAULT if enabled else InputState.DISABLED
+        if enabled:
+            self._state = InputState.DEFAULT if not self._has_error and not self._is_pending else (InputState.ERROR if self._has_error else InputState.PENDING)
+        else:
+            self._state = InputState.DISABLED
         self.state_changed.emit(self._state.value)
     
     # Properties
@@ -225,8 +242,17 @@ class BaseInput(QLineEdit):
     
     @property
     def has_error(self) -> bool:
-        """Check if input has error."""
+        """Get whether the input has an error."""
         return self._has_error
+    
+    @property
+    def is_pending(self) -> bool:
+        """Get whether the input is in pending state."""
+        return self._is_pending
+    
+    def clear_pending(self) -> None:
+        """Clear pending state."""
+        self.set_pending(False)
     
     # Convenience factory methods
     @staticmethod
@@ -258,3 +284,112 @@ class BaseInput(QLineEdit):
         input_field = BaseInput(placeholder, parent)
         # Could add search icon in the future
         return input_field 
+
+    def _setup_loading_animation(self) -> None:
+        """Set up the loading spinner animation."""
+        if not self._loading_animation:
+            self._loading_animation = QPropertyAnimation(self, b"loading_angle")
+            self._loading_animation.setDuration(1000)
+            self._loading_animation.setStartValue(0.0)
+            self._loading_animation.setEndValue(360.0)
+            self._loading_animation.setLoopCount(-1)  # Infinite loop
+            self._loading_animation.setEasingCurve(QEasingCurve.Type.Linear)
+    
+    @Property(float)
+    def loading_angle(self) -> float:
+        """Get the current loading spinner angle."""
+        return self._loading_angle
+    
+    @loading_angle.setter
+    def loading_angle(self, angle: float) -> None:
+        """Set the loading spinner angle."""
+        self._loading_angle = angle % 360.0
+        self.update()  # Trigger repaint
+    
+    def paintEvent(self, event) -> None:
+        """Custom paint event to draw loading spinner when pending."""
+        super().paintEvent(event)
+        
+        if self._is_pending:
+            painter = QPainter(self)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            
+            # Calculate spinner position and size
+            rect = self.rect()
+            spinner_size = 16
+            margin = 8
+            
+            # Position spinner on the right side
+            center_x = rect.width() - margin - spinner_size // 2
+            center_y = rect.height() // 2
+            
+            # Set up pen
+            pen = QPen()
+            pen.setWidth(2)
+            pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+            
+            # Draw spinner background (muted)
+            pen.setColor(QColor("#e5e7eb"))  # Light gray
+            painter.setPen(pen)
+            painter.drawEllipse(
+                center_x - spinner_size // 2, 
+                center_y - spinner_size // 2,
+                spinner_size, 
+                spinner_size
+            )
+            
+            # Draw spinner arc (accent color)
+            pen.setColor(QColor("#3b82f6"))  # Blue
+            painter.setPen(pen)
+            
+            # Calculate arc parameters
+            start_angle = int(self._loading_angle * 16)  # Qt uses 1/16th degree units
+            span_angle = 90 * 16  # 90 degree arc
+            
+            painter.drawArc(
+                center_x - spinner_size // 2, 
+                center_y - spinner_size // 2,
+                spinner_size, 
+                spinner_size,
+                start_angle, 
+                span_angle
+            )
+            
+            painter.end()
+    
+    def set_pending(self, is_pending: bool, pending_message: str = "Validating") -> None:
+        """
+        Set pending state for async validation.
+        
+        Args:
+            is_pending: Whether the input is in pending state
+            pending_message: Message to announce for pending state
+        """
+        if self._is_pending == is_pending:
+            return
+            
+        self._is_pending = is_pending
+        
+        if is_pending:
+            # Start loading animation
+            self._state = InputState.PENDING
+            self._setup_loading_animation()
+            if self._loading_animation:
+                self._loading_animation.start()
+            
+        else:
+            # Stop loading animation
+            if self._loading_animation:
+                self._loading_animation.stop()
+            
+            # Reset state if no error
+            if not self._has_error:
+                self._state = InputState.DEFAULT
+        
+        # Update accessibility for pending state
+        update_loading_state(self, is_pending, pending_message)
+        
+        self._apply_style()
+        self.pending_changed.emit(is_pending)
+        self.state_changed.emit(self._state.value)
+        self.update()  # Trigger repaint 

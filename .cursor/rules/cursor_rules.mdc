@@ -3,51 +3,46 @@ description: Guidelines for creating and maintaining Cursor rules to ensure cons
 globs: .cursor/rules/*.mdc
 alwaysApply: true
 ---
+# Cursor AI 규칙
 
-- **Required Rule Structure:**
-  ```markdown
-  ---
-  description: Clear, one-line description of what the rule enforces
-  globs: path/to/files/*.ext, other/path/**/*
-  alwaysApply: boolean
-  ---
+## 3모드 AI 검증 패턴
+```python
+def ai_three_mode_validation():
+    # DEV: 헤드리스 시뮬레이션 + UX 검증
+    dev_results = test_dev_mode_complete()
+    assert dev_results.all_interactions_work()
+    
+    # DUAL: GUI 일치성 + 동기화 검증
+    dual_results = test_dual_mode_validation()
+    assert dual_results.matches_dev_mode()
+    assert dual_results.sync_working_properly()
+    
+    # GUI: 프로덕션 성능 + 실사용자 검증
+    gui_results = test_gui_mode_production()
+    assert gui_results.production_performance()
+    
+    return all([dev_results.passed, dual_results.passed, gui_results.passed])
+```
 
-  - **Main Points in Bold**
-    - Sub-points with details
-    - Examples and explanations
-  ```
+## 모드별 코드 생성
+```python
+# ✅ 올바른 모드 인식 코드
+def create_ui_element(mode="auto"):
+    current_mode = get_current_mode() if mode == "auto" else mode
+    
+    if current_mode == "dev":
+        return create_headless_simulation_element()
+    elif current_mode == "dual":
+        return create_dual_mode_element()
+    elif current_mode == "gui":
+        return create_gui_element()
 
-- **File References:**
-  - Use `[filename](mdc:path/to/file)` ([filename](mdc:filename)) to reference files
-  - Example: [prisma.mdc](mdc:.cursor/rules/prisma.mdc) for rule references
-  - Example: [schema.prisma](mdc:prisma/schema.prisma) for code references
+# ❌ 단일 모드 코드 금지
+def create_ui_element():
+    return QWidget()  # GUI만 동작
+```
 
-- **Code Examples:**
-  - Use language-specific code blocks
-  ```typescript
-  // ✅ DO: Show good examples
-  const goodExample = true;
-  
-  // ❌ DON'T: Show anti-patterns
-  const badExample = false;
-  ```
-
-- **Rule Content Guidelines:**
-  - Start with high-level overview
-  - Include specific, actionable requirements
-  - Show examples of correct implementation
-  - Reference existing code when possible
-  - Keep rules DRY by referencing other rules
-
-- **Rule Maintenance:**
-  - Update rules when new patterns emerge
-  - Add examples from actual codebase
-  - Remove outdated patterns
-  - Cross-reference related rules
-
-- **Best Practices:**
-  - Use bullet points for clarity
-  - Keep descriptions concise
-  - Include both DO and DON'T examples
-  - Reference actual code over theoretical examples
-  - Use consistent formatting across rules 
+## AI 개발 순서
+1. **DEV 모드**: 헤드리스 시뮬레이션으로 구현
+2. **DUAL 모드**: GUI 일치성 검증
+3. **GUI 모드**: 프로덕션 성능 검증 

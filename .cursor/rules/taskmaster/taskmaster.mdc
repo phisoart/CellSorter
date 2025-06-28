@@ -3,3 +3,59 @@ description:
 globs:
 alwaysApply: false
 ---
+# Taskmaster 명령어
+
+**MCP 도구 사용 권장** (성능, 구조화된 데이터, 에러 처리 우수)
+
+## 핵심 명령어
+
+### 프로젝트 초기화
+- **MCP**: `initialize_project`
+- **CLI**: `task-master init`
+- 프로젝트 설정 후 PRD 파싱 필수
+
+### PRD 파싱
+- **MCP**: `parse_prd`
+- **CLI**: `task-master parse-prd <file>`
+- AI 호출 (최대 1분 소요)
+
+### 작업 조회
+- **MCP**: `get_tasks` / `next_task` / `get_task`
+- **CLI**: `task-master list` / `next` / `show <id>`
+
+### 작업 생성/수정
+- **MCP**: `add_task` / `update_task` / `update_subtask`
+- **CLI**: `task-master add-task` / `update-task` / `update-subtask`
+- 모든 업데이트 명령어는 AI 호출
+
+### 서브태스크 관리
+- **MCP**: `expand_task` / `add_subtask` / `remove_subtask`
+- **CLI**: `task-master expand <id>` / `add-subtask` / `remove-subtask`
+
+### 상태 관리
+- **MCP**: `set_task_status`
+- **CLI**: `task-master set-status --id=<id> --status=<status>`
+
+### 복잡도 분석
+- **MCP**: `analyze_project_complexity` / `complexity_report`
+- **CLI**: `task-master analyze-complexity` / `complexity-report`
+
+### 리서치 (강력한 도구)
+- **MCP**: `research`
+- **CLI**: `task-master research <query>`
+- 최신 정보 제공, 자주 사용 권장
+
+## 3모드 개발 상태
+- `pending` - 대기중
+- `in-progress-dev` - DEV 모드 개발중
+- `in-progress-dual` - DUAL 모드 검증중  
+- `in-progress-gui` - GUI 모드 검증중
+- `done` - 3모드 모두 통과
+
+## 태그 관리
+- **MCP**: `list_tags` / `add_tag` / `use_tag`
+- **CLI**: `task-master tags` / `add-tag <name>` / `use-tag <name>`
+
+## API 키 설정
+- MCP: `.cursor/mcp.json`의 `env` 섹션
+- CLI: 프로젝트 루트의 `.env` 파일

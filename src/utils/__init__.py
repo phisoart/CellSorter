@@ -8,8 +8,21 @@ from .error_handler import ErrorHandler, error_handler
 from .logging_config import setup_logging, LoggerMixin
 from .exceptions import CellSorterError, ImageLoadError, CSVParseError, CalibrationError, DataValidationError
 from .design_tokens import DesignTokens
-from .style_converter import convert_css_to_qt, generate_qt_palette_stylesheet
+from .style_converter import convert_css_to_qt
 from .update_checker import UpdateChecker
+from .accessibility import (
+    AccessibilityRole, 
+    AccessibilityState,
+    set_accessibility_properties,
+    update_loading_state,
+    set_focus_properties,
+    set_error_state,
+    announce_to_screen_reader,
+    create_keyboard_shortcut_text,
+    get_accessibility_summary,
+    setup_button_accessibility,
+    setup_input_accessibility
+)
 
 __all__ = [
     'ErrorHandler',
@@ -23,6 +36,17 @@ __all__ = [
     'DataValidationError',
     'DesignTokens',
     'convert_css_to_qt',
-    'generate_qt_palette_stylesheet',
     'UpdateChecker',
+    # Accessibility utilities
+    'AccessibilityRole',
+    'AccessibilityState', 
+    'set_accessibility_properties',
+    'update_loading_state',
+    'set_focus_properties',
+    'set_error_state',
+    'announce_to_screen_reader',
+    'create_keyboard_shortcut_text',
+    'get_accessibility_summary',
+    'setup_button_accessibility',
+    'setup_input_accessibility',
 ]

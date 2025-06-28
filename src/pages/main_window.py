@@ -29,7 +29,10 @@ from headless.ui_compatibility import UI
 from config.settings import (
     APP_NAME, APP_VERSION, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
     MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, IMAGE_PANEL_WIDTH, PLOT_PANEL_WIDTH,
-    SELECTION_PANEL_WIDTH, SUPPORTED_IMAGE_FORMATS, SUPPORTED_CSV_FORMATS
+    SELECTION_PANEL_WIDTH, SUPPORTED_IMAGE_FORMATS, SUPPORTED_CSV_FORMATS,
+    MIN_IMAGE_PANEL_WIDTH, MIN_PLOT_PANEL_WIDTH, MIN_SELECTION_PANEL_WIDTH,
+    PANEL_MARGIN, COMPONENT_SPACING, BUTTON_SPACING, BUTTON_HEIGHT, BUTTON_MIN_WIDTH,
+    BREAKPOINT_MOBILE, BREAKPOINT_TABLET, BREAKPOINT_DESKTOP
 )
 from utils.error_handler import ErrorHandler, error_handler
 from utils.logging_config import LoggerMixin
@@ -125,7 +128,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.log_info("CellSorter main window initialized")
     
     def setup_ui(self) -> None:
-        """Initialize the main window UI."""
+        """Initialize the main window UI with responsive layout and minimum size constraints."""
         self.setWindowTitle(f"{APP_NAME} - {APP_VERSION}")
         self.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT)
@@ -134,32 +137,76 @@ class MainWindow(QMainWindow, LoggerMixin):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         
-        # Main layout
+        # Main layout with proper margins
         main_layout = QHBoxLayout(central_widget)
-        main_layout.setContentsMargins(4, 4, 4, 4)
+        main_layout.setContentsMargins(PANEL_MARGIN, PANEL_MARGIN, PANEL_MARGIN, PANEL_MARGIN)
+        main_layout.setSpacing(COMPONENT_SPACING)
         
-        # Create main splitter
+        # Create main splitter with minimum size constraints
         self.main_splitter = QSplitter(Qt.Horizontal)
-        main_layout.addWidget(self.main_splitter)
+        
+        # Configure splitter to prevent panels from collapsing completely
+        self.main_splitter.setChildrenCollapsible(False)
+        self.main_splitter.setHandleWidth(6)  # Slightly wider handle for better usability
+        
+        # Set minimum sizes for each panel to prevent disappearing
+        self.image_handler.setMinimumWidth(MIN_IMAGE_PANEL_WIDTH)
+        self.scatter_plot_widget.setMinimumWidth(MIN_PLOT_PANEL_WIDTH)
+        self.selection_panel.setMinimumWidth(MIN_SELECTION_PANEL_WIDTH)
+        
+        # Set size policies for better responsive behavior
+        self.image_handler.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.scatter_plot_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.selection_panel.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         
         # Add real components to splitter
         self.main_splitter.addWidget(self.image_handler)
         self.main_splitter.addWidget(self.scatter_plot_widget)
         self.main_splitter.addWidget(self.selection_panel)
         
+        main_layout.addWidget(self.main_splitter)
+        
         # Create minimap overlay on image handler
         self.minimap_widget.setParent(self.image_handler)
         self.minimap_widget.move(10, 10)  # Position in top-left corner
         self.minimap_widget.raise_()  # Ensure it's on top
         
-        # Set initial panel sizes
-        total_width = DEFAULT_WINDOW_WIDTH - 50  # Account for margins
-        sizes = [
-            int(total_width * IMAGE_PANEL_WIDTH / 100),
-            int(total_width * PLOT_PANEL_WIDTH / 100),
-            int(total_width * SELECTION_PANEL_WIDTH / 100)
-        ]
-        self.main_splitter.setSizes(sizes)
+        # Set initial panel sizes with responsive calculation
+        self.setup_responsive_layout()
+        
+        # Connect resize event for responsive behavior
+        self.original_resize_event = super().resizeEvent
+    
+    def setup_responsive_layout(self) -> None:
+        """Setup responsive layout based on current window size."""
+        current_width = self.width()
+        
+        # Calculate available width (subtract margins and splitter handles)
+        available_width = current_width - (PANEL_MARGIN * 2) - (self.main_splitter.handleWidth() * 2)
+        
+        # Determine layout mode based on window width
+        if current_width < BREAKPOINT_TABLET:
+            # Compact layout for smaller windows
+            image_width = max(MIN_IMAGE_PANEL_WIDTH, int(available_width * 0.3))
+            plot_width = max(MIN_PLOT_PANEL_WIDTH, int(available_width * 0.4))
+            selection_width = max(MIN_SELECTION_PANEL_WIDTH, available_width - image_width - plot_width)
+        else:
+            # Standard layout for larger windows
+            image_width = max(MIN_IMAGE_PANEL_WIDTH, int(available_width * IMAGE_PANEL_WIDTH / 100))
+            plot_width = max(MIN_PLOT_PANEL_WIDTH, int(available_width * PLOT_PANEL_WIDTH / 100))
+            selection_width = max(MIN_SELECTION_PANEL_WIDTH, int(available_width * SELECTION_PANEL_WIDTH / 100))
+        
+        # Apply calculated sizes
+        self.main_splitter.setSizes([image_width, plot_width, selection_width])
+    
+    def resizeEvent(self, event) -> None:
+        """Handle window resize events for responsive layout."""
+        if hasattr(self, 'original_resize_event'):
+            self.original_resize_event(event)
+        
+        # Update layout if splitter exists
+        if hasattr(self, 'main_splitter'):
+            QTimer.singleShot(10, self.setup_responsive_layout)  # Delay to ensure proper sizing
     
     def create_placeholder_panel(self, title: str, icon: str) -> QFrame:
         """

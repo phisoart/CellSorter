@@ -14,7 +14,10 @@ from PySide6.QtCore import Qt, Signal, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QFont
 
 from services.theme_manager import ThemeManager
+from .base.base_button import BaseButton, ButtonVariant, ButtonSize
 
+# Make BaseButton available as Button for easier importing
+Button = BaseButton
 
 # Design Tokens
 class DesignTokens:
@@ -77,87 +80,7 @@ class DesignTokens:
     TRANSITION_SLOW = 300
 
 
-class Button(QPushButton):
-    """
-    Modern button component with shadcn/ui styling.
-    
-    Based on the design specifications in DESIGN_SYSTEM.md
-    """
-    
-    def __init__(
-        self, 
-        text: str = "",
-        variant: Literal["default", "secondary", "outline", "ghost", "destructive"] = "default",
-        size: Literal["sm", "default", "lg", "icon"] = "default",
-        parent: Optional[QWidget] = None
-    ):
-        super().__init__(text, parent)
-        self.variant = variant
-        self.size = size
-        self._setup_style()
-        
-    def _setup_style(self):
-        """Apply styling based on variant and size."""
-        # Base styles
-        self.setCursor(Qt.PointingHandCursor)
-        self.setFont(self._get_font())
-        
-        # Size-specific styles
-        size_styles = {
-            "sm": {
-                "height": 36,
-                "padding": (DesignTokens.SPACING_1, DesignTokens.SPACING_3),
-                "font_size": DesignTokens.TEXT_SM
-            },
-            "default": {
-                "height": 40,
-                "padding": (DesignTokens.SPACING_2, DesignTokens.SPACING_4),
-                "font_size": DesignTokens.TEXT_SM
-            },
-            "lg": {
-                "height": 44,
-                "padding": (DesignTokens.SPACING_3, DesignTokens.SPACING_8),
-                "font_size": DesignTokens.TEXT_BASE
-            },
-            "icon": {
-                "height": 40,
-                "width": 40,
-                "padding": (0, 0),
-                "font_size": DesignTokens.TEXT_BASE
-            }
-        }
-        
-        style = size_styles[self.size]
-        self.setMinimumHeight(style["height"])
-        if self.size == "icon":
-            self.setMinimumWidth(style["width"])
-            self.setMaximumWidth(style["width"])
-        
-        # Apply stylesheet
-        self._update_stylesheet()
-        
-    def _get_font(self) -> QFont:
-        """Get font for the button."""
-        font = QFont()
-        font.setFamily(", ".join(DesignTokens.FONT_FAMILY_SANS))
-        font.setWeight(DesignTokens.FONT_MEDIUM)
-        return font
-        
-    def _update_stylesheet(self):
-        """Update the stylesheet based on variant."""
-        # This will be properly styled by the theme manager
-        self.setProperty("variant", self.variant)
-        self.setProperty("size", self.size)
-        
-    def setVariant(self, variant: str):
-        """Change button variant."""
-        self.variant = variant
-        self._update_stylesheet()
-        
-    def setSize(self, size: str):
-        """Change button size."""
-        self.size = size
-        self._setup_style()
+# Button component is now imported from base module - see BaseButton for the complete implementation
 
 
 class Input(QLineEdit):

@@ -1,6 +1,6 @@
 # Task ID: 4
 # Title: Test MainWindow Action Execution in Headless
-# Status: pending
+# Status: done
 # Dependencies: 3 (Not found)
 # Priority: high
 # Description: Headless 모드에서 MainWindow의 모든 액션 실행 테스트

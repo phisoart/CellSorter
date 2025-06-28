@@ -264,7 +264,7 @@ pytest -k "test_image_loader"
 - Update test data to reflect real-world usage
 
 ## Collaboration Notes
-- 본 프로젝트는 별도의 CONTRIBUTING.md, RELEASE_PLAN.md 파일을 생성하지 않으며, 관련 규칙은 README.md 및 기타 문서에 통합되어 관리됩니다.
+- This project does not create separate CONTRIBUTING.md or RELEASE_PLAN.md files; related rules are integrated and managed in README.md and other documents.
 
 This comprehensive testing strategy ensures robust, reliable software that meets the demanding requirements of pathology research applications.
 
@@ -278,7 +278,7 @@ This document outlines the comprehensive testing strategy for the CellSorter app
 
 CellSorter supports three distinct operation modes, each requiring specific testing approaches:
 
-### 1. GUI Mode Testing (실제사용모드)
+### 1. GUI Mode Testing (Production Mode)
 **Environment**: `CELLSORTER_MODE=gui`
 ```bash
 # Run GUI mode tests
@@ -296,7 +296,7 @@ CELLSORTER_MODE=gui pytest tests/gui/
 - PySide6 properly installed
 - Visual regression tests
 
-### 2. Dev Mode Testing (디버깅모드 - Headless Only)
+### 2. Dev Mode Testing (Debug Mode - Headless Only)
 **Environment**: `CELLSORTER_MODE=dev`
 ```bash
 # Run headless mode tests
@@ -314,7 +314,7 @@ CELLSORTER_MODE=dev pytest tests/headless/
 - No GUI imports or operations
 - Terminal-only validation
 
-### 3. Dual Mode Testing (디버깅모드 - Both)
+### 3. Dual Mode Testing (Debug Mode - Both)
 **Environment**: `CELLSORTER_MODE=dual`
 ```bash
 # Run dual mode integration tests

@@ -1,6 +1,6 @@
 # Task ID: 7
 # Title: Test Virtual Scatter Plot Generation
-# Status: pending
+# Status: done
 # Dependencies: 6 (Not found)
 # Priority: medium
 # Description: 디스플레이 없이 scatter plot 생성 및 상호작용 테스트

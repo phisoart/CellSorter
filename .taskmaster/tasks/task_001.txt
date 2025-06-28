@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Fix MainWindow Adapter Linter Errors
-# Status: pending
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: MainWindowState 클래스의 property_changed 시그널과 set_property 메서드 관련 linter 에러 수정

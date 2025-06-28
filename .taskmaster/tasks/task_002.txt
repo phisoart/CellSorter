@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Test Display Detection System
-# Status: pending
+# Status: done
 # Dependencies: 1 (Not found)
 # Priority: high
 # Description: Windows, Linux, macOS에서 디스플레이 감지 시스템 테스트

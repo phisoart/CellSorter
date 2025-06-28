@@ -8,12 +8,14 @@ from typing import Optional, List, Dict, Any
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QHeaderView, QPushButton, QLabel, QCheckBox, QFrame, QSplitter,
-    QComboBox, QLineEdit, QMessageBox
+    QComboBox, QLineEdit, QMessageBox, QSizePolicy
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QColor
 
 from components.widgets.well_plate import WellPlateWidget
+from components.base.base_button import BaseButton
+from config.settings import BUTTON_HEIGHT, BUTTON_MIN_WIDTH, BUTTON_SPACING, COMPONENT_SPACING
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
 
@@ -47,24 +49,35 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.log_info("Selection panel initialized")
     
     def setup_ui(self) -> None:
-        """Set up the panel UI."""
+        """Set up the panel UI with improved button layout and spacing."""
         layout = QVBoxLayout(self)
+        layout.setSpacing(12)  # COMPONENT_SPACING equivalent
+        layout.setContentsMargins(8, 8, 8, 8)  # PANEL_MARGIN equivalent
         
-        # Title
+        # Title with better styling
         title_label = QLabel("Cell Selections")
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px; margin: 5px;")
+        title_label.setStyleSheet("""
+            font-weight: bold; 
+            font-size: 14px; 
+            margin-bottom: 8px;
+            color: var(--foreground);
+        """)
         layout.addWidget(title_label)
         
         # Create splitter for table and well plate
         splitter = QSplitter(Qt.Vertical)
+        splitter.setChildrenCollapsible(False)
         
         # Selection table section
         table_frame = QFrame()
+        table_frame.setFrameStyle(QFrame.StyledPanel)
         table_layout = QVBoxLayout(table_frame)
+        table_layout.setSpacing(8)  # BUTTON_SPACING equivalent
+        table_layout.setContentsMargins(8, 8, 8, 8)
         
         # Table header
         table_header = QLabel("Selections")
-        table_header.setStyleSheet("font-weight: bold; margin: 2px;")
+        table_header.setStyleSheet("font-weight: bold; margin-bottom: 4px;")
         table_layout.addWidget(table_header)
         
         # Selection table
@@ -72,56 +85,140 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.setup_table()
         table_layout.addWidget(self.selection_table)
         
-        # Table buttons
+        # Table buttons with improved layout
         table_buttons = QHBoxLayout()
+        table_buttons.setSpacing(8)  # BUTTON_SPACING equivalent
         
+        # Use consistent button sizing
         self.delete_button = QPushButton("Delete Selected")
+        self.delete_button.setMinimumHeight(32)  # BUTTON_HEIGHT equivalent
+        self.delete_button.setMinimumWidth(100)  # BUTTON_MIN_WIDTH equivalent
         self.delete_button.clicked.connect(self.delete_selected)
         self.delete_button.setEnabled(False)
+        self.delete_button.setStyleSheet("""
+            QPushButton {
+                background-color: var(--destructive);
+                color: var(--destructive-foreground);
+                border: none;
+                border-radius: 6px;
+                padding: 4px 12px;
+                font-weight: 500;
+            }
+            QPushButton:hover {
+                background-color: var(--destructive)/90;
+            }
+            QPushButton:disabled {
+                opacity: 0.5;
+            }
+        """)
         
         self.clear_all_button = QPushButton("Clear All")
+        self.clear_all_button.setMinimumHeight(32)
+        self.clear_all_button.setMinimumWidth(100)
         self.clear_all_button.clicked.connect(self.clear_all_selections)
+        self.clear_all_button.setStyleSheet("""
+            QPushButton {
+                background-color: var(--secondary);
+                color: var(--secondary-foreground);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 4px 12px;
+                font-weight: 500;
+            }
+            QPushButton:hover {
+                background-color: var(--secondary)/80;
+            }
+        """)
         
         table_buttons.addWidget(self.delete_button)
         table_buttons.addWidget(self.clear_all_button)
-        table_buttons.addStretch()
+        table_buttons.addStretch()  # Push buttons to the left
         
         table_layout.addLayout(table_buttons)
         
         # Well plate section
         well_frame = QFrame()
+        well_frame.setFrameStyle(QFrame.StyledPanel)
         well_layout = QVBoxLayout(well_frame)
+        well_layout.setSpacing(8)
+        well_layout.setContentsMargins(8, 8, 8, 8)
         
         # Well plate header
         well_header = QLabel("96-Well Plate")
-        well_header.setStyleSheet("font-weight: bold; margin: 2px;")
+        well_header.setStyleSheet("font-weight: bold; margin-bottom: 4px;")
         well_layout.addWidget(well_header)
         
         # Well plate widget
         self.well_plate = WellPlateWidget()
+        self.well_plate.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         well_layout.addWidget(self.well_plate)
         
-        # Add sections to splitter
+        # Add sections to splitter with better proportions
         splitter.addWidget(table_frame)
         splitter.addWidget(well_frame)
-        splitter.setSizes([300, 400])  # Give more space to well plate
+        splitter.setSizes([250, 350])  # Adjust proportions
+        splitter.setStretchFactor(0, 1)  # Table section can shrink
+        splitter.setStretchFactor(1, 2)  # Well plate gets more priority
         
         layout.addWidget(splitter)
         
-        # Export section
-        export_layout = QHBoxLayout()
+        # Export section with improved button layout
+        export_frame = QFrame()
+        export_frame.setFrameStyle(QFrame.StyledPanel)
+        export_frame.setMaximumHeight(80)
+        export_layout = QVBoxLayout(export_frame)
+        export_layout.setContentsMargins(8, 8, 8, 8)
+        
+        export_label = QLabel("Export")
+        export_label.setStyleSheet("font-weight: bold; margin-bottom: 4px;")
+        export_layout.addWidget(export_label)
+        
+        export_buttons = QHBoxLayout()
+        export_buttons.setSpacing(8)
         
         self.export_csv_button = QPushButton("Export CSV")
+        self.export_csv_button.setMinimumHeight(32)
+        self.export_csv_button.setMinimumWidth(100)
         self.export_csv_button.clicked.connect(self.export_csv)
+        self.export_csv_button.setStyleSheet("""
+            QPushButton {
+                background-color: var(--primary);
+                color: var(--primary-foreground);
+                border: none;
+                border-radius: 6px;
+                padding: 4px 12px;
+                font-weight: 500;
+            }
+            QPushButton:hover {
+                background-color: var(--primary)/90;
+            }
+        """)
         
         self.export_protocol_button = QPushButton("Export Protocol")
+        self.export_protocol_button.setMinimumHeight(32)
+        self.export_protocol_button.setMinimumWidth(120)
         self.export_protocol_button.clicked.connect(self.export_protocol)
+        self.export_protocol_button.setStyleSheet("""
+            QPushButton {
+                background-color: var(--primary);
+                color: var(--primary-foreground);
+                border: none;
+                border-radius: 6px;
+                padding: 4px 12px;
+                font-weight: 500;
+            }
+            QPushButton:hover {
+                background-color: var(--primary)/90;
+            }
+        """)
         
-        export_layout.addWidget(self.export_csv_button)
-        export_layout.addWidget(self.export_protocol_button)
-        export_layout.addStretch()
+        export_buttons.addWidget(self.export_csv_button)
+        export_buttons.addWidget(self.export_protocol_button)
+        export_buttons.addStretch()  # Push buttons to the left
         
-        layout.addLayout(export_layout)
+        export_layout.addLayout(export_buttons)
+        
+        layout.addWidget(export_frame)
     
     def setup_table(self) -> None:
         """Set up the selection table."""

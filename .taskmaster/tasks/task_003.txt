@@ -1,6 +1,6 @@
 # Task ID: 3
 # Title: Test Mode Manager Switching
-# Status: pending
+# Status: done
 # Dependencies: 2 (Not found)
 # Priority: high
 # Description: dev-mode와 gui-mode 간 전환 테스트

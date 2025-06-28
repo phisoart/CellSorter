@@ -100,8 +100,8 @@
     },
     {
       "id": "TASK-005",
-      "title": "좌표 캘리브레이션 시스템 구현",
-      "description": "2점 캘리브레이션 시스템을 통한 좌표 변환 기능을 3모드 아키텍처로 구현",
+      "title": "Coordinate Calibration System Implementation",
+      "description": "Implement coordinate transformation functionality through 2-point calibration system using 3-mode architecture",
       "type": "feature",
       "priority": "high",
       "status": "pending",
@@ -110,13 +110,13 @@
       "functional_requirement": "FR4.1, FR4.2",
       "three_mode_requirements": {
         "dev_mode": {
-          "description": "헤드리스 환경에서 캘리브레이션 로직 시뮬레이션",
+          "description": "Simulate calibration logic in headless environment",
           "requirements": [
-            "좌표 변환 매트릭스 계산 알고리즘 검증",
-            "2점 간 최소 거리 유효성 검사 시뮬레이션",
-            "아핀 변환 정확도 0.1 마이크로미터 검증",
-            "역변환 검증 로직 테스트",
-            "헤드리스 환경에서 UI 상호작용 시뮬레이션"
+            "Verify coordinate transformation matrix calculation algorithm",
+            "Simulate minimum distance validation between 2 points",
+            "Verify affine transformation accuracy to 0.1 micrometer",
+            "Test inverse transformation verification logic",
+            "Simulate UI interaction in headless environment"
           ],
           "test_commands": [
             "python run.py --dev-mode --test-calibration-logic",
@@ -125,12 +125,12 @@
           "status": "not_tested"
         },
         "dual_mode": {
-          "description": "GUI와 헤드리스 로직 일치성 검증",
+          "description": "Verify consistency between GUI and headless logic",
           "requirements": [
-            "실제 마우스 클릭으로 캘리브레이션 포인트 설정",
-            "GUI 좌표 입력과 헤드리스 계산 결과 비교",
-            "시각적 인디케이터와 계산 결과 동기화 검증",
-            "실시간 좌표 표시 정확성 확인"
+            "Set calibration points with actual mouse clicks",
+            "Compare GUI coordinate input with headless calculation results",
+            "Verify synchronization of visual indicators with calculation results",
+            "Confirm real-time coordinate display accuracy"
           ],
           "test_commands": [
             "python run.py --dual-mode --validate-calibration-ui",
@@ -139,12 +139,12 @@
           "status": "not_tested"
         },
         "gui_mode": {
-          "description": "프로덕션 환경에서 사용자 경험 및 성능 검증",
+          "description": "Verify user experience and performance in production environment",
           "requirements": [
-            "실제 하드웨어에서 마우스 클릭 정확도",
-            "캘리브레이션 다이얼로그 사용성",
-            "대용량 이미지에서 성능 최적화",
-            "에러 처리 및 복구 옵션"
+            "Mouse click accuracy on actual hardware",
+            "Calibration dialog usability",
+            "Performance optimization with large images",
+            "Error handling and recovery options"
           ],
           "test_commands": [
             "python run.py --gui-mode --production-test-calibration",
@@ -154,22 +154,22 @@
         }
       },
       "acceptance_criteria": [
-        "사용자가 이미지에서 2개 참조점 클릭",
-        "스테이지 좌표 수동 입력",
-        "아핀 변환 매트릭스 계산",
-        "캘리브레이션 포인트 시각적 인디케이터",
-        "포인트 간 최소 거리 유효성 검사",
-        "0.1 마이크로미터 정확도로 변환",
-        "실시간 좌표 표시",
-        "검증을 위한 역변환"
+        "User clicks 2 reference points on image",
+        "Manual input of stage coordinates",
+        "Calculate affine transformation matrix",
+        "Visual indicators for calibration points",
+        "Minimum distance validation between points",
+        "Transformation with 0.1 micrometer accuracy",
+        "Real-time coordinate display",
+        "Inverse transformation for verification"
       ],
       "implementation_file": "src/models/coordinate_transformer.py, src/components/dialogs/calibration_dialog.py",
-      "technical_notes": "3모드 아키텍처를 적용한 캘리브레이션 시스템 - NumPy 아핀 계산과 포괄적인 UI"
+      "technical_notes": "Calibration system with 3-mode architecture - NumPy affine calculations and comprehensive UI"
     },
     {
       "id": "TASK-006",
-      "title": "프로토콜 익스포터 구현",
-      "description": "CosmoSort 하드웨어용 .cxprotocol 파일 생성을 3모드로 구현",
+      "title": "Protocol Exporter Implementation",
+      "description": "Implement .cxprotocol file generation for CosmoSort hardware in 3-mode architecture",
       "type": "feature",
       "priority": "high",
       "status": "pending",
@@ -178,13 +178,13 @@
       "functional_requirement": "FR6.1, FR6.2",
       "three_mode_requirements": {
         "dev_mode": {
-          "description": "헤드리스 환경에서 프로토콜 생성 로직 검증",
+          "description": "Verify protocol generation logic in headless environment",
           "requirements": [
-            "INI 스타일 .cxprotocol 형식 생성 알고리즘",
-            "바운딩 박스에서 정사각형 크롭 계산",
-            "셀 중심점 기반 크롭 센터링",
-            "선택 메타데이터 포함 로직",
-            "출력 형식 유효성 검사"
+            "Algorithm for generating INI-style .cxprotocol format",
+            "Calculate square crop from bounding box",
+            "Center crop based on cell centroid",
+            "Logic for including selection metadata",
+            "Output format validation"
           ],
           "test_commands": [
             "python run.py --dev-mode --test-protocol-export",
@@ -193,12 +193,12 @@
           "status": "not_tested"
         },
         "dual_mode": {
-          "description": "GUI 익스포트와 헤드리스 로직 일치성 검증",
+          "description": "Verify consistency between GUI export and headless logic",
           "requirements": [
-            "GUI 익스포트 다이얼로그와 백엔드 로직 동기화",
-            "진행률 표시와 실제 처리 상태 일치",
-            "에러 메시지 GUI 표시 정확성",
-            "자동 백업 생성 검증"
+            "Synchronize GUI export dialog with backend logic",
+            "Match progress display with actual processing state",
+            "Accuracy of error message GUI display",
+            "Verify automatic backup generation"
           ],
           "test_commands": [
             "python run.py --dual-mode --validate-export-dialog",
@@ -207,12 +207,12 @@
           "status": "not_tested"
         },
         "gui_mode": {
-          "description": "프로덕션 환경에서 익스포트 성능 및 안정성",
+          "description": "Export performance and stability in production environment",
           "requirements": [
-            "10초 내 익스포트 완료",
-            "대용량 데이터셋 처리 안정성",
-            "사용자 친화적 진행률 표시",
-            "에러 복구 및 재시도 기능"
+            "Complete export within 10 seconds",
+            "Stability in processing large datasets",
+            "User-friendly progress display",
+            "Error recovery and retry functionality"
           ],
           "test_commands": [
             "python run.py --gui-mode --production-test-export",
@@ -222,22 +222,22 @@
         }
       },
       "acceptance_criteria": [
-        "INI 스타일 .cxprotocol 형식 생성",
-        "IMAGE 및 IMAGING_LAYOUT 섹션 포함",
-        "바운딩 박스에서 정사각형 크롭 계산",
-        "셀 중심점에 크롭 센터링",
-        "모든 선택 메타데이터 포함",
-        "10초 내 익스포트 시간",
-        "출력 형식 유효성 검사",
-        "자동 백업 생성"
+        "Generate INI-style .cxprotocol format",
+        "Include IMAGE and IMAGING_LAYOUT sections",
+        "Calculate square crop from bounding box",
+        "Center crop on cell centroid",
+        "Include all selection metadata",
+        "Export time within 10 seconds",
+        "Output format validation",
+        "Automatic backup generation"
       ],
       "implementation_file": "src/models/extractor.py",
-      "technical_notes": "3모드 아키텍처를 적용한 프로토콜 익스포터 - configparser와 크롭 계산 알고리즘"
+      "technical_notes": "Protocol exporter with 3-mode architecture - configparser and crop calculation algorithms"
     },
     {
       "id": "TASK-007",
-      "title": "메인 애플리케이션 윈도우 설계",
-      "description": "메뉴, 툴바, 레이아웃을 포함한 메인 윈도우를 3모드로 구현",
+      "title": "Main Application Window Design",
+      "description": "Implement main window with menu, toolbar, and layout in 3-mode architecture",
       "type": "feature",
       "priority": "high",
       "status": "pending",
@@ -246,13 +246,13 @@
       "functional_requirement": "NFR4.1",
       "three_mode_requirements": {
         "dev_mode": {
-          "description": "헤드리스 환경에서 UI 구조 시뮬레이션",
+          "description": "Simulate UI structure in headless environment",
           "requirements": [
-            "메뉴바 구조 및 액션 연결 검증",
-            "툴바 아이템 및 단축키 매핑",
-            "도킹 패널 레이아웃 로직",
-            "상태바 메시지 시스템",
-            "키보드 단축키 처리"
+            "Verify menu bar structure and action connections",
+            "Toolbar items and shortcut key mapping",
+            "Docking panel layout logic",
+            "Status bar message system",
+            "Keyboard shortcut handling"
           ],
           "test_commands": [
             "python run.py --dev-mode --test-main-window-structure",
@@ -261,12 +261,12 @@
           "status": "not_tested"
         },
         "dual_mode": {
-          "description": "GUI 렌더링과 헤드리스 구조 일치성 검증",
+          "description": "Verify consistency between GUI rendering and headless structure",
           "requirements": [
-            "실제 메뉴 클릭과 액션 매핑 일치",
-            "툴바 버튼과 기능 연결 검증",
-            "반응형 레이아웃 동작 확인",
-            "도킹 패널 상호작용 테스트"
+            "Match actual menu clicks with action mapping",
+            "Verify toolbar button and function connections",
+            "Confirm responsive layout behavior",
+            "Test docking panel interactions"
           ],
           "test_commands": [
             "python run.py --dual-mode --validate-main-window-ui",
@@ -275,12 +275,12 @@
           "status": "not_tested"
         },
         "gui_mode": {
-          "description": "프로덕션 환경에서 사용자 경험 및 성능",
+          "description": "User experience and performance in production environment",
           "requirements": [
-            "Windows 디자인 가이드라인 준수",
-            "반응형 레이아웃 성능",
-            "툴팁 및 컨텍스트 도움말",
-            "메모리 효율성"
+            "Compliance with Windows design guidelines",
+            "Responsive layout performance",
+            "Tooltips and context help",
+            "Memory efficiency"
           ],
           "test_commands": [
             "python run.py --gui-mode --production-test-main-window",
@@ -290,21 +290,21 @@
         }
       },
       "acceptance_criteria": [
-        "File, Edit, View, Tools, Help 메뉴바 구현",
-        "공통 작업용 툴바 생성",
-        "도킹 가능한 패널로 반응형 레이아웃 설계",
-        "사용자 피드백용 상태바 추가",
-        "키보드 단축키 지원",
-        "Windows 디자인 가이드라인 준수",
-        "컨텍스트 도움말/툴팁 포함"
+        "Implement File, Edit, View, Tools, Help menu bar",
+        "Create toolbar for common tasks",
+        "Design responsive layout with dockable panels",
+        "Add status bar for user feedback",
+        "Support keyboard shortcuts",
+        "Comply with Windows design guidelines",
+        "Include context help/tooltips"
       ],
       "implementation_file": "src/pages/main_window.py",
-      "technical_notes": "3모드 아키텍처를 적용한 QMainWindow 구현 - 포괄적인 UI"
+      "technical_notes": "QMainWindow implementation with 3-mode architecture - comprehensive UI"
     },
     {
       "id": "TASK-008",
-      "title": "이미지 상의 셀 하이라이팅 추가",
-      "description": "현미경 이미지에 선택된 셀을 오버레이로 표시하는 기능을 3모드로 구현",
+      "title": "Add Cell Highlighting on Image",
+      "description": "Implement functionality to display selected cells as overlay on microscopy image in 3-mode architecture",
       "type": "feature",
       "priority": "high",
       "status": "pending",
@@ -313,13 +313,13 @@
       "functional_requirement": "FR3.1",
       "three_mode_requirements": {
         "dev_mode": {
-          "description": "헤드리스 환경에서 오버레이 로직 시뮬레이션",
+          "description": "Simulate overlay logic in headless environment",
           "requirements": [
-            "색상 마커 계산 및 위치 결정",
-            "선택 변경 시 실시간 업데이트 로직",
-            "10,000개 셀 성능 최적화",
-            "플롯과 오버레이 색상 일치성",
-            "1,000개 셀 1초 내 하이라이팅"
+            "Calculate color markers and position determination",
+            "Real-time update logic on selection changes",
+            "Performance optimization for 10,000 cells",
+            "Color consistency between plot and overlay",
+            "Highlight 1,000 cells within 1 second"
           ],
           "test_commands": [
             "python run.py --dev-mode --test-cell-highlighting",
@@ -328,12 +328,12 @@
           "status": "not_tested"
         },
         "dual_mode": {
-          "description": "GUI 렌더링과 헤드리스 계산 일치성 검증",
+          "description": "Verify consistency between GUI rendering and headless calculations",
           "requirements": [
-            "실제 이미지 렌더링과 계산된 위치 일치",
-            "오버레이 가시성 토글 동작",
-            "색상 매핑 정확성",
-            "실시간 업데이트 동기화"
+            "Match actual image rendering with calculated positions",
+            "Overlay visibility toggle behavior",
+            "Color mapping accuracy",
+            "Real-time update synchronization"
           ],
           "test_commands": [
             "python run.py --dual-mode --validate-overlay-rendering",
