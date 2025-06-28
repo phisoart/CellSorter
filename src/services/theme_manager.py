@@ -23,7 +23,7 @@ except ImportError:
     QColor = object
 
 from utils.logging_config import LoggerMixin
-from utils.style_converter import convert_css_to_qt
+from utils.style_converter import convert_css_to_qt, get_shadcn_color_variables, get_shadcn_dark_color_variables, hsl_string_to_rgb
 
 
 class ThemeManager(QObject, LoggerMixin):
@@ -404,3 +404,26 @@ class ThemeManager(QObject, LoggerMixin):
         
         color_key = color_map.get(tissue_type.lower(), 'primary')
         return self.get_color(color_key)
+    
+    def get_current_colors(self) -> Dict[str, str]:
+        """
+        Get current theme colors as hex values for Qt compatibility.
+        
+        Returns:
+            Dictionary mapping variable names to hex color values
+        """
+        # Get HSL colors based on current theme
+        if self.current_theme == "dark":
+            hsl_colors = get_shadcn_dark_color_variables()
+        else:
+            hsl_colors = get_shadcn_color_variables()
+        
+        # Convert HSL to hex for Qt compatibility
+        hex_colors = {}
+        for var_name, hsl_value in hsl_colors.items():
+            if isinstance(hsl_value, str):
+                hex_colors[var_name] = hsl_string_to_rgb(hsl_value)
+            else:
+                hex_colors[var_name] = hsl_value
+        
+        return hex_colors

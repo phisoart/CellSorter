@@ -2,39 +2,76 @@
 /* Inspired by shadcn/ui and qt-material */
 
 /* ============================================ */
-/* CSS Variables / Design Tokens               */
+/* CSS Variables - shadcn/ui Color System     */
 /* ============================================ */
 
 :root {
-  /* Colors - Light Theme (shadcn/ui inspired) */
+  /* Base Colors */
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
+  
+  /* Card */
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
+  
+  /* Popover */
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
+  
+  /* Primary */
   --primary: 222.2 47.4% 11.2%;
   --primary-foreground: 210 40% 98%;
+  
+  /* Secondary */
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
+  
+  /* Muted */
   --muted: 210 40% 96%;
   --muted-foreground: 215.4 16.3% 46.9%;
+  
+  /* Accent */
   --accent: 210 40% 96%;
   --accent-foreground: 222.2 84% 4.9%;
+  
+  /* Destructive */
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
+  
+  /* Success */
+  --success: 142.1 76.2% 36.3%;
+  --success-foreground: 355.7 100% 97.3%;
+  
+  /* Warning */
+  --warning: 32.5 94.6% 43.7%;
+  --warning-foreground: 220.9 39.3% 11%;
+  
+  /* Info */
+  --info: 221.2 83.2% 53.3%;
+  --info-foreground: 210 40% 98%;
+  
+  /* Border & Input */
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
   --ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
   
-  /* Scientific/Medical Colors */
+  /* Chart Colors */
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+  
+  /* Medical/Scientific Colors */
   --cancer-primary: 0 84.2% 60.2%;
   --normal-tissue: 142.1 76.2% 36.3%;
   --stroma: 221.2 83.2% 53.3%;
   --immune-cells: 262.1 83.3% 57.8%;
   --blood-vessels: 24.6 95% 53.1%;
   --necrosis: 47.9 95.8% 53.1%;
+  
+  /* Radius */
+  --radius: 0.5rem;
   
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -59,27 +96,62 @@
   --easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="dark"] {
-  /* Colors - Dark Theme */
+.dark {
+  /* Base Colors */
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
+  
+  /* Card */
   --card: 222.2 84% 4.9%;
   --card-foreground: 210 40% 98%;
+  
+  /* Popover */
   --popover: 222.2 84% 4.9%;
   --popover-foreground: 210 40% 98%;
+  
+  /* Primary */
   --primary: 210 40% 98%;
   --primary-foreground: 222.2 47.4% 11.2%;
+  
+  /* Secondary */
   --secondary: 217.2 32.6% 17.5%;
   --secondary-foreground: 210 40% 98%;
+  
+  /* Muted */
   --muted: 217.2 32.6% 17.5%;
   --muted-foreground: 215 20.2% 65.1%;
+  
+  /* Accent */
   --accent: 217.2 32.6% 17.5%;
   --accent-foreground: 210 40% 98%;
+  
+  /* Destructive */
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
+  
+  /* Success */
+  --success: 142.1 70.6% 45.3%;
+  --success-foreground: 144.9 80.4% 10%;
+  
+  /* Warning */
+  --warning: 35.5 91.7% 32.9%;
+  --warning-foreground: 48 100% 96.1%;
+  
+  /* Info */
+  --info: 213.3 93.9% 67.8%;
+  --info-foreground: 215.4 16.3% 46.9%;
+  
+  /* Border & Input */
   --border: 217.2 32.6% 17.5%;
   --input: 217.2 32.6% 17.5%;
   --ring: 212.7 26.8% 83.9%;
+  
+  /* Chart Colors (Dark Mode) */
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
 }
 
 /* ============================================ */
@@ -526,7 +598,7 @@ QDialog {
     --ring: 0 0% 0%;
   }
   
-  [data-theme="dark"] {
+  .dark {
     --border: 0 0% 100%;
     --ring: 0 0% 100%;
   }
@@ -557,6 +629,187 @@ QDialog {
   border: 0;
 }
 
+/* Text Overflow Utilities */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+
+.text-clip {
+  text-overflow: clip;
+}
+
+/* Line Clamp Utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.line-clamp-4 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.line-clamp-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+}
+
+.line-clamp-6 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+}
+
+.line-clamp-none {
+  overflow: visible;
+  display: block;
+  -webkit-box-orient: horizontal;
+  -webkit-line-clamp: none;
+  line-clamp: none;
+}
+
+/* Word Break Utilities */
+.break-normal {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.break-words {
+  overflow-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+.break-keep {
+  word-break: keep-all;
+}
+
+/* Whitespace Utilities */
+.whitespace-normal {
+  white-space: normal;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.whitespace-pre {
+  white-space: pre;
+}
+
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.whitespace-break-spaces {
+  white-space: break-spaces;
+}
+
+/* Responsive Text Utilities */
+@media (min-width: 768px) {
+  .md\:truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .md\:line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+  
+  .md\:line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  
+  .md\:line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .lg\:line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+  
+  .lg\:line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  
+  .lg\:line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
+/* Typography Utilities */
 .text-xs { font-size: 12px; }
 .text-sm { font-size: 14px; }
 .text-base { font-size: 16px; }
@@ -568,6 +821,7 @@ QDialog {
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }
 
+/* Spacing Utilities */
 .p-1 { padding: var(--spacing-1); }
 .p-2 { padding: var(--spacing-2); }
 .p-3 { padding: var(--spacing-3); }
@@ -580,10 +834,12 @@ QDialog {
 .m-4 { margin: var(--spacing-4); }
 .m-6 { margin: var(--spacing-6); }
 
+/* Border Radius Utilities */
 .rounded { border-radius: var(--radius); }
 .rounded-lg { border-radius: calc(var(--radius) * 2); }
 .rounded-full { border-radius: 9999px; }
 
+/* Shadow Utilities */
 .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
 .shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
 .shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }

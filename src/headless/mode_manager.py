@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 
 class AppMode(Enum):
     """Application operation modes."""
-    GUI = "gui"                           # 실제사용모드(only gui mode)
-    DEV = "dev"                          # 디버깅모드(only headless mode) 
-    DUAL = "dual"                        # 디버깅모드(both headless mode & gui mode)
-    AUTO = "auto"                        # 자동 감지 모드
+    GUI = "gui"                           # Production mode (only GUI mode)
+    DEV = "dev"                          # Development mode (only headless mode) 
+    DUAL = "dual"                        # Development mode (both headless mode & GUI mode)
+    AUTO = "auto"                        # Auto detection mode
 
 
 class ModeManager:
@@ -176,11 +176,11 @@ class ModeManager:
         return {
             'mode': current_mode.value if current_mode else 'unknown',
             'mode_description': {
-                AppMode.GUI: "실제사용모드(only GUI mode)",
-                AppMode.DEV: "디버깅모드(only headless mode)",
-                AppMode.DUAL: "디버깅모드(both headless mode & GUI mode)",
-                AppMode.AUTO: "자동 감지 모드"
-            }.get(current_mode, "알 수 없는 모드"),
+                AppMode.GUI: "Production mode (only GUI mode)",
+                AppMode.DEV: "Development mode (only headless mode)",
+                AppMode.DUAL: "Development mode (both headless mode & GUI mode)",
+                AppMode.AUTO: "Auto detection mode"
+            }.get(current_mode, "Unknown mode"),
             'dev_mode': self.is_dev_mode(),
             'gui_mode': self.is_gui_mode(),
             'dual_mode': self.is_dual_mode(),

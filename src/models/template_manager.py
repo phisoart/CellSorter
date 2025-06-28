@@ -282,9 +282,16 @@ class TemplateManager(QObject, LoggerMixin):
         if 'metadata' not in template_data:
             template_data['metadata'] = {}
         
-        metadata = template_data['metadata']
-        if not metadata.get('name'):
-            metadata['name'] = template_name or f"New {template_type.value.title()} Template"
+        metadata_dict = template_data['metadata']
+        if template_name:
+            metadata_dict['name'] = template_name
+        elif not metadata_dict.get('name'):
+            metadata_dict['name'] = f"New {template_type.value.title()} Template"
+        
+        # Convert metadata dict to TemplateMetadata object
+        if isinstance(metadata_dict, dict):
+            template_data = template_data.copy()  # Don't modify original
+            template_data['metadata'] = TemplateMetadata(**metadata_dict)
         
         # Create template object
         template = template_class(**template_data)

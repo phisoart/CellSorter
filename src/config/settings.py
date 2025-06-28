@@ -40,6 +40,23 @@ IMAGE_PANEL_WIDTH = 40
 PLOT_PANEL_WIDTH = 35
 SELECTION_PANEL_WIDTH = 25
 
+# Minimum Panel Sizes (in pixels)
+MIN_IMAGE_PANEL_WIDTH = 200
+MIN_PLOT_PANEL_WIDTH = 300
+MIN_SELECTION_PANEL_WIDTH = 250
+
+# Layout Spacing and Margins
+PANEL_MARGIN = 8
+COMPONENT_SPACING = 12
+BUTTON_SPACING = 8
+BUTTON_HEIGHT = 32
+BUTTON_MIN_WIDTH = 100
+
+# Responsive Breakpoints
+BREAKPOINT_MOBILE = 768
+BREAKPOINT_TABLET = 1024
+BREAKPOINT_DESKTOP = 1280
+
 # Color Palette for Selections (Based on design system)
 SELECTION_COLORS: Dict[str, str] = {
     "Red": "hsl(0, 84.2%, 60.2%)",         # Destructive color

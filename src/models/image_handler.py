@@ -954,15 +954,15 @@ class ImageHandler(QWidget, LoggerMixin):
         image_height, image_width = self.image_data.shape[:2]
         label_width, label_height = label_size.width(), label_size.height()
 
-        # ZeroDivisionError 방지
+        # Prevent ZeroDivisionError
         if label_width == 0 or label_height == 0:
             return (0, 0)
 
-        # 이미지와 라벨의 종횡비 계산
+        # Calculate aspect ratios of image and label
         image_aspect = image_width / image_height
         label_aspect = label_width / label_height
 
-        # QLabel 내 실제 이미지 표시 영역 크기 계산 (aspect ratio 유지)
+        # Calculate actual image display area size within QLabel (maintain aspect ratio)
         if image_aspect > label_aspect:
             scaled_width = label_width
             scaled_height = int(label_width / image_aspect)
@@ -973,11 +973,11 @@ class ImageHandler(QWidget, LoggerMixin):
         offset_x = (label_width - scaled_width) // 2
         offset_y = (label_height - scaled_height) // 2
 
-        # 이미지 표시 영역 내에 있는지 확인
+        # Check if position is within image display area
         if not (offset_x <= label_x < offset_x + scaled_width and offset_y <= label_y < offset_y + scaled_height):
             return (0, 0)
 
-        # 라벨 내 이미지 표시 영역 좌표 → 원본 이미지 좌표
+        # Convert label image display area coordinates → original image coordinates
         rel_x = label_x - offset_x
         rel_y = label_y - offset_y
         image_x = int(rel_x * image_width / scaled_width)

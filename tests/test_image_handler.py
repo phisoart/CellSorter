@@ -222,11 +222,12 @@ class TestImageHandler:
         # Test zoom in
         original_zoom = handler.zoom_level
         handler.zoom_in()
-        assert handler.zoom_level > original_zoom
+        zoom_after_zoom_in = handler.zoom_level
+        assert zoom_after_zoom_in > original_zoom
         
         # Test zoom out
         handler.zoom_out()
-        assert handler.zoom_level < handler.zoom_level  # Should be less than after zoom in
+        assert handler.zoom_level < zoom_after_zoom_in  # Should be less than after zoom in
         
         # Test zoom limits
         handler.set_zoom(0.05)  # Below minimum

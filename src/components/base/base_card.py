@@ -13,6 +13,7 @@ from utils.design_tokens import DesignTokens
 from services.theme_manager import ThemeManager
 from utils.style_converter import convert_css_to_qt
 from utils.card_colors import get_default_card_colors
+from utils.accessibility import set_accessibility_properties, AccessibilityRole, set_focus_properties
 
 
 class CardHeader(QWidget):
@@ -169,9 +170,39 @@ class BaseCard(QFrame):
         self.setFrameStyle(QFrame.Shape.StyledPanel)
         self.setProperty("role", "card")
         
-        # Accessibility
-        self.setAccessibleName("Card container")
-        self.setAccessibleDescription("Grouped content container")
+        # Enhanced accessibility
+        self._update_accessibility_properties(title)
+    
+    def _update_accessibility_properties(self, title: str = "") -> None:
+        """Update accessibility properties based on current state."""
+        # Set accessible name based on title or default
+        if title:
+            accessible_name = f"Card: {title}"
+        elif self.header and hasattr(self.header, 'title_label'):
+            accessible_name = f"Card: {self.header.title_label.text()}"
+        else:
+            accessible_name = "Content card"
+        
+        # Set description based on whether card is clickable
+        if self._clickable:
+            description = "Clickable content container, press Enter or Space to activate"
+            role = AccessibilityRole.BUTTON
+        else:
+            description = "Content container"
+            role = None
+        
+        set_accessibility_properties(
+            self,
+            name=accessible_name,
+            description=description,
+            role=role
+        )
+        
+        # Set focus properties for clickable cards
+        if self._clickable:
+            set_focus_properties(self, focusable=True)
+        else:
+            set_focus_properties(self, focusable=False)
     
     def _apply_style(self) -> None:
         """Apply card styling."""
@@ -248,6 +279,9 @@ class BaseCard(QFrame):
         else:
             self.header.set_title(title)
         
+        # Update accessibility properties when header changes
+        self._update_accessibility_properties()
+        
         return self.header
     
     def remove_header(self) -> None:
@@ -299,6 +333,10 @@ class BaseCard(QFrame):
         self._clickable = clickable
         self.setProperty("clickable", str(clickable).lower())
         self.setCursor(Qt.CursorShape.PointingHandCursor if clickable else Qt.CursorShape.ArrowCursor)
+        
+        # Update accessibility properties when clickable state changes
+        self._update_accessibility_properties()
+        
         self._apply_style()
     
     def mousePressEvent(self, event) -> None:
@@ -306,6 +344,14 @@ class BaseCard(QFrame):
         if self._clickable and event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit()
         super().mousePressEvent(event)
+    
+    def keyPressEvent(self, event) -> None:
+        """Handle keyboard events for accessibility."""
+        if self._clickable and event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Space):
+            self.clicked.emit()
+            event.accept()
+        else:
+            super().keyPressEvent(event)
     
     # Convenience factory methods
     @staticmethod

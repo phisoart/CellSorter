@@ -3,76 +3,33 @@ description:
 globs: 
 alwaysApply: true
 ---
-# Base Development Rules
+# CellSorter 개발 규칙
 
-## 1. Cross-Platform Compatibility
-- This project is built using **PySide6** and must function correctly on both **macOS and Windows** environments.
+## 1. 3가지 모드 필수 테스트
+- **DEV → DUAL → GUI** 순서로 모든 기능 테스트 (예외 없음)
+- **DEV**: `python run.py --dev-mode` (헤드리스 시뮬레이션)
+- **DUAL**: `python run.py --dual-mode` (헤드리스+GUI 동기화 검증)
+- **GUI**: `python run.py --gui-mode` (프로덕션 환경)
 
-## 2. Mandatory Headless Development
-- **ALL development MUST be done in headless mode unless explicitly specified otherwise**
-- **NEVER show GUI during development** - use `--headless` or virtual display for testing
-- **All UI operations MUST work without display server**
-- **Use virtual display (Xvfb) for any GUI testing if display is required**
+## 2. AI 도구 제한
+- **오직 Cursor AI + Taskmaster만 사용**
+- 다른 AI 도구 금지
 
-## 3. Test-Driven Development (TDD) with Interactive Testing
-- All development must strictly follow the principles of **Test-Driven Development**.
-- For every new feature or change request, corresponding **test code must be written first** before implementation.
-- **ALL tests MUST include comprehensive UI interaction simulation in headless mode**
-- **MUST test every click, drag, keyboard input, and user workflow without display**
+## 3. 크로스 플랫폼
+- PySide6 기반 macOS/Windows 호환
 
-## 4. Feature Development Workflow
-- When a feature is requested:
-  - Begin by writing a test that describes the expected behavior.
-  - Then implement the functionality to pass the test.
-  - The implemented feature must pass all relevant tests before being merged into the codebase.
+## 4. 테스트 명령어
+```bash
+# 전체 3모드 테스트
+pytest tests/dev_mode/ --comprehensive
+pytest tests/dual_mode/ --validate-against-dev  
+pytest tests/gui_mode/ --production-test
+```
 
-## 5. Code Integration Criteria
-- Code changes must not be merged into the main codebase unless **all related tests pass successfully**.
-- If a test fails, the issue must be identified and resolved before retrying integration.
-- **ALL interactive UI tests MUST pass in headless mode before integration**
+## 5. 환경 설정
+```bash
+conda activate cellsorter  # 항상 먼저 실행
+```
 
-## 6. Code Style and Naming Conventions
-- Follow @PEP8 for Python code style.
-- Use `PascalCase` for class names.
-- Use `snake_case` for function and variable names.
-- Use `UPPER_SNAKE_CASE` for constants.
-- Prefix private members with an underscore `_`.
-
-## 7. Project Structure Rules
-- Place all reusable UI components under `src/components/`.
-- Place page-level UIs under `src/pages/`.
-- Avoid putting business logic inside UI components. Abstract business logic into `src/services/` or `src/utils/`.
-
-## 8. File and Directory Naming
-- Use lowercase with underscores for all file names (e.g., `image_processor.py`).
-- Each importable module directory should contain an `__init__.py`.
-
-## 9. Documentation Standards
-- Every public class, function, and module must include a docstring that clearly explains its purpose and usage.
-- Use the @Google Python Style Guide for Docstrings.
-
-## 10. Version Control Standards
-- Follow @Conventional Commits format for all commit messages.
-- Each pull request must include:
-  - At least one reviewer
-  - A linked issue or feature ID
-  - A checklist confirming all tests have passed (including headless interactive tests)
-
-## 11. Platform Compatibility Coding
-- Always use standard libraries such as `os` or `pathlib` for filesystem operations to ensure cross-platform support.
-- For platform-specific behaviors, use explicit conditionals:
-  ```python
-  import platform
-
-  if platform.system() == "Darwin":
-      # macOS-specific logic
-  elif platform.system() == "Windows":
-      # Windows-specific logic
-  ```
-
-## 12. Conda Environment Verification
-- Before running any commands or starting development work, always verify that the correct conda environment is activated.
-- The project uses a dedicated `cellsorter` conda environment. Ensure it is activated before running any Python commands or development tools.
-- If the `cellsorter` environment is not active (check terminal prompt), run `conda activate cellsorter` first.
-- Use `conda info --envs` to check available environments and `conda list` to verify installed packages.
-- This ensures all development work uses the correct Python version and dependencies.
+## 6. 코딩 스타일
+- PEP8, camelCase 위젯명, snake_case 함수명
