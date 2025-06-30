@@ -15,6 +15,7 @@ from PySide6.QtGui import QColor
 
 from components.widgets.well_plate import WellPlateWidget
 from components.base.base_button import BaseButton
+from components.dialogs.custom_color_dialog import CustomColorDialog
 from config.settings import BUTTON_HEIGHT, BUTTON_MIN_WIDTH, BUTTON_SPACING, COMPONENT_SPACING
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
@@ -445,20 +446,13 @@ class SelectionPanel(QWidget, LoggerMixin):
             self.refresh_well_plate()
     
     def on_color_clicked(self, selection_id: str) -> None:
-        """Handle color frame clicks to open color dialog."""
+        """Handle color frame clicks to open the custom color palette dialog."""
         if selection_id not in self.selections_data:
             return
         
-        current_color = self.selections_data[selection_id].get('color', '#FF0000')
+        new_color_hex = CustomColorDialog.get_color(self)
         
-        # Open color dialog
-        color_dialog = QColorDialog(self)
-        color_dialog.setCurrentColor(QColor(current_color))
-        
-        if color_dialog.exec() == QColorDialog.Accepted:
-            new_color = color_dialog.currentColor()
-            new_color_hex = new_color.name()
-            
+        if new_color_hex:
             # Update selection data
             self.selections_data[selection_id]['color'] = new_color_hex
             
@@ -501,6 +495,7 @@ class SelectionPanel(QWidget, LoggerMixin):
             for selection_id in selection_ids:
                 self.delete_selection(selection_id)
     
+    @error_handler("Deleting selection")
     def delete_selection(self, selection_id: str) -> None:
         """Delete a specific selection."""
         if selection_id in self.selections_data:
