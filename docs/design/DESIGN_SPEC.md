@@ -4,6 +4,108 @@
 
 CellSorter follows a modern, accessible design philosophy inspired by Material Design principles and shadcn/ui aesthetics. The interface prioritizes clarity, efficiency, and user-centered workflows for pathology research applications.
 
+## DEPRECATED/REMOVED FEATURES
+
+The following features have been marked for removal from the CellSorter application:
+
+### 1. Help Menu Items
+**REMOVED**: All menu items under "Help" menu including:
+- About
+- Documentation
+- Support
+- About CellSorter
+- Any other help-related menu items
+
+**Rationale**: Simplified interface focusing on core functionality without tutorial or help systems.
+
+### 2. View Menu Toggle Features  
+**REMOVED**: Toggle-related functionality in the "View" menu including:
+- Toggle Panel Visibility
+- Toggle Toolbar
+- Toggle Status Bar
+- Any other view toggle options
+
+**Rationale**: Fixed layout approach for consistent user experience.
+
+### 3. Expression Filter Components
+**REMOVED**: All expression filter related components from the center Scatter Plot Panel including:
+- Expression filter controls
+- Expression filter dropdown menus
+- Expression filter input fields
+- Expression filter buttons and actions
+- Expression filter validation
+- Expression filter settings
+
+**Rationale**: Simplified scatter plot interface focusing on basic cell selection without advanced filtering.
+
+### 4. Dark Mode/Theme Toggle
+**REMOVED**: Dark mode functionality including:
+- Theme Toggle button [🌙/☀️] from toolbar
+- Dark/Light theme switching
+- Theme preference settings
+- Theme-related UI controls
+
+**Rationale**: Single theme approach for consistent visual identity.
+
+### 5. Session Save/Load System
+**REMOVED**: Complete session management functionality:
+- Session save/load dialogs
+- "Unsaved changes" warning dialogs when closing application
+- Session file (.cellsession) management
+- Auto-save functionality
+- Session state persistence
+- Recent sessions menu
+- Session metadata tracking
+
+**Rationale**: Simple, lightweight application without complex state management. Users work with direct file operations (Open CSV, Open Image, Export Protocol) without session complexity.
+
+**Technical Impact**: 
+- No session persistence between application runs
+- No warning dialogs when closing with data
+- No session file format (.cellsession) support
+- Simplified application lifecycle
+
+### Updated Toolbar Layout
+```
+Toolbar: [📁] [💾] [🔍] [⚙️] [▶️]
+```
+Note: Theme Toggle [🌙/☀️] has been removed from the toolbar.
+
+### Updated Menu Bar
+```
+Menu Bar: File | Edit | View | Tools | Analysis
+```
+Note: "Help" menu has been removed from the menu bar.
+
+### Updated Scatter Plot Panel Layout
+```
+┌─────────────────────────────────────┐
+│ ┌─ Plot Controls ─────────────────┐ │
+│ │ X-Axis: [CK7_Intensity    ▼]   │ │
+│ │ Y-Axis: [CK20_Intensity   ▼]   │ │
+│ │ [🎨 Color Mode] [📊 Stats]     │ │
+│ └─────────────────────────────────┘ │
+│                                     │
+│ ┌─ Scatter Plot ──────────────────┐ │
+│ │ ↑                               │ │
+│ │ │     • • •                     │ │
+│ │ │   •  ○  •                     │ │
+│ │ │  •   ○○  •                    │ │
+│ │ │    •  ○•                      │ │
+│ │ │     • •                       │ │
+│ │ └─────────────────────────→     │ │
+│ │                                 │ │
+│ │ Selection: 147 cells            │ │
+│ └─────────────────────────────────┘ │
+│                                     │
+│ ┌─ Selection Tools ───────────────┐ │
+│ │ [🔲 Rectangle] [🟡 Lasso]      │ │
+│ │ [⭐ Clear] [🎯 Zoom to Fit]     │ │
+│ └─────────────────────────────────┘ │
+└─────────────────────────────────────┘
+```
+Note: Expression filter controls have been removed from the Plot Controls section.
+
 ## Design Philosophy
 
 ### Core Principles
@@ -29,9 +131,9 @@ CellSorter follows a modern, accessible design philosophy inspired by Material D
 ┌─────────────────────────────────────────────────────────────┐
 │ Title Bar                                    [─] [□] [×]     │
 ├─────────────────────────────────────────────────────────────┤
-│ Menu Bar: File | Edit | View | Tools | Analysis | Help     │
+│ Menu Bar: File | Edit | View | Tools | Analysis     │
 ├─────────────────────────────────────────────────────────────┤
-│ Toolbar: [📁] [💾] [🔍] [⚙️] [▶️] | Theme Toggle [🌙/☀️]   │
+│ Toolbar: [📁] [💾] [🔍] [⚙️] [▶️]   │
 ├─────────────────────────────────────────────────────────────┤
 │ Main Content Area                                           │
 │ ┌─────────────────┬─────────────────┬─────────────────────┐ │

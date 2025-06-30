@@ -8,7 +8,92 @@
 - **Comprehensive headless testing infrastructure required**
 - **Virtual display (Xvfb) for GUI testing only when absolutely necessary**
 
-## System Overview
+## DEPRECATED/REMOVED COMPONENTS
+
+The following components and features have been removed from the CellSorter architecture:
+
+### 1. Help System Architecture
+**REMOVED COMPONENTS**:
+- Help menu handlers and routing
+- About dialog components
+- Documentation viewer components
+- Support contact integrations
+- Help content management system
+
+**ARCHITECTURAL IMPACT**: Simplified menu system without help routing infrastructure.
+
+### 2. Theme Management Architecture
+**REMOVED COMPONENTS**:
+- Dark theme stylesheet management
+- Theme switching infrastructure  
+- Dynamic theme reload systems
+- Theme preference storage
+- Multi-theme asset management
+
+**ARCHITECTURAL IMPACT**: Single light theme with simplified CSS/QSS management.
+
+### 3. Expression Filter Architecture
+**REMOVED COMPONENTS**:
+- Expression parsing engine
+- Filter validation systems
+- Advanced query builders
+- Expression-based selection algorithms
+- Filter persistence mechanisms
+
+**ARCHITECTURAL IMPACT**: Streamlined selection workflow with direct visual tools only.
+
+### 4. View Toggle Architecture
+**REMOVED COMPONENTS**:
+- Panel visibility management
+- Layout state persistence
+- Dynamic UI reconfiguration
+- View mode switching logic
+
+**ARCHITECTURAL IMPACT**: Fixed panel layout with consistent visibility.
+
+### 5. Session Management Architecture *(NEW)*
+**REMOVED COMPONENTS**:
+- Session persistence layer (`HeadlessSessionManager`, `SessionManager`)
+- Session file I/O operations (.cellsession format)
+- Session state serialization/deserialization
+- Auto-save mechanisms and timers
+- Session metadata tracking
+- Recent sessions cache
+- Unsaved changes detection
+- Application state restoration
+- Session backup and recovery
+
+**ARCHITECTURAL IMPACT**: 
+- Stateless application architecture
+- No persistence between application runs
+- Simplified application lifecycle management
+- Direct file-based workflow (CSV + Image → Export)
+- Reduced memory footprint
+- Eliminates complex state synchronization
+
+**FILE REMOVALS**:
+- `src/headless/session_manager.py`
+- `src/models/session_manager.py` 
+- Session-related test files
+- Session configuration files
+
+## Simplified Application Flow
+
+### Traditional Session-Based Flow *(REMOVED)*
+```
+Start → Load Session → Restore State → Work → Save Session → Exit
+```
+
+### New Direct File Flow *(CURRENT)*
+```
+Start → Open Image → Open CSV → Work → Export Protocol → Exit
+```
+
+## Core Architecture Components
+
+CellSorter follows a modular, component-based architecture designed for scalability and maintainability.
+
+### System Overview
 
 CellSorter is a sophisticated GUI-based software application designed to work in conjunction with the CosmoSort hardware instrument for advanced cell sorting and tissue extraction from pathology slides. The software serves as the analytical frontend that processes microscopy images and CellProfiler-generated CSV data to enable precise cell selection and coordinate transformation for automated tissue extraction.
 
