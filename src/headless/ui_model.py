@@ -81,7 +81,7 @@ class WidgetType(Enum):
     SCATTER_PLOT = "ScatterPlot"
     WELL_PLATE = "WellPlate"
     SELECTION_PANEL = "SelectionPanel"
-    EXPRESSION_FILTER = "ExpressionFilter"
+    # EXPRESSION_FILTER = "ExpressionFilter"  # DEPRECATED - Removed from UI
 
 
 class LayoutType(Enum):

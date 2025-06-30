@@ -1,5 +1,60 @@
 # CellSorter Project Structure
 
+## DEPRECATED/REMOVED COMPONENTS
+
+The following components and files have been removed from the project structure:
+
+### 1. Help System Components
+**REMOVED**:
+- Help menu handler components
+- About dialog files
+- Documentation viewer components
+- Support/tutorial related files
+
+### 2. Theme Management Files
+**REMOVED**:
+- Dark theme stylesheet files
+- Theme toggle component files  
+- Theme preference configuration files
+- Dynamic theme switching logic
+
+### 3. Expression Filter Components
+**REMOVED**:
+- Expression filter widget files (`expression_filter.py` functionality)
+- Expression parser modules
+- Filter validation components
+- Advanced filtering UI elements
+
+### 4. View Toggle Components
+**REMOVED**:
+- Panel visibility toggle components
+- Layout state management files
+- View configuration persistence files
+
+### 5. Session Management Files *(NEW)*
+**REMOVED**:
+- `src/headless/session_manager.py` - Headless session management
+- `src/models/session_manager.py` - GUI session management (if exists)
+- Session serialization/deserialization modules
+- Session file format handlers (.cellsession)
+- Auto-save mechanism files
+- Session backup and recovery systems
+- Recent sessions cache management
+
+**REMOVED TEST FILES**:
+- `tests/dev_mode/test_session_save_load.py`
+- `tests/dual_mode/test_session_save_load_consistency.py`
+- `tests/gui_mode/test_session_save_load_production.py`
+- `tests/test_headless/test_session_manager.py`
+- `tests/test_auto_session.py`
+
+**CONFIGURATION REMOVALS**:
+- Session storage directories
+- Session metadata schemas
+- Session migration scripts
+
+**Note**: The above components may still exist in the file system but should be considered deprecated and not used in new development.
+
 ## File Organization
 
 ```

@@ -72,20 +72,23 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Initialize error handler
         self.error_handler = ErrorHandler(self)
         
-        # Initialize theme manager
+        # Initialize theme manager (light theme only)
         self.theme_manager = theme_manager
-        self.settings = QSettings(APP_NAME, APP_VERSION)
-        self.theme_manager.apply_theme(self.settings.value("theme", "light"))
-        
-        # Initialize update checker
         self.update_checker = update_checker
-        if self.update_checker:
-            self.update_checker.update_available.connect(self._on_update_available)
         
-        # State tracking
+        # Component state tracking - removed session management
         self.current_image_path: Optional[str] = None
         self.current_csv_path: Optional[str] = None
-        self.is_modified: bool = False
+        
+        # QSettings for window state persistence only
+        self.settings = QSettings("CellSorter", "MainWindow")
+        
+        # Initialize theme manager (light theme only)
+        self.theme_manager.apply_theme("light")
+        
+        # Initialize update checker
+        if self.update_checker:
+            self.update_checker.update_available.connect(self._on_update_available)
         
         # Initialize core components
         self.image_handler = ImageHandler(self)
@@ -288,12 +291,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_reset_view.setStatusTip("Reset view to default")
         self.action_reset_view.setEnabled(False)
         
-        self.action_toggle_overlays = QAction("Toggle &Overlays", self)
-        self.action_toggle_overlays.setShortcut(QKeySequence("Ctrl+Shift+O"))
-        self.action_toggle_overlays.setCheckable(True)
-        self.action_toggle_overlays.setChecked(True)
-        self.action_toggle_overlays.setEnabled(False)
-        
         # Tools actions
         self.action_selection_tool = QAction("&Selection Tool", self)
         self.action_selection_tool.setShortcut(QKeySequence("S"))
@@ -332,21 +329,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_pan_down = QAction("Pan Down", self)
         self.action_pan_down.setShortcut(QKeySequence("Down"))
         self.action_pan_down.setEnabled(False)
-        
-        # Workflow shortcuts
-        self.action_toggle_panel = QAction("Toggle &Panel", self)
-        self.action_toggle_panel.setShortcut(QKeySequence("Space"))
-        self.action_toggle_panel.setStatusTip("Toggle side panel visibility")
-        
-        # Help actions
-        self.action_about = QAction("&About CellSorter", self)
-        self.action_about.setStatusTip("About this application")
-        
-        self.action_check_updates = QAction("Check for &Updates...", self)
-        self.action_check_updates.setStatusTip("Check for new versions of CellSorter")
-        
-        self.action_update_preferences = QAction("Update &Preferences...", self)
-        self.action_update_preferences.setStatusTip("Configure automatic update checking")
     
     def setup_menu_bar(self) -> None:
         """Create and configure the menu bar."""
@@ -361,15 +343,12 @@ class MainWindow(QMainWindow, LoggerMixin):
         file_menu.addSeparator()
         file_menu.addAction(self.action_exit)
         
-        # View menu
+        # View menu (removed toggle actions)
         view_menu = menubar.addMenu("&View")
         view_menu.addAction(self.action_zoom_in)
         view_menu.addAction(self.action_zoom_out)
         view_menu.addAction(self.action_zoom_fit)
         view_menu.addAction(self.action_reset_view)
-        view_menu.addSeparator()
-        view_menu.addAction(self.action_toggle_overlays)
-        view_menu.addAction(self.action_toggle_panel)
         
         # Tools menu
         tools_menu = menubar.addMenu("&Tools")
@@ -379,14 +358,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
         
-        # Help menu
-        help_menu = menubar.addMenu("&Help")
-        help_menu.addAction("&About")
-        help_menu.addAction("&Documentation")
-        help_menu.addSeparator()
-        help_menu.addAction(self.action_check_updates)
-        help_menu.addAction(self.action_update_preferences)
-        help_menu.addAction(self.action_about)
+        # Analysis menu
+        analysis_menu = menubar.addMenu("&Analysis")
+        # Analysis menu actions will be added as needed
     
     def setup_toolbar(self) -> None:
         """Create and configure the toolbar."""
@@ -408,29 +382,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         toolbar.addAction(self.action_zoom_fit)
         toolbar.addSeparator()
         
-        # Tools
+                # Tools
         toolbar.addAction(self.action_calibrate)
-        
-        # Add spacer to push theme toggle to the right
-        spacer = QWidget()
-        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        toolbar.addWidget(spacer)
-        
-        # Theme toggle (placeholder)
-        self.theme_button = QPushButton("🌙")
-        self.theme_button.setFixedSize(32, 32)
-        self.theme_button.setStyleSheet("""
-            QPushButton {
-                border: none;
-                border-radius: 16px;
-                font-size: 16px;
-            }
-            QPushButton:hover {
-                background-color: #e9ecef;
-            }
-        """)
-        self.theme_button.setToolTip("Toggle theme (Light/Dark)")
-        toolbar.addWidget(self.theme_button)
     
     def setup_status_bar(self) -> None:
         """Create and configure the status bar."""
@@ -471,8 +424,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_out.triggered.connect(self.zoom_out)
         self.action_zoom_fit.triggered.connect(self.zoom_fit)
         self.action_reset_view.triggered.connect(self.reset_view)
-        self.action_toggle_overlays.triggered.connect(self.toggle_overlays)
-        self.action_toggle_panel.triggered.connect(self.toggle_panel)
+
         
         # Navigation actions
         self.action_pan_left.triggered.connect(self.pan_left)
@@ -486,13 +438,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
         
-        # Help actions
-        self.action_about.triggered.connect(self.show_about)
-        self.action_check_updates.triggered.connect(self.check_for_updates)
-        self.action_update_preferences.triggered.connect(self.show_update_preferences)
-        
-        # Theme button
-        self.theme_button.clicked.connect(self.toggle_theme)
+
         
         # Component connections
         self.csv_parser.csv_loaded.connect(self._on_csv_loaded)
@@ -504,11 +450,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Use the new signal with method information for enhanced functionality
         self.scatter_plot_widget.selection_made_with_method.connect(self._on_selection_made)
         
-        # Connect expression filter specific signals if available
-        if hasattr(self.scatter_plot_widget, 'expression_filter_widget') and self.scatter_plot_widget.expression_filter_widget:
-            expression_filter = self.scatter_plot_widget.expression_filter_widget
-            if hasattr(expression_filter, 'selection_requested'):
-                expression_filter.selection_requested.connect(self._on_expression_filter_selection)
+
         
         self.coordinate_transformer.calibration_updated.connect(self._on_calibration_updated)
         self.selection_manager.selection_added.connect(self._on_selection_added)
@@ -602,9 +544,8 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_status("Fit to window")
     
     def toggle_overlays(self) -> None:
-        """Toggle cell overlay visibility."""
-        enabled = self.action_toggle_overlays.isChecked()
-        self.update_status(f"Overlays {'enabled' if enabled else 'disabled'}")
+        """Toggle cell overlay visibility (deprecated - overlays are always enabled)."""
+        self.update_status("Overlays are always enabled")
     
     def calibrate_coordinates(self) -> None:
         """Start coordinate calibration process."""
@@ -630,7 +571,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_manager.clear_all_selections()
         self.image_handler.clear_all_cell_highlights()
         self.update_status("All selections cleared")
-        self.is_modified = True
         self.update_window_title()
     
 
@@ -640,15 +580,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         if self.current_image_path:
             self.image_handler.reset_view()
             self.update_status("View reset to default")
-    
-    def toggle_panel(self) -> None:
-        """Toggle side panel visibility."""
-        if self.selection_panel.isVisible():
-            self.selection_panel.hide()
-            self.update_status("Side panel hidden")
-        else:
-            self.selection_panel.show()
-            self.update_status("Side panel shown")
     
     def pan_left(self) -> None:
         """Pan image view left."""
@@ -693,33 +624,7 @@ class MainWindow(QMainWindow, LoggerMixin):
     
 
     
-    def toggle_theme(self) -> None:
-        """Toggle between light and dark themes."""
-        self.theme_manager.toggle_theme()
-        current_theme = self.theme_manager.get_current_theme()
-        self.theme_button.setText("☀️" if current_theme == "dark" else "🌙")
-        self.update_status(f"Theme switched to: {current_theme}")
-    
-    def show_about(self) -> None:
-        """Show about dialog."""
-        QMessageBox.about(
-            self,
-            "About CellSorter",
-            f"""
-            <h3>{APP_NAME} {APP_VERSION}</h3>
-            <p>Advanced Cell Sorting and Tissue Extraction Software</p>
-            <p>Designed for precision cell sorting workflows in pathology research.</p>
-            <p><b>Features:</b></p>
-            <ul>
-            <li>Multi-format image support (TIFF, JPG, PNG)</li>
-            <li>CellProfiler integration</li>
-            <li>Interactive data visualization</li>
-            <li>Coordinate calibration system</li>
-            <li>CosmoSort hardware integration</li>
-            </ul>
-            <p><small>Built with PySide6 and scientific Python libraries.</small></p>
-            """
-        )
+
     
     def update_status(self, message: str) -> None:
         """Update status bar message."""
@@ -752,9 +657,6 @@ class MainWindow(QMainWindow, LoggerMixin):
                 files.append(Path(self.current_csv_path).name)
             title += f" - {', '.join(files)}"
         
-        if self.is_modified:
-            title += " *"
-        
         self.setWindowTitle(title)
     
     def enable_image_actions(self) -> None:
@@ -763,7 +665,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_out.setEnabled(True)
         self.action_zoom_fit.setEnabled(True)
         self.action_reset_view.setEnabled(True)
-        self.action_toggle_overlays.setEnabled(True)
+
         self.action_calibrate.setEnabled(True)
         self.action_selection_tool.setEnabled(True)
         self.action_calibration_tool.setEnabled(True)
@@ -775,9 +677,8 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def enable_analysis_actions(self) -> None:
         """Enable actions that require data to be loaded."""
-        self.action_save_session.setEnabled(True)
-        self.action_select_all.setEnabled(True)
-        self.action_delete_selection.setEnabled(True)
+        # Analysis actions are automatically enabled when needed
+        pass
         
         # Enable export if both image and CSV are loaded
         if self.current_image_path and self.current_csv_path:
@@ -812,23 +713,6 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def closeEvent(self, event) -> None:
         """Handle application close event."""
-        if self.is_modified:
-            reply = QMessageBox.question(
-                self,
-                "Unsaved Changes",
-                "You have unsaved changes. Do you want to save before closing?",
-                QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel
-            )
-            
-            if reply == QMessageBox.Save:
-                self.save_session()
-                if self.is_modified:  # Save was cancelled
-                    event.ignore()
-                    return
-            elif reply == QMessageBox.Cancel:
-                event.ignore()
-                return
-        
         # Save settings
         self.save_settings()
         
@@ -858,7 +742,7 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def _on_csv_loaded(self, file_path: str) -> None:
         """Handle successful CSV loading."""
-        # Load data into scatter plot widget (includes expression filter)
+        # Load data into scatter plot widget (without expression filter)
         if self.csv_parser.data is not None:
             self.scatter_plot_widget.load_data(self.csv_parser.data)
             
@@ -909,7 +793,6 @@ class MainWindow(QMainWindow, LoggerMixin):
             
             if selection_id:
                 self.update_status(status_message)
-                self.is_modified = True
                 self.update_window_title()
                 
                 # Store selection method in metadata
@@ -920,38 +803,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         else:
             self.update_status("No cells selected")
     
-    def _on_expression_filter_selection(self, indices: list) -> None:
-        """Handle cell selection specifically from expression filter."""
-        if indices:
-            # Add selection to selection manager with expression prefix
-            selection_id = self.selection_manager.add_selection(
-                cell_indices=indices,
-                label=f"Expression_{len(self.selection_manager.selections) + 1}"
-            )
-            
-            if selection_id:
-                # Get expression details from the expression filter widget
-                expression = ""
-                if hasattr(self.scatter_plot_widget, 'expression_filter_widget'):
-                    expression_filter = self.scatter_plot_widget.expression_filter_widget
-                    if hasattr(expression_filter, 'get_current_expression'):
-                        expression = expression_filter.get_current_expression()
-                
-                self.update_status(f"Expression filter selected {len(indices)} cells")
-                self.is_modified = True
-                self.update_window_title()
-                
-                # Store expression in selection metadata
-                selection = self.selection_manager.get_selection(selection_id)
-                if selection:
-                    if expression:
-                        selection.metadata['expression'] = expression
-                    selection.metadata['selection_method'] = 'expression_filter'
-                    self.log_info(f"Expression selection: {expression} -> {len(indices)} cells")
-                else:
-                    self.log_info(f"Expression selection: {len(indices)} cells (no expression details)")
-        else:
-            self.update_status("No cells selected by expression filter")
+
     
     def _on_calibration_updated(self, is_valid: bool) -> None:
         """Handle calibration update."""
@@ -960,7 +812,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         else:
             self.update_status("Calibration cleared")
         
-        self.is_modified = True
         self.update_window_title()
     
     def _on_selection_added(self, selection_id: str) -> None:
@@ -987,7 +838,6 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.selection_panel.add_selection(selection_data)
             
             self.update_status(f"Added selection: {selection.label}")
-            self.is_modified = True
             self.update_window_title()
     
     def _on_selection_updated(self, selection_id: str) -> None:
@@ -1013,7 +863,6 @@ class MainWindow(QMainWindow, LoggerMixin):
                 alpha=0.4
             )
             
-            self.is_modified = True
             self.update_window_title()
     
     def _on_selection_removed(self, selection_id: str) -> None:
@@ -1021,7 +870,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Remove image highlights
         self.image_handler.remove_cell_highlights(selection_id)
         
-        self.is_modified = True
         self.update_window_title()
     
     def _on_panel_selection_deleted(self, selection_id: str) -> None:

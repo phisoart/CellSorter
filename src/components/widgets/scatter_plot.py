@@ -2,7 +2,7 @@
 CellSorter Scatter Plot Widget
 
 Interactive matplotlib scatter plot embedded in Qt widget for cell selection
-and analysis with rectangle selection tool and expression filtering.
+and analysis with rectangle selection tool.
 """
 
 from typing import Optional, List, Tuple, Dict, Any, Callable
@@ -11,7 +11,7 @@ import pandas as pd
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QLabel,
-    QTabWidget, QSplitter
+    QTabWidget, QSplitter, QCheckBox
 )
 from PySide6.QtCore import Signal, QObject
 
@@ -24,13 +24,6 @@ import matplotlib.pyplot as plt
 
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
-
-# Import expression filter components
-try:
-    from components.widgets.expression_filter import ExpressionFilterWidget
-    EXPRESSION_FILTER_AVAILABLE = True
-except ImportError:
-    EXPRESSION_FILTER_AVAILABLE = False
 
 
 class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
@@ -59,8 +52,7 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.selection_enabled = False
         self.point_selection_enabled = False
         
-        # Connect mouse events for point selection
-        self.mpl_connect('button_press_event', self._on_mouse_click)
+        # Mouse events connected for rectangle selection only
         
         # Color configuration - will be set by theme manager
         self.theme_manager = None  # Will be injected
@@ -79,7 +71,8 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
     
     @error_handler("Plotting scatter data")
     def plot_data(self, x_data: np.ndarray, y_data: np.ndarray, 
-                  x_label: str = "X", y_label: str = "Y") -> None:
+                  x_label: str = "X", y_label: str = "Y", 
+                  x_log: bool = False, y_log: bool = False) -> None:
         """
         Plot scatter data on the canvas.
         
@@ -88,6 +81,8 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
             y_data: Y coordinate data  
             x_label: Label for X axis
             y_label: Label for Y axis
+            x_log: Whether to use log scale for X axis
+            y_log: Whether to use log scale for Y axis
         """
         self.x_data = x_data
         self.y_data = y_data
@@ -105,6 +100,12 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
             edgecolors='none'
         )
         
+        # Set log scales if requested
+        if x_log:
+            self.axes.set_xscale('log')
+        if y_log:
+            self.axes.set_yscale('log')
+        
         # Set labels and title
         self.axes.set_xlabel(x_label, fontsize=11)
         self.axes.set_ylabel(y_label, fontsize=11)
@@ -119,7 +120,7 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.figure.tight_layout()
         self.draw()
         
-        self.log_info(f"Plotted {len(x_data):,} data points")
+        self.log_info(f"Plotted {len(x_data):,} data points (X log: {x_log}, Y log: {y_log})")
     
     def enable_rectangle_selection(self, enabled: bool = True) -> None:
         """
@@ -141,7 +142,6 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
                 )
             self.rectangle_selector.set_active(True)
             self.selection_enabled = True
-            self.point_selection_enabled = False  # Disable point selection when rectangle is enabled
             self.log_info("Rectangle selection enabled")
         else:
             if self.rectangle_selector:
@@ -149,22 +149,7 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
             self.selection_enabled = False
             self.log_info("Rectangle selection disabled")
     
-    def enable_point_selection(self, enabled: bool = True) -> None:
-        """
-        Enable or disable individual point selection.
-        
-        Args:
-            enabled: Whether to enable point selection
-        """
-        self.point_selection_enabled = enabled
-        if enabled:
-            # Disable rectangle selection when point selection is enabled
-            if self.rectangle_selector:
-                self.rectangle_selector.set_active(False)
-            self.selection_enabled = False
-            self.log_info("Point selection enabled")
-        else:
-            self.log_info("Point selection disabled")
+    # Point selection removed as per design specification
     
     def _on_mouse_click(self, event) -> None:
         """
@@ -331,151 +316,153 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         super().__init__(parent)
         
         # Data storage
-        self.dataframe: Optional[pd.DataFrame] = None
-        self.numeric_columns: List[str] = []
+        self.data: Optional[pd.DataFrame] = None
+        self.available_columns: List[str] = []
         
-        # Expression filter widget
-        self.expression_filter_widget: Optional = None
-        
+        # UI setup
         self.setup_ui()
         self.connect_signals()
         
-        self.log_info("Scatter plot widget initialized")
+        self.log_info("Scatter plot widget initialized (without expression filter)")
     
     def setup_ui(self) -> None:
         """Set up the widget UI."""
         layout = QVBoxLayout(self)
         
-        # Controls section
-        controls_layout = QHBoxLayout()
+        # Control panel
+        controls_panel = self._create_controls_panel()
+        layout.addWidget(controls_panel)
         
-        # X-axis column selector
-        x_label = QLabel("X-axis:")
+        # Main content area
+        self.canvas = ScatterPlotCanvas(self)
+        layout.addWidget(self.canvas)
+        
+        # Initially disable controls
+        self.x_combo.setEnabled(False)
+        self.y_combo.setEnabled(False)
+        self.rect_button.setEnabled(False)
+        self.clear_button.setEnabled(False)
+    
+    def _create_controls_panel(self) -> QWidget:
+        """Create the controls panel."""
+        panel = QWidget()
+        layout = QVBoxLayout(panel)
+        
+        # Axis selection
+        axis_layout = QHBoxLayout()
+        
+        axis_layout.addWidget(QLabel("X-Axis:"))
         self.x_combo = QComboBox()
         self.x_combo.setMinimumWidth(150)
+        axis_layout.addWidget(self.x_combo)
         
-        # Y-axis column selector  
-        y_label = QLabel("Y-axis:")
+        axis_layout.addWidget(QLabel("Y-Axis:"))
         self.y_combo = QComboBox()
         self.y_combo.setMinimumWidth(150)
+        axis_layout.addWidget(self.y_combo)
         
-        # Action buttons
-        self.plot_button = QPushButton("Create Plot")
-        self.plot_button.setEnabled(False)
+        # Refresh button
+        self.refresh_button = QPushButton("Refresh Plot")
+        axis_layout.addWidget(self.refresh_button)
         
-        self.select_button = QPushButton("Rectangle Selection")
-        self.select_button.setCheckable(True)
-        self.select_button.setEnabled(False)
+        axis_layout.addStretch()
+        layout.addLayout(axis_layout)
         
-        self.point_select_button = QPushButton("Point Selection")
-        self.point_select_button.setCheckable(True)
-        self.point_select_button.setEnabled(False)
+        # Log scale options
+        scale_layout = QHBoxLayout()
+        
+        self.x_log_checkbox = QCheckBox("X Log Scale")
+        self.y_log_checkbox = QCheckBox("Y Log Scale")
+        
+        scale_layout.addWidget(self.x_log_checkbox)
+        scale_layout.addWidget(self.y_log_checkbox)
+        scale_layout.addStretch()
+        layout.addLayout(scale_layout)
+        
+        # Selection tools (removed Point Selection)
+        tools_layout = QHBoxLayout()
+        
+        self.rect_button = QPushButton("Rectangle Selection")
+        self.rect_button.setCheckable(True)
+        tools_layout.addWidget(self.rect_button)
         
         self.clear_button = QPushButton("Clear Selection")
-        self.clear_button.setEnabled(False)
+        tools_layout.addWidget(self.clear_button)
         
-        # Add to layout
-        controls_layout.addWidget(x_label)
-        controls_layout.addWidget(self.x_combo)
-        controls_layout.addWidget(y_label)
-        controls_layout.addWidget(self.y_combo)
-        controls_layout.addWidget(self.plot_button)
-        controls_layout.addWidget(self.select_button)
-        controls_layout.addWidget(self.point_select_button)
-        controls_layout.addWidget(self.clear_button)
-        controls_layout.addStretch()
+        tools_layout.addStretch()
+        layout.addLayout(tools_layout)
         
-        # Main content area with tabs
-        self.tab_widget = QTabWidget()
-        
-        # Plot tab
-        plot_tab = QWidget()
-        plot_layout = QVBoxLayout(plot_tab)
-        
-        # Canvas
-        self.canvas = ScatterPlotCanvas(self)
-        plot_layout.addWidget(self.canvas)
-        
-        # Status label
-        self.status_label = QLabel("No data loaded")
-        self.status_label.setStyleSheet("color: #6c757d; font-style: italic;")
-        plot_layout.addWidget(self.status_label)
-        
-        self.tab_widget.addTab(plot_tab, "Scatter Plot")
-        
-        # Expression filter tab (if available)
-        if EXPRESSION_FILTER_AVAILABLE:
-            self.expression_filter_widget = ExpressionFilterWidget()
-            self.tab_widget.addTab(self.expression_filter_widget, "Expression Filter")
-        
-        # Add to main layout
-        layout.addLayout(controls_layout)
-        layout.addWidget(self.tab_widget)
-    
+        return panel
+
     def connect_signals(self) -> None:
         """Connect widget signals."""
-        self.plot_button.clicked.connect(self.create_plot)
-        self.select_button.toggled.connect(self.toggle_rectangle_selection)
-        self.point_select_button.toggled.connect(self.toggle_point_selection)
+        self.refresh_button.clicked.connect(self.create_plot)
+        self.rect_button.toggled.connect(self.toggle_rectangle_selection)
         self.clear_button.clicked.connect(self.clear_selection)
         self.canvas.selection_changed.connect(self._on_selection_changed)
         
-        # Connect expression filter signals if available
-        if self.expression_filter_widget:
-            self.expression_filter_widget.selection_requested.connect(self._on_expression_selection)
+        # Connect log scale checkboxes
+        self.x_log_checkbox.toggled.connect(self.update_plot_scales)
+        self.y_log_checkbox.toggled.connect(self.update_plot_scales)
     
     @error_handler("Loading data for scatter plot")
     def load_data(self, dataframe: pd.DataFrame) -> None:
         """
-        Load data for plotting.
+        Load data into the scatter plot widget.
         
         Args:
-            dataframe: Data to load
+            dataframe: Pandas DataFrame containing cell data
         """
-        self.dataframe = dataframe
-        self.numeric_columns = dataframe.select_dtypes(include=[np.number]).columns.tolist()
+        self.data = dataframe.copy()
         
-        # Update combo boxes
+        # Get numeric columns for plotting
+        numeric_columns = self.data.select_dtypes(include=[np.number]).columns.tolist()
+        self.available_columns = numeric_columns
+        
+        # Populate combo boxes
         self.x_combo.clear()
         self.y_combo.clear()
+        self.x_combo.addItems(numeric_columns)
+        self.y_combo.addItems(numeric_columns)
         
-        if self.numeric_columns:
-            self.x_combo.addItems(self.numeric_columns)
-            self.y_combo.addItems(self.numeric_columns)
-            
-            # Set default selections (first two columns if available)
-            if len(self.numeric_columns) >= 2:
-                self.x_combo.setCurrentText(self.numeric_columns[0])
-                self.y_combo.setCurrentText(self.numeric_columns[1])
-            
-            self.plot_button.setEnabled(True)
-            self.status_label.setText(f"Data loaded: {len(dataframe):,} rows, {len(self.numeric_columns)} numeric columns")
-        else:
-            self.plot_button.setEnabled(False)
-            self.status_label.setText("No numeric columns found for plotting")
+        # Set default selections if available
+        if len(numeric_columns) >= 2:
+            self.x_combo.setCurrentIndex(0)
+            self.y_combo.setCurrentIndex(1)
+        elif len(numeric_columns) == 1:
+            self.x_combo.setCurrentIndex(0)
+            self.y_combo.setCurrentIndex(0)
         
-        self.log_info(f"Loaded data: {len(dataframe):,} rows, {len(self.numeric_columns)} numeric columns")
+        # Enable controls
+        self.x_combo.setEnabled(True)
+        self.y_combo.setEnabled(True)
+        self.rect_button.setEnabled(True)
+        self.clear_button.setEnabled(True)
+        self.refresh_button.setEnabled(True)
+        self.x_log_checkbox.setEnabled(True)
+        self.y_log_checkbox.setEnabled(True)
         
-        # Load data into expression filter if available
-        if self.expression_filter_widget:
-            self.expression_filter_widget.load_data(dataframe)
+        # Create initial plot
+        if numeric_columns:
+            self.create_plot()
+        
+        self.log_info(f"Loaded data with {len(dataframe)} rows and {len(numeric_columns)} numeric columns")
     
     @error_handler("Creating scatter plot")
     def create_plot(self) -> None:
         """Create a new scatter plot with selected columns."""
-        if self.dataframe is None or not self.numeric_columns:
+        if self.data is None or not self.available_columns:
             return
         
         x_column = self.x_combo.currentText()
         y_column = self.y_combo.currentText()
         
         if not x_column or not y_column:
-            self.status_label.setText("Please select both X and Y columns")
             return
         
         # Get data
-        x_data = self.dataframe[x_column].values
-        y_data = self.dataframe[y_column].values
+        x_data = self.data[x_column].values
+        y_data = self.data[y_column].values
         
         # Remove NaN values
         mask = ~(np.isnan(x_data) | np.isnan(y_data))
@@ -483,24 +470,23 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         y_data = y_data[mask]
         
         if len(x_data) == 0:
-            self.status_label.setText("No valid data points to plot")
             return
         
+        # Get log scale settings
+        x_log = self.x_log_checkbox.isChecked()
+        y_log = self.y_log_checkbox.isChecked()
+        
         # Create plot
-        self.canvas.plot_data(x_data, y_data, x_column, y_column)
+        self.canvas.plot_data(x_data, y_data, x_column, y_column, x_log, y_log)
         
         # Enable controls
-        self.select_button.setEnabled(True)
-        self.point_select_button.setEnabled(True)
+        self.rect_button.setEnabled(True)
         self.clear_button.setEnabled(True)
         
-        # Update status
-        self.status_label.setText(f"Plot created: {len(x_data):,} points")
+        self.log_info(f"Created scatter plot: {x_column} vs {y_column} ({len(x_data):,} points)")
         
         # Emit signal
         self.plot_created.emit(x_column, y_column)
-        
-        self.log_info(f"Created scatter plot: {x_column} vs {y_column} ({len(x_data):,} points)")
     
     def toggle_rectangle_selection(self, enabled: bool) -> None:
         """
@@ -512,66 +498,44 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         self.canvas.enable_rectangle_selection(enabled)
         
         if enabled:
-            # Disable point selection if rectangle selection is enabled
-            self.point_select_button.setChecked(False)
-            self.select_button.setText("Disable Rectangle")
-            self.status_label.setText("Rectangle selection enabled - drag to select points")
+            self.rect_button.setText("Disable Rectangle")
+            self.log_info("Rectangle selection enabled - drag to select points")
         else:
-            self.select_button.setText("Rectangle Selection")
-            self.status_label.setText("Rectangle selection disabled")
-        
-        self.log_info(f"Rectangle selection {'enabled' if enabled else 'disabled'}")
+            self.rect_button.setText("Rectangle Selection")
+            self.log_info("Rectangle selection disabled")
     
-    def toggle_point_selection(self, enabled: bool) -> None:
-        """
-        Toggle individual point selection mode.
+    def update_plot_scales(self) -> None:
+        """Update plot scales when log scale checkboxes are toggled."""
+        if self.data is not None and not self.available_columns:
+            return
         
-        Args:
-            enabled: Whether point selection is enabled
-        """
-        self.canvas.enable_point_selection(enabled)
-        
-        if enabled:
-            # Disable rectangle selection if point selection is enabled
-            self.select_button.setChecked(False)
-            self.point_select_button.setText("Disable Point")
-            self.status_label.setText("Point selection enabled - click points to select/deselect")
-        else:
-            self.point_select_button.setText("Point Selection")
-            self.status_label.setText("Point selection disabled")
-        
-        self.log_info(f"Point selection {'enabled' if enabled else 'disabled'}")
+        # Re-create the plot with updated scales
+        self.create_plot()
     
     def clear_selection(self) -> None:
         """Clear current selection."""
         self.canvas.clear_selection()
-        self.status_label.setText("Selection cleared")
-        
         self.log_info("Selection cleared")
     
     def _on_selection_changed(self, indices: List[int]) -> None:
         """
-        Handle selection change from canvas.
+        Handle selection changes from canvas.
         
         Args:
-            indices: Selected point indices
+            indices: List of selected row indices
         """
-        if indices:
-            self.status_label.setText(f"Selected {len(indices):,} points")
-        else:
-            self.status_label.setText("No points selected")
+        self.log_info(f"Selection changed: {len(indices)} points selected")
         
-        # Determine selection method based on current mode
-        if self.canvas.point_selection_enabled:
-            selection_method = "point_selection"
-        elif self.canvas.selection_enabled:
-            selection_method = "rectangle_selection"
+        # Determine selection method based on active tool
+        method = "unknown"
+        if self.rect_button.isChecked():
+            method = "rectangle_selection"
         else:
-            selection_method = "unknown"
+            method = "programmatic_selection"
         
-        # Emit both signals for backward compatibility and new functionality
-        self.selection_made.emit(indices)  # Legacy signal for backward compatibility
-        self.selection_made_with_method.emit(indices, selection_method)  # New signal with method info
+        # Emit signals
+        self.selection_made.emit(indices)
+        self.selection_made_with_method.emit(indices, method)
     
     def highlight_indices(self, indices: List[int], color: str = None) -> None:
         """
@@ -590,14 +554,14 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
         Returns:
             DataFrame with selected rows or None
         """
-        if self.dataframe is None:
+        if self.data is None:
             return None
         
         indices = self.canvas.get_selected_indices()
         if not indices:
             return None
         
-        return self.dataframe.iloc[indices].copy()
+        return self.data.iloc[indices].copy()
     
     def export_plot(self, file_path: str) -> bool:
         """
@@ -610,31 +574,3 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
             True if successful, False otherwise
         """
         return self.canvas.export_plot(file_path)
-    
-    def _on_expression_selection(self, indices: List[int]) -> None:
-        """
-        Handle selection from expression filter.
-        
-        Args:
-            indices: Selected data point indices
-        """
-        # Highlight points on canvas
-        if indices:
-            self.canvas.highlight_points(indices, self.canvas.expression_color)
-            self.status_label.setText(f"Expression filter selected {len(indices):,} points")
-        else:
-            self.canvas.clear_selection()
-            self.status_label.setText("No points matched expression filter")
-        
-        self.log_info(f"Expression filter selection: {len(indices)} points")
-    
-    def get_current_expression(self) -> str:
-        """
-        Get current expression from expression filter.
-        
-        Returns:
-            Current expression string or empty string
-        """
-        if self.expression_filter_widget:
-            return self.expression_filter_widget.get_current_expression()
-        return ""
