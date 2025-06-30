@@ -1,7 +1,7 @@
 """
 Theme Manager for CellSorter Application
 
-Manages theme switching between custom shadcn/ui inspired themes and qt-material themes.
+Manages light theme styling for the CellSorter application.
 Based on the design system specifications in docs/design/.
 """
 
@@ -23,12 +23,12 @@ except ImportError:
     QColor = object
 
 from utils.logging_config import LoggerMixin
-from utils.style_converter import convert_css_to_qt, get_shadcn_color_variables, get_shadcn_dark_color_variables, hsl_string_to_rgb
+from utils.style_converter import convert_css_to_qt, get_shadcn_color_variables, hsl_string_to_rgb
 
 
 class ThemeManager(QObject, LoggerMixin):
     """
-    Manages theme switching between custom and qt-material themes.
+    Manages light theme styling for CellSorter application.
     
     Based on the design specifications in docs/design/DESIGN_SYSTEM.md
     """
@@ -59,29 +59,6 @@ class ThemeManager(QObject, LoggerMixin):
         'ring': 'hsl(222.2, 84%, 4.9%)',
     }
     
-    # Dark Theme Colors
-    COLORS_DARK = {
-        'background': 'hsl(222.2, 84%, 4.9%)',
-        'foreground': 'hsl(210, 40%, 98%)',
-        'card': 'hsl(222.2, 84%, 4.9%)',
-        'card_foreground': 'hsl(210, 40%, 98%)',
-        'popover': 'hsl(222.2, 84%, 4.9%)',
-        'popover_foreground': 'hsl(210, 40%, 98%)',
-        'primary': 'hsl(210, 40%, 98%)',
-        'primary_foreground': 'hsl(222.2, 47.4%, 11.2%)',
-        'secondary': 'hsl(217.2, 32.6%, 17.5%)',
-        'secondary_foreground': 'hsl(210, 40%, 98%)',
-        'muted': 'hsl(217.2, 32.6%, 17.5%)',
-        'muted_foreground': 'hsl(215, 20.2%, 65.1%)',
-        'accent': 'hsl(217.2, 32.6%, 17.5%)',
-        'accent_foreground': 'hsl(210, 40%, 98%)',
-        'destructive': 'hsl(0, 62.8%, 30.6%)',
-        'destructive_foreground': 'hsl(210, 40%, 98%)',
-        'border': 'hsl(217.2, 32.6%, 17.5%)',
-        'input': 'hsl(217.2, 32.6%, 17.5%)',
-        'ring': 'hsl(212.7, 26.8%, 83.9%)',
-    }
-    
     # Scientific/Medical Colors
     MEDICAL_COLORS = {
         'cancer_primary': 'hsl(0, 84.2%, 60.2%)',
@@ -92,48 +69,38 @@ class ThemeManager(QObject, LoggerMixin):
         'necrosis': 'hsl(47.9, 95.8%, 53.1%)',
     }
     
-    # Qt-Material theme list
-    QT_MATERIAL_THEMES = [
-        'dark_amber.xml', 'dark_blue.xml', 'dark_cyan.xml',
-        'dark_lightgreen.xml', 'dark_pink.xml', 'dark_purple.xml',
-        'dark_red.xml', 'dark_teal.xml', 'dark_yellow.xml',
-        'light_amber.xml', 'light_blue.xml', 'light_cyan.xml',
-        'light_lightgreen.xml', 'light_pink.xml', 'light_purple.xml',
-        'light_red.xml', 'light_teal.xml', 'light_yellow.xml'
-    ]
-    
     def __init__(self, app: QApplication, parent: Optional[QObject] = None):
         super().__init__(parent)
         self.app = app
         self.settings = QSettings("CellSorter", "Theme")
-        # Force dark mode only
-        self.current_theme = "dark"
-        self.settings.setValue("theme", "dark")
+        # Single light theme only
+        self.current_theme = "light"
+        self.settings.setValue("theme", "light")
         
-        # Apply dark theme immediately
-        self.apply_theme("dark")
+        # Apply light theme immediately
+        self.apply_theme("light")
         
-    def apply_theme(self, theme_name: str) -> None:
+    def apply_theme(self, theme_name: str = "light") -> None:
         """
-        Apply dark theme to the application (only dark mode supported).
+        Apply light theme to the application (only light theme supported).
         
         Args:
-            theme_name: Theme name (forced to "dark")
+            theme_name: Theme name (always "light")
         """
-        # Force dark mode only
-        theme_name = "dark"
+        # Force light theme only
+        theme_name = "light"
         
         self.apply_custom_theme(theme_name)
             
         self.current_theme = theme_name
         self.settings.setValue("theme", theme_name)
         self.theme_changed.emit(theme_name)
-        self.log_info(f"Applied dark theme (forced dark mode)")
+        self.log_info(f"Applied light theme")
     
-    def apply_custom_theme(self, theme_name: str) -> None:
-        """Apply custom shadcn/ui inspired theme."""
+    def apply_custom_theme(self, theme_name: str = "light") -> None:
+        """Apply custom shadcn/ui inspired light theme."""
         try:
-            colors = self.COLORS_LIGHT if theme_name == "light" else self.COLORS_DARK
+            colors = self.COLORS_LIGHT
             
             # Generate stylesheet
             stylesheet = self._generate_stylesheet(colors)
@@ -144,43 +111,28 @@ class ThemeManager(QObject, LoggerMixin):
             # Apply to application
             self.app.setStyleSheet(stylesheet)
             
-            self.log_info(f"Successfully applied custom theme: {theme_name}")
+            self.log_info(f"Successfully applied custom light theme")
             
         except Exception as e:
-            self.log_error(f"Failed to apply custom theme {theme_name}: {e}")
+            self.log_error(f"Failed to apply custom light theme: {e}")
             # Try fallback
             try:
-                colors = self.COLORS_LIGHT if theme_name == "light" else self.COLORS_DARK
+                colors = self.COLORS_LIGHT
                 hex_colors = {}
                 for key, hsl in colors.items():
                     qcolor = self._hsl_to_qcolor(hsl)
                     hex_colors[key] = qcolor.name()
                 fallback_stylesheet = self._generate_fallback_stylesheet(hex_colors)
                 self.app.setStyleSheet(fallback_stylesheet)
-                self.log_info(f"Applied fallback stylesheet for theme: {theme_name}")
+                self.log_info(f"Applied fallback stylesheet for light theme")
             except Exception as fallback_error:
                 self.log_error(f"Even fallback failed: {fallback_error}")
                 # Clear stylesheet to avoid parsing errors
                 self.app.setStyleSheet("")
     
-    def apply_qt_material_theme(self, theme_name: str) -> None:
-        """Apply qt-material theme."""
-        try:
-            from qt_material import apply_stylesheet
-            apply_stylesheet(self.app, theme=theme_name + ".xml")
-            self.log_info(f"Applied qt-material theme: {theme_name}")
-        except ImportError:
-            self.log_error("qt-material package not installed")
-            # Fall back to custom theme
-            self.apply_custom_theme("light" if "light" in theme_name else "dark")
-    
-    def toggle_theme(self) -> None:
-        """No-op: Only dark theme supported."""
-        self.log_info("Theme toggle disabled - dark mode only")
-        
     def get_current_theme(self) -> str:
-        """Get the current theme name (always dark)."""
-        return "dark"
+        """Get the current theme name (always light)."""
+        return "light"
     
     def _hsl_to_qcolor(self, hsl_string: str) -> QColor:
         """Convert HSL string to QColor."""
@@ -381,7 +333,7 @@ class ThemeManager(QObject, LoggerMixin):
         Returns:
             Color value as hex string
         """
-        colors = self.COLORS_LIGHT if self.current_theme == "light" else self.COLORS_DARK
+        colors = self.COLORS_LIGHT
         
         if color_name in colors:
             return self._hsl_to_qcolor(colors[color_name]).name()
@@ -412,10 +364,7 @@ class ThemeManager(QObject, LoggerMixin):
             Dictionary mapping variable names to hex color values
         """
         # Get HSL colors based on current theme
-        if self.current_theme == "dark":
-            hsl_colors = get_shadcn_dark_color_variables()
-        else:
-            hsl_colors = get_shadcn_color_variables()
+        hsl_colors = get_shadcn_color_variables()
         
         # Convert HSL to hex for Qt compatibility
         hex_colors = {}

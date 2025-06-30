@@ -8,19 +8,42 @@
 5. [Responsive Patterns](#responsive-patterns)
 6. [Accessibility Standards](#accessibility-standards)
 7. [3-Mode Compatibility](#3-mode-compatibility)
-8. [Theme Integration](#theme-integration)
-9. [Animation System](#animation-system)
-10. [Migration Guide](#migration-guide)
+8. [Animation System](#animation-system)
+9. [Migration Guide](#migration-guide)
+
+## DEPRECATED/REMOVED DESIGN COMPONENTS
+
+The following design system components have been removed:
+
+### 1. Dark Theme System
+**REMOVED**: All dark theme related design tokens and styling
+- Dark theme color palette
+- Theme switching mechanisms
+- Theme-aware component variants
+
+### 2. Theme Toggle Components
+**REMOVED**: Theme switching UI components
+- Theme toggle buttons
+- Theme preference controls
+- Dynamic theme application
+
+### 3. Expression Filter Components
+**REMOVED**: Expression filter related design components
+- Filter input styling
+- Filter validation UI
+- Expression syntax highlighting
+
+**Rationale**: Simplified design system focusing on single light theme approach.
 
 ## Design Tokens
 
 ### Color System
 
-#### Base Colors (shadcn/ui inspired)
+#### Base Colors (shadcn/ui inspired - Light Theme Only)
 
 ```python
-# Light Theme
-COLORS_LIGHT = {
+# Light Theme (Single Theme Approach)
+COLORS = {
     'background': 'hsl(0 0% 100%)',
     'foreground': 'hsl(222.2 84% 4.9%)',
     'card': 'hsl(0 0% 100%)',
@@ -40,29 +63,6 @@ COLORS_LIGHT = {
     'border': 'hsl(214.3 31.8% 91.4%)',
     'input': 'hsl(214.3 31.8% 91.4%)',
     'ring': 'hsl(222.2 84% 4.9%)',
-}
-
-# Dark Theme
-COLORS_DARK = {
-    'background': 'hsl(222.2 84% 4.9%)',
-    'foreground': 'hsl(210 40% 98%)',
-    'card': 'hsl(222.2 84% 4.9%)',
-    'card_foreground': 'hsl(210 40% 98%)',
-    'popover': 'hsl(222.2 84% 4.9%)',
-    'popover_foreground': 'hsl(210 40% 98%)',
-    'primary': 'hsl(210 40% 98%)',
-    'primary_foreground': 'hsl(222.2 47.4% 11.2%)',
-    'secondary': 'hsl(217.2 32.6% 17.5%)',
-    'secondary_foreground': 'hsl(210 40% 98%)',
-    'muted': 'hsl(217.2 32.6% 17.5%)',
-    'muted_foreground': 'hsl(215 20.2% 65.1%)',
-    'accent': 'hsl(217.2 32.6% 17.5%)',
-    'accent_foreground': 'hsl(210 40% 98%)',
-    'destructive': 'hsl(0 62.8% 30.6%)',
-    'destructive_foreground': 'hsl(210 40% 98%)',
-    'border': 'hsl(217.2 32.6% 17.5%)',
-    'input': 'hsl(217.2 32.6% 17.5%)',
-    'ring': 'hsl(212.7 26.8% 83.9%)',
 }
 
 # Scientific/Medical Colors
@@ -824,307 +824,8 @@ def test_component_three_modes(component_class, test_data):
     }
 ```
 
-## Theme Integration
-
-### Qt-Material Integration
-
-```python
-class ThemeManager:
-    """
-    Manages theme switching between custom and qt-material themes
-    """
-    
-    QT_MATERIAL_THEMES = [
-        'dark_amber.xml', 'dark_blue.xml', 'dark_cyan.xml',
-        'dark_lightgreen.xml', 'dark_pink.xml', 'dark_purple.xml',
-        'dark_red.xml', 'dark_teal.xml', 'dark_yellow.xml',
-        'light_amber.xml', 'light_blue.xml', 'light_cyan.xml',
-        'light_lightgreen.xml', 'light_pink.xml', 'light_purple.xml',
-        'light_red.xml', 'light_teal.xml', 'light_yellow.xml'
-    ]
-    
-    @staticmethod
-    def apply_qt_material_theme(app, theme_name):
-        """Apply qt-material theme"""
-        from qt_material import apply_stylesheet
-        apply_stylesheet(app, theme=theme_name)
-    
-    @staticmethod
-    def apply_custom_theme(app, theme_name="light"):
-        """Apply custom shadcn/ui inspired theme"""
-        colors = COLORS_LIGHT if theme_name == "light" else COLORS_DARK
-        app.setStyleSheet(generate_theme_stylesheet(colors))
-```
-
-### CSS Variables
-
-```css
-:root {
-    /* Light theme variables */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-}
-
-[data-theme="dark"] {
-    /* Dark theme variables */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    /* ... etc */
-}
-```
-
 ## Animation System
 
 ### Transitions
 
-```python
-TRANSITIONS = {
-    'default': 'all 150ms ease-out',
-    'fast': 'all 100ms ease-out',
-    'slow': 'all 300ms ease-out',
-    'colors': 'color 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out',
-}
-
-ANIMATIONS = {
-    'fade_in': 'fadeIn 200ms ease-out',
-    'fade_out': 'fadeOut 200ms ease-out',
-    'slide_up': 'slideUp 300ms ease-out',
-    'slide_down': 'slideDown 300ms ease-out',
-    'scale_up': 'scaleUp 200ms ease-out',
-    'scale_down': 'scaleDown 200ms ease-out',
-    'spin': 'spin 1s linear infinite',
-    'shimmer': 'shimmer 2s ease-in-out infinite',
-}
 ```
-
-### Loading States
-
-```python
-# Enhanced SkeletonLoader with multiple animation types
-class SkeletonLoader(QWidget):
-    """Skeleton loading animation for content"""
-    
-    ANIMATION_TYPES = {
-        'shimmer': 'shimmer 2s ease-in-out infinite',
-        'pulse': 'pulse 1.5s ease-in-out infinite',
-        'wave': 'wave 2s linear infinite',
-    }
-    
-    @classmethod
-    def create_text_line(cls, width=200, height=16):
-        return cls(width, height, animation='shimmer')
-    
-    @classmethod 
-    def create_paragraph(cls, lines=3, line_height=16, spacing=8):
-        container = QWidget()
-        layout = QVBoxLayout(container)
-        
-        for i in range(lines):
-            line_width = 200 if i < lines-1 else 150  # Last line shorter
-            skeleton_line = cls(line_width, line_height, animation='shimmer')
-            layout.addWidget(skeleton_line)
-            
-        return container
-    
-    @classmethod
-    def create_card(cls, width=300, height=200):
-        return cls(width, height, animation='shimmer')
-```
-
-## Migration Guide
-
-### From Old Components to New Base Components
-
-#### Button Migration
-
-```python
-# OLD - Direct QPushButton usage
-old_button = QPushButton("Click Me")
-old_button.setStyleSheet("background: blue; color: white;")
-
-# NEW - BaseButton with variant system
-new_button = BaseButton("Click Me", variant="default")
-# or
-new_button = BaseButton.create_primary("Click Me")
-```
-
-#### Input Migration
-
-```python
-# OLD - Direct QLineEdit usage
-old_input = QLineEdit()
-old_input.setPlaceholderText("Enter text...")
-old_input.setStyleSheet("border: 1px solid gray;")
-
-# NEW - BaseInput with state management
-new_input = BaseInput("Enter text...")
-new_input.set_state("error", "Please enter valid text")
-```
-
-#### Card Migration
-
-```python
-# OLD - Manual QFrame styling
-old_card = QFrame()
-old_card.setFrameStyle(QFrame.Box)
-old_card.setStyleSheet("border: 1px solid gray; border-radius: 8px;")
-
-# NEW - BaseCard with built-in styling
-new_card = BaseCard()
-new_card.set_header("Card Title")
-```
-
-### Accessibility Migration
-
-```python
-# OLD - No accessibility support
-widget = QPushButton("Button")
-
-# NEW - Full accessibility support
-widget = BaseButton("Button")
-widget.setAccessibleName("Action Button")
-widget.setAccessibleDescription("Perform the main action")
-```
-
-### State Management Migration
-
-```python
-# OLD - Manual state handling
-def set_input_error(widget, message):
-    widget.setStyleSheet("border: 2px solid red;")
-    # Manually create error label
-    
-# NEW - Built-in state management
-input_widget = BaseInput("Email")
-input_widget.set_state("error", "Invalid email format")
-```
-
-## Code Examples
-
-### Complete Form Example
-
-```python
-from src.components.base import BaseButton, BaseCard, BaseInput, BaseSelect, BaseTextarea
-
-class UserProfileForm(BaseCard):
-    def __init__(self):
-        super().__init__()
-        self.setup_form()
-        
-    def setup_form(self):
-        layout = QVBoxLayout(self)
-        
-        # Header
-        self.set_header("User Profile")
-        
-        # Form fields
-        self.name_input = BaseInput("Full Name")
-        self.email_input = BaseInput.create_email("Email Address")
-        self.role_select = BaseSelect("Select Role")
-        self.role_select.add_option("Admin", "admin")
-        self.role_select.add_option("User", "user")
-        self.bio_textarea = BaseTextarea.create_description()
-        
-        # Buttons
-        button_layout = QHBoxLayout()
-        self.save_button = BaseButton.create_primary("Save")
-        self.cancel_button = BaseButton.create_secondary("Cancel")
-        
-        button_layout.addWidget(self.save_button)
-        button_layout.addWidget(self.cancel_button)
-        
-        # Add to form
-        form_layout = QVBoxLayout()
-        form_layout.addWidget(self.name_input)
-        form_layout.addWidget(self.email_input)
-        form_layout.addWidget(self.role_select)
-        form_layout.addWidget(self.bio_textarea)
-        form_layout.addLayout(button_layout)
-        
-        self.add_content_layout(form_layout)
-        
-        # Connect signals
-        self.save_button.clicked.connect(self.save_form)
-        self.cancel_button.clicked.connect(self.cancel_form)
-    
-    def save_form(self):
-        # Validate form
-        if not self.validate_form():
-            return
-            
-        # Show loading state
-        self.save_button.set_loading(True)
-        
-        # Simulate API call
-        QTimer.singleShot(2000, self.save_complete)
-    
-    def validate_form(self):
-        valid = True
-        
-        if not self.name_input.text().strip():
-            self.name_input.set_state("error", "Name is required")
-            valid = False
-        
-        if not self.email_input.text().strip():
-            self.email_input.set_state("error", "Email is required")
-            valid = False
-            
-        return valid
-    
-    def save_complete(self):
-        self.save_button.set_loading(False)
-        # Show success state or close form
-```
-
-### Responsive Dashboard Example
-
-```python
-class DashboardLayout(ResponsiveThreePanel):
-    def __init__(self):
-        super().__init__()
-        self.setup_panels()
-        
-    def setup_panels(self):
-        # Left panel - Image viewer
-        self.image_viewer = ImageViewerWidget()
-        self.left_panel.setLayout(QVBoxLayout())
-        self.left_panel.layout().addWidget(self.image_viewer)
-        
-        # Center panel - Data table
-        self.data_table = Table()
-        self.center_panel.setLayout(QVBoxLayout())
-        self.center_panel.layout().addWidget(self.data_table)
-        
-        # Right panel - Logs and well plate
-        right_layout = QVBoxLayout(self.right_panel)
-        self.well_plate = WellPlateWidget()
-        self.log_display = QTextEdit()
-        
-        right_layout.addWidget(self.well_plate, 1)
-        right_layout.addWidget(self.log_display, 1)
-        
-        # Set minimum sizes to prevent collapse
-        self.left_panel.setMinimumWidth(200)
-        self.center_panel.setMinimumWidth(300)
-        self.right_panel.setMinimumWidth(250)
-```
-
-This comprehensive design system provides a solid foundation for building consistent, accessible, and modern user interfaces in CellSorter while maintaining compatibility across all three operational modes (DEV/DUAL/GUI). 

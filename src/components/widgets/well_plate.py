@@ -61,33 +61,14 @@ class WellPlateWidget(QWidget, LoggerMixin):
         """Set up the widget UI."""
         layout = QVBoxLayout(self)
         
-        # Title
-        title_label = QLabel("96-Well Plate Layout")
-        title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px; margin: 5px;")
-        layout.addWidget(title_label)
-        
-        # Calculate widget size
+        # Calculate widget size (removed title)
         plate_width = self.margin * 2 + self.label_size + self.cols * self.well_spacing
         plate_height = self.margin * 2 + self.label_size + self.rows * self.well_spacing
         
         self.setMinimumSize(plate_width, plate_height)
         self.setMaximumSize(plate_width, plate_height)
         
-        # Control buttons
-        button_layout = QHBoxLayout()
-        
-        self.clear_button = QPushButton("Clear All")
-        self.clear_button.clicked.connect(self.clear_all_wells)
-        
-        self.export_button = QPushButton("Export Image")
-        self.export_button.clicked.connect(self.export_plate_image)
-        
-        button_layout.addWidget(self.clear_button)
-        button_layout.addWidget(self.export_button)
-        button_layout.addStretch()
-        
-        layout.addLayout(button_layout)
+        # No control buttons - removed Clear All and Export Image buttons
     
     def paintEvent(self, event) -> None:
         """Paint the well plate."""
