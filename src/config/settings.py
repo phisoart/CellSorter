@@ -6,6 +6,7 @@ This module contains application-wide settings, constants, and configuration.
 
 from typing import Dict, List
 from pathlib import Path
+from utils.design_tokens import DesignTokens
 
 # Application Information
 APP_NAME = "CellSorter"
@@ -57,6 +58,19 @@ BREAKPOINT_MOBILE = 768
 BREAKPOINT_TABLET = 1024
 BREAKPOINT_DESKTOP = 1280
 
+# Color Palette for Selections (HEX 16색, design_tokens.py와 동일)
+SELECTION_COLORS: Dict[str, str] = {k.capitalize(): v['primary'] for k, v in DesignTokens.SELECTION_COLORS.items()}
+
+# Medical/Scientific Colors (Based on design system)
+MEDICAL_COLORS: Dict[str, str] = {
+    "cancer_primary": "hsl(0, 84.2%, 60.2%)",       # Red
+    "normal_tissue": "hsl(142.1, 76.2%, 36.3%)",   # Green  
+    "stroma": "hsl(221.2, 83.2%, 53.3%)",          # Blue
+    "immune_cells": "hsl(262.1, 83.3%, 57.8%)",    # Purple
+    "blood_vessels": "hsl(24.6, 95%, 53.1%)",      # Orange
+    "necrosis": "hsl(47.9, 95.8%, 53.1%)"          # Yellow
+}
+
 # Well Plate Configuration
 WELL_PLATE_ROWS = 8  # A-H
 WELL_PLATE_COLUMNS = 12  # 01-12
@@ -76,26 +90,6 @@ REQUIRED_CSV_COLUMNS: List[str] = [
     "AreaShape_BoundingBoxMaximum_Y", 
     "AreaShape_BoundingBoxMinimum_Y"
 ]
-
-# Color Palette for Selections (Based on design system)
-SELECTION_COLORS: Dict[str, str] = {
-    "Red": "#FF0000",
-    "Green": "#00FF00",
-    "Blue": "#0000FF",
-    "Yellow": "#FFFF00",
-    "Magenta": "#FF00FF",
-    "Cyan": "#00FFFF",
-    "LightGray": "#C0C0C0",
-    "DarkRed": "#800000",
-    "DarkGreen": "#008000",
-    "DarkBlue": "#000080",
-    "DarkYellow": "#808000",
-    "DarkMagenta": "#800080",
-    "DarkCyan": "#008080",
-    "DarkGray": "#808080",
-    "White": "#FFFFFF",
-    "Black": "#000000"
-}
 
 # Application Paths
 BASE_DIR = Path(__file__).parent.parent.parent

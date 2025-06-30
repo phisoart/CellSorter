@@ -14,6 +14,7 @@ from PySide6.QtCore import QObject, Signal
 
 from utils.error_handler import error_handler
 from utils.logging_config import LoggerMixin
+from utils.design_tokens import DesignTokens
 
 
 class SelectionStatus(Enum):
@@ -72,24 +73,24 @@ class SelectionManager(QObject, LoggerMixin):
     - Export preparation
     """
     
-    # Color palette for selections (16 distinct colors)
+    # Color palette for selections (16 distinct colors, HEX)
     COLOR_PALETTE = [
-        "#FF0000",  # Red
-        "#00FF00",  # Green
-        "#0000FF",  # Blue
-        "#FFFF00",  # Yellow
-        "#FF00FF",  # Magenta
-        "#00FFFF",  # Cyan
-        "#C0C0C0",  # LightGray
-        "#800000",  # DarkRed
-        "#008000",  # DarkGreen
-        "#000080",  # DarkBlue
-        "#808000",  # DarkYellow
-        "#800080",  # DarkMagenta
-        "#008080",  # DarkCyan
-        "#808080",  # DarkGray
-        "#FFFFFF",  # White
-        "#000000",  # Black
+        DesignTokens.SELECTION_COLORS['red']['primary'],
+        DesignTokens.SELECTION_COLORS['green']['primary'],
+        DesignTokens.SELECTION_COLORS['blue']['primary'],
+        DesignTokens.SELECTION_COLORS['yellow']['primary'],
+        DesignTokens.SELECTION_COLORS['magenta']['primary'],
+        DesignTokens.SELECTION_COLORS['cyan']['primary'],
+        DesignTokens.SELECTION_COLORS['orange']['primary'],
+        DesignTokens.SELECTION_COLORS['purple']['primary'],
+        DesignTokens.SELECTION_COLORS['pink']['primary'],
+        DesignTokens.SELECTION_COLORS['lime']['primary'],
+        DesignTokens.SELECTION_COLORS['sky']['primary'],
+        DesignTokens.SELECTION_COLORS['light_red']['primary'],
+        DesignTokens.SELECTION_COLORS['light_green']['primary'],
+        DesignTokens.SELECTION_COLORS['light_blue']['primary'],
+        DesignTokens.SELECTION_COLORS['light_yellow']['primary'],
+        DesignTokens.SELECTION_COLORS['light_magenta']['primary'],
     ]
     
     # 96-well plate layout (standard 8x12 format)

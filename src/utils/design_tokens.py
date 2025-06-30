@@ -139,24 +139,24 @@ class DesignTokens:
         }
     }
     
-    # Cell Selection Colors (16 predefined colors)
+    # Cell Selection Colors (16 predefined colors, HEX)
     SELECTION_COLORS = {
-        'red': {'primary': '#FF0000', 'label': 'Red'},
-        'green': {'primary': '#00FF00', 'label': 'Green'},
-        'blue': {'primary': '#0000FF', 'label': 'Blue'},
-        'yellow': {'primary': '#FFFF00', 'label': 'Yellow'},
-        'magenta': {'primary': '#FF00FF', 'label': 'Magenta'},
-        'cyan': {'primary': '#00FFFF', 'label': 'Cyan'},
-        'lightgray': {'primary': '#C0C0C0', 'label': 'LightGray'},
-        'darkred': {'primary': '#800000', 'label': 'DarkRed'},
-        'darkgreen': {'primary': '#008000', 'label': 'DarkGreen'},
-        'darkblue': {'primary': '#000080', 'label': 'DarkBlue'},
-        'darkyellow': {'primary': '#808000', 'label': 'DarkYellow'},
-        'darkmagenta': {'primary': '#800080', 'label': 'DarkMagenta'},
-        'darkcyan': {'primary': '#008080', 'label': 'DarkCyan'},
-        'darkgray': {'primary': '#808080', 'label': 'DarkGray'},
-        'white': {'primary': '#FFFFFF', 'label': 'White'},
-        'black': {'primary': '#000000', 'label': 'Black'},
+        'red':      {'primary': '#FF0000', 'label': 'Red'},
+        'green':    {'primary': '#00FF00', 'label': 'Green'},
+        'blue':     {'primary': '#0000FF', 'label': 'Blue'},
+        'yellow':   {'primary': '#FFFF00', 'label': 'Yellow'},
+        'magenta':  {'primary': '#FF00FF', 'label': 'Magenta'},
+        'cyan':     {'primary': '#00FFFF', 'label': 'Cyan'},
+        'orange':   {'primary': '#FF8000', 'label': 'Orange'},
+        'purple':   {'primary': '#8000FF', 'label': 'Purple'},
+        'pink':     {'primary': '#FF0080', 'label': 'Pink'},
+        'lime':     {'primary': '#80FF00', 'label': 'Lime'},
+        'sky':      {'primary': '#0080FF', 'label': 'Sky Blue'},
+        'light_red':    {'primary': '#FF8080', 'label': 'Light Red'},
+        'light_green':  {'primary': '#80FF80', 'label': 'Light Green'},
+        'light_blue':   {'primary': '#8080FF', 'label': 'Light Blue'},
+        'light_yellow': {'primary': '#FFFF80', 'label': 'Light Yellow'},
+        'light_magenta':{'primary': '#FF80FF', 'label': 'Light Magenta'},
     }
     
     @staticmethod

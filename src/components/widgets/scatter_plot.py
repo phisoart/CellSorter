@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
+from utils.design_tokens import DesignTokens
 
 
 class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
@@ -56,9 +57,10 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         
         # Color configuration - will be set by theme manager
         self.theme_manager = None  # Will be injected
-        self.default_color = '#1f77b4'  # matplotlib default blue
-        self.selected_color = '#ff7f0e'  # orange for selected points
-        self.expression_color = '#2ca02c'  # green for expression selection
+        palette = DesignTokens.SELECTION_COLORS
+        self.default_color = palette['blue']['primary']
+        self.selected_color = palette['orange']['primary']
+        self.expression_color = palette['green']['primary']
         self.point_size = 20
         self.point_alpha = 0.6
         
@@ -227,6 +229,10 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.selection_changed.emit(self.selected_indices)
         
         self.log_info(f"Selected {len(self.selected_indices)} points in rectangle")
+        # 선택 박스 숨김
+        if self.rectangle_selector:
+            self.rectangle_selector.set_visible(False)
+            self.rectangle_selector.set_active(False)
     
     def _update_selection_visual(self) -> None:
         """Update visual highlighting of selected points."""
@@ -246,18 +252,12 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.draw_idle()
     
     def highlight_points(self, indices: List[int], color: str = None) -> None:
-        """
-        Highlight specific points with a given color.
-        
-        Args:
-            indices: List of point indices to highlight
-            color: Color for highlighting (defaults to selected_color)
-        """
+        """팔레트 내 색상만 허용하도록 수정"""
+        palette_hex = [info['primary'].lower() for info in DesignTokens.SELECTION_COLORS.values()]
+        if color and color.lower() not in palette_hex:
+            color = self.selected_color  # 팔레트 외 색상은 기본 선택색으로 대체
         if self.scatter_plot is None or self.x_data is None:
             return
-        
-        if color is None:
-            color = self.selected_color
         
         self.selected_indices = indices
         self._update_selection_visual()

@@ -8,17 +8,52 @@ from typing import Optional, List, Dict, Any
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QHeaderView, QPushButton, QLabel, QCheckBox, QFrame, QSplitter,
-    QComboBox, QLineEdit, QMessageBox, QSizePolicy, QColorDialog
+    QComboBox, QLineEdit, QMessageBox, QSizePolicy, QColorDialog, QDialog, QGridLayout
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QColor
 
 from components.widgets.well_plate import WellPlateWidget
 from components.base.base_button import BaseButton
-from components.dialogs.custom_color_dialog import CustomColorDialog
 from config.settings import BUTTON_HEIGHT, BUTTON_MIN_WIDTH, BUTTON_SPACING, COMPONENT_SPACING
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
+from utils.design_tokens import DesignTokens
+
+
+class SelectionColorDialog(QDialog):
+    """팔레트 기반 색상 선택 다이얼로그 (QColorDialog 대체)"""
+    def __init__(self, current_color: str = None, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("색상 선택 (팔레트)")
+        self.selected_color = None
+        self.setModal(True)
+        self.setMinimumWidth(320)
+        layout = QGridLayout(self)
+        palette = DesignTokens.SELECTION_COLORS
+        self.color_buttons = {}
+        row, col = 0, 0
+        for key, info in palette.items():
+            color_hex = info['primary']
+            btn = QPushButton()
+            btn.setFixedSize(36, 36)
+            btn.setStyleSheet(f"background-color: {color_hex}; border-radius: 18px; border: 2px solid #ccc;")
+            btn.setToolTip(info['label'])
+            if color_hex.lower() == (current_color or '').lower():
+                btn.setStyleSheet(btn.styleSheet() + "border: 3px solid #222;")
+            btn.clicked.connect(lambda checked, c=color_hex: self.select_color(c))
+            layout.addWidget(btn, row, col)
+            self.color_buttons[color_hex] = btn
+            col += 1
+            if col >= 4:
+                col = 0
+                row += 1
+        self.setLayout(layout)
+    def select_color(self, color_hex):
+        self.selected_color = color_hex
+        self.accept()
+    def get_selected_color(self):
+        return self.selected_color
 
 
 class SelectionPanel(QWidget, LoggerMixin):
@@ -446,23 +481,19 @@ class SelectionPanel(QWidget, LoggerMixin):
             self.refresh_well_plate()
     
     def on_color_clicked(self, selection_id: str) -> None:
-        """Handle color frame clicks to open the custom color palette dialog."""
+        """Handle color frame clicks to open palette dialog."""
         if selection_id not in self.selections_data:
             return
-        
-        new_color_hex = CustomColorDialog.get_color(self)
-        
-        if new_color_hex:
-            # Update selection data
+        current_color = self.selections_data[selection_id].get('color', '#FF0000')
+        dlg = SelectionColorDialog(current_color, self)
+        if dlg.exec() == QDialog.Accepted:
+            new_color_hex = dlg.get_selected_color()
+            if not new_color_hex:
+                return
             self.selections_data[selection_id]['color'] = new_color_hex
-            
-            # Refresh UI
             self.refresh_table()
             self.refresh_well_plate()
-            
-            # Emit signal for external updates
             self.selection_updated.emit(selection_id, {'color': new_color_hex})
-            
             self.log_info(f"Updated color for selection {selection_id}: {new_color_hex}")
     
     def delete_selected(self) -> None:
@@ -495,7 +526,6 @@ class SelectionPanel(QWidget, LoggerMixin):
             for selection_id in selection_ids:
                 self.delete_selection(selection_id)
     
-    @error_handler("Deleting selection")
     def delete_selection(self, selection_id: str) -> None:
         """Delete a specific selection."""
         if selection_id in self.selections_data:
