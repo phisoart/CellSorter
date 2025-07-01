@@ -450,6 +450,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Use the new signal with method information for enhanced functionality
         self.scatter_plot_widget.selection_made_with_method.connect(self._on_selection_made)
         
+        # Connect plot_created signal to restore existing selections
+        self.scatter_plot_widget.plot_created.connect(self._on_plot_created)
+        
 
         
         self.coordinate_transformer.calibration_updated.connect(self._on_calibration_updated)
@@ -775,6 +778,13 @@ class MainWindow(QMainWindow, LoggerMixin):
         """Handle failed CSV loading."""
         self.update_status(f"CSV loading failed: {error_message}")
         self.log_error(f"CSV loading failed: {error_message}")
+    
+    def _on_plot_created(self, x_column: str, y_column: str) -> None:
+        """Handle plot creation - restore existing selections to maintain colors after axis changes."""
+        self.log_info(f"Plot created with axes: {x_column} vs {y_column}")
+        
+        # Restore highlighting for all existing active selections
+        self._update_scatter_plot_highlights()
     
     def _on_selection_made(self, indices: list, method: str = "rectangle_selection") -> None:
         """Handle cell selection from scatter plot."""

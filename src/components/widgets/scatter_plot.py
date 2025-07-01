@@ -232,6 +232,10 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.y_data = y_data
         self.selected_indices = []
         
+        # Reset multiple selection state when creating new plot
+        self._multiple_selection_mode = False
+        self._current_selections.clear()
+        
         # Clear previous plot
         self.axes.clear()
         
@@ -461,6 +465,11 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         if self.scatter_plot is None or self.x_data is None:
             return
         
+        # If selections is empty, clear all selections
+        if not selections:
+            self.clear_selection()
+            return
+        
         # Set flag to prevent signal emission (avoid infinite loops)
         self._updating_highlights = True
         
@@ -501,8 +510,27 @@ class ScatterPlotCanvas(FigureCanvas, LoggerMixin):
         self.log_info(f"Highlighted {total_highlighted} points across {len(selections)} selections")
     
     def clear_selection(self) -> None:
-        """Clear current selection."""
-        self.canvas.clear_selection()
+        """Clear current selection and reset all visual highlighting."""
+        if self.scatter_plot is None or self.x_data is None:
+            return
+        
+        # Set flag to prevent signal emission
+        self._updating_highlights = True
+        
+        # Clear all selection states
+        self.selected_indices = []
+        self._multiple_selection_mode = False
+        self._current_selections.clear()
+        
+        # Reset all colors to default
+        colors = [self.default_color] * len(self.x_data)
+        self.scatter_plot.set_color(colors)
+        self.draw_idle()
+        
+        # Reset flag
+        self._updating_highlights = False
+        
+        self.log_info("Cleared all selections and highlighting")
     
     def get_selected_indices(self) -> List[int]:
         """
@@ -636,35 +664,27 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
                 padding: 10px 16px;
                 font-weight: 500;
                 min-height: 36px;
-                transition: all 0.2s ease;
             }
             QPushButton:hover {
                 background-color: var(--primary);
                 color: var(--primary-foreground);
                 border-color: var(--primary);
-                transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }
             QPushButton:pressed {
-                background-color: var(--primary)/80;
-                transform: translateY(0px);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                background-color: var(--primary);
+                color: var(--primary-foreground);
             }
             QPushButton:disabled {
                 opacity: 0.5;
-                transform: none;
-                box-shadow: none;
             }
             QPushButton:checked {
                 background-color: var(--primary);
                 color: var(--primary-foreground);
                 border-color: var(--primary);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
             QPushButton:checked:hover {
-                background-color: var(--primary)/90;
-                transform: translateY(-1px);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+                background-color: var(--primary);
+                color: var(--primary-foreground);
             }
         """)
         axis_layout.addWidget(self.rect_button)
@@ -838,6 +858,10 @@ class ScatterPlotWidget(QWidget, LoggerMixin):
             selections: Dictionary with selection_id as key and dict with 'indices' and 'color' as value
         """
         self.canvas.highlight_multiple_selections(selections)
+    
+    def clear_selection(self) -> None:
+        """Clear all selections and reset colors to default."""
+        self.canvas.clear_selection()
     
     def get_selected_data(self) -> Optional[pd.DataFrame]:
         """
