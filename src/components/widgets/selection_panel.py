@@ -324,14 +324,19 @@ class SelectionPanel(QWidget, LoggerMixin):
             count_item.setFlags(count_item.flags() & ~Qt.ItemIsEditable)  # Read-only
             self.selection_table.setItem(row, 4, count_item)
             
-            # Delete button sized to match row height
+            # Delete button sized to exactly match the current row height
             delete_btn = QPushButton("Delete")
-            # Adjust button size to current row height (with small padding)
+            # Adjust button size to exactly match the current row height
             row_height = self.selection_table.rowHeight(row)
             if row_height == 0:
                 # Fallback to default section size when rowHeight not yet computed
                 row_height = self.selection_table.verticalHeader().defaultSectionSize()
-            delete_btn.setFixedHeight(max(24, row_height - 4))  # ensure minimum usable size
+
+            # Match the cell height precisely
+            delete_btn.setFixedHeight(row_height)
+
+            # Allow width/height to expand within the cell as needed
+            delete_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             delete_btn.clicked.connect(
                 lambda checked, sid=selection_id: self.delete_selection(sid)
             )
