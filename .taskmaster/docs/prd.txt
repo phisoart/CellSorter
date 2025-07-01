@@ -1,131 +1,128 @@
-CellSorter Background + GUI Mode Integration Testing PRD
+# Product Requirements Document: Cell Selections Table UI Enhancements
 
-## Product Overview
-CellSorter application needs comprehensive testing in both background (headless) and GUI modes to ensure all features work correctly without display server dependency.
+## Objective
+Improve the usability and visual consistency of the Cell Selections table by addressing alignment, editing experience, and interaction issues across all three modes (DEV → DUAL → GUI).
 
-## Testing Objectives
-1. Verify all UI components work in headless mode
-2. Test data synchronization between modes
-3. Validate user interactions without display
-4. Ensure performance parity between modes
-5. Test mode switching capabilities
+---
 
-## Core Testing Requirements
+## Feature 1 – Delete Column Improvements
 
-### 1. Display Detection and Mode Management
-- Test display detection on Windows/Linux/macOS
-- Verify mode switching between dev-mode and gui-mode
-- Test fallback mechanisms when display is unavailable
-- Validate environment variable based control
+### Description
+1. Rename column header from **Action** to **Delete**.
+2. Resize Delete buttons to match the full row height and maintain consistent width.
+3. Ensure the Delete button continues to remove the targeted selection without regression.
 
-### 2. MainWindow Adapter Testing
-- Test window state synchronization
-- Verify action execution in headless mode
-- Test model initialization without Qt
-- Validate UI definition generation
-- Test state persistence and recovery
+### User Story
+_As a user, I want a clearly labeled Delete column with properly-sized buttons so that I can intuitively remove selections without UI glitches._
 
-### 3. Image Processing in Headless Mode
-- Load and process images without display
-- Test zoom, pan operations programmatically
-- Verify overlay rendering in virtual mode
-- Test coordinate transformations
-- Validate minimap functionality
+### Acceptance Criteria
+- Column header displays **Delete** in all modes.
+- Delete button height equals the table row height (±2 px tolerance).
+- Clicking Delete removes the row immediately and emits the proper model-update signal.
+- All three modes pass automated tests located in `tests/*/test_selection_management*`.
 
-### 4. CSV Data Processing
-- Test CSV parsing without UI
-- Verify data validation in headless mode
-- Test selection operations programmatically
-- Validate expression filtering
-- Test batch processing capabilities
+### 3-Mode Test Strategy
+| Mode | Test | Expected Result |
+|------|------|-----------------|
+| DEV  | `pytest tests/dev_mode/test_selection_management_sync.py` | No failures |
+| DUAL | `pytest tests/dual_mode/test_selection_management_consistency.py` | Matches DEV |
+| GUI  | `pytest tests/gui_mode/test_selection_management_production.py` | Production passes |
 
-### 5. Selection Management
-- Test selection creation/modification
-- Verify color assignment logic
-- Test well plate assignments
-- Validate selection persistence
-- Test multi-selection operations
+---
 
-### 6. Scatter Plot Operations
-- Test plot generation without display
-- Verify interactive selection simulation
-- Test axis selection and updates
-- Validate export functionality
-- Test performance with large datasets
+## Feature 2 – Enabled Checkbox Alignment & Toggle Fix
 
-### 7. Coordinate Calibration
-- Test two-point calibration in headless
-- Verify transformation accuracy
-- Test calibration dialog interactions
-- Validate template integration
-- Test calibration persistence
+### Description
+1. Horizontally and vertically center the checkbox within the Enabled column.
+2. Fix bug: re-enabling a previously disabled selection must update both the UI and underlying model state.
 
-### 8. Export and Protocol Generation
-- Test protocol file generation
-- Verify export dialog functionality
-- Test batch export operations
-- Validate file format compliance
-- Test progress tracking
+### User Story
+_As a user, I need the Enabled checkbox centred and reliably toggleable so that I can easily enable or disable selections._
 
-### 9. Session Management
-- Test session save/load in both modes
-- Verify auto-session functionality
-- Test crash recovery mechanisms
-- Validate session compatibility
-- Test concurrent session handling
+### Acceptance Criteria
+- Checkbox appears centred in every row (verified via pixel comparison test).
+- Toggling from unchecked → checked updates model and refreshes UI.
 
-### 10. Template System
-- Test template creation and loading
-- Verify template application
-- Test template validation
-- Validate template sharing
-- Test version compatibility
+### 3-Mode Test Strategy
+`tests/dev_mode/test_selection_management_sync.py`, `...dual_mode/...`, `...gui_mode/...` – all assert correct state transitions.
 
-### 11. Error Handling
-- Test error recovery in headless mode
-- Verify error logging mechanisms
-- Test user notification systems
-- Validate data integrity on errors
-- Test fallback operations
+---
 
-### 12. Performance Testing
-- Benchmark operations in both modes
-- Test memory usage patterns
-- Verify threading behavior
-- Test resource cleanup
-- Validate scalability limits
+## Feature 3 – Label In-Cell Editing
 
-### 13. UI Serialization
-- Test widget to YAML conversion
-- Verify round-trip editing
-- Test schema validation
-- Validate AI agent compatibility
-- Test version control integration
+### Description
+Replace overlay editing with in-place text editing using a proper `QStyledItemDelegate` so that the cell text itself updates during editing.
 
-### 14. CLI Tool Integration
-- Test all CLI commands
-- Verify UI manipulation via CLI
-- Test batch operations
-- Validate error reporting
-- Test integration with main app
+### User Story
+_As a user, when I edit a label, the old text should be editable directly within the cell without overlay artefacts._
 
-### 15. Cross-Platform Testing
-- Test on Windows 10/11
-- Test on Ubuntu/Debian Linux
-- Test on macOS (if available)
-- Verify path handling
-- Test platform-specific features
+### Acceptance Criteria
+- Double-clicking a Label cell enters in-place edit mode.
+- Editing commits on Enter/Focus-out and updates the model without flicker.
+- No overlay of previous text remains visible while typing.
 
-## Test Execution Strategy
-1. Unit tests for each component
-2. Integration tests for workflows
-3. End-to-end tests for complete scenarios
-4. Performance benchmarks
-5. Stress testing with large datasets
+### 3-Mode Test Strategy
+`tests/dev_mode/test_selection_management_sync.py` → label editing; consistency verified in DUAL & GUI.
 
-## Success Criteria
-- All tests pass in both modes
-- No display dependency in headless mode
-- Performance within 10% between modes
-- Zero data loss on mode switching
-- Complete feature parity 
+---
+
+## Feature 4 – Color Column Enhancements
+
+### Description
+1. Center align color names.
+2. Limit selectable colors to those defined in `COLOR_PALETTE` (see `ARCHITECTURE.md`).
+3. Provide a dialog displaying the palette with color swatches next to names.
+4. After selection, the cell shows the color name and a small colour chip.
+
+### User Story
+_As a user, I want to pick colours only from the approved palette via an intuitive dialog so that selections remain consistent._
+
+### Acceptance Criteria
+- Dialog lists exactly 16 colors from `COLOR_PALETTE`.
+- Selecting a color updates both the model and UI chip.
+- Center alignment verified visually and via automated Qt pixel test.
+
+### 3-Mode Test Strategy
+Colour selection flow covered in existing scatter-plot and selection tests across modes.
+
+---
+
+## Feature 5 – Well Selection via 96-Well Plate Dialog
+
+### Description
+Provide a graphical 96-well plate dialog for changing the Well column value.
+
+### User Story
+_As a user, I want a visual well plate to choose wells quickly and accurately._
+
+### Acceptance Criteria
+- Dialog displays A-H rows and 01-12 columns.
+- Clicking a well immediately updates the table cell.
+- Invalid or duplicate well assignment prompts a warning.
+
+### 3-Mode Test Strategy
+Add dedicated tests under `tests/dev_mode/test_selection_management_sync.py` and propagate to DUAL/GUI.
+
+---
+
+## Non-Functional Requirements
+- All new UI code adheres to PEP-8 and project coding conventions.
+- Cross-platform behaviour (Windows/macOS) validated.
+- No introduction of external dependencies beyond those already in `requirements.txt`.
+
+## Out of Scope
+- Any changes to session management or template management systems.
+- Theme switching; the application remains single-theme.
+
+## Milestones & Priority
+| ID | Feature | Priority |
+|----|---------|----------|
+| 1  | Delete Column Improvements | High |
+| 2  | Enabled Checkbox Alignment & Toggle Fix | High |
+| 3  | Color Column Enhancements | Medium |
+| 4  | Label In-Cell Editing | Medium |
+| 5  | Well Selection Dialog | Low |
+
+---
+
+End of Document

@@ -227,8 +227,9 @@ class SelectionPanel(QWidget, LoggerMixin):
     def setup_table(self) -> None:
         """Set up the selection table."""
         self.selection_table.setColumnCount(6)
+        # Column headers (renamed "Delete" per PRD requirements)
         self.selection_table.setHorizontalHeaderLabels([
-            "Enabled", "Label", "Color", "Well", "Cells", "Actions"
+            "Enabled", "Label", "Color", "Well", "Cells", "Delete"
         ])
         
         # Set column widths
@@ -323,8 +324,14 @@ class SelectionPanel(QWidget, LoggerMixin):
             count_item.setFlags(count_item.flags() & ~Qt.ItemIsEditable)  # Read-only
             self.selection_table.setItem(row, 4, count_item)
             
-            # Actions (delete button)
+            # Delete button sized to match row height
             delete_btn = QPushButton("Delete")
+            # Adjust button size to current row height (with small padding)
+            row_height = self.selection_table.rowHeight(row)
+            if row_height == 0:
+                # Fallback to default section size when rowHeight not yet computed
+                row_height = self.selection_table.verticalHeader().defaultSectionSize()
+            delete_btn.setFixedHeight(max(24, row_height - 4))  # ensure minimum usable size
             delete_btn.clicked.connect(
                 lambda checked, sid=selection_id: self.delete_selection(sid)
             )
@@ -470,7 +477,9 @@ class SelectionPanel(QWidget, LoggerMixin):
         
         current_color = self.selections_data[selection_id].get('color', '#FF0000')
 
-        
+        # Show custom color dialog limited to SELECTION_COLORS palette
+        new_color_hex = CustomColorDialog.get_color(self)
+
         if new_color_hex:
             # Update selection data
             self.selections_data[selection_id]['color'] = new_color_hex
