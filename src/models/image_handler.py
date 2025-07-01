@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageFile
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QProgressBar
-from PySide6.QtCore import Qt, Signal, QThread, QObject, QTimer
+from PySide6.QtCore import Qt, Signal, QThread, QObject, QTimer, QPoint, QSize, QRect
 from PySide6.QtGui import QPixmap, QImage, QPainter, QPen, QBrush
 
 from config.settings import (
@@ -224,6 +224,7 @@ class ImageHandler(QWidget, LoggerMixin):
     zoom_changed = Signal(float)  # zoom_level
     coordinates_changed = Signal(float, float)  # x, y
     calibration_point_clicked = Signal(int, int, str)  # x, y, label
+    viewport_changed = Signal()  # viewport changed (zoom or pan)
     
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
@@ -234,6 +235,11 @@ class ImageHandler(QWidget, LoggerMixin):
         self.current_file_path: Optional[str] = None
         self.zoom_level: float = 1.0
         self.pan_offset: Tuple[int, int] = (0, 0)
+        
+        # Drag and pan state
+        self.is_dragging: bool = False
+        self.drag_start_pos: QPoint = QPoint()
+        self.drag_start_pan: Tuple[int, int] = (0, 0)
         
         # Overlay data
         self.overlays: List[Dict[str, Any]] = []
@@ -275,6 +281,8 @@ class ImageHandler(QWidget, LoggerMixin):
         self.image_label.setMouseTracking(True)
         self.image_label.mousePressEvent = self._mouse_press_event
         self.image_label.mouseMoveEvent = self._mouse_move_event
+        self.image_label.mouseReleaseEvent = self._mouse_release_event
+        self.image_label.wheelEvent = self._wheel_event
         
         # Progress bar (hidden by default)
         self.progress_bar = QProgressBar()
@@ -355,6 +363,9 @@ class ImageHandler(QWidget, LoggerMixin):
         # Update display
         self._update_display()
         
+        # Auto fit to window on first load
+        QTimer.singleShot(100, self.zoom_fit)  # Delay to ensure widget is properly sized
+
         # Emit signal
         self.image_loaded.emit(self.current_file_path)
         
@@ -589,6 +600,7 @@ class ImageHandler(QWidget, LoggerMixin):
         self.zoom_level = max(0.1, min(10.0, zoom_level))  # Clamp between 10% and 1000%
         self._update_display()
         self.zoom_changed.emit(self.zoom_level)
+        self.viewport_changed.emit()
     
     def zoom_in(self) -> None:
         """Zoom in by 25%."""
@@ -643,6 +655,7 @@ class ImageHandler(QWidget, LoggerMixin):
         self.pan_offset = (0, 0)
         self._update_display()
         self.zoom_changed.emit(self.zoom_level)
+        self.viewport_changed.emit()
     
     def pan(self, dx: int, dy: int) -> None:
         """
@@ -663,6 +676,7 @@ class ImageHandler(QWidget, LoggerMixin):
         
         # Apply the panning by updating the display
         self._update_display()
+        self.viewport_changed.emit()
     
     def set_selection_mode(self, enabled: bool) -> None:
         """
@@ -737,6 +751,7 @@ class ImageHandler(QWidget, LoggerMixin):
         )
         
         self._update_display()
+        self.viewport_changed.emit()
         self.log_info(f"Navigated to position: ({norm_x:.2f}, {norm_y:.2f})")
     
     def add_overlay(self, overlay_type: str, x: float, y: float, 
@@ -918,9 +933,15 @@ class ImageHandler(QWidget, LoggerMixin):
                 self.calibration_point_clicked.emit(image_x, image_y, point_label)
                 
                 self.log_info(f"Added calibration point: {point_label} at ({image_x}, {image_y})")
-    
+            else:
+                # Start dragging for image panning
+                self.is_dragging = True
+                self.drag_start_pos = event.pos()
+                self.drag_start_pan = self.pan_offset
+                self.image_label.setCursor(Qt.ClosedHandCursor)
+
     def _mouse_move_event(self, event) -> None:
-        """Handle mouse move events for coordinate tracking."""
+        """Handle mouse move events for coordinate tracking and dragging."""
         if not self.image_data is None:
             # Get image coordinates from label coordinates
             label_x = event.x()
@@ -935,6 +956,89 @@ class ImageHandler(QWidget, LoggerMixin):
             
             # Emit coordinate change signal
             self.coordinates_changed.emit(float(image_x), float(image_y))
+            
+            # Handle dragging for image panning
+            if self.is_dragging and not self.calibration_mode:
+                delta = event.pos() - self.drag_start_pos
+                new_pan_x = self.drag_start_pan[0] + delta.x()
+                new_pan_y = self.drag_start_pan[1] + delta.y()
+                self.pan_offset = (new_pan_x, new_pan_y)
+                self._update_display()
+                
+                # Emit viewport changed signal for minimap update
+                self.viewport_changed.emit()
+
+    def _mouse_release_event(self, event) -> None:
+        """Handle mouse release events on the image."""
+        if event.button() == Qt.LeftButton:
+            self.is_dragging = False
+            # Reset cursor
+            if self.calibration_mode:
+                self.image_label.setCursor(Qt.CrossCursor)
+            else:
+                self.image_label.setCursor(Qt.ArrowCursor)
+
+    def _wheel_event(self, event) -> None:
+        """Handle mouse wheel events for point-centered zooming."""
+        if self.image_data is None:
+            return
+            
+        # Get mouse position in label coordinates
+        mouse_pos = event.position()
+        label_x = int(mouse_pos.x())
+        label_y = int(mouse_pos.y())
+        
+        # Convert to image coordinates before zooming
+        image_x, image_y = self._label_to_image_coords(label_x, label_y)
+        
+        # Calculate zoom factor
+        zoom_factor = 1.2 if event.angleDelta().y() > 0 else 1.0 / 1.2
+        old_zoom = self.zoom_level
+        new_zoom = max(0.1, min(10.0, old_zoom * zoom_factor))
+        
+        if new_zoom != old_zoom:
+            # Calculate new pan offset to keep the mouse position centered
+            # Widget center coordinates
+            widget_center_x = self.image_label.width() / 2
+            widget_center_y = self.image_label.height() / 2
+            
+            # Calculate the position where the mouse point should be after zoom
+            new_image_x_pos = image_x * new_zoom
+            new_image_y_pos = image_y * new_zoom
+            
+            # Calculate new pan offset to center the mouse position
+            new_pan_x = widget_center_x - new_image_x_pos + (label_x - widget_center_x)
+            new_pan_y = widget_center_y - new_image_y_pos + (label_y - widget_center_y)
+            
+            # Update zoom and pan
+            self.zoom_level = new_zoom
+            self.pan_offset = (int(new_pan_x), int(new_pan_y))
+            
+            # Update display
+            self._update_display()
+            self.zoom_changed.emit(self.zoom_level)
+            
+            # Emit viewport changed signal for minimap update
+            self.viewport_changed.emit()
+    
+    def _update_minimap_viewport(self) -> None:
+        """Update minimap viewport based on current zoom and pan."""
+        if self.image_data is None:
+            return
+            
+        visible_rect = self.get_visible_rect()
+        image_size = QSize(self.image_data.shape[1], self.image_data.shape[0])
+        
+        # Find minimap widget in parent hierarchy
+        parent = self.parent()
+        while parent:
+            if hasattr(parent, 'minimap_widget'):
+                parent.minimap_widget.update_viewport(
+                    QRect(visible_rect[0], visible_rect[1], visible_rect[2], visible_rect[3]),
+                    image_size
+                )
+                break
+            parent = parent.parent()
     
     def _label_to_image_coords(self, label_x: int, label_y: int) -> Tuple[int, int]:
         """
