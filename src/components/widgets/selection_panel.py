@@ -16,7 +16,8 @@ from PySide6.QtGui import QColor
 from components.widgets.well_plate import WellPlateWidget
 from components.base.base_button import BaseButton
 from components.dialogs.custom_color_dialog import CustomColorDialog
-from config.settings import BUTTON_HEIGHT, BUTTON_MIN_WIDTH, BUTTON_SPACING, COMPONENT_SPACING
+from components.dialogs.well_selection_dialog import WellSelectionDialog
+from config.settings import BUTTON_HEIGHT, BUTTON_MIN_WIDTH, BUTTON_SPACING, COMPONENT_SPACING, SELECTION_COLORS
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
 
@@ -257,6 +258,7 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.selection_table.cellChanged.connect(self.on_table_cell_changed)
         self.selection_table.itemSelectionChanged.connect(self.on_table_selection_changed)
         self.well_plate.well_clicked.connect(self.on_well_clicked)
+        self.selection_table.cellDoubleClicked.connect(self.on_table_cell_double_clicked)
     
     @error_handler("Loading selections data")
     def load_selections(self, selections: List[Dict[str, Any]]) -> None:
@@ -287,35 +289,51 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.selection_table.setRowCount(len(self.selections_data))
         
         for row, (selection_id, data) in enumerate(self.selections_data.items()):
-            # Enabled checkbox
+            # Enabled checkbox centered horizontally & vertically via container widget
             enabled_checkbox = QCheckBox()
             enabled_checkbox.setChecked(data.get('enabled', True))
             enabled_checkbox.stateChanged.connect(
                 lambda state, sid=selection_id: self.on_enabled_changed(sid, state == Qt.Checked)
             )
-            self.selection_table.setCellWidget(row, 0, enabled_checkbox)
+
+            checkbox_container = QWidget()
+            c_layout = QHBoxLayout(checkbox_container)
+            c_layout.setContentsMargins(0, 0, 0, 0)
+            c_layout.setAlignment(Qt.AlignCenter)
+            c_layout.addWidget(enabled_checkbox)
+            self.selection_table.setCellWidget(row, 0, checkbox_container)
             
             # Label (editable)
             label_item = QTableWidgetItem(data.get('label', ''))
             label_item.setData(Qt.UserRole, selection_id)
             self.selection_table.setItem(row, 1, label_item)
             
-            # Color display (clickable)
-            color_frame = QFrame()
-            color_frame.setFixedSize(40, 20)
+            # Color display: chip + name centered
             color_hex = data.get('color', '#FF0000')
-            color_frame.setStyleSheet(f"""
-                background-color: {color_hex}; 
-                border: 1px solid black; 
-                border-radius: 3px;
-            """)
-            color_frame.setCursor(Qt.PointingHandCursor)
-            color_frame.mousePressEvent = lambda event, sid=selection_id: self.on_color_clicked(sid)
-            self.selection_table.setCellWidget(row, 2, color_frame)
+            color_name = self._get_color_name(color_hex)
+
+            color_widget = QWidget()
+            h_layout = QHBoxLayout(color_widget)
+            h_layout.setContentsMargins(0, 0, 0, 0)
+            h_layout.setAlignment(Qt.AlignCenter)
+            chip = QFrame()
+            chip.setFixedSize(12, 12)
+            chip.setStyleSheet(f"background-color: {color_hex}; border: 1px solid #333; border-radius: 2px;")
+            name_label = QLabel(color_name)
+            name_label.setStyleSheet("font-size:11px;")
+            h_layout.addWidget(chip)
+            h_layout.addSpacing(4)
+            h_layout.addWidget(name_label)
+
+            color_widget.setCursor(Qt.PointingHandCursor)
+            color_widget.mousePressEvent = lambda event, sid=selection_id: self.on_color_clicked(sid)
+            self.selection_table.setCellWidget(row, 2, color_widget)
             
             # Well position
-            well_item = QTableWidgetItem(data.get('well_position', ''))
+            well_position_text = data.get('well_position', '')
+            well_item = QTableWidgetItem(well_position_text)
             well_item.setData(Qt.UserRole, selection_id)
+            well_item.setTextAlignment(Qt.AlignCenter)
             self.selection_table.setItem(row, 3, well_item)
             
             # Cell count
@@ -341,6 +359,13 @@ class SelectionPanel(QWidget, LoggerMixin):
                 lambda checked, sid=selection_id: self.delete_selection(sid)
             )
             self.selection_table.setCellWidget(row, 5, delete_btn)
+        
+        # Ensure delete button heights match final row heights
+        for r in range(self.selection_table.rowCount()):
+            widget = self.selection_table.cellWidget(r, 5)
+            if widget:
+                final_height = self.selection_table.rowHeight(r)
+                widget.setFixedHeight(final_height)
     
     def refresh_well_plate(self) -> None:
         """Refresh the well plate display."""
@@ -358,17 +383,30 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.well_plate.set_well_assignments(well_assignments)
     
     def on_enabled_changed(self, selection_id: str, enabled: bool) -> None:
-        """Handle selection enabled/disabled."""
-        if selection_id in self.selections_data:
-            self.selections_data[selection_id]['enabled'] = enabled
-            
-            # Don't emit signal during programmatic updates to avoid infinite loops
-            if not self._updating_selection:
-                self.refresh_well_plate()  # Update well plate display
-                self.selection_toggled.emit(selection_id, enabled)
-                self.log_info(f"Selection {selection_id} {'enabled' if enabled else 'disabled'}")
-            else:
-                self.log_info(f"Skipping signal emission for enabled change during programmatic update: {selection_id}")
+        """Handle selection enabled/disabled, ensuring UI & model sync."""
+        if selection_id not in self.selections_data:
+            return
+
+        self.selections_data[selection_id]['enabled'] = enabled
+
+        if self._updating_selection:
+            # Avoid recursive loops
+            self.log_info(
+                f"Skipping signal emission for enabled change during programmatic update: {selection_id}"
+            )
+            return
+
+        # Update UI representations
+        self._updating_selection = True
+        try:
+            self.refresh_table()
+            self.refresh_well_plate()
+        finally:
+            self._updating_selection = False
+
+        # Emit external signal after UI sync
+        self.selection_toggled.emit(selection_id, enabled)
+        self.log_info(f"Selection {selection_id} {'enabled' if enabled else 'disabled'}")
     
     def on_table_cell_changed(self, row: int, column: int) -> None:
         """Handle table cell changes."""
@@ -642,3 +680,29 @@ class SelectionPanel(QWidget, LoggerMixin):
             data for data in self.selections_data.values()
             if data.get('enabled', True)
         ]
+
+    def _get_color_name(self, hex_code: str) -> str:
+        for name, hex_val in SELECTION_COLORS.items():
+            if hex_val.lower() == hex_code.lower():
+                return name
+        return hex_code  # fallback
+
+    def on_table_cell_double_clicked(self, row: int, column: int):
+        """Open dialogs for Color and Well columns on double-click."""
+        if column == 2:
+            # Color column
+            selection_ids = list(self.selections_data.keys())
+            if row < len(selection_ids):
+                self.on_color_clicked(selection_ids[row])
+        elif column == 3:
+            # Well column
+            selection_ids = list(self.selections_data.keys())
+            if row < len(selection_ids):
+                sid = selection_ids[row]
+                current_well = self.selections_data[sid].get('well_position', '')
+                new_well = WellSelectionDialog.get_well(current_well, self)
+                if new_well:
+                    self.selections_data[sid]['well_position'] = new_well
+                    self.selection_updated.emit(sid, {'well_position': new_well})
+                    self.refresh_table()
+                    self.refresh_well_plate()
