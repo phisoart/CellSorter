@@ -251,9 +251,22 @@ class SelectionManager:
     ]
     
     COLOR_PALETTE = {
-        "Red": "#FF0000", "Green": "#00FF00", "Blue": "#0000FF",
-        "Yellow": "#FFFF00", "Magenta": "#FF00FF", "Cyan": "#00FFFF",
-        # ... complete color dictionary
+        "Red": "#FF0000",
+        "Green": "#00FF00",
+        "Blue": "#0000FF",
+        "Yellow": "#FFFF00",
+        "Magenta": "#FF00FF",
+        "Cyan": "#00FFFF",
+        "LightGray": "#C0C0C0",
+        "DarkRed": "#800000",
+        "DarkGreen": "#008000",
+        "DarkBlue": "#000080",
+        "DarkYellow": "#808000",
+        "DarkMagenta": "#800080",
+        "DarkCyan": "#008080",
+        "DarkGray": "#808080",
+        "White": "#FFFFFF",
+        "Black": "#000000"
     }
     
     def add_selection(self, cell_indices: List[int], color: str, label: str) -> str
@@ -386,10 +399,10 @@ FORMAT = "TIF"
 PositionOnly = 1
 AfterBefore = "01"
 Points = 4
-P_1 = "24.5693; 11.0685; 24.6437; 11.1429;red;A01;"
-P_2 = "24.6994; 11.1114; 24.7781; 11.1901;blue;B01;"
-P_3 = "24.6722; 11.1880; 24.7142; 11.2300;green;C01;"
-P_4 = "24.6104; 11.2206; 24.6404; 11.2506;yellow;D01;"
+P_1 = "24.5693; 11.0685; 24.6437; 11.1429;Red;A01;"
+P_2 = "24.6994; 11.1114; 24.7781; 11.1901;Blue;B01;"
+P_3 = "24.6722; 11.1880; 24.7142; 11.2300;Green;C01;"
+P_4 = "24.6104; 11.2206; 24.6404; 11.2506;Yellow;D01;"
 ```
 
 Each point entry (P_1, P_2, etc.) contains semicolon-separated values:
@@ -397,7 +410,7 @@ Each point entry (P_1, P_2, etc.) contains semicolon-separated values:
 - **min_y**: Minimum Y coordinate of crop region  
 - **max_x**: Maximum X coordinate of crop region
 - **max_y**: Maximum Y coordinate of crop region
-- **color**: Selection color (red, blue, green, etc.)
+- **color**: Selection color (Red, Blue, Green, etc.)
 - **well**: 96-well plate position (A01-H12)
 
 ### Export Validation

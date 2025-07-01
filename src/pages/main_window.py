@@ -685,7 +685,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         """Enable actions that require data to be loaded."""
         # Analysis actions are automatically enabled when needed
         pass
-        self.action_delete_selection.setEnabled(True)
         
         # Enable export if both image and CSV are loaded
         if self.current_image_path and self.current_csv_path:

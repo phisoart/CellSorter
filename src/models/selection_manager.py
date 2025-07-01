@@ -75,21 +75,21 @@ class SelectionManager(QObject, LoggerMixin):
     # Color palette for selections (16 distinct colors)
     COLOR_PALETTE = [
         "#FF0000",  # Red
-        "#00FF00",  # Green  
+        "#00FF00",  # Green
         "#0000FF",  # Blue
         "#FFFF00",  # Yellow
         "#FF00FF",  # Magenta
         "#00FFFF",  # Cyan
-        "#FF8000",  # Orange
-        "#8000FF",  # Purple
-        "#FF0080",  # Pink
-        "#80FF00",  # Lime
-        "#0080FF",  # Sky Blue
-        "#FF8080",  # Light Red
-        "#80FF80",  # Light Green
-        "#8080FF",  # Light Blue
-        "#FFFF80",  # Light Yellow
-        "#FF80FF",  # Light Magenta
+        "#C0C0C0",  # LightGray
+        "#800000",  # DarkRed
+        "#008000",  # DarkGreen
+        "#000080",  # DarkBlue
+        "#808000",  # DarkYellow
+        "#800080",  # DarkMagenta
+        "#008080",  # DarkCyan
+        "#808080",  # DarkGray
+        "#FFFFFF",  # White
+        "#000000",  # Black
     ]
     
     # 96-well plate layout (standard 8x12 format)
