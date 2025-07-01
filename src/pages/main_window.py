@@ -462,6 +462,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Image handler connections
         self.image_handler.coordinates_changed.connect(self.update_coordinates)
         self.image_handler.calibration_point_clicked.connect(self._on_calibration_point_clicked)
+        self.image_handler.viewport_changed.connect(self._update_minimap_viewport)
         
         # Minimap connections
         self.minimap_widget.navigation_requested.connect(self.image_handler.navigate_to_position)

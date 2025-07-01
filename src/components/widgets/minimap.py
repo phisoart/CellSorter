@@ -231,9 +231,23 @@ class MinimapWidget(QWidget, LoggerMixin):
                 self.setCursor(Qt.PointingHandCursor)
     
     def wheelEvent(self, event) -> None:
-        """Handle wheel events for zooming."""
-        # Pass wheel events to parent (main image view)
-        event.ignore()
+        """Handle wheel events for zooming - forward to main image view."""
+        # Find the main image handler in parent hierarchy
+        parent = self.parent()
+        while parent:
+            if hasattr(parent, 'image_handler'):
+                # Forward wheel event to main image handler
+                if hasattr(parent.image_handler, '_wheel_event'):
+                    parent.image_handler._wheel_event(event)
+                break
+            elif hasattr(parent, '_wheel_event'):
+                # Direct image handler
+                parent._wheel_event(event)
+                break
+            parent = parent.parent()
+        
+        # Accept the event to prevent further propagation
+        event.accept()
     
     def _navigate_to_position(self, pos: QPoint) -> None:
         """
