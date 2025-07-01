@@ -43,6 +43,9 @@ class SelectionPanel(QWidget, LoggerMixin):
         # Data storage
         self.selections_data: Dict[str, Dict[str, Any]] = {}
         
+        # Prevent circular reference during updates
+        self._updating_selection: bool = False
+        
         self.setup_ui()
         self.connect_signals()
         
@@ -345,12 +348,22 @@ class SelectionPanel(QWidget, LoggerMixin):
         """Handle selection enabled/disabled."""
         if selection_id in self.selections_data:
             self.selections_data[selection_id]['enabled'] = enabled
-            self.refresh_well_plate()  # Update well plate display
-            self.selection_toggled.emit(selection_id, enabled)
-            self.log_info(f"Selection {selection_id} {'enabled' if enabled else 'disabled'}")
+            
+            # Don't emit signal during programmatic updates to avoid infinite loops
+            if not self._updating_selection:
+                self.refresh_well_plate()  # Update well plate display
+                self.selection_toggled.emit(selection_id, enabled)
+                self.log_info(f"Selection {selection_id} {'enabled' if enabled else 'disabled'}")
+            else:
+                self.log_info(f"Skipping signal emission for enabled change during programmatic update: {selection_id}")
     
     def on_table_cell_changed(self, row: int, column: int) -> None:
         """Handle table cell changes."""
+        # Skip signal emission if we're updating selections programmatically (avoid infinite loops)
+        if self._updating_selection:
+            self.log_info(f"Skipping signal emission during programmatic update: row {row}, column {column}")
+            return
+            
         if column == 1:  # Label column
             item = self.selection_table.item(row, column)
             if item:
@@ -447,6 +460,11 @@ class SelectionPanel(QWidget, LoggerMixin):
     def on_color_clicked(self, selection_id: str) -> None:
         """Handle color frame clicks to open color dialog."""
         if selection_id not in self.selections_data:
+            return
+        
+        # Skip if we're in a programmatic update
+        if self._updating_selection:
+            self.log_info(f"Skipping color dialog during programmatic update: {selection_id}")
             return
         
         current_color = self.selections_data[selection_id].get('color', '#FF0000')
@@ -591,10 +609,17 @@ class SelectionPanel(QWidget, LoggerMixin):
             data: Updated data
         """
         if selection_id in self.selections_data:
-            self.selections_data[selection_id].update(data)
-            self.refresh_table()
-            self.refresh_well_plate()
-            self.log_info(f"Updated selection {selection_id}")
+            # Set flag to prevent circular updates
+            self._updating_selection = True
+            
+            try:
+                self.selections_data[selection_id].update(data)
+                self.refresh_table()
+                self.refresh_well_plate()
+                self.log_info(f"Updated selection {selection_id}")
+            finally:
+                # Always reset flag, even if an error occurs
+                self._updating_selection = False
     
     def get_active_selections(self) -> List[Dict[str, Any]]:
         """

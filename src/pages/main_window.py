@@ -457,6 +457,8 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_manager.selection_updated.connect(self._on_selection_updated)
         self.selection_manager.selection_removed.connect(self._on_selection_removed)
         self.selection_panel.selection_deleted.connect(self._on_panel_selection_deleted)
+        self.selection_panel.selection_toggled.connect(self._on_panel_selection_toggled)
+        self.selection_panel.selection_updated.connect(self._on_panel_selection_updated)
         self.selection_panel.export_requested.connect(self.export_protocol)
         
         # Image handler connections
@@ -776,6 +778,11 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def _on_selection_made(self, indices: list, method: str = "rectangle_selection") -> None:
         """Handle cell selection from scatter plot."""
+        # Skip creating new selections for programmatic highlights (avoid infinite loops)
+        if method == "programmatic_selection":
+            self.log_info(f"Skipping selection creation for programmatic highlight: {len(indices)} cells")
+            return
+            
         if indices:
             # Create label based on selection method
             if method == "point_selection":
@@ -828,6 +835,9 @@ class MainWindow(QMainWindow, LoggerMixin):
                 alpha=0.4
             )
             
+            # Update scatter plot highlighting
+            self._update_scatter_plot_highlights()
+            
             # Update selection panel display
             selection_data = {
                 'id': selection.id,
@@ -865,12 +875,40 @@ class MainWindow(QMainWindow, LoggerMixin):
                 alpha=0.4
             )
             
+            # Update scatter plot highlighting
+            self._update_scatter_plot_highlights()
+            
             self.update_window_title()
+    
+    def _update_scatter_plot_highlights(self) -> None:
+        """Update scatter plot highlighting for all active selections."""
+        # Get all active selections
+        active_selections = self.selection_manager.get_all_selections()
+        active_selections = [s for s in active_selections if s.status.value == 'active']
+        
+        if not active_selections:
+            # Clear highlighting if no active selections
+            self.scatter_plot_widget.clear_selection()
+            return
+        
+        # Prepare selections data for scatter plot
+        selections_data = {}
+        for selection in active_selections:
+            selections_data[selection.id] = {
+                'indices': selection.cell_indices,
+                'color': selection.color
+            }
+        
+        # Update scatter plot with all selections
+        self.scatter_plot_widget.highlight_multiple_selections(selections_data)
     
     def _on_selection_removed(self, selection_id: str) -> None:
         """Handle selection removal."""
         # Remove image highlights
         self.image_handler.remove_cell_highlights(selection_id)
+        
+        # Update scatter plot highlighting
+        self._update_scatter_plot_highlights()
         
         self.update_window_title()
     
@@ -881,6 +919,51 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Remove image highlights
         self.image_handler.remove_cell_highlights(selection_id)
+        
+        # Update scatter plot highlighting
+        self._update_scatter_plot_highlights()
+    
+    def _on_panel_selection_toggled(self, selection_id: str, enabled: bool) -> None:
+        """Handle selection toggled from panel."""
+        # Update selection status in manager
+        selection = self.selection_manager.get_selection(selection_id)
+        if selection:
+            from models.selection_manager import SelectionStatus
+            new_status = SelectionStatus.ACTIVE if enabled else SelectionStatus.DISABLED
+            self.selection_manager.update_selection(selection_id, status=new_status)
+            
+            # Update scatter plot highlighting
+            self._update_scatter_plot_highlights()
+            
+            status_text = "enabled" if enabled else "disabled"
+            self.update_status(f"Selection {selection.label} {status_text}")
+    
+    def _on_panel_selection_updated(self, selection_id: str, data: dict) -> None:
+        """Handle selection updated from panel."""
+        # Update selection in manager only, don't trigger panel update to avoid circular reference
+        selection = self.selection_manager.get_selection(selection_id)
+        if selection:
+            # Update selection data directly without triggering signals that would update the panel again
+            old_status = selection.status
+            self.selection_manager.update_selection(selection_id, **data)
+            
+            # Only update external components (image and scatter plot)
+            updated_selection = self.selection_manager.get_selection(selection_id)
+            if updated_selection:
+                # Update image highlights
+                self.image_handler.highlight_cells(
+                    selection_id, 
+                    updated_selection.cell_indices, 
+                    updated_selection.color,
+                    alpha=0.4
+                )
+                
+                # Update scatter plot highlighting
+                self._update_scatter_plot_highlights()
+                
+                self.update_window_title()
+                
+                self.log_info(f"Updated selection {selection_id} from panel: {data}")
     
     def _on_calibration_point_clicked(self, image_x: int, image_y: int, point_label: str) -> None:
         """Handle calibration point clicked on image."""
