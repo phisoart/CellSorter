@@ -7,7 +7,7 @@ status bar, and dockable panels for the CellSorter application.
 Supports both traditional GUI mode and headless development mode.
 """
 
-from typing import Optional, Dict, Any, Union
+from typing import Optional, Dict, Any, Union, List
 from pathlib import Path
 from datetime import datetime
 import platform
@@ -49,6 +49,7 @@ from components.widgets.minimap import MinimapWidget
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
 from components.dialogs.image_export_dialog import ImageExportDialog
+from components.dialogs.protocol_export_dialog import ProtocolExportDialog
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -512,54 +513,83 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_status("Export completed successfully")
             self.log_info("Analysis results exported")
     
-    def export_images_with_overlays(self, selections_data: list) -> None:
-        """Show image export dialog for individual cell images."""
-        # Check if image and CSV data are available
-        if not self.current_image_path or self.image_handler.image_data is None:
-            QMessageBox.warning(self, "이미지 없음", "먼저 이미지를 로드해주세요.")
+    def export_protocol_with_data(self, selections_data: List[Dict[str, Any]]) -> None:
+        """
+        Show protocol export dialog with selection data.
+        
+        Args:
+            selections_data: List of selection data dictionaries
+        """
+        # Validate required data
+        if not hasattr(self, 'image_handler') or self.image_handler.image_data is None:
+            QMessageBox.warning(self, "No Image", "Please load an image first.")
             return
         
-        if not self.current_csv_path or not hasattr(self, 'csv_parser') or self.csv_parser.data is None:
-            QMessageBox.warning(self, "데이터 없음", "먼저 CSV 데이터를 로드해주세요.")
+        if not hasattr(self, 'csv_parser') or self.csv_parser.data is None or self.csv_parser.data.empty:
+            QMessageBox.warning(self, "No CSV Data", "Please load CSV data first.")
             return
+        
+        # Convert selections data to dictionary format expected by dialog
+        selections_dict = {}
+        for selection in selections_data:
+            selection_id = selection.get('id', '')
+            if selection_id:
+                selections_dict[selection_id] = selection
         
         # Get bounding boxes from CSV parser
-        bounding_box_data = self.csv_parser.get_bounding_box_data()
-        if bounding_box_data is None or bounding_box_data.empty:
-            QMessageBox.warning(self, "바운딩 박스 없음", "CSV 파일에서 바운딩 박스 정보를 찾을 수 없습니다.")
+        bounding_boxes = []
+        if hasattr(self.csv_parser, 'get_bounding_boxes'):
+            bounding_boxes = self.csv_parser.get_bounding_boxes()
+        
+        # Create and show dialog
+        dialog = ProtocolExportDialog(
+            selections_dict,
+            self.image_handler.image_data,
+            bounding_boxes,
+            self
+        )
+        dialog.exec()
+        
+        self.log_info(f"Showed protocol export dialog with {len(selections_dict)} selections")
+    
+    def export_images_with_overlays(self, selections_data: List[Dict[str, Any]]) -> None:
+        """
+        Show image export dialog with selection data.
+        
+        Args:
+            selections_data: List of selection data dictionaries
+        """
+        # Validate required data
+        if not hasattr(self, 'image_handler') or self.image_handler.image_data is None:
+            QMessageBox.warning(self, "No Image", "Please load an image first.")
             return
         
-        # Convert bounding box data to list of tuples
-        bounding_boxes = []
-        for _, row in bounding_box_data.iterrows():
-            bbox = (
-                int(row['AreaShape_BoundingBoxMinimum_X']),
-                int(row['AreaShape_BoundingBoxMinimum_Y']),
-                int(row['AreaShape_BoundingBoxMaximum_X']),
-                int(row['AreaShape_BoundingBoxMaximum_Y'])
-            )
-            bounding_boxes.append(bbox)
+        if not hasattr(self, 'csv_parser') or self.csv_parser.data is None or self.csv_parser.data.empty:
+            QMessageBox.warning(self, "No CSV Data", "Please load CSV data first.")
+            return
         
-        # Convert selections list to dictionary
+        # Convert selections data to dictionary format expected by dialog
         selections_dict = {}
-        for selection_data in selections_data:
-            selection_id = selection_data.get('id', '')
+        for selection in selections_data:
+            selection_id = selection.get('id', '')
             if selection_id:
-                selections_dict[selection_id] = selection_data
+                selections_dict[selection_id] = selection
         
-        # Show export dialog
-        try:
-            dialog = ImageExportDialog(
-                selections_dict,
-                self.image_handler.image_data,
-                bounding_boxes,
-                self
-            )
-            dialog.exec()
-            self.log_info("Image export dialog shown")
-        except Exception as e:
-            self.log_error(f"Failed to show image export dialog: {e}")
-            QMessageBox.critical(self, "오류", f"이미지 익스포트 다이얼로그를 표시할 수 없습니다: {e}")
+        # Get bounding boxes from CSV parser
+        bounding_boxes = []
+        if hasattr(self.csv_parser, 'get_bounding_boxes'):
+            bounding_boxes = self.csv_parser.get_bounding_boxes()
+        
+        # Create and show dialog
+        dialog = ImageExportDialog(
+            selections_dict,
+            self.image_handler.image_data,
+            bounding_boxes,
+            self
+        )
+        dialog.exec()
+        
+        self.log_info("Image export dialog shown")
     
     def zoom_in(self) -> None:
         """Zoom in on image."""

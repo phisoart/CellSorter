@@ -249,10 +249,9 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.selection_table.setColumnWidth(0, 50)   # Checkbox
         self.selection_table.setColumnWidth(5, 80)   # Delete button
         
-        # Configure table behavior - completely disable all selection
-        self.selection_table.setSelectionBehavior(QAbstractItemView.SelectItems)
-        self.selection_table.setSelectionMode(QAbstractItemView.NoSelection)
-        self.selection_table.setFocusPolicy(Qt.NoFocus)  # Prevent focus-based selection
+        # Configure table behavior - allow selection for delete functionality
+        self.selection_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.selection_table.setSelectionMode(QAbstractItemView.MultiSelection)
         self.selection_table.setAlternatingRowColors(True)
         self.selection_table.verticalHeader().setVisible(False)
         
@@ -267,8 +266,8 @@ class SelectionPanel(QWidget, LoggerMixin):
     def connect_signals(self) -> None:
         """Connect widget signals."""
         self.selection_table.cellChanged.connect(self.on_table_cell_changed)
-        # Remove itemSelectionChanged to prevent delete button from appearing
-        # self.selection_table.itemSelectionChanged.connect(self.on_table_selection_changed)
+        # Re-enable itemSelectionChanged to update delete button state
+        self.selection_table.itemSelectionChanged.connect(self.on_table_selection_changed)
         self.well_plate.well_clicked.connect(self.on_well_clicked)
         self.selection_table.cellDoubleClicked.connect(self.on_table_cell_double_clicked)
     
@@ -408,35 +407,36 @@ class SelectionPanel(QWidget, LoggerMixin):
             count_item.setFlags(count_item.flags() & ~Qt.ItemIsEditable)  # Read-only
             self.selection_table.setItem(row, 4, count_item)
             
-            # Delete button - only create when row is selected, otherwise create hidden placeholder
-            selected_rows = self.selection_table.selectionModel().selectedRows()
-            is_row_selected = any(index.row() == row for index in selected_rows)
-            
-            if is_row_selected:
-                # Create visible delete button for selected row
-                delete_btn = QPushButton("Delete")
-                # Adjust button size to exactly match the current row height
-                row_height = self.selection_table.rowHeight(row)
-                if row_height == 0:
-                    # Fallback to default section size when rowHeight not yet computed
-                    row_height = self.selection_table.verticalHeader().defaultSectionSize()
+            # Delete button - always create and show for each row
+            delete_btn = QPushButton("Delete")
+            # Adjust button size to exactly match the current row height
+            row_height = self.selection_table.rowHeight(row)
+            if row_height == 0:
+                # Fallback to default section size when rowHeight not yet computed
+                row_height = self.selection_table.verticalHeader().defaultSectionSize()
 
-                # Match the cell height with tiny offset to avoid floating gap
-                delete_btn.setFixedHeight(max(18, row_height - 4))
+            # Match the cell height with tiny offset to avoid floating gap
+            delete_btn.setFixedHeight(max(18, row_height - 4))
 
-                # Allow width/height to expand within the cell as needed
-                delete_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-                delete_btn.clicked.connect(
-                    lambda checked, sid=selection_id: self.delete_selection(sid)
-                )
-                delete_btn.setVisible(True)
-                self.selection_table.setCellWidget(row, 5, delete_btn)
-            else:
-                # Create hidden placeholder for unselected rows
-                placeholder = QPushButton()
-                placeholder.setVisible(False)  # Hide the button
-                placeholder.setEnabled(False)  # Disable interaction
-                self.selection_table.setCellWidget(row, 5, placeholder)
+            # Allow width/height to expand within the cell as needed
+            delete_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            delete_btn.clicked.connect(
+                lambda checked, sid=selection_id: self.delete_selection(sid)
+            )
+            delete_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #dc3545;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    font-weight: 500;
+                    font-size: 11px;
+                }
+                QPushButton:hover {
+                    background-color: #c82333;
+                }
+            """)
+            self.selection_table.setCellWidget(row, 5, delete_btn)
         
         # Ensure delete button heights match final row heights
         for r in range(self.selection_table.rowCount()):
@@ -529,10 +529,10 @@ class SelectionPanel(QWidget, LoggerMixin):
                     self.log_info(f"Updated well for selection {selection_id}: {new_well}")
     
     def on_table_selection_changed(self) -> None:
-        """Handle table selection changes - DISABLED to prevent delete button issues."""
-        # This method is intentionally disabled to prevent delete button from appearing
-        # when clicking checkboxes. Table selection is disabled via NoSelection mode.
-        pass
+        """Handle table selection changes to update delete button state."""
+        selected_rows = self.selection_table.selectionModel().selectedRows()
+        self.delete_button.setEnabled(len(selected_rows) > 0)
+        # Individual delete buttons in table rows are always enabled
     
     def on_well_clicked(self, well_position: str) -> None:
         """Handle well plate clicks to assign/unassign wells."""
@@ -695,7 +695,31 @@ class SelectionPanel(QWidget, LoggerMixin):
                 "Please complete coordinate calibration before exporting protocol."
             )
             return
-        self.export_requested.emit()
+        
+        # Check if any selections exist (regardless of enabled status)
+        if not self.selections_data:
+            QMessageBox.information(
+                self, 
+                "선정 필요", 
+                "선정된 영역이 없습니다. 먼저 Cell을 선정해주세요."
+            )
+            return
+        
+        # Emit signal to main window to show protocol export dialog with selections
+        self._request_protocol_export_dialog()
+    
+    def _request_protocol_export_dialog(self) -> None:
+        """Request protocol export through parent window."""
+        # Find main window in parent hierarchy
+        parent = self.parent()
+        while parent:
+            if hasattr(parent, 'export_protocol_with_data'):
+                parent.export_protocol_with_data(list(self.selections_data.values()))
+                break
+            parent = parent.parent()
+        else:
+            QMessageBox.information(self, "Export Not Available", "Protocol export functionality not available.")
+            self.log_warning("Could not find main window for protocol export")
     
     def export_images(self) -> None:
         """Export images with selection overlays."""

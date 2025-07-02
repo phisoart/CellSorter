@@ -58,6 +58,9 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.pixel2_x: Optional[int] = None
         self.pixel2_y: Optional[int] = None
         
+        # Point tracking for first point updates
+        self.allow_first_point_update = True
+        
         self.setup_ui()
         self.update_ui_state()
         
@@ -115,36 +118,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
     def create_header(self) -> QFrame:
         """Create simplified header."""
         header = QFrame()
-        header.setFrameStyle(QFrame.StyledPanel)
-        header.setStyleSheet("""
-            QFrame { 
-                background-color: #f8f9fa; 
-                border: 1px solid #dee2e6; 
-                border-radius: 8px;
-                padding: 10px;
-            }
-        """)
-        
-        layout = QVBoxLayout(header)
-        layout.setContentsMargins(15, 15, 15, 15)
-        layout.setSpacing(10)
-        
-        # Title
-        title = QLabel("Coordinate Calibration")
-        title_font = QFont()
-        title_font.setBold(True)
-        title_font.setPointSize(16)
-        title.setFont(title_font)
-        title.setAlignment(Qt.AlignCenter)
-        title.setStyleSheet("QLabel { color: #2c3e50; }")
-        layout.addWidget(title)
-        
-        # Subtitle
-        subtitle = QLabel("Map pixel coordinates to stage coordinates")
-        subtitle.setAlignment(Qt.AlignCenter)
-        subtitle.setStyleSheet("QLabel { color: #6c757d; font-size: 12px; }")
-        layout.addWidget(subtitle)
-        
+        header.setFixedHeight(0)  # Remove header completely
         return header
     
     def create_footer(self) -> QFrame:
@@ -165,7 +139,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         # Back button
         self.back_button = QPushButton("← Back")
         self.back_button.clicked.connect(self.go_back)
-        self.back_button.setEnabled(False)
+        self.back_button.setVisible(False)  # Initially hidden
         self.back_button.setStyleSheet("""
             QPushButton {
                 background-color: #6c757d;
@@ -361,10 +335,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.point2_status.setStyleSheet("QLabel { color: #856404; background: #fff3cd; padding: 8px; border: 1px solid #ffeaa7; border-radius: 4px; }")
         layout.addWidget(self.point2_status)
         
-        # Distance info
-        self.distance_label = QLabel("")
-        self.distance_label.setStyleSheet("QLabel { color: #6c757d; font-style: italic; margin: 5px 0; }")
-        layout.addWidget(self.distance_label)
+        # Remove distance info display
         
         self.stacked_widget.addWidget(point2_widget)
     
@@ -374,7 +345,14 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.stacked_widget.setCurrentIndex(step_index)
         
         # Update navigation buttons
-        self.back_button.setEnabled(step_index > 0)
+        # Hide back button on first step
+        if step_index == CalibrationStep.FIRST_POINT.value:
+            if self.back_button:
+                self.back_button.setVisible(False)
+        else:
+            if self.back_button:
+                self.back_button.setVisible(True)
+                self.back_button.setEnabled(True)
         
         if step_index == CalibrationStep.SECOND_POINT.value:
             self.next_button.setVisible(False)
@@ -419,11 +397,11 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
             return False
         if not hasattr(self, 'point2_x_input') or not hasattr(self, 'point2_y_input'):
             return False
-        
+            
         # Check minimum distance between points
         pixel_distance = ((self.pixel2_x - self.initial_pixel_x) ** 2 + 
                          (self.pixel2_y - self.initial_pixel_y) ** 2) ** 0.5
-        
+            
         return pixel_distance >= 50  # Minimum 50 pixels apart
     
     def validate_point1(self) -> None:
@@ -444,7 +422,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
             self.point2_status.setStyleSheet("QLabel { color: #856404; background: #fff3cd; padding: 8px; border: 1px solid #ffeaa7; border-radius: 4px; }")
             self.update_ui_state()
             return
-        
+            
         # Check minimum distance
         pixel_distance = ((self.pixel2_x - self.initial_pixel_x) ** 2 + 
                          (self.pixel2_y - self.initial_pixel_y) ** 2) ** 0.5
@@ -459,8 +437,6 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.point2_status.setText(f"✅ Second point valid (distance: {pixel_distance:.1f} pixels)")
         self.point2_status.setStyleSheet("QLabel { color: #155724; background: #d4edda; padding: 8px; border: 1px solid #c3e6cb; border-radius: 4px; }")
         
-        # Update distance display
-        self.update_distance_display()
         self.update_ui_state()
     
     def go_next(self) -> None:
@@ -514,44 +490,40 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         else:
             QMessageBox.warning(self, "Incomplete", "Please complete both calibration points.")
     
-    def set_second_point(self, pixel_x: int, pixel_y: int) -> None:
-        """Set the second calibration point from image click."""
-        self.pixel2_x = pixel_x
-        self.pixel2_y = pixel_y
-        
-        # Update UI labels
-        self.pixel2_x_label.setText(str(pixel_x))
-        self.pixel2_y_label.setText(str(pixel_y))
-        
-        # Update status and validation
-        self.validate_point2()
-        self.log_info(f"Second point set to: ({pixel_x}, {pixel_y})")
-    
-    def update_distance_display(self) -> None:
-        """Update distance information display."""
-        if hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y'):
-            # Calculate pixel distance
-            pixel_distance = ((self.pixel2_x - self.initial_pixel_x) ** 2 + 
-                             (self.pixel2_y - self.initial_pixel_y) ** 2) ** 0.5
+    def set_calibration_point(self, pixel_x: int, pixel_y: int) -> None:
+        """Set calibration point from image click - works for both first and second point."""
+        if self.current_step == CalibrationStep.FIRST_POINT and self.allow_first_point_update:
+            # Update first point coordinates
+            self.initial_pixel_x = pixel_x
+            self.initial_pixel_y = pixel_y
             
-            # Calculate stage distance if both coordinates are entered
-            if hasattr(self, 'point1_x_input') and hasattr(self, 'point2_x_input'):
-                stage_dx = self.point2_x_input.value() - self.point1_x_input.value()
-                stage_dy = self.point2_y_input.value() - self.point1_y_input.value()
-                stage_distance = (stage_dx ** 2 + stage_dy ** 2) ** 0.5
+            # Update UI labels
+            if hasattr(self, 'pixel1_x_label') and hasattr(self, 'pixel1_y_label'):
+                self.pixel1_x_label.setText(str(pixel_x))
+                self.pixel1_y_label.setText(str(pixel_y))
+            
+            self.log_info(f"First point updated to: ({pixel_x}, {pixel_y})")
+            
+        elif self.current_step == CalibrationStep.SECOND_POINT:
+            # Set second point coordinates
+            self.pixel2_x = pixel_x
+            self.pixel2_y = pixel_y
+            
+            # Update UI labels
+            if hasattr(self, 'pixel2_x_label') and hasattr(self, 'pixel2_y_label'):
+                self.pixel2_x_label.setText(str(pixel_x))
+                self.pixel2_y_label.setText(str(pixel_y))
                 
-                # Calculate scale
-                if pixel_distance > 0:
-                    scale = stage_distance / pixel_distance
-                    self.distance_label.setText(
-                        f"Distance: {pixel_distance:.1f} pixels = {stage_distance:.3f} µm "
-                        f"(Scale: {scale:.6f} µm/pixel)"
-                    )
-                else:
-                    self.distance_label.setText(f"Distance: {pixel_distance:.1f} pixels")
-            else:
-                self.distance_label.setText(f"Pixel distance: {pixel_distance:.1f} pixels")
+                # Update status and validation
+            self.validate_point2()
+            self.log_info(f"Second point set to: ({pixel_x}, {pixel_y})")
     
+    def set_second_point(self, pixel_x: int, pixel_y: int) -> None:
+        """Backward compatibility method for setting second point."""
+        self.set_calibration_point(pixel_x, pixel_y)
+    
+
+
     def get_calibration_data(self) -> Dict[str, Any]:
         """Get current calibration data."""
         return self.coordinate_transformer.export_calibration()
@@ -559,7 +531,7 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
     def on_calibration_updated(self, is_valid: bool) -> None:
         """Handle calibration updates."""
         self.log_info(f"Calibration updated. Valid: {is_valid}")
-
+        
 
 class CalibrationDialog(CalibrationWizardDialog):
     """Backward compatibility wrapper."""

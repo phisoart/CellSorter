@@ -1042,54 +1042,37 @@ class ImageHandler(QWidget, LoggerMixin):
     
     def _label_to_image_coords(self, label_x: int, label_y: int) -> Tuple[int, int]:
         """
-        Convert label coordinates to image coordinates, accounting for Qt.KeepAspectRatio scaling and label padding.
+        Convert label coordinates to image coordinates, accounting for zoom, pan, and scaling.
 
         Args:
-            label_x: X coordinate in label
-            label_y: Y coordinate in label
+            label_x: X coordinate in label widget
+            label_y: Y coordinate in label widget
 
         Returns:
-            Tuple of (image_x, image_y)
+            Tuple of (image_x, image_y) in original image coordinates
         """
         if self.image_data is None:
             return (0, 0)
 
-        label_size = self.image_label.size()
         image_height, image_width = self.image_data.shape[:2]
-        label_width, label_height = label_size.width(), label_size.height()
 
         # Prevent ZeroDivisionError
-        if label_width == 0 or label_height == 0:
+        if self.zoom_level <= 0:
             return (0, 0)
 
-        # Calculate aspect ratios of image and label
-        image_aspect = image_width / image_height
-        label_aspect = label_width / label_height
+        # Convert label coordinates accounting for pan and zoom
+        # 1. Subtract pan offset to get coordinate in zoomed image space
+        adjusted_x = label_x - self.pan_offset[0]
+        adjusted_y = label_y - self.pan_offset[1]
+        
+        # 2. Divide by zoom level to get original image coordinates
+        image_x = int(adjusted_x / self.zoom_level)
+        image_y = int(adjusted_y / self.zoom_level)
 
-        # Calculate actual image display area size within QLabel (maintain aspect ratio)
-        if image_aspect > label_aspect:
-            scaled_width = label_width
-            scaled_height = int(label_width / image_aspect)
-        else:
-            scaled_height = label_height
-            scaled_width = int(label_height * image_aspect)
-
-        offset_x = (label_width - scaled_width) // 2
-        offset_y = (label_height - scaled_height) // 2
-
-        # Check if position is within image display area
-        if not (offset_x <= label_x < offset_x + scaled_width and offset_y <= label_y < offset_y + scaled_height):
-            return (0, 0)
-
-        # Convert label image display area coordinates → original image coordinates
-        rel_x = label_x - offset_x
-        rel_y = label_y - offset_y
-        image_x = int(rel_x * image_width / scaled_width)
-        image_y = int(rel_y * image_height / scaled_height)
-
-        # Clamp
+        # 3. Clamp to valid image bounds (instead of returning 0,0)
         image_x = max(0, min(image_x, image_width - 1))
         image_y = max(0, min(image_y, image_height - 1))
+        
         return (image_x, image_y)
     
     def update_status(self, message: str) -> None:
