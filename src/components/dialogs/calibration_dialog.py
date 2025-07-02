@@ -31,7 +31,7 @@ class CalibrationStep(Enum):
 
 
 class CalibrationWizardDialog(QDialog, LoggerMixin):
-    """Enhanced calibration dialog with step-by-step wizar interface."""
+    """Enhanced calibration dialog with step-by-step wizard interface."""
     
     # Signals
     calibration_completed = Signal(bool)
@@ -58,64 +58,117 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.finish_button: Optional[QPushButton] = None
         self.status_label: Optional[QLabel] = None
         
+        # Point tracking for second point selection
+        self.pixel2_x: Optional[int] = None
+        self.pixel2_y: Optional[int] = None
+        
         self.setup_ui()
         self.update_ui_state()
         
         self.log_info("Enhanced calibration wizard dialog initialized")
         
     def setup_ui(self) -> None:
-        """Set up the enhanced wizard UI."""
+        """Set up the enhanced wizard UI with improved layout."""
         self.setWindowTitle("Calibration Wizard - CellSorter")
-        self.setModal(True)
-        self.setFixedSize(600, 500)
         
-        # Main layout
+        # CRITICAL FIX: Make dialog non-modal to allow image interaction
+        self.setModal(False)
+        
+        # ENLARGED SIZING: Use bigger minimum size to prevent overlap
+        self.setMinimumSize(600, 800)
+        self.resize(650, 850)  # ENLARGED: Initial size, but user can resize
+        
+        # Enable window resizing and keep on top for visibility
+        self.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint)
+        
+        # ENLARGED LAYOUT: Better margins and spacing to prevent overlap
         main_layout = QVBoxLayout(self)
-        main_layout.setSpacing(10)
+        main_layout.setContentsMargins(25, 25, 25, 25)  # ENLARGED: Even more generous margins
+        main_layout.setSpacing(20)  # ENLARGED: More spacing to prevent overlap
         
         # Header with progress
         header_frame = self.create_header()
         main_layout.addWidget(header_frame)
         
-        # Stacked widget for different steps
+        # Stacked widget for different steps - ENLARGED margins
         self.stacked_widget = QStackedWidget()
+        self.stacked_widget.setContentsMargins(15, 15, 15, 15)  # ENLARGED: More content margins
         main_layout.addWidget(self.stacked_widget)
         
-        # Create basic step widgets
+        # Create step widgets
         self.create_basic_steps()
         
         # Footer with navigation buttons
         footer_frame = self.create_footer()
         main_layout.addWidget(footer_frame)
         
-        # Status area
+        # Status area with better styling
         self.status_label = QLabel("Ready to start calibration")
-        self.status_label.setStyleSheet("QLabel { color: #666; font-style: italic; }")
+        self.status_label.setStyleSheet("""
+            QLabel { 
+                color: #666; 
+                font-style: italic; 
+                padding: 8px;
+                background-color: #f8f9fa;
+                border-radius: 4px;
+                border: 1px solid #e9ecef;
+            }
+        """)
+        self.status_label.setWordWrap(True)
         main_layout.addWidget(self.status_label)
     
     def create_header(self) -> QFrame:
         """Create header with title and progress bar."""
         header = QFrame()
         header.setFrameStyle(QFrame.StyledPanel)
-        header.setStyleSheet("QFrame { background-color: #f8f9fa; border: 1px solid #dee2e6; }")
+        header.setStyleSheet("""
+            QFrame { 
+                background-color: #f8f9fa; 
+                border: 1px solid #dee2e6; 
+                border-radius: 8px;
+                padding: 10px;
+            }
+        """)
         
         layout = QVBoxLayout(header)
+        layout.setContentsMargins(20, 20, 20, 20)  # ENLARGED: More header margins
+        layout.setSpacing(15)  # ENLARGED: More header spacing
         
-        # Title
+        # Title with improved typography
         title = QLabel("Coordinate Calibration Wizard")
         title_font = QFont()
         title_font.setBold(True)
-        title_font.setPointSize(14)
+        title_font.setPointSize(16)
         title.setFont(title_font)
         title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("QLabel { color: #2c3e50; margin-bottom: 5px; }")
         layout.addWidget(title)
         
-        # Progress bar
+        # Subtitle
+        subtitle = QLabel("Map pixel coordinates to stage coordinates")
+        subtitle.setAlignment(Qt.AlignCenter)
+        subtitle.setStyleSheet("QLabel { color: #6c757d; font-size: 12px; }")
+        layout.addWidget(subtitle)
+        
+        # Progress bar with better styling
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(0)
         self.progress_bar.setTextVisible(True)
-        self.progress_bar.setFormat("Step %v of 5")
+        self.progress_bar.setFormat("Step %v%")
+        self.progress_bar.setStyleSheet("""
+            QProgressBar {
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                text-align: center;
+                background-color: #ffffff;
+                height: 25px;
+            }
+            QProgressBar::chunk {
+                background-color: #007bff;
+                border-radius: 6px;
+            }
+        """)
         layout.addWidget(self.progress_bar)
         
         return header
@@ -123,31 +176,105 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
     def create_footer(self) -> QFrame:
         """Create footer with navigation buttons."""
         footer = QFrame()
-        layout = QHBoxLayout(footer)
+        footer.setStyleSheet("""
+            QFrame {
+                border-top: 1px solid #dee2e6;
+                padding-top: 10px;
+                margin-top: 10px;
+            }
+        """)
         
-        # Back button
-        self.back_button = QPushButton("�� Back")
+        layout = QHBoxLayout(footer)
+        layout.setContentsMargins(0, 15, 0, 0)  # ENLARGED: More footer margins
+        layout.setSpacing(15)  # ENLARGED: More button spacing
+        
+        # Back button with styling - ENLARGED
+        self.back_button = QPushButton("← Back")
         self.back_button.clicked.connect(self.go_back)
         self.back_button.setEnabled(False)
+        self.back_button.setStyleSheet("""
+            QPushButton {
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                padding: 10px 20px;  /* ENLARGED: Bigger button padding */
+                border-radius: 4px;
+                font-weight: bold;
+                min-width: 100px;  /* ENLARGED: Minimum button width */
+            }
+            QPushButton:hover {
+                background-color: #5a6268;
+            }
+            QPushButton:disabled {
+                background-color: #e9ecef;
+                color: #6c757d;
+            }
+        """)
         layout.addWidget(self.back_button)
         
         # Spacer
         layout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
         
-        # Next button
-        self.next_button = QPushButton("Next ��")
+        # Next button with styling - ENLARGED
+        self.next_button = QPushButton("Next →")
         self.next_button.clicked.connect(self.go_next)
+        self.next_button.setStyleSheet("""
+            QPushButton {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 10px 20px;  /* ENLARGED: Bigger button padding */
+                border-radius: 4px;
+                font-weight: bold;
+                min-width: 100px;  /* ENLARGED: Bigger minimum width */
+            }
+            QPushButton:hover {
+                background-color: #0056b3;
+            }
+            QPushButton:disabled {
+                background-color: #e9ecef;
+                color: #6c757d;
+            }
+        """)
         layout.addWidget(self.next_button)
         
-        # Finish button
+        # Finish button with styling - ENLARGED
         self.finish_button = QPushButton("Finish")
         self.finish_button.clicked.connect(self.finish_calibration)
         self.finish_button.setVisible(False)
+        self.finish_button.setStyleSheet("""
+            QPushButton {
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 10px 20px;  /* ENLARGED: Bigger button padding */
+                border-radius: 4px;
+                font-weight: bold;
+                min-width: 100px;  /* ENLARGED: Bigger minimum width */
+            }
+            QPushButton:hover {
+                background-color: #1e7e34;
+            }
+        """)
         layout.addWidget(self.finish_button)
         
-        # Cancel button
+        # Cancel button with styling - ENLARGED
         cancel_button = QPushButton("Cancel")
         cancel_button.clicked.connect(self.reject)
+        cancel_button.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 10px 20px;  /* ENLARGED: Bigger button padding */
+                border-radius: 4px;
+                font-weight: bold;
+                min-width: 100px;  /* ENLARGED: Minimum button width */
+            }
+            QPushButton:hover {
+                background-color: #c82333;
+            }
+        """)
         layout.addWidget(cancel_button)
         
         return footer
@@ -299,9 +426,11 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.stacked_widget.addWidget(point1_widget)
     
     def create_second_point_step(self) -> None:
-        """Create second point calibration step."""
+        """Create second point calibration step with non-modal support."""
         point2_widget = QWidget()
         layout = QVBoxLayout(point2_widget)
+        layout.setContentsMargins(15, 15, 15, 15)
+        layout.setSpacing(15)
         
         # Step title
         title = QLabel("Step 2: Second Calibration Point")
@@ -309,39 +438,62 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         title_font.setBold(True)
         title_font.setPointSize(11)
         title.setFont(title_font)
+        title.setStyleSheet("QLabel { color: #2c3e50; margin-bottom: 10px; }")
         layout.addWidget(title)
         
-        # Instructions
+        # CRITICAL: Instructions for non-modal interaction
         instructions = QLabel(
-            "Click on a second reference point that is far from the first point "
-            "(minimum 50 pixels apart), then enter its stage coordinates."
+            "🖱️ <strong>Click on a second reference point in your image</strong> (this dialog won't block image interaction), "
+            "then enter the corresponding stage coordinates below. "
+            "Choose a point at least 50 pixels away from the first point for optimal accuracy."
         )
         instructions.setWordWrap(True)
-        instructions.setStyleSheet("QLabel { color: #495057; margin: 10px 0; }")
+        instructions.setStyleSheet("""
+            QLabel { 
+                color: #495057; 
+                background: #e8f4fd; 
+                padding: 12px; 
+                border-left: 4px solid #007bff; 
+                border-radius: 4px; 
+                margin: 10px 0; 
+            }
+        """)
         layout.addWidget(instructions)
         
-        # Distance indicator
-        self.distance_label = QLabel("Distance from first point: Not set")
-        self.distance_label.setStyleSheet("QLabel { font-weight: bold; }")
-        layout.addWidget(self.distance_label)
+        # Current first point reference
+        first_point_ref = QLabel(f"First point: ({self.initial_pixel_x}, {self.initial_pixel_y}) pixels")
+        first_point_ref.setStyleSheet("QLabel { color: #6c757d; font-style: italic; margin: 5px 0; }")
+        layout.addWidget(first_point_ref)
         
-        # Pixel coordinates (display only)
-        pixel_group = QGroupBox("Image Coordinates (Read-Only)")
+        # Pixel coordinates for second point (initially empty, filled when clicked)
+        pixel_group = QGroupBox("Second Point - Image Coordinates")
         pixel_layout = QFormLayout(pixel_group)
+        pixel_layout.setSpacing(8)
         
-        self.pixel2_x_label = QLabel("Click on image")
-        self.pixel2_y_label = QLabel("Click on image")
+        self.pixel2_x_label = QLabel("(Click on image)")
+        self.pixel2_y_label = QLabel("(Click on image)")
         
         for label in [self.pixel2_x_label, self.pixel2_y_label]:
-            label.setStyleSheet("QLabel { font-family: monospace; font-weight: bold; background: #f8f9fa; padding: 5px; border: 1px solid #dee2e6; }")
+            label.setStyleSheet("""
+                QLabel { 
+                    font-family: monospace; 
+                    font-weight: bold; 
+                    background: #f8f9fa; 
+                    padding: 8px; 
+                    border: 1px solid #dee2e6; 
+                    border-radius: 4px;
+                    min-width: 120px;
+                }
+            """)
         
         pixel_layout.addRow("X (pixels):", self.pixel2_x_label)
         pixel_layout.addRow("Y (pixels):", self.pixel2_y_label)
         layout.addWidget(pixel_group)
         
         # Stage coordinates input
-        stage_group = QGroupBox("Stage Coordinates (Required)")
+        stage_group = QGroupBox("Second Point - Stage Coordinates")
         stage_layout = QFormLayout(stage_group)
+        stage_layout.setSpacing(8)
         
         self.point2_x_input = QDoubleSpinBox()
         self.point2_x_input.setRange(-999999.999, 999999.999)
@@ -349,6 +501,16 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.point2_x_input.setSuffix(" µm")
         self.point2_x_input.setMinimumWidth(150)
         self.point2_x_input.valueChanged.connect(self.validate_point2)
+        self.point2_x_input.setStyleSheet("""
+            QDoubleSpinBox {
+                padding: 6px;
+                border: 2px solid #e9ecef;
+                border-radius: 4px;
+            }
+            QDoubleSpinBox:focus {
+                border-color: #007bff;
+            }
+        """)
         
         self.point2_y_input = QDoubleSpinBox()
         self.point2_y_input.setRange(-999999.999, 999999.999)
@@ -356,15 +518,72 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.point2_y_input.setSuffix(" µm")
         self.point2_y_input.setMinimumWidth(150)
         self.point2_y_input.valueChanged.connect(self.validate_point2)
+        self.point2_y_input.setStyleSheet("""
+            QDoubleSpinBox {
+                padding: 6px;
+                border: 2px solid #e9ecef;
+                border-radius: 4px;
+            }
+            QDoubleSpinBox:focus {
+                border-color: #007bff;
+            }
+        """)
         
         stage_layout.addRow("X (µm):", self.point2_x_input)
         stage_layout.addRow("Y (µm):", self.point2_y_input)
         layout.addWidget(stage_group)
         
+        # Distance display
+        distance_group = QGroupBox("Point Distance Analysis")
+        distance_layout = QVBoxLayout(distance_group)
+        
+        self.distance_label = QLabel("Select second point to see distance analysis")
+        self.distance_label.setStyleSheet("""
+            QLabel { 
+                font-family: monospace; 
+                background: #f8f9fa; 
+                padding: 10px; 
+                border: 1px solid #dee2e6; 
+                border-radius: 4px; 
+            }
+        """)
+        distance_layout.addWidget(self.distance_label)
+        layout.addWidget(distance_group)
+        
         # Validation status
-        self.point2_status = QLabel("⚠️ Please click second point and enter coordinates")
-        self.point2_status.setStyleSheet("QLabel { color: #856404; background: #fff3cd; padding: 8px; border: 1px solid #ffeaa7; border-radius: 4px; }")
+        self.point2_status = QLabel("⚠️ Click on the image to select second point")
+        self.point2_status.setStyleSheet("""
+            QLabel { 
+                color: #856404; 
+                background: #fff3cd; 
+                padding: 10px; 
+                border: 1px solid #ffeaa7; 
+                border-radius: 4px; 
+                margin: 5px 0;
+            }
+        """)
         layout.addWidget(self.point2_status)
+        
+        # Tips for non-modal interaction
+        tips = QLabel("""
+        💡 <strong>Non-Modal Dialog Tips:</strong><br>
+        • This dialog stays open while you click on the image<br>
+        • You can move or resize this dialog as needed<br>
+        • Choose points that are far apart (>50 pixels) for better calibration<br>
+        • Use distinctive features like cell corners or fiducial markers
+        """)
+        tips.setWordWrap(True)
+        tips.setStyleSheet("""
+            QLabel { 
+                background: #d4edda; 
+                color: #155724;
+                padding: 12px; 
+                border-left: 4px solid #28a745; 
+                border-radius: 4px;
+                margin: 10px 0; 
+            }
+        """)
+        layout.addWidget(tips)
         
         self.stacked_widget.addWidget(point2_widget)
     
@@ -572,23 +791,28 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         return x_val != 0.0 or y_val != 0.0
     
     def is_point2_valid(self) -> bool:
-        """Check if second point is valid."""
-        if not self.point2_x_input or not self.point2_y_input:
+        """Check if second point is valid - ENHANCED."""
+        # Must have pixel coordinates set (from image click)
+        if self.pixel2_x is None or self.pixel2_y is None:
             return False
-        
-        # Check coordinates
-        x_val = self.point2_x_input.value()
-        y_val = self.point2_y_input.value()
-        
-        # Pixel coordinates must be set before validation
-        if not (hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y')):
+            
+        # Must have stage coordinate inputs
+        if not (hasattr(self, 'point2_x_input') and hasattr(self, 'point2_y_input')):
             return False
-        
-        # Check minimum distance
-        pixel_distance = ((self.pixel2_x - self.initial_pixel_x)**2 + 
-                        (self.pixel2_y - self.initial_pixel_y)**2)**0.5
-        
-        return (x_val != 0.0 or y_val != 0.0) and pixel_distance >= 50
+            
+        # Stage coordinates must not be zero
+        stage_x = self.point2_x_input.value()
+        stage_y = self.point2_y_input.value()
+        if stage_x == 0.0 and stage_y == 0.0:
+            return False
+            
+        # Check minimum distance from first point (at least 50 pixels)
+        pixel_distance = ((self.pixel2_x - self.initial_pixel_x) ** 2 + 
+                         (self.pixel2_y - self.initial_pixel_y) ** 2) ** 0.5
+        if pixel_distance < 50:
+            return False
+            
+        return True
     
     def validate_point1(self) -> None:
         """Validate first point input."""
@@ -602,27 +826,74 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.update_ui_state()
     
     def validate_point2(self) -> None:
-        """Validate second point input."""
-        if not (hasattr(self, 'pixel2_x') and hasattr(self, 'pixel2_y')):
-            self.distance_label.setText("Distance from first point: Click on image to set second point")
-            self.point2_status.setText("⚠️ Please click second point on the image first")
-            self.point2_status.setStyleSheet("QLabel { color: #856404; background: #fff3cd; padding: 8px; border: 1px solid #ffeaa7; border-radius: 4px; }")
-        else:
-            pixel_distance = ((self.pixel2_x - self.initial_pixel_x)**2 + 
-                            (self.pixel2_y - self.initial_pixel_y)**2)**0.5
+        """Validate second point and update UI - ENHANCED."""
+        if not hasattr(self, 'point2_status'):
+            return
             
-            self.distance_label.setText(f"Distance from first point: {pixel_distance:.1f} pixels")
+        if self.pixel2_x is None or self.pixel2_y is None:
+            self.point2_status.setText("⚠️ Click on the image to select second point")
+            self.point2_status.setStyleSheet("""
+                QLabel { 
+                    color: #856404; 
+                    background: #fff3cd; 
+                    padding: 10px; 
+                    border: 1px solid #ffeaa7; 
+                    border-radius: 4px; 
+                }
+            """)
+            return
             
-            if pixel_distance < 50:
-                self.point2_status.setText("❌ Points too close! Minimum 50 pixels required")
-                self.point2_status.setStyleSheet("QLabel { color: #721c24; background: #f8d7da; padding: 8px; border: 1px solid #f5c6cb; border-radius: 4px; }")
-            elif self.is_point2_valid():
-                self.point2_status.setText("✅ Valid second point configured")
-                self.point2_status.setStyleSheet("QLabel { color: #155724; background: #d4edda; padding: 8px; border: 1px solid #c3e6cb; border-radius: 4px; }")
-            else:
-                self.point2_status.setText("⚠️ Please enter stage coordinates")
-                self.point2_status.setStyleSheet("QLabel { color: #856404; background: #fff3cd; padding: 8px; border: 1px solid #ffeaa7; border-radius: 4px; }")
+        # Check distance
+        pixel_distance = ((self.pixel2_x - self.initial_pixel_x) ** 2 + 
+                         (self.pixel2_y - self.initial_pixel_y) ** 2) ** 0.5
         
+        if pixel_distance < 50:
+            self.point2_status.setText(f"❌ Points too close ({pixel_distance:.1f} pixels). Select a point at least 50 pixels away.")
+            self.point2_status.setStyleSheet("""
+                QLabel { 
+                    color: #721c24; 
+                    background: #f8d7da; 
+                    padding: 10px; 
+                    border: 1px solid #f5c6cb; 
+                    border-radius: 4px; 
+                }
+            """)
+            return
+            
+        # Check stage coordinates
+        if hasattr(self, 'point2_x_input') and hasattr(self, 'point2_y_input'):
+            stage_x = self.point2_x_input.value()
+            stage_y = self.point2_y_input.value()
+            
+            if stage_x == 0.0 and stage_y == 0.0:
+                self.point2_status.setText("⚠️ Please enter stage coordinates")
+                self.point2_status.setStyleSheet("""
+                    QLabel { 
+                        color: #856404; 
+                        background: #fff3cd; 
+                        padding: 10px; 
+                        border: 1px solid #ffeaa7; 
+                        border-radius: 4px; 
+                    }
+                """)
+                return
+        
+        # All validations passed
+        self.point2_status.setText(f"✅ Second point valid (distance: {pixel_distance:.1f} pixels)")
+        self.point2_status.setStyleSheet("""
+            QLabel { 
+                color: #155724; 
+                background: #d4edda; 
+                padding: 10px; 
+                border: 1px solid #c3e6cb; 
+                border-radius: 4px; 
+            }
+        """)
+        
+        # Update distance display
+        self.update_distance_display()
+        
+        # Update overall UI state
         self.update_ui_state()
     
     def go_next(self) -> None:
@@ -873,16 +1144,107 @@ class CalibrationWizardDialog(QDialog, LoggerMixin):
         self.log_info("Calibration wizard completed successfully")
     
     def set_second_point(self, pixel_x: int, pixel_y: int) -> None:
-        """Set second calibration point coordinates (called from main window)."""
+        """Set the second calibration point from image click - ENHANCED for non-modal."""
+        self.log_info(f"Setting second calibration point at pixel ({pixel_x}, {pixel_y})")
+        
+        # Store pixel coordinates
         self.pixel2_x = pixel_x
         self.pixel2_y = pixel_y
         
-        if hasattr(self, 'pixel2_x_label'):
+        # Update UI labels immediately
+        if hasattr(self, 'pixel2_x_label') and hasattr(self, 'pixel2_y_label'):
             self.pixel2_x_label.setText(str(pixel_x))
             self.pixel2_y_label.setText(str(pixel_y))
+            
+            # Update styling to show coordinates are set
+            coordinate_style = """
+                QLabel { 
+                    font-family: monospace; 
+                    font-weight: bold; 
+                    background: #d4edda; 
+                    color: #155724;
+                    padding: 8px; 
+                    border: 2px solid #28a745; 
+                    border-radius: 4px;
+                    min-width: 120px;
+                }
+            """
+            self.pixel2_x_label.setStyleSheet(coordinate_style)
+            self.pixel2_y_label.setStyleSheet(coordinate_style)
         
+        # Calculate and display distance immediately
+        self.update_distance_display()
+        
+        # Validate the point
         self.validate_point2()
-    
+        
+        # If we're on the second point step, update UI state
+        if self.current_step == CalibrationStep.SECOND_POINT:
+            self.update_ui_state()
+        
+        self.log_info("Second point set successfully with non-modal interaction")
+
+    def update_distance_display(self) -> None:
+        """Update distance display between calibration points."""
+        if not hasattr(self, 'distance_label'):
+            return
+            
+        # Check if we have both points
+        if self.pixel2_x is None or self.pixel2_y is None:
+            self.distance_label.setText("Select second point to see distance analysis")
+            return
+            
+        # Calculate pixel distance
+        pixel_distance = ((self.pixel2_x - self.initial_pixel_x) ** 2 + 
+                         (self.pixel2_y - self.initial_pixel_y) ** 2) ** 0.5
+        
+        # Check if stage coordinates are available for both points
+        if (hasattr(self, 'point1_x_input') and hasattr(self, 'point1_y_input') and
+            hasattr(self, 'point2_x_input') and hasattr(self, 'point2_y_input')):
+            
+            stage1_x = self.point1_x_input.value()
+            stage1_y = self.point1_y_input.value()
+            stage2_x = self.point2_x_input.value()
+            stage2_y = self.point2_y_input.value()
+            
+            # Only calculate stage distance if coordinates are not zero
+            if not (stage1_x == 0 and stage1_y == 0 and stage2_x == 0 and stage2_y == 0):
+                stage_distance = ((stage2_x - stage1_x) ** 2 + (stage2_y - stage1_y) ** 2) ** 0.5
+                scale_factor = stage_distance / pixel_distance if pixel_distance > 0 else 0
+                
+                distance_info = f"""
+                📏 Distance Analysis:
+                • Pixel distance: {pixel_distance:.1f} pixels
+                • Stage distance: {stage_distance:.1f} µm  
+                • Scale factor: {scale_factor:.3f} µm/pixel
+                """
+                
+                # Color code based on distance quality
+                if pixel_distance >= 100:
+                    color_style = "background: #d4edda; color: #155724; border-color: #28a745;"
+                elif pixel_distance >= 50:
+                    color_style = "background: #fff3cd; color: #856404; border-color: #ffc107;"
+                else:
+                    color_style = "background: #f8d7da; color: #721c24; border-color: #dc3545;"
+                    
+            else:
+                distance_info = f"📏 Pixel distance: {pixel_distance:.1f} pixels\n(Enter stage coordinates to see full analysis)"
+                color_style = "background: #e2e3e5; color: #6c757d; border-color: #6c757d;"
+        else:
+            distance_info = f"📏 Pixel distance: {pixel_distance:.1f} pixels"
+            color_style = "background: #f8f9fa; color: #6c757d; border-color: #dee2e6;"
+        
+        self.distance_label.setText(distance_info)
+        self.distance_label.setStyleSheet(f"""
+            QLabel {{ 
+                font-family: monospace; 
+                padding: 10px; 
+                border: 2px solid; 
+                border-radius: 4px;
+                {color_style}
+            }}
+        """)
+
     def get_calibration_data(self) -> Dict[str, Any]:
         """Get current calibration data."""
         return self.coordinate_transformer.export_calibration()
