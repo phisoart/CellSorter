@@ -699,39 +699,25 @@ class SelectionPanel(QWidget, LoggerMixin):
     
     def export_images(self) -> None:
         """Export images with selection overlays."""
-        from PySide6.QtWidgets import QFileDialog
-        
+        # Check if any selections exist (regardless of enabled status)
         if not self.selections_data:
-            QMessageBox.information(self, "No Selections", "No selections available to export.")
+            QMessageBox.information(
+                self, 
+                "선정 필요", 
+                "선정된 영역이 없습니다. 먼저 Cell을 선정해주세요."
+            )
             return
         
-        file_path, _ = QFileDialog.getSaveFileName(
-            self, 
-            "Export Selection Images", 
-            "selection_overlays.png", 
-            "PNG Files (*.png);;JPEG Files (*.jpg);;TIFF Files (*.tiff)"
-        )
-        
-        if file_path:
-            try:
-                # Emit signal for main window to handle image export with overlays
-                # This allows the main window to access the current image and apply overlays
-                from PySide6.QtCore import QTimer
-                QTimer.singleShot(0, lambda: self._request_image_export(file_path))
-                
-                self.log_info(f"Requesting image export to {file_path}")
-                
-            except Exception as e:
-                self.log_error(f"Failed to request image export: {e}")
-                QMessageBox.critical(self, "Export Error", f"Failed to request image export: {e}")
+        # Emit signal to main window to show image export dialog with selections
+        self._request_image_export_dialog()
     
-    def _request_image_export(self, file_path: str) -> None:
+    def _request_image_export_dialog(self) -> None:
         """Request image export through parent window."""
         # Find main window in parent hierarchy
         parent = self.parent()
         while parent:
             if hasattr(parent, 'export_images_with_overlays'):
-                parent.export_images_with_overlays(file_path, self.get_active_selections())
+                parent.export_images_with_overlays(list(self.selections_data.values()))
                 break
             parent = parent.parent()
         else:

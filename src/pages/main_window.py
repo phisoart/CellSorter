@@ -48,6 +48,7 @@ from components.widgets.selection_panel import SelectionPanel
 from components.widgets.minimap import MinimapWidget
 from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
+from components.dialogs.image_export_dialog import ImageExportDialog
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -511,7 +512,54 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_status("Export completed successfully")
             self.log_info("Analysis results exported")
     
-
+    def export_images_with_overlays(self, selections_data: list) -> None:
+        """Show image export dialog for individual cell images."""
+        # Check if image and CSV data are available
+        if not self.current_image_path or self.image_handler.image_data is None:
+            QMessageBox.warning(self, "이미지 없음", "먼저 이미지를 로드해주세요.")
+            return
+        
+        if not self.current_csv_path or not hasattr(self, 'csv_parser') or self.csv_parser.data is None:
+            QMessageBox.warning(self, "데이터 없음", "먼저 CSV 데이터를 로드해주세요.")
+            return
+        
+        # Get bounding boxes from CSV parser
+        bounding_box_data = self.csv_parser.get_bounding_box_data()
+        if bounding_box_data is None or bounding_box_data.empty:
+            QMessageBox.warning(self, "바운딩 박스 없음", "CSV 파일에서 바운딩 박스 정보를 찾을 수 없습니다.")
+            return
+        
+        # Convert bounding box data to list of tuples
+        bounding_boxes = []
+        for _, row in bounding_box_data.iterrows():
+            bbox = (
+                int(row['AreaShape_BoundingBoxMinimum_X']),
+                int(row['AreaShape_BoundingBoxMinimum_Y']),
+                int(row['AreaShape_BoundingBoxMaximum_X']),
+                int(row['AreaShape_BoundingBoxMaximum_Y'])
+            )
+            bounding_boxes.append(bbox)
+        
+        # Convert selections list to dictionary
+        selections_dict = {}
+        for selection_data in selections_data:
+            selection_id = selection_data.get('id', '')
+            if selection_id:
+                selections_dict[selection_id] = selection_data
+        
+        # Show export dialog
+        try:
+            dialog = ImageExportDialog(
+                selections_dict,
+                self.image_handler.image_data,
+                bounding_boxes,
+                self
+            )
+            dialog.exec()
+            self.log_info("Image export dialog shown")
+        except Exception as e:
+            self.log_error(f"Failed to show image export dialog: {e}")
+            QMessageBox.critical(self, "오류", f"이미지 익스포트 다이얼로그를 표시할 수 없습니다: {e}")
     
     def zoom_in(self) -> None:
         """Zoom in on image."""
