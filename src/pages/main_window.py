@@ -976,38 +976,87 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def _on_calibration_point_clicked(self, image_x: int, image_y: int, point_label: str) -> None:
         """Handle calibration point clicked on image."""
-        # Show dialog to enter stage coordinates
-        dialog = CalibrationDialog(image_x, image_y, point_label, self)
-        
-        if dialog.exec() == QDialog.Accepted:
-            stage_x, stage_y = dialog.get_stage_coordinates()
-            
-            # Add calibration point to coordinate transformer
-            success = self.coordinate_transformer.add_calibration_point(
-                image_x, image_y, stage_x, stage_y, point_label
-            )
-            
-            if success:
-                self.update_status(f"Added calibration point: {point_label} "
-                                 f"({image_x}, {image_y}) → ({stage_x:.3f}, {stage_y:.3f})")
-                
-                # Check if we have enough points for calibration
-                if len(self.coordinate_transformer.calibration_points) >= 2:
-                    if self.coordinate_transformer.is_calibrated:
-                        self.update_status("Coordinate calibration completed successfully!")
-                        # Exit calibration mode
-                        self.image_handler.set_calibration_mode(False)
-                        self.action_calibrate.setText("&Calibrate Coordinates")
-                    else:
-                        self.update_status("Calibration points too close. Please select points further apart.")
+        # Check if we already have an open calibration dialog
+        if hasattr(self, '_current_calibration_dialog') and self._current_calibration_dialog is not None:
+            # Use existing dialog for second point
+            if hasattr(self._current_calibration_dialog, 'set_second_point'):
+                self._current_calibration_dialog.set_second_point(image_x, image_y)
+                self.update_status(f"Second calibration point set at ({image_x}, {image_y})")
+                return
             else:
-                self.update_status("Failed to add calibration point")
-        else:
-            # Remove the point from image handler if dialog was cancelled
-            if hasattr(self.image_handler, 'calibration_points'):
-                if self.image_handler.calibration_points:
-                    self.image_handler.calibration_points.pop()
-                    self.image_handler._update_display()
+                # Clean up invalid dialog reference
+                self._current_calibration_dialog = None
+        
+        # Show NON-MODAL dialog to enter stage coordinates for FIRST point only
+        dialog = CalibrationDialog(image_x, image_y, point_label, self, self.coordinate_transformer)
+        
+        # Store dialog reference to prevent garbage collection
+        self._current_calibration_dialog = dialog
+        
+        # Connect signals for non-modal handling
+        dialog.accepted.connect(lambda: self._on_calibration_dialog_accepted(dialog, image_x, image_y, point_label))
+        dialog.rejected.connect(lambda: self._on_calibration_dialog_rejected(dialog))
+        
+        # Show as NON-MODAL dialog (allows image interaction)
+        dialog.show()
+        
+        self.update_status(f"First calibration point set at ({image_x}, {image_y}). Click a second point on the image.")
+
+    def _on_calibration_dialog_accepted(self, dialog: CalibrationDialog, image_x: int, image_y: int, point_label: str) -> None:
+        """Handle calibration dialog accepted (non-modal)."""
+        # Get calibration data from the dialog (which may have both points)
+        calibration_data = dialog.get_calibration_data()
+        
+        # Apply calibration if both points are available
+        if calibration_data and 'calibration_points' in calibration_data:
+            points = calibration_data['calibration_points']
+            if len(points) >= 2:
+                # Clear existing points and add both points from dialog
+                self.coordinate_transformer.clear_calibration()
+                
+                for point in points:
+                    success = self.coordinate_transformer.add_calibration_point(
+                        int(point['pixel_x']), int(point['pixel_y']),
+                        float(point['stage_x']), float(point['stage_y']),
+                        point['label']
+                    )
+                
+                if self.coordinate_transformer.is_calibrated():
+                    self.update_status("Coordinate calibration completed successfully!")
+                    # Exit calibration mode
+                    self.image_handler.set_calibration_mode(False)
+                    self.action_calibrate.setText("&Calibrate Coordinates")
+                else:
+                    self.update_status("Calibration points too close. Please select points further apart.")
+            else:
+                # Fallback to single point handling
+                stage_x, stage_y = dialog.get_stage_coordinates()
+                success = self.coordinate_transformer.add_calibration_point(
+                    image_x, image_y, stage_x, stage_y, point_label
+                )
+                if success:
+                    self.update_status(f"Added calibration point: {point_label} "
+                                     f"({image_x}, {image_y}) → ({stage_x:.3f}, {stage_y:.3f})")
+                else:
+                    self.update_status("Failed to add calibration point")
+        
+        # Clean up dialog reference
+        self._current_calibration_dialog = None
+        dialog.deleteLater()
+
+    def _on_calibration_dialog_rejected(self, dialog: CalibrationDialog) -> None:
+        """Handle calibration dialog rejected (non-modal)."""
+        # Remove the point from image handler if dialog was cancelled
+        if hasattr(self.image_handler, 'calibration_points'):
+            if self.image_handler.calibration_points:
+                self.image_handler.calibration_points.pop()
+                self.image_handler._update_display()
+        
+        self.update_status("Calibration point entry cancelled")
+        
+        # Clean up dialog reference
+        self._current_calibration_dialog = None
+        dialog.deleteLater()
     
     def check_for_updates(self) -> None:
         """Manually check for application updates."""
