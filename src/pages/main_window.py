@@ -286,11 +286,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_fit.setShortcut(QKeySequence("Ctrl+0"))
         self.action_zoom_fit.setEnabled(False)
         
-        self.action_reset_view = QAction("&Reset View", self)
-        self.action_reset_view.setShortcut(QKeySequence("R"))
-        self.action_reset_view.setStatusTip("Reset view to default")
-        self.action_reset_view.setEnabled(False)
-        
         # Tools actions
         self.action_selection_tool = QAction("&Selection Tool", self)
         self.action_selection_tool.setShortcut(QKeySequence("S"))
@@ -343,12 +338,11 @@ class MainWindow(QMainWindow, LoggerMixin):
         file_menu.addSeparator()
         file_menu.addAction(self.action_exit)
         
-        # View menu (removed toggle actions)
+        # View menu (removed reset view action)
         view_menu = menubar.addMenu("&View")
         view_menu.addAction(self.action_zoom_in)
         view_menu.addAction(self.action_zoom_out)
         view_menu.addAction(self.action_zoom_fit)
-        view_menu.addAction(self.action_reset_view)
         
         # Tools menu
         tools_menu = menubar.addMenu("&Tools")
@@ -357,10 +351,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         tools_menu.addSeparator()
         tools_menu.addAction(self.action_calibrate)
         tools_menu.addAction(self.action_clear_selections)
-        
-        # Analysis menu
-        analysis_menu = menubar.addMenu("&Analysis")
-        # Analysis menu actions will be added as needed
     
     def setup_toolbar(self) -> None:
         """Create and configure the toolbar."""
@@ -423,8 +413,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_in.triggered.connect(self.zoom_in)
         self.action_zoom_out.triggered.connect(self.zoom_out)
         self.action_zoom_fit.triggered.connect(self.zoom_fit)
-        self.action_reset_view.triggered.connect(self.reset_view)
-
         
         # Navigation actions
         self.action_pan_left.triggered.connect(self.pan_left)
@@ -438,8 +426,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_calibrate.triggered.connect(self.calibrate_coordinates)
         self.action_clear_selections.triggered.connect(self.clear_selections)
         
-
-        
         # Component connections
         self.csv_parser.csv_loaded.connect(self._on_csv_loaded)
         self.csv_parser.csv_load_failed.connect(self._on_csv_load_failed)
@@ -452,8 +438,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Connect plot_created signal to restore existing selections
         self.scatter_plot_widget.plot_created.connect(self._on_plot_created)
-        
-
         
         self.coordinate_transformer.calibration_updated.connect(self._on_calibration_updated)
         self.selection_manager.selection_added.connect(self._on_selection_added)
@@ -581,12 +565,6 @@ class MainWindow(QMainWindow, LoggerMixin):
     
 
     
-    def reset_view(self) -> None:
-        """Reset view to default state."""
-        if self.current_image_path:
-            self.image_handler.reset_view()
-            self.update_status("View reset to default")
-    
     def pan_left(self) -> None:
         """Pan image view left."""
         if self.current_image_path:
@@ -670,8 +648,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.action_zoom_in.setEnabled(True)
         self.action_zoom_out.setEnabled(True)
         self.action_zoom_fit.setEnabled(True)
-        self.action_reset_view.setEnabled(True)
-
         self.action_calibrate.setEnabled(True)
         self.action_selection_tool.setEnabled(True)
         self.action_calibration_tool.setEnabled(True)
