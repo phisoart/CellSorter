@@ -456,6 +456,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Minimap connections
         self.minimap_widget.navigation_requested.connect(self.image_handler.navigate_to_position)
         self.image_handler.zoom_changed.connect(self._update_minimap_viewport)
+        
+        # Set initial calibration status for SelectionPanel (disabled by default)
+        if hasattr(self, 'selection_panel'):
+            self.selection_panel.update_calibration_status(False)
     
     @error_handler("Opening image file")
     def open_image_file(self) -> None:
@@ -662,10 +666,18 @@ class MainWindow(QMainWindow, LoggerMixin):
         # Analysis actions are automatically enabled when needed
         pass
         
-        # Enable export if both image and CSV are loaded
+        # Enable export if both image and CSV are loaded AND calibration is complete
         if self.current_image_path and self.current_csv_path:
-            self.action_export_protocol.setEnabled(True)
+            # Check if calibration has at least 2 points
+            calibration_complete = (hasattr(self, 'coordinate_transformer') and 
+                                  len(getattr(self.coordinate_transformer, 'calibration_points', [])) >= 2)
+            
+            self.action_export_protocol.setEnabled(calibration_complete)
             self.action_clear_selections.setEnabled(True)
+            
+            # Update SelectionPanel export button state based on calibration
+            if hasattr(self, 'selection_panel'):
+                self.selection_panel.update_calibration_status(calibration_complete)
     
     def restore_settings(self) -> None:
         """Restore window settings from previous session."""
@@ -805,6 +817,15 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_status("Coordinate calibration updated")
         else:
             self.update_status("Calibration cleared")
+        
+        # Re-check export protocol availability after calibration change
+        self.enable_analysis_actions()
+        
+        # Also update SelectionPanel directly for immediate feedback
+        if hasattr(self, 'selection_panel'):
+            calibration_complete = (hasattr(self, 'coordinate_transformer') and 
+                                  len(getattr(self.coordinate_transformer, 'calibration_points', [])) >= 2)
+            self.selection_panel.update_calibration_status(calibration_complete and is_valid)
         
         self.update_window_title()
     
