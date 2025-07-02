@@ -8,7 +8,7 @@ from typing import Optional, List, Dict, Any
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QHeaderView, QPushButton, QLabel, QCheckBox, QFrame, QSplitter,
-    QComboBox, QLineEdit, QMessageBox, QSizePolicy, QColorDialog
+    QComboBox, QLineEdit, QMessageBox, QSizePolicy, QColorDialog, QAbstractItemView
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QColor
@@ -226,37 +226,44 @@ class SelectionPanel(QWidget, LoggerMixin):
         layout.addWidget(export_frame)
     
     def setup_table(self) -> None:
-        """Set up the selection table."""
-        self.selection_table.setColumnCount(6)
-        # Column headers (renamed "Delete" per PRD requirements)
-        self.selection_table.setHorizontalHeaderLabels([
-            "Enabled", "Label", "Color", "Well", "Cells", "Delete"
-        ])
+        """Setup the selection table with proper headers and behavior."""
+        headers = ["", "Label", "Color", "Well", "Cells", "Delete"]
+        self.selection_table.setColumnCount(len(headers))
+        self.selection_table.setHorizontalHeaderLabels(headers)
+        
+        # Configure headers
+        header = self.selection_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Fixed)  # Checkbox column
+        header.setSectionResizeMode(1, QHeaderView.Stretch)  # Label column
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)  # Color column
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Well column
+        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)  # Cell count column
+        header.setSectionResizeMode(5, QHeaderView.Fixed)  # Delete column
         
         # Set column widths
-        header = self.selection_table.horizontalHeader()
-        header.setStretchLastSection(True)
-        header.setSectionResizeMode(0, QHeaderView.Fixed)  # Enabled
-        header.setSectionResizeMode(1, QHeaderView.Stretch)  # Label
-        header.setSectionResizeMode(2, QHeaderView.Fixed)  # Color
-        header.setSectionResizeMode(3, QHeaderView.Fixed)  # Well
-        header.setSectionResizeMode(4, QHeaderView.Fixed)  # Cells
+        self.selection_table.setColumnWidth(0, 50)   # Checkbox
+        self.selection_table.setColumnWidth(5, 80)   # Delete button
         
-        # Set fixed column widths
-        self.selection_table.setColumnWidth(0, 60)   # Enabled
-        self.selection_table.setColumnWidth(2, 60)   # Color
-        self.selection_table.setColumnWidth(3, 60)   # Well
-        self.selection_table.setColumnWidth(4, 60)   # Cells
-        
-        # Table properties
+        # Configure table behavior - completely disable all selection
+        self.selection_table.setSelectionBehavior(QAbstractItemView.SelectItems)
+        self.selection_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.selection_table.setFocusPolicy(Qt.NoFocus)  # Prevent focus-based selection
         self.selection_table.setAlternatingRowColors(True)
-        self.selection_table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.selection_table.setSelectionMode(QTableWidget.SingleSelection)
+        self.selection_table.verticalHeader().setVisible(False)
+        
+        # Enable editing for label and well columns
+        self.selection_table.setEditTriggers(
+            QAbstractItemView.DoubleClicked | QAbstractItemView.SelectedClicked
+        )
+        
+        # Set minimum row height for better button sizing
+        self.selection_table.verticalHeader().setDefaultSectionSize(32)
     
     def connect_signals(self) -> None:
         """Connect widget signals."""
         self.selection_table.cellChanged.connect(self.on_table_cell_changed)
-        self.selection_table.itemSelectionChanged.connect(self.on_table_selection_changed)
+        # Remove itemSelectionChanged to prevent delete button from appearing
+        # self.selection_table.itemSelectionChanged.connect(self.on_table_selection_changed)
         self.well_plate.well_clicked.connect(self.on_well_clicked)
         self.selection_table.cellDoubleClicked.connect(self.on_table_cell_double_clicked)
     
@@ -286,26 +293,80 @@ class SelectionPanel(QWidget, LoggerMixin):
     
     def refresh_table(self) -> None:
         """Refresh the selection table display."""
-        self.selection_table.setRowCount(len(self.selections_data))
+        # Store current row count to check if we need to add/remove rows
+        current_row_count = self.selection_table.rowCount()
+        new_row_count = len(self.selections_data)
+        
+        # Update row count if needed
+        self.selection_table.setRowCount(new_row_count)
         
         for row, (selection_id, data) in enumerate(self.selections_data.items()):
-            # Enabled checkbox centered horizontally & vertically via container widget
-            enabled_checkbox = QCheckBox()
-            enabled_checkbox.setChecked(data.get('enabled', True))
-            enabled_checkbox.stateChanged.connect(
-                lambda state, sid=selection_id: self.on_enabled_changed(sid, state == Qt.Checked)
-            )
+            # Check if checkbox already exists to avoid recreating it
+            existing_container = self.selection_table.cellWidget(row, 0)
+            existing_checkbox = None
+            
+            if existing_container:
+                existing_checkboxes = existing_container.findChildren(QCheckBox)
+                if existing_checkboxes:
+                    existing_checkbox = existing_checkboxes[0]
+            
+            if existing_checkbox:
+                # Reuse existing checkbox - update state and ensure signal connection
+                existing_checkbox.blockSignals(True)
+                existing_checkbox.setChecked(data.get('enabled', True))
+                existing_checkbox.blockSignals(False)
+                
+                # Ensure signal connection exists (reconnect if needed)
+                try:
+                    existing_checkbox.stateChanged.disconnect()
+                except:
+                    pass
+                
+                def create_checkbox_handler(sel_id):
+                    return lambda state: self.on_enabled_changed(sel_id, bool(state))
+                
+                existing_checkbox.stateChanged.connect(create_checkbox_handler(selection_id))
+                checkbox_container = existing_container
+            else:
+                # Create new checkbox only when needed
+                enabled_checkbox = QCheckBox()
+                enabled_checkbox.setChecked(data.get('enabled', True))
+                
+                # Create closure function to capture selection_id properly
+                def create_checkbox_handler(sel_id):
+                    return lambda state: self.on_enabled_changed(sel_id, bool(state))
+                
+                enabled_checkbox.stateChanged.connect(create_checkbox_handler(selection_id))
 
-            checkbox_container = QWidget()
-            c_layout = QHBoxLayout(checkbox_container)
-            c_layout.setContentsMargins(0, 0, 0, 0)
-            c_layout.setAlignment(Qt.AlignCenter)
-            c_layout.addWidget(enabled_checkbox)
-            self.selection_table.setCellWidget(row, 0, checkbox_container)
+                # Create container that blocks table interaction
+                class CheckboxContainer(QWidget):
+                    def __init__(self):
+                        super().__init__()
+                        
+                    def mousePressEvent(self, event):
+                        # Block all mouse events to prevent table row selection
+                        event.accept()
+                        
+                    def mouseReleaseEvent(self, event):
+                        # Block all mouse events to prevent table row selection  
+                        event.accept()
+                        
+                    def mouseMoveEvent(self, event):
+                        # Block all mouse events to prevent table row selection
+                        event.accept()
+
+                checkbox_container = CheckboxContainer()
+                c_layout = QHBoxLayout(checkbox_container)
+                c_layout.setContentsMargins(0, 0, 0, 0)
+                c_layout.setAlignment(Qt.AlignCenter)
+                c_layout.addWidget(enabled_checkbox)
+                self.selection_table.setCellWidget(row, 0, checkbox_container)
             
             # Label (editable)
             label_item = QTableWidgetItem(data.get('label', ''))
             label_item.setData(Qt.UserRole, selection_id)
+            # Ensure label is editable in-place
+            label_item.setFlags(label_item.flags() | Qt.ItemIsEditable)
             self.selection_table.setItem(row, 1, label_item)
             
             # Color display: chip + name centered
@@ -342,30 +403,42 @@ class SelectionPanel(QWidget, LoggerMixin):
             count_item.setFlags(count_item.flags() & ~Qt.ItemIsEditable)  # Read-only
             self.selection_table.setItem(row, 4, count_item)
             
-            # Delete button sized to exactly match the current row height
-            delete_btn = QPushButton("Delete")
-            # Adjust button size to exactly match the current row height
-            row_height = self.selection_table.rowHeight(row)
-            if row_height == 0:
-                # Fallback to default section size when rowHeight not yet computed
-                row_height = self.selection_table.verticalHeader().defaultSectionSize()
+            # Delete button - only create when row is selected, otherwise create hidden placeholder
+            selected_rows = self.selection_table.selectionModel().selectedRows()
+            is_row_selected = any(index.row() == row for index in selected_rows)
+            
+            if is_row_selected:
+                # Create visible delete button for selected row
+                delete_btn = QPushButton("Delete")
+                # Adjust button size to exactly match the current row height
+                row_height = self.selection_table.rowHeight(row)
+                if row_height == 0:
+                    # Fallback to default section size when rowHeight not yet computed
+                    row_height = self.selection_table.verticalHeader().defaultSectionSize()
 
-            # Match the cell height precisely
-            delete_btn.setFixedHeight(row_height)
+                # Match the cell height with tiny offset to avoid floating gap
+                delete_btn.setFixedHeight(max(18, row_height - 4))
 
-            # Allow width/height to expand within the cell as needed
-            delete_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            delete_btn.clicked.connect(
-                lambda checked, sid=selection_id: self.delete_selection(sid)
-            )
-            self.selection_table.setCellWidget(row, 5, delete_btn)
+                # Allow width/height to expand within the cell as needed
+                delete_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                delete_btn.clicked.connect(
+                    lambda checked, sid=selection_id: self.delete_selection(sid)
+                )
+                delete_btn.setVisible(True)
+                self.selection_table.setCellWidget(row, 5, delete_btn)
+            else:
+                # Create hidden placeholder for unselected rows
+                placeholder = QPushButton()
+                placeholder.setVisible(False)  # Hide the button
+                placeholder.setEnabled(False)  # Disable interaction
+                self.selection_table.setCellWidget(row, 5, placeholder)
         
         # Ensure delete button heights match final row heights
         for r in range(self.selection_table.rowCount()):
             widget = self.selection_table.cellWidget(r, 5)
             if widget:
                 final_height = self.selection_table.rowHeight(r)
-                widget.setFixedHeight(final_height)
+                widget.setFixedHeight(max(18, final_height - 4))
     
     def refresh_well_plate(self) -> None:
         """Refresh the well plate display."""
@@ -384,29 +457,42 @@ class SelectionPanel(QWidget, LoggerMixin):
     
     def on_enabled_changed(self, selection_id: str, enabled: bool) -> None:
         """Handle selection enabled/disabled, ensuring UI & model sync."""
+        self.log_info(f"📋 on_enabled_changed called: {selection_id}, enabled={enabled}, type={type(enabled)}")
+        
         if selection_id not in self.selections_data:
+            self.log_info(f"⚠️ Selection {selection_id} not found in data")
             return
 
+        # Update data model
+        old_enabled = self.selections_data[selection_id]['enabled']
+        self.log_info(f"📊 Data state: old_enabled={old_enabled}, new_enabled={enabled}")
+        
         self.selections_data[selection_id]['enabled'] = enabled
 
         if self._updating_selection:
             # Avoid recursive loops
             self.log_info(
-                f"Skipping signal emission for enabled change during programmatic update: {selection_id}"
+                f"⏸️ Skipping signal emission for enabled change during programmatic update: {selection_id}"
             )
             return
 
-        # Update UI representations
-        self._updating_selection = True
-        try:
-            self.refresh_table()
-            self.refresh_well_plate()
-        finally:
-            self._updating_selection = False
+        # Only proceed if the state actually changed
+        if old_enabled == enabled:
+            self.log_info(f"🔄 Selection {selection_id} enabled state unchanged: {enabled} (old={old_enabled})")
+            return
 
-        # Emit external signal after UI sync
+        # Update well plate to reflect changes (only enabled selections show)
+        # Don't refresh the entire table to avoid recreating checkboxes during interaction
+        self.refresh_well_plate()
+
+        # Force update of external visualizations by emitting both signals
         self.selection_toggled.emit(selection_id, enabled)
-        self.log_info(f"Selection {selection_id} {'enabled' if enabled else 'disabled'}")
+        
+        # Also emit the update signal with the current full selection data
+        selection_data = self.selections_data[selection_id].copy()
+        self.selection_updated.emit(selection_id, selection_data)
+
+        self.log_info(f"✅ Selection {selection_id} {'enabled' if enabled else 'disabled'} - signals emitted for external updates")
     
     def on_table_cell_changed(self, row: int, column: int) -> None:
         """Handle table cell changes."""
@@ -438,9 +524,10 @@ class SelectionPanel(QWidget, LoggerMixin):
                     self.log_info(f"Updated well for selection {selection_id}: {new_well}")
     
     def on_table_selection_changed(self) -> None:
-        """Handle table selection changes."""
-        selected_rows = self.selection_table.selectionModel().selectedRows()
-        self.delete_button.setEnabled(len(selected_rows) > 0)
+        """Handle table selection changes - DISABLED to prevent delete button issues."""
+        # This method is intentionally disabled to prevent delete button from appearing
+        # when clicking checkboxes. Table selection is disabled via NoSelection mode.
+        pass
     
     def on_well_clicked(self, well_position: str) -> None:
         """Handle well plate clicks to assign/unassign wells."""
@@ -706,3 +793,18 @@ class SelectionPanel(QWidget, LoggerMixin):
                     self.selection_updated.emit(sid, {'well_position': new_well})
                     self.refresh_table()
                     self.refresh_well_plate()
+
+    def update_checkbox_state(self, selection_id: str, enabled: bool) -> None:
+        """Update individual checkbox state without refreshing entire table."""
+        for row in range(self.selection_table.rowCount()):
+            label_item = self.selection_table.item(row, 1)
+            if label_item and label_item.data(Qt.UserRole) == selection_id:
+                container = self.selection_table.cellWidget(row, 0)
+                if container:
+                    checkboxes = container.findChildren(QCheckBox)
+                    if checkboxes:
+                        checkbox = checkboxes[0]
+                        checkbox.blockSignals(True)
+                        checkbox.setChecked(enabled)
+                        checkbox.blockSignals(False)
+                        break

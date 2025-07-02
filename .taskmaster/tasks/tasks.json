@@ -2,224 +2,65 @@
   "master": {
     "tasks": [
       {
-        "id": "1",
-        "title": "Display Detection and Mode Management",
-        "description": "Test display detection on Windows/Linux/macOS and verify mode switching between dev-mode and gui-mode",
-        "details": "Test display detection across platforms, verify mode switching mechanisms, test fallback when display unavailable, validate environment variable control",
-        "status": "pending",
+        "id": 1,
+        "title": "Implement Delete Column Improvements",
+        "description": "Rename the Action column header to Delete, resize Delete buttons to match row height, and ensure proper deletion functionality.",
+        "details": "1. Locate the table header definition in the codebase and change 'Action' to 'Delete'\n2. Modify the Delete button styling to ensure it spans the full row height (±2px tolerance)\n3. Verify the deletion functionality works correctly by:\n   - Ensuring the click event handler is properly connected\n   - Confirming the row removal from the table\n   - Verifying the model update signal is emitted\n\nCode changes will likely involve:\n```python\n# For header rename\nself.table.setHorizontalHeaderItem(delete_column_index, QTableWidgetItem(\"Delete\"))\n\n# For button sizing (example approach)\nclass DeleteButtonDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        # Configure button to match row height\n        button_rect = option.rect\n        # Paint the button with proper dimensions\n        # ...\n\n# Ensure deletion handler is properly connected\ndelete_button.clicked.connect(self.remove_selection)\n```",
+        "testStrategy": "Run the existing automated tests to verify functionality:\n1. `pytest tests/dev_mode/test_selection_management_sync.py`\n2. `pytest tests/dual_mode/test_selection_management_consistency.py`\n3. `pytest tests/gui_mode/test_selection_management_production.py`\n\nAdditionally, perform manual verification:\n- Confirm header displays 'Delete' in all three modes\n- Verify button height matches row height within 2px tolerance\n- Test deletion functionality by clicking buttons and confirming rows are removed",
         "priority": "high",
         "dependencies": [],
-        "testStrategy": "DEV Mode: headless detection testing, DUAL Mode: mode switching validation, GUI Mode: display availability verification",
+        "status": "done",
         "subtasks": []
       },
       {
-        "id": "2",
-        "title": "MainWindow Adapter Testing",
-        "description": "Test window state synchronization and action execution in headless mode",
-        "details": "Test window state sync, verify action execution without Qt, test model initialization, validate UI definition generation, test state persistence and recovery",
-        "status": "pending",
-        "priority": "high",
-        "dependencies": [
-          "1"
-        ],
-        "testStrategy": "DEV Mode: headless window operations, DUAL Mode: state synchronization validation, GUI Mode: full window functionality",
-        "subtasks": []
-      },
-      {
-        "id": "3",
-        "title": "Image Processing in Headless Mode",
-        "description": "Load and process images without display server dependency",
-        "details": "Load/process images without display, test zoom/pan programmatically, verify overlay rendering in virtual mode, test coordinate transformations, validate minimap functionality",
-        "status": "pending",
-        "priority": "high",
-        "dependencies": [
-          "2"
-        ],
-        "testStrategy": "DEV Mode: virtual image processing, DUAL Mode: processing result comparison, GUI Mode: visual verification",
-        "subtasks": []
-      },
-      {
-        "id": "4",
-        "title": "CSV Data Processing Stability",
-        "description": "Test CSV parsing without UI and verify data validation in headless mode",
-        "details": "Test CSV parsing without UI, verify data validation in headless, test selection operations programmatically, validate expression filtering, test batch processing",
-        "status": "pending",
+        "id": 2,
+        "title": "Fix Enabled Checkbox Alignment and Toggle Functionality",
+        "description": "Center the Enabled checkbox both horizontally and vertically within its column and fix the bug where re-enabling a previously disabled selection doesn't update both UI and model state.",
+        "details": "1. Implement a custom checkbox delegate to ensure proper alignment:\n```python\nclass CenteredCheckBoxDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        # Get checkbox state from model\n        checked = index.data(Qt.CheckStateRole) == Qt.Checked\n        \n        # Calculate centered position\n        checkbox_rect = QRect(option.rect)\n        checkbox_size = QApplication.style().pixelMetric(QStyle.PM_IndicatorWidth)\n        x_center = checkbox_rect.x() + (checkbox_rect.width() - checkbox_size) // 2\n        y_center = checkbox_rect.y() + (checkbox_rect.height() - checkbox_size) // 2\n        centered_rect = QRect(x_center, y_center, checkbox_size, checkbox_size)\n        \n        # Draw the checkbox\n        QApplication.style().drawPrimitive(\n            QStyle.PE_IndicatorCheckBox,\n            QStyleOptionButton(),\n            painter\n        )\n```\n\n2. Fix the re-enabling bug by ensuring the model is updated when checkbox state changes:\n```python\ndef on_checkbox_toggled(self, index):\n    current_state = self.model.data(index, Qt.CheckStateRole)\n    new_state = Qt.Unchecked if current_state == Qt.Checked else Qt.Checked\n    \n    # Update model\n    self.model.setData(index, new_state, Qt.CheckStateRole)\n    \n    # Update UI\n    self.table.update(index)\n    \n    # Emit signal for model state update\n    self.selectionStateChanged.emit(index.row(), new_state == Qt.Checked)\n```",
+        "testStrategy": "1. Run the existing test suite across all three modes:\n   - `tests/dev_mode/test_selection_management_sync.py`\n   - `tests/dual_mode/test_selection_management_consistency.py`\n   - `tests/gui_mode/test_selection_management_production.py`\n\n2. Add specific tests for the checkbox toggle functionality:\n   - Test toggling from checked to unchecked and verify model update\n   - Test toggling from unchecked to checked and verify model update\n   - Verify UI reflects the correct state after toggling\n\n3. Implement pixel comparison test to verify checkbox centering",
         "priority": "high",
         "dependencies": [],
-        "testStrategy": "DEV Mode: headless CSV processing, DUAL Mode: parsing result validation, GUI Mode: interactive data handling",
+        "status": "done",
         "subtasks": []
       },
       {
-        "id": "5",
-        "title": "Selection Management Testing",
-        "description": "Test selection creation/modification and verify color assignment logic",
-        "details": "Test selection creation/modification, verify color assignment logic, test well plate assignments, validate selection persistence, test multi-selection operations",
-        "status": "pending",
-        "priority": "medium",
-        "dependencies": [
-          "3",
-          "4"
-        ],
-        "testStrategy": "DEV Mode: programmatic selection operations, DUAL Mode: selection state consistency, GUI Mode: interactive selection testing",
-        "subtasks": []
-      },
-      {
-        "id": "6",
-        "title": "Scatter Plot Operations",
-        "description": "Test plot generation without display and verify interactive selection simulation",
-        "details": "Test plot generation without display, verify interactive selection simulation, test axis selection and updates, validate export functionality, test performance with large datasets",
-        "status": "pending",
-        "priority": "medium",
-        "dependencies": [
-          "4"
-        ],
-        "testStrategy": "DEV Mode: headless plot generation, DUAL Mode: plot data consistency, GUI Mode: interactive plot testing",
-        "subtasks": []
-      },
-      {
-        "id": "7",
-        "title": "Coordinate Calibration Testing",
-        "description": "Test two-point calibration in headless mode and verify transformation accuracy",
-        "details": "Test two-point calibration in headless, verify transformation accuracy, test calibration dialog interactions, validate template integration, test calibration persistence",
-        "status": "pending",
-        "priority": "medium",
-        "dependencies": [
-          "3"
-        ],
-        "testStrategy": "DEV Mode: mathematical calibration testing, DUAL Mode: calibration accuracy validation, GUI Mode: user interaction testing",
-        "subtasks": []
-      },
-      {
-        "id": "8",
-        "title": "Export and Protocol Generation",
-        "description": "Test protocol file generation and verify export dialog functionality",
-        "details": "Test protocol file generation, verify export dialog functionality, test batch export operations, validate file format compliance, test progress tracking",
-        "status": "pending",
-        "priority": "high",
-        "dependencies": [
-          "5",
-          "6",
-          "7"
-        ],
-        "testStrategy": "DEV Mode: headless export operations, DUAL Mode: export result validation, GUI Mode: interactive export testing",
-        "subtasks": []
-      },
-      {
-        "id": "9",
-        "title": "Session Management Testing",
-        "description": "Test session save/load in both modes and verify auto-session functionality",
-        "details": "Test session save/load in both modes, verify auto-session functionality, test crash recovery mechanisms, validate session compatibility, test concurrent session handling",
-        "status": "pending",
-        "priority": "medium",
-        "dependencies": [
-          "8"
-        ],
-        "testStrategy": "DEV Mode: headless session operations, DUAL Mode: session data consistency, GUI Mode: interactive session management",
-        "subtasks": []
-      },
-      {
-        "id": "10",
-        "title": "Template System Testing",
-        "description": "Test template creation and loading across different modes",
-        "details": "Test template creation and loading, verify template application, test template validation, validate template sharing, test version compatibility",
-        "status": "pending",
-        "priority": "low",
-        "dependencies": [
-          "9"
-        ],
-        "testStrategy": "DEV Mode: template processing logic, DUAL Mode: template consistency validation, GUI Mode: template UI interactions",
-        "subtasks": []
-      },
-      {
-        "id": "11",
-        "title": "Error Handling and Recovery",
-        "description": "Test error recovery in headless mode and verify error logging mechanisms",
-        "details": "Test error recovery in headless mode, verify error logging mechanisms, test user notification systems, validate data integrity on errors, test fallback operations",
-        "status": "pending",
+        "id": 3,
+        "title": "Implement In-Cell Label Editing",
+        "description": "Replace overlay editing with in-place text editing for the Label column using QStyledItemDelegate to ensure the cell text updates during editing without overlay artifacts.",
+        "details": "1. Create a custom item delegate for in-place editing:\n```python\nclass LabelItemDelegate(QStyledItemDelegate):\n    def createEditor(self, parent, option, index):\n        editor = QLineEdit(parent)\n        return editor\n        \n    def setEditorData(self, editor, index):\n        value = index.model().data(index, Qt.EditRole)\n        editor.setText(value)\n        \n    def setModelData(self, editor, model, index):\n        value = editor.text()\n        model.setData(index, value, Qt.EditRole)\n        \n    def updateEditorGeometry(self, editor, option, index):\n        editor.setGeometry(option.rect)\n```\n\n2. Apply the delegate to the Label column:\n```python\nlabel_column_index = self.get_column_index_by_name(\"Label\")\nself.table.setItemDelegateForColumn(label_column_index, LabelItemDelegate())\n```\n\n3. Ensure double-clicking activates editing:\n```python\nself.table.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)\n```\n\n4. Connect signals to handle edit completion:\n```python\ndef on_item_changed(self, item):\n    if item.column() == label_column_index:\n        row = item.row()\n        new_label = item.text()\n        # Update model\n        self.update_selection_label(row, new_label)\n        # Emit signal\n        self.selectionLabelChanged.emit(row, new_label)\n```",
+        "testStrategy": "1. Run the existing test suite for label editing functionality:\n   - `tests/dev_mode/test_selection_management_sync.py`\n\n2. Add specific tests for in-cell editing:\n   - Test double-clicking enters edit mode\n   - Test editing and pressing Enter commits changes\n   - Test editing and clicking elsewhere commits changes\n   - Verify no overlay artifacts remain visible during editing\n\n3. Verify consistency across all three modes (DEV, DUAL, GUI)",
         "priority": "medium",
         "dependencies": [],
-        "testStrategy": "DEV Mode: error simulation and recovery, DUAL Mode: error handling consistency, GUI Mode: user error experience",
+        "status": "done",
         "subtasks": []
       },
       {
-        "id": "12",
-        "title": "Performance Benchmarking",
-        "description": "Benchmark operations in both modes and test memory usage patterns",
-        "details": "Benchmark operations in both modes, test memory usage patterns, verify threading behavior, test resource cleanup, validate scalability limits",
-        "status": "pending",
+        "id": 4,
+        "title": "Enhance Color Column with Centered Text and Color Picker Dialog",
+        "description": "Center align color names, limit selectable colors to those in COLOR_PALETTE, implement a color picker dialog with swatches, and display both color name and chip in the cell.",
+        "details": "1. Create a centered text delegate for the Color column:\n```python\nclass CenteredTextDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        option.displayAlignment = Qt.AlignCenter\n        super().paint(painter, option, index)\n```\n\n2. Implement a color picker dialog:\n```python\nclass ColorPickerDialog(QDialog):\n    def __init__(self, parent=None):\n        super().__init__(parent)\n        self.setWindowTitle(\"Select Color\")\n        layout = QGridLayout()\n        \n        # Load colors from COLOR_PALETTE\n        from architecture import COLOR_PALETTE\n        \n        row, col = 0, 0\n        for color_name, color_value in COLOR_PALETTE.items():\n            button = QPushButton()\n            button.setFixedSize(100, 30)\n            \n            # Create a layout with color chip and name\n            button_layout = QHBoxLayout(button)\n            color_chip = QFrame()\n            color_chip.setFixedSize(20, 20)\n            color_chip.setStyleSheet(f\"background-color: {color_value};\")\n            button_layout.addWidget(color_chip)\n            button_layout.addWidget(QLabel(color_name))\n            \n            button.clicked.connect(lambda checked, name=color_name: self.select_color(name))\n            layout.addWidget(button, row, col)\n            \n            col += 1\n            if col > 3:  # 4 columns layout\n                col = 0\n                row += 1\n                \n        self.setLayout(layout)\n        self.selected_color = None\n        \n    def select_color(self, color_name):\n        self.selected_color = color_name\n        self.accept()\n```\n\n3. Create a custom delegate for the Color column with color chip:\n```python\nclass ColorDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        color_name = index.data(Qt.DisplayRole)\n        from architecture import COLOR_PALETTE\n        \n        if color_name in COLOR_PALETTE:\n            color_value = COLOR_PALETTE[color_name]\n            \n            # Draw background\n            painter.fillRect(option.rect, option.palette.base())\n            \n            # Draw color chip\n            chip_rect = QRect(option.rect.x() + 5, \n                             option.rect.y() + 5,\n                             20, \n                             option.rect.height() - 10)\n            painter.fillRect(chip_rect, QColor(color_value))\n            \n            # Draw text centered\n            text_rect = QRect(option.rect.x() + 30,\n                             option.rect.y(),\n                             option.rect.width() - 35,\n                             option.rect.height())\n            painter.drawText(text_rect, Qt.AlignCenter, color_name)\n        else:\n            super().paint(painter, option, index)\n    \n    def createEditor(self, parent, option, index):\n        # No direct editing, will show dialog instead\n        return None\n    \n    def editorEvent(self, event, model, option, index):\n        if event.type() == QEvent.MouseButtonDblClick:\n            dialog = ColorPickerDialog(parent=None)\n            if dialog.exec_() == QDialog.Accepted and dialog.selected_color:\n                model.setData(index, dialog.selected_color, Qt.EditRole)\n            return True\n        return False\n```\n\n4. Apply the delegate to the Color column:\n```python\ncolor_column_index = self.get_column_index_by_name(\"Color\")\nself.table.setItemDelegateForColumn(color_column_index, ColorDelegate())\n```",
+        "testStrategy": "1. Run existing scatter-plot and selection tests across all modes to verify color selection functionality\n\n2. Add specific tests for the color column enhancements:\n   - Verify center alignment of color names\n   - Test that only colors from COLOR_PALETTE can be selected\n   - Verify the color dialog displays all 16 colors from COLOR_PALETTE\n   - Test that selecting a color updates both the model and UI\n   - Verify the color chip is displayed correctly next to the color name\n\n3. Implement automated Qt pixel tests to verify center alignment and color chip display",
         "priority": "medium",
-        "dependencies": [
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8"
-        ],
-        "testStrategy": "DEV Mode: performance metrics collection, DUAL Mode: performance parity validation, GUI Mode: real-world performance testing",
+        "dependencies": [],
+        "status": "done",
         "subtasks": []
       },
       {
-        "id": "13",
-        "title": "UI Serialization Testing",
-        "description": "Test widget to YAML conversion and verify round-trip editing",
-        "details": "Test widget to YAML conversion, verify round-trip editing, test schema validation, validate AI agent compatibility, test version control integration",
-        "status": "pending",
+        "id": 5,
+        "title": "Implement Well Selection via 96-Well Plate Dialog",
+        "description": "Create a graphical 96-well plate dialog for selecting wells, with rows A-H and columns 01-12, that updates the Well column value and validates against invalid or duplicate selections.",
+        "details": "1. Implement the 96-well plate dialog:\n```python\nclass WellPlateDialog(QDialog):\n    def __init__(self, parent=None, current_well=None, existing_wells=None):\n        super().__init__(parent)\n        self.setWindowTitle(\"Select Well\")\n        self.setMinimumSize(600, 400)\n        \n        self.existing_wells = existing_wells or []\n        self.selected_well = current_well\n        \n        layout = QVBoxLayout()\n        grid_layout = QGridLayout()\n        \n        # Add column headers (1-12)\n        for col in range(1, 13):\n            label = QLabel(f\"{col:02d}\")\n            label.setAlignment(Qt.AlignCenter)\n            grid_layout.addWidget(label, 0, col)\n        \n        # Add row headers (A-H) and well buttons\n        for row in range(8):\n            row_label = QLabel(chr(65 + row))  # A-H\n            row_label.setAlignment(Qt.AlignCenter)\n            grid_layout.addWidget(row_label, row + 1, 0)\n            \n            for col in range(1, 13):\n                well_id = f\"{chr(65 + row)}{col:02d}\"\n                button = QPushButton(well_id)\n                button.setFixedSize(40, 40)\n                \n                # Highlight current well\n                if well_id == current_well:\n                    button.setStyleSheet(\"background-color: lightblue;\")\n                \n                # Disable already selected wells\n                if well_id in self.existing_wells and well_id != current_well:\n                    button.setEnabled(False)\n                    button.setStyleSheet(\"background-color: lightgray;\")\n                \n                button.clicked.connect(lambda checked, w=well_id: self.select_well(w))\n                grid_layout.addWidget(button, row + 1, col)\n        \n        layout.addLayout(grid_layout)\n        \n        # Add buttons\n        button_layout = QHBoxLayout()\n        cancel_button = QPushButton(\"Cancel\")\n        cancel_button.clicked.connect(self.reject)\n        button_layout.addWidget(cancel_button)\n        \n        ok_button = QPushButton(\"OK\")\n        ok_button.clicked.connect(self.accept)\n        button_layout.addWidget(ok_button)\n        \n        layout.addLayout(button_layout)\n        self.setLayout(layout)\n    \n    def select_well(self, well_id):\n        self.selected_well = well_id\n        # Update UI to show selection\n        for i in range(1, 9):\n            for j in range(1, 13):\n                button = self.findChild(QPushButton, f\"{chr(64 + i)}{j:02d}\")\n                if button:\n                    if button.text() == well_id:\n                        button.setStyleSheet(\"background-color: lightblue;\")\n                    elif button.text() not in self.existing_wells:\n                        button.setStyleSheet(\"\")\n```\n\n2. Implement a custom delegate for the Well column:\n```python\nclass WellDelegate(QStyledItemDelegate):\n    def createEditor(self, parent, option, index):\n        # No direct editing, will show dialog instead\n        return None\n    \n    def editorEvent(self, event, model, option, index):\n        if event.type() == QEvent.MouseButtonDblClick:\n            # Get current well and existing wells\n            current_well = index.data(Qt.DisplayRole)\n            existing_wells = []\n            for row in range(model.rowCount()):\n                if row != index.row():  # Exclude current row\n                    well_idx = model.index(row, index.column())\n                    well = model.data(well_idx, Qt.DisplayRole)\n                    if well:\n                        existing_wells.append(well)\n            \n            dialog = WellPlateDialog(None, current_well, existing_wells)\n            if dialog.exec_() == QDialog.Accepted and dialog.selected_well:\n                model.setData(index, dialog.selected_well, Qt.EditRole)\n            return True\n        return False\n```\n\n3. Apply the delegate to the Well column:\n```python\nwell_column_index = self.get_column_index_by_name(\"Well\")\nself.table.setItemDelegateForColumn(well_column_index, WellDelegate())\n```\n\n4. Implement validation for duplicate wells:\n```python\ndef validate_well_selection(self, row, well_id):\n    # Check for duplicates\n    for i in range(self.table.rowCount()):\n        if i != row:  # Skip current row\n            well_item = self.table.item(i, well_column_index)\n            if well_item and well_item.text() == well_id:\n                QMessageBox.warning(self, \"Duplicate Well\", \n                                   f\"Well {well_id} is already assigned to another selection.\")\n                return False\n    return True\n```",
+        "testStrategy": "1. Add dedicated tests under `tests/dev_mode/test_selection_management_sync.py`:\n   - Test opening the well plate dialog\n   - Test selecting a well updates the table cell correctly\n   - Test that duplicate well assignments show a warning\n   - Test that invalid well selections are prevented\n\n2. Propagate tests to DUAL and GUI modes to ensure consistent behavior\n\n3. Manual testing:\n   - Verify the dialog displays A-H rows and 01-12 columns correctly\n   - Test that clicking a well updates the table cell\n   - Verify that duplicate well assignments are properly handled",
         "priority": "low",
-        "dependencies": [
-          "2"
-        ],
-        "testStrategy": "DEV Mode: serialization logic testing, DUAL Mode: serialization consistency, GUI Mode: UI-YAML synchronization",
-        "subtasks": []
-      },
-      {
-        "id": "14",
-        "title": "CLI Tool Integration",
-        "description": "Test all CLI commands and verify UI manipulation via CLI",
-        "details": "Test all CLI commands, verify UI manipulation via CLI, test batch operations, validate error reporting, test integration with main app",
-        "status": "pending",
-        "priority": "low",
-        "dependencies": [
-          "13"
-        ],
-        "testStrategy": "DEV Mode: CLI command execution, DUAL Mode: CLI-GUI integration, GUI Mode: CLI result verification",
-        "subtasks": []
-      },
-      {
-        "id": "15",
-        "title": "Cross-Platform Testing",
-        "description": "Test on Windows 10/11, Ubuntu/Debian Linux, and macOS",
-        "details": "Test on Windows 10/11, Test on Ubuntu/Debian Linux, Test on macOS, verify path handling, test platform-specific features",
-        "status": "pending",
-        "priority": "medium",
-        "dependencies": [
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8",
-          "9",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14"
-        ],
-        "testStrategy": "DEV Mode: cross-platform compatibility, DUAL Mode: platform-specific validation, GUI Mode: platform UI testing",
+        "dependencies": [],
+        "status": "done",
         "subtasks": []
       }
     ],
     "metadata": {
-      "created": "2024-12-28",
-      "project": "CellSorter Background + GUI Mode Testing",
-      "version": "1.0",
-      "totalTasks": 15,
-      "focus": "현재 기능 안정성과 3모드 테스트 완성도 향상"
+      "created": "2025-07-01T06:25:51.475Z",
+      "updated": "2025-07-01T06:39:29.370Z",
+      "description": "Tasks for master context"
     }
   }
 }
