@@ -181,28 +181,11 @@ class SelectionPanel(QWidget, LoggerMixin):
         export_buttons = QHBoxLayout()
         export_buttons.setSpacing(8)
         
-        self.export_csv_button = QPushButton("Export CSV")
-        self.export_csv_button.setMinimumHeight(32)
-        self.export_csv_button.setMinimumWidth(100)
-        self.export_csv_button.clicked.connect(self.export_csv)
-        self.export_csv_button.setStyleSheet("""
-            QPushButton {
-                background-color: var(--primary);
-                color: var(--primary-foreground);
-                border: none;
-                border-radius: 6px;
-                padding: 4px 12px;
-                font-weight: 500;
-            }
-            QPushButton:hover {
-                background-color: var(--primary)/90;
-            }
-        """)
-        
         self.export_protocol_button = QPushButton("Export Protocol")
         self.export_protocol_button.setMinimumHeight(32)
         self.export_protocol_button.setMinimumWidth(120)
         self.export_protocol_button.clicked.connect(self.export_protocol)
+        self.export_protocol_button.setEnabled(False)  # Initially disabled until calibration is complete
         self.export_protocol_button.setStyleSheet("""
             QPushButton {
                 background-color: var(--primary);
@@ -212,13 +195,35 @@ class SelectionPanel(QWidget, LoggerMixin):
                 padding: 4px 12px;
                 font-weight: 500;
             }
-            QPushButton:hover {
+            QPushButton:hover:enabled {
                 background-color: var(--primary)/90;
+            }
+            QPushButton:disabled {
+                background-color: var(--muted);
+                color: var(--muted-foreground);
             }
         """)
         
-        export_buttons.addWidget(self.export_csv_button)
+        self.export_images_button = QPushButton("Export Images")
+        self.export_images_button.setMinimumHeight(32)
+        self.export_images_button.setMinimumWidth(120)
+        self.export_images_button.clicked.connect(self.export_images)
+        self.export_images_button.setStyleSheet("""
+            QPushButton {
+                background-color: var(--secondary);
+                color: var(--secondary-foreground);
+                border: none;
+                border-radius: 6px;
+                padding: 4px 12px;
+                font-weight: 500;
+            }
+            QPushButton:hover {
+                background-color: var(--secondary)/90;
+            }
+        """)
+        
         export_buttons.addWidget(self.export_protocol_button)
+        export_buttons.addWidget(self.export_images_button)
         export_buttons.addStretch()  # Push buttons to the left
         
         export_layout.addLayout(export_buttons)
@@ -681,45 +686,57 @@ class SelectionPanel(QWidget, LoggerMixin):
             
             self.log_info("Cleared all selections")
     
-    def export_csv(self) -> None:
-        """Export selections as CSV."""
+    def export_protocol(self) -> None:
+        """Request protocol export."""
+        if not self.export_protocol_button.isEnabled():
+            QMessageBox.information(
+                self, 
+                "Calibration Required", 
+                "Please complete coordinate calibration before exporting protocol."
+            )
+            return
+        self.export_requested.emit()
+    
+    def export_images(self) -> None:
+        """Export images with selection overlays."""
         from PySide6.QtWidgets import QFileDialog
-        import csv
+        
+        if not self.selections_data:
+            QMessageBox.information(self, "No Selections", "No selections available to export.")
+            return
         
         file_path, _ = QFileDialog.getSaveFileName(
-            self, "Export Selections CSV", "selections.csv", "CSV Files (*.csv)"
+            self, 
+            "Export Selection Images", 
+            "selection_overlays.png", 
+            "PNG Files (*.png);;JPEG Files (*.jpg);;TIFF Files (*.tiff)"
         )
         
         if file_path:
             try:
-                with open(file_path, 'w', newline='') as csvfile:
-                    writer = csv.writer(csvfile)
-                    
-                    # Write header
-                    writer.writerow(['Selection ID', 'Label', 'Color', 'Well Position', 'Cell Count', 'Cell Indices'])
-                    
-                    # Write data
-                    for selection_id, data in self.selections_data.items():
-                        if data.get('enabled', True):
-                            writer.writerow([
-                                selection_id,
-                                data.get('label', ''),
-                                data.get('color', ''),
-                                data.get('well_position', ''),
-                                len(data.get('cell_indices', [])),
-                                ';'.join(map(str, data.get('cell_indices', [])))
-                            ])
+                # Emit signal for main window to handle image export with overlays
+                # This allows the main window to access the current image and apply overlays
+                from PySide6.QtCore import QTimer
+                QTimer.singleShot(0, lambda: self._request_image_export(file_path))
                 
-                self.log_info(f"Exported selections to {file_path}")
-                QMessageBox.information(self, "Export Complete", f"Selections exported to {file_path}")
+                self.log_info(f"Requesting image export to {file_path}")
                 
             except Exception as e:
-                self.log_error(f"Failed to export CSV: {e}")
-                QMessageBox.critical(self, "Export Error", f"Failed to export CSV: {e}")
+                self.log_error(f"Failed to request image export: {e}")
+                QMessageBox.critical(self, "Export Error", f"Failed to request image export: {e}")
     
-    def export_protocol(self) -> None:
-        """Request protocol export."""
-        self.export_requested.emit()
+    def _request_image_export(self, file_path: str) -> None:
+        """Request image export through parent window."""
+        # Find main window in parent hierarchy
+        parent = self.parent()
+        while parent:
+            if hasattr(parent, 'export_images_with_overlays'):
+                parent.export_images_with_overlays(file_path, self.get_active_selections())
+                break
+            parent = parent.parent()
+        else:
+            QMessageBox.information(self, "Export Not Available", "Image export functionality not available.")
+            self.log_warning("Could not find main window for image export")
     
     def add_selection(self, selection_data: Dict[str, Any]) -> None:
         """
@@ -808,3 +825,20 @@ class SelectionPanel(QWidget, LoggerMixin):
                         checkbox.setChecked(enabled)
                         checkbox.blockSignals(False)
                         break
+
+    def update_calibration_status(self, is_calibrated: bool) -> None:
+        """
+        Update the export protocol button state based on calibration status.
+        
+        Args:
+            is_calibrated: Whether coordinate calibration is complete
+        """
+        self.export_protocol_button.setEnabled(is_calibrated)
+        
+        # Update tooltip to inform users about calibration requirement
+        if is_calibrated:
+            self.export_protocol_button.setToolTip("Export protocol file for CosmoSort")
+        else:
+            self.export_protocol_button.setToolTip("Complete coordinate calibration to enable protocol export")
+        
+        self.log_info(f"Export protocol button {'enabled' if is_calibrated else 'disabled'} - calibration {'complete' if is_calibrated else 'required'}")
