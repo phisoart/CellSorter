@@ -542,10 +542,32 @@ class MainWindow(QMainWindow, LoggerMixin):
             if selection_id:
                 selections_dict[selection_id] = selection
         
-        # Get bounding boxes from CSV parser
+        # Get bounding boxes from image handler (already processed during CSV loading)
         bounding_boxes = []
-        if hasattr(self.csv_parser, 'get_bounding_boxes'):
-            bounding_boxes = self.csv_parser.get_bounding_boxes()
+        self.log_info("Attempting to get bounding boxes for protocol export...")
+        
+        if hasattr(self.image_handler, 'bounding_boxes') and self.image_handler.bounding_boxes:
+            bounding_boxes = self.image_handler.bounding_boxes
+            self.log_info(f"Found {len(bounding_boxes)} bounding boxes from image_handler")
+        else:
+            self.log_info("No bounding boxes in image_handler, generating from CSV data...")
+            # Fallback: generate bounding boxes from CSV data
+            bounding_box_data = self.csv_parser.get_bounding_box_data()
+            if bounding_box_data is not None:
+                self.log_info(f"Found bounding box data with {len(bounding_box_data)} rows")
+                for _, row in bounding_box_data.iterrows():
+                    bbox = (
+                        int(row['AreaShape_BoundingBoxMinimum_X']),
+                        int(row['AreaShape_BoundingBoxMinimum_Y']),
+                        int(row['AreaShape_BoundingBoxMaximum_X']),
+                        int(row['AreaShape_BoundingBoxMaximum_Y'])
+                    )
+                    bounding_boxes.append(bbox)
+                self.log_info(f"Generated {len(bounding_boxes)} bounding boxes from CSV")
+            else:
+                self.log_error("No bounding box data available from CSV parser")
+        
+        self.log_info(f"Final bounding boxes count: {len(bounding_boxes)}")
         
         # Get image information
         image_info = {
@@ -597,10 +619,22 @@ class MainWindow(QMainWindow, LoggerMixin):
             if selection_id:
                 selections_dict[selection_id] = selection
         
-        # Get bounding boxes from CSV parser
+        # Get bounding boxes from image handler (already processed during CSV loading)
         bounding_boxes = []
-        if hasattr(self.csv_parser, 'get_bounding_boxes'):
-            bounding_boxes = self.csv_parser.get_bounding_boxes()
+        if hasattr(self.image_handler, 'bounding_boxes') and self.image_handler.bounding_boxes:
+            bounding_boxes = self.image_handler.bounding_boxes
+        else:
+            # Fallback: generate bounding boxes from CSV data
+            bounding_box_data = self.csv_parser.get_bounding_box_data()
+            if bounding_box_data is not None:
+                for _, row in bounding_box_data.iterrows():
+                    bbox = (
+                        int(row['AreaShape_BoundingBoxMinimum_X']),
+                        int(row['AreaShape_BoundingBoxMinimum_Y']),
+                        int(row['AreaShape_BoundingBoxMaximum_X']),
+                        int(row['AreaShape_BoundingBoxMaximum_Y'])
+                    )
+                    bounding_boxes.append(bbox)
         
         # Create and show dialog
         dialog = ImageExportDialog(

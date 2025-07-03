@@ -92,4 +92,8 @@ tmp/
 config.ini
 settings.json
 .env.local
-.env.production 
+.env.production
+
+# Taskmaster and backup files
+.taskmaster/
+*.backup 
