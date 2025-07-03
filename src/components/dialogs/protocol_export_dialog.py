@@ -13,10 +13,10 @@ try:
     from PySide6.QtWidgets import (
         QDialog, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
         QPushButton, QLabel, QHeaderView, QFileDialog, QMessageBox, QProgressBar,
-        QFrame, QAbstractItemView
+        QFrame, QAbstractItemView, QSizePolicy, QWidget
     )
     from PySide6.QtCore import Qt, Signal, QThread, QObject, QTimer
-    from PySide6.QtGui import QPixmap, QIcon, QColor
+    from PySide6.QtGui import QPixmap, QIcon, QColor, QFont
 except ImportError:
     # Fallback for development
     QDialog = object
@@ -40,6 +40,9 @@ except ImportError:
     QPixmap = object
     QIcon = object
     QColor = object
+    QSizePolicy = object
+    QFont = object
+    QWidget = object
 
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
@@ -140,13 +143,13 @@ class ProtocolExportDialog(QDialog, LoggerMixin):
         """Populate the table with selection data."""
         self.table.setRowCount(len(self.selections_data))
         
-        # Set row height for consistent button sizing
-        row_height = 32
+        # Auto-size rows to content
+        self.table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        
+        # Ensure compact font globally within table
+        self.table.setStyleSheet("QTableWidget { font-size: 12px; }")
         
         for row, (selection_id, data) in enumerate(self.selections_data.items()):
-            # Set row height
-            self.table.setRowHeight(row, row_height)
-            
             # Number
             number_item = QTableWidgetItem(str(row + 1))
             number_item.setTextAlignment(Qt.AlignCenter)
@@ -162,6 +165,7 @@ class ProtocolExportDialog(QDialog, LoggerMixin):
             color_item.setBackground(QColor(color_hex))
             color_item.setTextAlignment(Qt.AlignCenter)
             color_item.setText("●")
+            color_item.setFont(QFont("Arial", 10))
             self.table.setItem(row, 2, color_item)
             
             # Well
@@ -175,33 +179,21 @@ class ProtocolExportDialog(QDialog, LoggerMixin):
             count_item.setTextAlignment(Qt.AlignCenter)
             self.table.setItem(row, 4, count_item)
             
-            # Extract button - matched to row height
-            extract_button = QPushButton("Extract")
-            extract_button.setMaximumHeight(row_height - 4)  # Slightly smaller than row
-            extract_button.setMinimumHeight(row_height - 4)
-            extract_button.setStyleSheet("""
-                QPushButton {
-                    background-color: #28a745;
-                    color: white;
-                    border: none;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-weight: 500;
-                    font-size: 12px;
-                }
-                QPushButton:hover {
-                    background-color: #218838;
-                }
-                QPushButton:disabled {
-                    background-color: #e9ecef;
-                    color: #6c757d;
-                }
-            """)
+            # Extract button
+            extract_button = QPushButton("Export")
+            extract_button.setStyleSheet("padding: 2px 8px;")
             
             # Connect button to extract function (placeholder for now)
             extract_button.clicked.connect(lambda checked, sid=selection_id: self.extract_selection(sid))
-            
-            self.table.setCellWidget(row, 5, extract_button)
+
+            # Use a container to center the button in the cell
+            container = QWidget()
+            layout = QHBoxLayout(container)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.addStretch()
+            layout.addWidget(extract_button)
+            layout.addStretch()
+            self.table.setCellWidget(row, 5, container)
         
         self.log_info(f"Populated table with {len(self.selections_data)} selections")
     
