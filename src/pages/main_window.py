@@ -529,6 +529,12 @@ class MainWindow(QMainWindow, LoggerMixin):
             QMessageBox.warning(self, "No CSV Data", "Please load CSV data first.")
             return
         
+        # Check if calibration is available
+        if not hasattr(self, 'coordinate_transformer') or not self.coordinate_transformer.is_calibrated():
+            QMessageBox.warning(self, "Calibration Required", 
+                              "Please calibrate coordinates first to export protocol.")
+            return
+        
         # Convert selections data to dictionary format expected by dialog
         selections_dict = {}
         for selection in selections_data:
@@ -541,11 +547,27 @@ class MainWindow(QMainWindow, LoggerMixin):
         if hasattr(self.csv_parser, 'get_bounding_boxes'):
             bounding_boxes = self.csv_parser.get_bounding_boxes()
         
+        # Get image information
+        image_info = {
+            'file_path': self.current_image_path,
+            'width': self.image_handler.image_data.shape[1],
+            'height': self.image_handler.image_data.shape[0],
+            'format': 'TIF'  # Default format
+        }
+        
+        # Extract filename from path
+        if self.current_image_path:
+            image_info['filename'] = Path(self.current_image_path).stem
+        else:
+            image_info['filename'] = "Unknown"
+        
         # Create and show dialog
         dialog = ProtocolExportDialog(
             selections_dict,
             self.image_handler.image_data,
             bounding_boxes,
+            self.coordinate_transformer,
+            image_info,
             self
         )
         dialog.exec()

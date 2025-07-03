@@ -1,12 +1,13 @@
 """
 Protocol Export Dialog for CellSorter
 
-Provides interface for exporting protocol from selections.
+Provides interface for exporting protocol files from selections.
 """
 
 from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 import numpy as np
+from PySide6.QtWidgets import QApplication
 
 try:
     from PySide6.QtWidgets import (
@@ -46,25 +47,32 @@ from utils.error_handler import error_handler
 
 class ProtocolExportDialog(QDialog, LoggerMixin):
     """
-    Dialog for exporting protocol from selections.
+    Dialog for exporting protocol files from selections.
     
     Shows list of selections with individual extract buttons for each.
     """
     
     def __init__(self, selections_data: Dict[str, Dict[str, Any]], 
                  image_data: np.ndarray, bounding_boxes: List[Tuple[int, int, int, int]], 
+                 coordinate_transformer, image_info: Dict[str, Any],
                  parent=None):
         super().__init__(parent)
         self.selections_data = selections_data
         self.image_data = image_data
         self.bounding_boxes = bounding_boxes
+        self.coordinate_transformer = coordinate_transformer
+        self.image_info = image_info
+        
+        self.setWindowTitle("Export Protocol")
+        self.setModal(True)
+        self.resize(700, 500)
         
         self.setup_ui()
         self.populate_table()
     
     def setup_ui(self):
         """Setup the dialog UI."""
-        self.setWindowTitle("Export Selection Protocol")
+        self.setWindowTitle("Export Protocol")
         self.setMinimumSize(700, 500)
         self.resize(800, 600)
         
@@ -191,30 +199,235 @@ class ProtocolExportDialog(QDialog, LoggerMixin):
             """)
             
             # Connect button to extract function (placeholder for now)
-            extract_button.clicked.connect(lambda checked, sid=selection_id: self.extract_protocol(sid))
+            extract_button.clicked.connect(lambda checked, sid=selection_id: self.extract_selection(sid))
             
             self.table.setCellWidget(row, 5, extract_button)
         
         self.log_info(f"Populated table with {len(self.selections_data)} selections")
     
-    @error_handler("Extracting protocol")
-    def extract_protocol(self, selection_id: str):
-        """Extract protocol for a specific selection (placeholder)."""
+    @error_handler("Exporting selection protocol")
+    def extract_selection(self, selection_id: str):
+        """Extract protocol for a specific selection."""
         if selection_id not in self.selections_data:
             QMessageBox.warning(self, "Error", "Selection not found")
             return
-        
+
         selection_data = self.selections_data[selection_id]
-        
-        # Placeholder functionality - just show info message
-        QMessageBox.information(
+        cell_indices = selection_data.get('cell_indices', [])
+
+        if not cell_indices:
+            QMessageBox.information(self, "No Cells", "This selection contains no cells to extract")
+            return
+
+        # Check calibration
+        if not self.coordinate_transformer.is_calibrated():
+            QMessageBox.warning(self, "Calibration Required", 
+                              "Coordinate calibration is required for protocol export")
+            return
+
+        # Let user choose output file
+        default_filename = f"{selection_data.get('label', 'Selection')}.cxprotocol"
+        output_file, _ = QFileDialog.getSaveFileName(
             self, 
-            "Protocol Extract", 
-            f"Protocol extraction for '{selection_data.get('label', 'Selection')}' will be implemented in future updates."
+            f"Save Protocol for {selection_data.get('label', 'Selection')}", 
+            str(Path.home() / default_filename),
+            "CellXpress Protocol Files (*.cxprotocol);;All Files (*)"
         )
+
+        if not output_file:
+            return  # User cancelled
+
+        try:
+            # Generate protocol content
+            protocol_content = self._generate_protocol_content(selection_data)
+            
+            # Write to file
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(protocol_content)
+            
+            QMessageBox.information(
+                self, 
+                "Protocol Exported", 
+                f"Protocol successfully exported to:\n{output_file}"
+            )
+            self.log_info(f"Protocol exported: {output_file}")
+            
+        except Exception as e:
+            error_msg = f"Failed to export protocol: {e}"
+            QMessageBox.critical(self, "Export Failed", error_msg)
+            self.log_error(error_msg)
+
+    def _generate_protocol_content(self, selection_data: Dict[str, Any]) -> str:
+        """Generate .cxprotocol file content."""
+        lines = []
         
-        self.log_info(f"Protocol extract requested for selection {selection_id}")
+        # [IMAGE] section
+        lines.append("[IMAGE]")
+        lines.append(f'FILE = "{self.image_info["filename"]}"')
+        lines.append(f'WIDTH = {self.image_info["width"]}')
+        lines.append(f'HEIGHT = {self.image_info["height"]}')
+        lines.append(f'FORMAT = "{self.image_info["format"]}"')
+        lines.append("")
+        
+        # [IMAGING_LAYOUT] section
+        lines.append("[IMAGING_LAYOUT]")
+        lines.append("PositionOnly = 1")
+        lines.append('AfterBefore = "01"')
+        
+        # Get cells for this selection
+        cell_indices = selection_data.get('cell_indices', [])
+        lines.append(f"Points = {len(cell_indices)}")
+        
+        # Debug logging
+        self.log_info(f"Generating protocol for {len(cell_indices)} cells")
+        self.log_info(f"Available bounding boxes: {len(self.bounding_boxes)}")
+        self.log_info(f"Cell indices: {cell_indices[:10]}...")  # Show first 10
+        
+        # Generate points
+        point_count = 0
+        for i, cell_index in enumerate(cell_indices, 1):
+            if cell_index < len(self.bounding_boxes):
+                bbox = self.bounding_boxes[cell_index]
+                min_x, min_y, max_x, max_y = bbox
+                
+                # Convert rectangle to square while preserving center
+                square_bbox = self._convert_to_square_bbox(min_x, min_y, max_x, max_y)
+                sq_min_x, sq_min_y, sq_max_x, sq_max_y = square_bbox
+                
+                # Convert pixel coordinates to stage coordinates
+                try:
+                    stage_min = self.coordinate_transformer.pixel_to_stage(sq_min_x, sq_min_y)
+                    stage_max = self.coordinate_transformer.pixel_to_stage(sq_max_x, sq_max_y)
+                    # 항상 x_min < x_max, y_min < y_max 보장
+                    final_min_x = min(stage_min.stage_x, stage_max.stage_x)
+                    final_max_x = max(stage_min.stage_x, stage_max.stage_x)
+                    final_min_y = min(stage_min.stage_y, stage_max.stage_y)
+                    final_max_y = max(stage_min.stage_y, stage_max.stage_y)
+                    
+                    # Get selection info
+                    color_code = selection_data.get('color', '#FF0000')
+                    color_name = self._rgb_to_color_name(color_code)
+                    well = selection_data.get('well_position', 'A01')
+                    # Use actual selection label instead of Cell_XXX
+                    selection_label = selection_data.get('label', 'Selection')
+                    note = f"{selection_label}_{i:03d}"
+                    
+                    # Format: "X_min; Y_min; X_max; Y_max; color; well; note"
+                    point_line = f'P_{i} = "{final_min_x:.4f}; {final_min_y:.4f}; {final_max_x:.4f}; {final_max_y:.4f}; {color_name}; {well}; {note}"'
+                    lines.append(point_line)
+                    point_count += 1
+                    self.log_info(f"Added point {i}: cell_index={cell_index}, stage_coords=({final_min_x:.4f},{final_min_y:.4f})-({final_max_x:.4f},{final_max_y:.4f})")
+                    
+                except Exception as e:
+                    self.log_error(f"Failed to convert coordinates for cell {cell_index}: {e}")
+                    # Skip this cell if coordinate conversion fails
+                    continue
+            else:
+                self.log_error(f"Cell index {cell_index} out of bounds (max: {len(self.bounding_boxes)})")
+        
+        self.log_info(f"Generated {point_count} points for protocol")
+        
+        return '\n'.join(lines)
+
+    def _convert_to_square_bbox(self, min_x: int, min_y: int, max_x: int, max_y: int) -> Tuple[int, int, int, int]:
+        """
+        Convert rectangular bounding box to square, preserving center.
+        
+        Args:
+            min_x, min_y, max_x, max_y: Original bounding box coordinates
+            
+        Returns:
+            Tuple of (sq_min_x, sq_min_y, sq_max_x, sq_max_y) for square bbox
+        """
+        # Calculate current dimensions
+        width = max_x - min_x
+        height = max_y - min_y
+        
+        # Use the longer side as the square size
+        square_size = max(width, height)
+        
+        # Calculate center of original bbox
+        center_x = (min_x + max_x) // 2
+        center_y = (min_y + max_y) // 2
+        
+        # Calculate square bbox centered on the original center
+        half_size = square_size // 2
+        sq_min_x = center_x - half_size
+        sq_min_y = center_y - half_size
+        sq_max_x = sq_min_x + square_size
+        sq_max_y = sq_min_y + square_size
+        
+        # Get image dimensions for boundary checking
+        img_height, img_width = self.image_data.shape[:2]
+        
+        # Adjust if square goes outside image boundaries
+        if sq_min_x < 0:
+            # Shift right
+            offset = -sq_min_x
+            sq_min_x = 0
+            sq_max_x = square_size
+        elif sq_max_x > img_width:
+            # Shift left
+            offset = sq_max_x - img_width
+            sq_max_x = img_width
+            sq_min_x = img_width - square_size
+            
+        if sq_min_y < 0:
+            # Shift down
+            offset = -sq_min_y
+            sq_min_y = 0
+            sq_max_y = square_size
+        elif sq_max_y > img_height:
+            # Shift up
+            offset = sq_max_y - img_height
+            sq_max_y = img_height
+            sq_min_y = img_height - square_size
+        
+        # Final boundary check - ensure coordinates are within image
+        sq_min_x = max(0, min(sq_min_x, img_width - 1))
+        sq_min_y = max(0, min(sq_min_y, img_height - 1))
+        sq_max_x = max(0, min(sq_max_x, img_width - 1))
+        sq_max_y = max(0, min(sq_max_y, img_height - 1))
+        
+        return (sq_min_x, sq_min_y, sq_max_x, sq_max_y)
     
+    def _rgb_to_color_name(self, rgb_color: str) -> str:
+        """
+        Convert RGB color code to readable color name.
+        
+        Args:
+            rgb_color: Color string like '#FF0000' or 'ff0000'
+            
+        Returns:
+            Color name like 'red', 'blue', etc.
+        """
+        # Remove # if present and convert to uppercase
+        color_code = rgb_color.replace('#', '').upper()
+        
+        # Color mapping from RGB codes to names
+        color_map = {
+            'FF0000': 'red',
+            '00FF00': 'green', 
+            '0000FF': 'blue',
+            'FFFF00': 'yellow',
+            'FF00FF': 'magenta',
+            '00FFFF': 'cyan',
+            'C0C0C0': 'lightgray',
+            '800000': 'darkred',
+            '008000': 'darkgreen',
+            '000080': 'darkblue',
+            '808000': 'darkyellow',
+            '800080': 'darkmagenta',
+            '008080': 'darkcyan',
+            '808080': 'darkgray',
+            'FFFFFF': 'white',
+            '000000': 'black'
+            
+        }
+        
+        # Return mapped color name or default to original if not found
+        return color_map.get(color_code, color_code.lower())
+
     def closeEvent(self, event):
         """Handle dialog close event."""
         event.accept() 
