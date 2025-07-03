@@ -8,6 +8,7 @@ from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
+from PySide6.QtWidgets import QApplication
 
 try:
     from PySide6.QtWidgets import (
@@ -45,142 +46,6 @@ from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
 
 
-class ImageExportWorker(QObject, LoggerMixin):
-    """Worker thread for exporting individual cell images."""
-    
-    # Signals
-    progress_updated = Signal(int, str)  # percentage, status
-    export_finished = Signal(bool, str)  # success, message
-    
-    def __init__(self, image_data: np.ndarray, selection_data: Dict[str, Any], 
-                 bounding_boxes: List[Tuple[int, int, int, int]], output_dir: str):
-        super().__init__()
-        self.image_data = image_data
-        self.selection_data = selection_data
-        self.bounding_boxes = bounding_boxes
-        self.output_dir = Path(output_dir)
-        self.should_cancel = False
-    
-    def cancel(self):
-        """Cancel the export operation."""
-        self.should_cancel = True
-    
-    def export_selection_images(self):
-        """Export individual cell images and marked overlay image."""
-        try:
-            if self.should_cancel:
-                return
-                
-            self.progress_updated.emit(0, "Preparing export...")
-            
-            # Get selection info
-            label = self.selection_data.get('label', 'Selection')
-            cell_indices = self.selection_data.get('cell_indices', [])
-            color = self.selection_data.get('color', '#FF0000')
-            
-            if not cell_indices:
-                self.export_finished.emit(False, "No cells in selection")
-                return
-            
-            # Create output directory if it doesn't exist
-            self.output_dir.mkdir(parents=True, exist_ok=True)
-            
-            total_steps = len(cell_indices) + 1  # +1 for overlay image
-            
-            # Export individual cell images
-            for i, cell_index in enumerate(cell_indices):
-                if self.should_cancel:
-                    return
-                    
-                progress = int((i / total_steps) * 100)
-                self.progress_updated.emit(progress, f"Exporting cell {i+1}/{len(cell_indices)}")
-                
-                # Get bounding box for this cell
-                if cell_index < len(self.bounding_boxes):
-                    bbox = self.bounding_boxes[cell_index]
-                    min_x, min_y, max_x, max_y = bbox
-                    
-                    # Crop cell region from image
-                    cell_image = self.image_data[min_y:max_y, min_x:max_x]
-                    
-                    # Convert to PIL Image and save
-                    if cell_image.size > 0:  # Ensure valid crop
-                        # Convert numpy to PIL
-                        if len(cell_image.shape) == 3:
-                            # RGB image
-                            pil_image = Image.fromarray(cell_image.astype(np.uint8))
-                        else:
-                            # Grayscale image
-                            pil_image = Image.fromarray(cell_image.astype(np.uint8), mode='L')
-                        
-                        # Save with sequential numbering
-                        filename = f"{label}_{i+1:03d}.jpg"
-                        filepath = self.output_dir / filename
-                        pil_image.save(filepath, 'JPEG', quality=95)
-                        
-                        self.log_info(f"Exported cell image: {filename}")
-            
-            if self.should_cancel:
-                return
-            
-            # Create and save overlay image
-            self.progress_updated.emit(90, "Creating overlay image...")
-            overlay_success = self._create_overlay_image(label, cell_indices, color)
-            
-            if overlay_success:
-                self.progress_updated.emit(100, "Export completed")
-                message = f"Exported {len(cell_indices)} cell images and overlay to {self.output_dir}"
-                self.export_finished.emit(True, message)
-            else:
-                self.export_finished.emit(False, "Failed to create overlay image")
-                
-        except Exception as e:
-            self.log_error(f"Export failed: {e}")
-            self.export_finished.emit(False, f"Export failed: {e}")
-    
-    def _create_overlay_image(self, label: str, cell_indices: List[int], color: str) -> bool:
-        """Create overlay image with marked selection areas."""
-        try:
-            # Convert original image to PIL
-            if len(self.image_data.shape) == 3:
-                # RGB image
-                overlay_image = Image.fromarray(self.image_data.astype(np.uint8))
-            else:
-                # Grayscale - convert to RGB for colored overlays
-                gray_array = self.image_data.astype(np.uint8)
-                rgb_array = np.stack([gray_array, gray_array, gray_array], axis=2)
-                overlay_image = Image.fromarray(rgb_array)
-            
-            # Create drawing context
-            draw = ImageDraw.Draw(overlay_image)
-            
-            # Parse color (remove # if present)
-            color_hex = color.replace('#', '')
-            color_rgb = tuple(int(color_hex[i:i+2], 16) for i in (0, 2, 4))
-            
-            # Draw bounding boxes for selected cells
-            for cell_index in cell_indices:
-                if cell_index < len(self.bounding_boxes):
-                    bbox = self.bounding_boxes[cell_index]
-                    min_x, min_y, max_x, max_y = bbox
-                    
-                    # Draw rectangle outline
-                    draw.rectangle([min_x, min_y, max_x, max_y], 
-                                 outline=color_rgb, width=3)
-            
-            # Save overlay image
-            overlay_filename = f"{label}.jpg"
-            overlay_filepath = self.output_dir / overlay_filename
-            overlay_image.save(overlay_filepath, 'JPEG', quality=95)
-            
-            self.log_info(f"Created overlay image: {overlay_filename}")
-            return True
-            
-        except Exception as e:
-            self.log_error(f"Failed to create overlay image: {e}")
-            return False
-
-
 class ImageExportDialog(QDialog, LoggerMixin):
     """
     Dialog for exporting individual cell images from selections.
@@ -195,12 +60,6 @@ class ImageExportDialog(QDialog, LoggerMixin):
         self.selections_data = selections_data
         self.image_data = image_data
         self.bounding_boxes = bounding_boxes
-        self.export_workers: Dict[str, ImageExportWorker] = {}
-        self.export_threads: Dict[str, QThread] = {}
-        
-        self.setWindowTitle("Export Selection Images")
-        self.setModal(True)
-        self.resize(600, 400)
         
         self.setup_ui()
         self.populate_table()
@@ -268,7 +127,13 @@ class ImageExportDialog(QDialog, LoggerMixin):
         """Populate the table with selection data."""
         self.table.setRowCount(len(self.selections_data))
         
+        # Set row height for consistent button sizing
+        row_height = 32
+        
         for row, (selection_id, data) in enumerate(self.selections_data.items()):
+            # Set row height
+            self.table.setRowHeight(row, row_height)
+            
             # Number
             number_item = QTableWidgetItem(str(row + 1))
             number_item.setTextAlignment(Qt.AlignCenter)
@@ -297,16 +162,19 @@ class ImageExportDialog(QDialog, LoggerMixin):
             count_item.setTextAlignment(Qt.AlignCenter)
             self.table.setItem(row, 4, count_item)
             
-            # Export button
+            # Export button - matched to row height
             export_button = QPushButton("Export")
+            export_button.setMaximumHeight(row_height - 4)  # Slightly smaller than row
+            export_button.setMinimumHeight(row_height - 4)
             export_button.setStyleSheet("""
                 QPushButton {
                     background-color: #007bff;
                     color: white;
                     border: none;
-                    padding: 6px 12px;
+                    padding: 4px 8px;
                     border-radius: 4px;
                     font-weight: 500;
+                    font-size: 12px;
                 }
                 QPushButton:hover {
                     background-color: #0056b3;
@@ -330,80 +198,168 @@ class ImageExportDialog(QDialog, LoggerMixin):
         if selection_id not in self.selections_data:
             QMessageBox.warning(self, "Error", "Selection not found")
             return
-        
+
         selection_data = self.selections_data[selection_id]
         cell_indices = selection_data.get('cell_indices', [])
-        
+
         if not cell_indices:
             QMessageBox.information(self, "No Cells", "This selection contains no cells to export")
             return
-        
+
         # Let user choose output directory
         output_dir = QFileDialog.getExistingDirectory(
             self, 
             f"Select Export Directory for {selection_data.get('label', 'Selection')}", 
             str(Path.home())
         )
-        
+
         if not output_dir:
             return  # User cancelled
-        
-        # Show progress
+
+        # Show progress and disable buttons
         self.progress_frame.setVisible(True)
         self.progress_label.setText(f"Exporting {selection_data.get('label', 'Selection')}")
         self.progress_bar.setValue(0)
         self.progress_status.setText("Starting export...")
-        
-        # Disable all export buttons during export
         self._set_export_buttons_enabled(False)
         
-        # Create worker and thread
-        worker = ImageExportWorker(self.image_data, selection_data, self.bounding_boxes, output_dir)
-        thread = QThread()
-        
-        # Store references
-        self.export_workers[selection_id] = worker
-        self.export_threads[selection_id] = thread
-        
-        # Connect signals
-        worker.moveToThread(thread)
-        thread.started.connect(worker.export_selection_images)
-        worker.progress_updated.connect(self._on_export_progress)
-        worker.export_finished.connect(lambda success, msg, sid=selection_id: self._on_export_finished(success, msg, sid))
-        
-        # Ensure thread cleanup when worker finishes
-        worker.export_finished.connect(thread.quit)
-        thread.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
-        
-        # Start export
-        thread.start()
-        
-        self.log_info(f"Started export for selection {selection_id}")
-    
-    def _on_export_progress(self, percentage: int, status: str):
-        """Handle export progress updates."""
-        self.progress_bar.setValue(percentage)
-        self.progress_status.setText(status)
-    
-    def _on_export_finished(self, success: bool, message: str, selection_id: str):
-        """Handle export completion."""
-        # Note: Don't clean up immediately here - let the automatic cleanup handle it
-        # This prevents race conditions and threading issues
-        
-        # Hide progress
-        self.progress_frame.setVisible(False)
-        
-        # Re-enable export buttons
-        self._set_export_buttons_enabled(True)
-        
-        # Show result
-        if success:
-            QMessageBox.information(self, "Export Complete", message)
-            self.log_info(f"Export completed successfully: {message}")
-        else:
-            QMessageBox.critical(self, "Export Failed", message)
-            self.log_error(f"Export failed: {message}")
+        # Process events to update UI
+        QApplication.processEvents()
+
+        try:
+            # Perform export synchronously
+            success, message = self._export_selection_sync(selection_data, output_dir)
+            
+            # Hide progress and re-enable buttons
+            self.progress_frame.setVisible(False)
+            self._set_export_buttons_enabled(True)
+            
+            # Show result
+            if success:
+                QMessageBox.information(self, "Export Complete", message)
+                self.log_info(f"Export completed successfully: {message}")
+            else:
+                QMessageBox.critical(self, "Export Failed", message)
+                self.log_error(f"Export failed: {message}")
+                
+        except Exception as e:
+            # Hide progress and re-enable buttons
+            self.progress_frame.setVisible(False)
+            self._set_export_buttons_enabled(True)
+            
+            error_msg = f"Export failed: {e}"
+            QMessageBox.critical(self, "Export Failed", error_msg)
+            self.log_error(error_msg)
+
+    def _export_selection_sync(self, selection_data: Dict[str, Any], output_dir: str) -> Tuple[bool, str]:
+        """Synchronously export selection images."""
+        try:
+            output_path = Path(output_dir)
+            output_path.mkdir(parents=True, exist_ok=True)
+            
+            label = selection_data.get('label', 'Selection')
+            cell_indices = selection_data.get('cell_indices', [])
+            color = selection_data.get('color', '#FF0000')
+            
+            total_steps = len(cell_indices) + 1  # +1 for overlay image
+            
+            # Export individual cell images
+            for i, cell_index in enumerate(cell_indices):
+                progress = int((i / total_steps) * 90)  # Reserve 10% for overlay
+                self.progress_bar.setValue(progress)
+                self.progress_status.setText(f"Exporting cell {i+1}/{len(cell_indices)}")
+                QApplication.processEvents()  # Update UI
+                
+                # Get bounding box for this cell
+                if cell_index < len(self.bounding_boxes):
+                    bbox = self.bounding_boxes[cell_index]
+                    min_x, min_y, max_x, max_y = bbox
+                    
+                    # Convert rectangle to square while preserving center
+                    square_bbox = self._convert_to_square_bbox(min_x, min_y, max_x, max_y)
+                    sq_min_x, sq_min_y, sq_max_x, sq_max_y = square_bbox
+                    
+                    # Crop cell region from image using square bbox
+                    cell_image = self.image_data[sq_min_y:sq_max_y, sq_min_x:sq_max_x]
+                    
+                    # Convert to PIL Image and save
+                    if cell_image.size > 0:  # Ensure valid crop
+                        # Convert numpy to PIL
+                        if len(cell_image.shape) == 3:
+                            # RGB image
+                            pil_image = Image.fromarray(cell_image.astype(np.uint8))
+                        else:
+                            # Grayscale image
+                            pil_image = Image.fromarray(cell_image.astype(np.uint8), mode='L')
+                        
+                        # Save with sequential numbering
+                        filename = f"{label}_{i+1:03d}.jpg"
+                        filepath = output_path / filename
+                        pil_image.save(filepath, 'JPEG', quality=95)
+                        
+                        self.log_info(f"Exported cell image: {filename}")
+            
+            # Create and save overlay image
+            self.progress_bar.setValue(90)
+            self.progress_status.setText("Creating overlay image...")
+            QApplication.processEvents()
+            
+            overlay_success = self._create_overlay_image_sync(label, cell_indices, color, output_path)
+            
+            self.progress_bar.setValue(100)
+            self.progress_status.setText("Export completed")
+            QApplication.processEvents()
+            
+            if overlay_success:
+                message = f"Exported {len(cell_indices)} cell images and overlay to {output_path}"
+                return True, message
+            else:
+                return False, "Failed to create overlay image"
+                
+        except Exception as e:
+            return False, f"Export failed: {e}"
+
+    def _create_overlay_image_sync(self, label: str, cell_indices: List[int], color: str, output_path: Path) -> bool:
+        """Create overlay image with marked selection areas synchronously."""
+        try:
+            # Convert original image to PIL
+            if len(self.image_data.shape) == 3:
+                # RGB image
+                overlay_image = Image.fromarray(self.image_data.astype(np.uint8))
+            else:
+                # Grayscale - convert to RGB for colored overlays
+                gray_array = self.image_data.astype(np.uint8)
+                rgb_array = np.stack([gray_array, gray_array, gray_array], axis=2)
+                overlay_image = Image.fromarray(rgb_array)
+            
+            # Create drawing context
+            draw = ImageDraw.Draw(overlay_image)
+            
+            # Parse color (remove # if present)
+            color_hex = color.replace('#', '')
+            color_rgb = tuple(int(color_hex[i:i+2], 16) for i in (0, 2, 4))
+            
+            # Draw bounding boxes for selected cells
+            for cell_index in cell_indices:
+                if cell_index < len(self.bounding_boxes):
+                    bbox = self.bounding_boxes[cell_index]
+                    min_x, min_y, max_x, max_y = bbox
+                    
+                    # Draw rectangle outline
+                    draw.rectangle([min_x, min_y, max_x, max_y], 
+                                 outline=color_rgb, width=3)
+            
+            # Save overlay image
+            overlay_filename = f"{label}.jpg"
+            overlay_filepath = output_path / overlay_filename
+            overlay_image.save(overlay_filepath, 'JPEG', quality=95)
+            
+            self.log_info(f"Created overlay image: {overlay_filename}")
+            return True
+            
+        except Exception as e:
+            self.log_error(f"Failed to create overlay image: {e}")
+            return False
     
     def _set_export_buttons_enabled(self, enabled: bool):
         """Enable or disable all export buttons."""
@@ -414,18 +370,67 @@ class ImageExportDialog(QDialog, LoggerMixin):
     
     def closeEvent(self, event):
         """Handle dialog close event."""
-        # Cancel any running exports
-        for worker in self.export_workers.values():
-            worker.cancel()
-        
-        # Wait for threads to finish properly
-        for thread in self.export_threads.values():
-            if thread.isRunning():
-                thread.quit()
-                # Don't wait too long to avoid blocking the UI
-                thread.wait(1000)  # Wait up to 1 second only
-        
-        # Let Qt handle the cleanup automatically through deleteLater
-        # This is safer and prevents the "QThread: Destroyed while thread is still running" warning
-        
+        # No threads to cleanup anymore - just close
         event.accept()
+
+    def _convert_to_square_bbox(self, min_x: int, min_y: int, max_x: int, max_y: int) -> Tuple[int, int, int, int]:
+        """
+        Convert rectangular bounding box to square, preserving center.
+        
+        Args:
+            min_x, min_y, max_x, max_y: Original bounding box coordinates
+            
+        Returns:
+            Tuple of (sq_min_x, sq_min_y, sq_max_x, sq_max_y) for square bbox
+        """
+        # Calculate current dimensions
+        width = max_x - min_x
+        height = max_y - min_y
+        
+        # Use the longer side as the square size
+        square_size = max(width, height)
+        
+        # Calculate center of original bbox
+        center_x = (min_x + max_x) // 2
+        center_y = (min_y + max_y) // 2
+        
+        # Calculate square bbox centered on the original center
+        half_size = square_size // 2
+        sq_min_x = center_x - half_size
+        sq_min_y = center_y - half_size
+        sq_max_x = sq_min_x + square_size
+        sq_max_y = sq_min_y + square_size
+        
+        # Get image dimensions for boundary checking
+        img_height, img_width = self.image_data.shape[:2]
+        
+        # Adjust if square goes outside image boundaries
+        if sq_min_x < 0:
+            # Shift right
+            offset = -sq_min_x
+            sq_min_x = 0
+            sq_max_x = square_size
+        elif sq_max_x > img_width:
+            # Shift left
+            offset = sq_max_x - img_width
+            sq_max_x = img_width
+            sq_min_x = img_width - square_size
+            
+        if sq_min_y < 0:
+            # Shift down
+            offset = -sq_min_y
+            sq_min_y = 0
+            sq_max_y = square_size
+        elif sq_max_y > img_height:
+            # Shift up
+            offset = sq_max_y - img_height
+            sq_max_y = img_height
+            sq_min_y = img_height - square_size
+        
+        # Final boundary check - ensure coordinates are within image
+        sq_min_x = max(0, sq_min_x)
+        sq_min_y = max(0, sq_min_y)
+        sq_max_x = min(img_width, sq_max_x)
+        sq_max_y = min(img_height, sq_max_y)
+        
+        return (sq_min_x, sq_min_y, sq_max_x, sq_max_y)

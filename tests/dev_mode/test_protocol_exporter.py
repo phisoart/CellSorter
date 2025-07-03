@@ -7,6 +7,9 @@ Validates INI format generation and crop calculation algorithms.
 Test sequence: DEV → DUAL → GUI (mandatory)
 """
 
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
 import pytest
 import tempfile
 import configparser
