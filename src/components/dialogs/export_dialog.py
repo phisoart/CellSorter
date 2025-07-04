@@ -156,7 +156,7 @@ class ExportWorker(QThread):
                     # Note: In a real implementation, you would get actual bounding box coordinates
                     # For now, we'll draw placeholder rectangles
                     x, y = (cell_index * 50) % original_image.width, (cell_index * 30) % original_image.height
-                    draw.rectangle([x, y, x+20, y+20], fill=overlay_color, outline=color + (255,), width=2)
+                    draw.rectangle([x, y, x+20, y+20], fill=overlay_color, outline=color + (255,), width=1)
             
             # Composite original image with overlay
             if original_image.mode != 'RGBA':

@@ -12,7 +12,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 from PIL import Image, ImageFile
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QProgressBar
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QProgressBar, QSizePolicy
 from PySide6.QtCore import Qt, Signal, QThread, QObject, QTimer, QPoint, QSize, QRect
 from PySide6.QtGui import QPixmap, QImage, QPainter, QPen, QBrush
 
@@ -268,6 +268,11 @@ class ImageHandler(QWidget, LoggerMixin):
         # Image display label
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignCenter)
+        
+        # Set size policy to prevent size changes, but don't enable scaled contents
+        # as it conflicts with manual zoom functionality
+        self.image_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        
         self.image_label.setStyleSheet("""
             QLabel {
                 border: 1px solid #dee2e6;
@@ -417,27 +422,22 @@ class ImageHandler(QWidget, LoggerMixin):
             if self.show_overlays and (self.overlays or self.cell_overlays):
                 pixmap = self._draw_overlays(pixmap)
             
-            # Get widget size, ensuring minimum dimensions of 1x1
-            label_width = max(1, self.image_label.width())
-            label_height = max(1, self.image_label.height())
+            # Create a consistent canvas size to prevent widget size changes
+            # Use current widget size or fallback to reasonable minimum
+            label_width = max(400, self.image_label.width()) if self.image_label.width() > 0 else 400
+            label_height = max(300, self.image_label.height()) if self.image_label.height() > 0 else 300
             
-            # Create a new pixmap for the view that includes pan offset
-            view_pixmap = QPixmap(label_width, label_height)
-            
-            # Ensure pixmap is valid before proceeding
-            if view_pixmap.isNull():
-                self.log_error("Failed to create valid pixmap - invalid dimensions")
-                return
-                
-            view_pixmap.fill(Qt.gray)  # Fill with background color
+            # Always create a canvas with consistent size
+            canvas_pixmap = QPixmap(label_width, label_height)
+            canvas_pixmap.fill(Qt.gray)  # Fill with background color
             
             # Draw the image pixmap with pan offset
-            painter = QPainter(view_pixmap)
+            painter = QPainter(canvas_pixmap)
             painter.drawPixmap(self.pan_offset[0], self.pan_offset[1], pixmap)
             painter.end()
             
-            # Update label
-            self.image_label.setPixmap(view_pixmap)
+            # Set the canvas pixmap to maintain consistent size
+            self.image_label.setPixmap(canvas_pixmap)
             
         except Exception as e:
             self.log_error(f"Failed to update display: {e}")

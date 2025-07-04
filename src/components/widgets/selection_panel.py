@@ -11,7 +11,13 @@ from PySide6.QtWidgets import (
     QComboBox, QLineEdit, QMessageBox, QSizePolicy, QColorDialog, QAbstractItemView
 )
 from PySide6.QtCore import Signal, Qt
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QColor, QCursor
+
+# Import Qt constants explicitly to avoid linter issues
+from PySide6.QtWidgets import QSizePolicy
+from PySide6.QtCore import Qt as QtCore
+from PySide6.QtWidgets import QFrame as QtFrame, QHeaderView as QtHeaderView, QAbstractItemView as QtAbstractItemView
+from PySide6.QtWidgets import QMessageBox as QtMessageBox
 
 from components.widgets.well_plate import WellPlateWidget
 from components.base.base_button import BaseButton
@@ -490,12 +496,11 @@ class SelectionPanel(QWidget, LoggerMixin):
         # Don't refresh the entire table to avoid recreating checkboxes during interaction
         self.refresh_well_plate()
 
-        # Force update of external visualizations by emitting both signals
+        # For enabled/disabled state changes, emit both signals
+        # selection_toggled for immediate UI updates (image highlights)
+        # selection_updated for selection_manager synchronization  
         self.selection_toggled.emit(selection_id, enabled)
-        
-        # Also emit the update signal with the current full selection data
-        selection_data = self.selections_data[selection_id].copy()
-        self.selection_updated.emit(selection_id, selection_data)
+        self.selection_updated.emit(selection_id, {'enabled': enabled})
 
         self.log_info(f"✅ Selection {selection_id} {'enabled' if enabled else 'disabled'} - signals emitted for external updates")
     

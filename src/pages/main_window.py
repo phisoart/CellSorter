@@ -11,6 +11,7 @@ from typing import Optional, Dict, Any, Union, List
 from pathlib import Path
 from datetime import datetime
 import platform
+import os
 
 import numpy as np
 
@@ -22,10 +23,11 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal, QTimer, QSettings, QRect, QSize
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QImage
 
-# Headless mode imports
-from headless.mode_manager import is_dev_mode, is_dual_mode, get_mode_info
-from headless.main_window_adapter import MainWindowAdapter
-from headless.ui_compatibility import UI
+# Conditional import for headless mode
+if os.environ.get('GUI_ONLY_MODE') != '1':
+    from headless.mode_manager import is_dev_mode, is_dual_mode, get_mode_info
+    from headless.main_window_adapter import MainWindowAdapter
+    from headless.ui_compatibility import UI
 
 from config.settings import (
     APP_NAME, APP_VERSION, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
@@ -1065,45 +1067,80 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def _on_panel_selection_toggled(self, selection_id: str, enabled: bool) -> None:
         """Handle selection toggled from panel."""
-        # Update selection status in manager
+        # Only handle image highlights - selection_manager update will come via _on_selection_updated
         selection = self.selection_manager.get_selection(selection_id)
         if selection:
-            from models.selection_manager import SelectionStatus
-            new_status = SelectionStatus.ACTIVE if enabled else SelectionStatus.DISABLED
-            self.selection_manager.update_selection(selection_id, status=new_status)
+            # Update image highlights based on enabled state
+            if enabled:
+                # Show highlights for enabled selection
+                self.image_handler.highlight_cells(
+                    selection_id, 
+                    selection.cell_indices, 
+                    selection.color,
+                    alpha=0.4
+                )
+            else:
+                # Hide highlights for disabled selection
+                self.image_handler.remove_cell_highlights(selection_id)
             
             # Update scatter plot highlighting
             self._update_scatter_plot_highlights()
             
             status_text = "enabled" if enabled else "disabled"
             self.update_status(f"Selection {selection.label} {status_text}")
+            
+            self.log_info(f"Selection {selection_id} toggled to {status_text} - image highlights updated")
     
     def _on_panel_selection_updated(self, selection_id: str, data: dict) -> None:
         """Handle selection updated from panel."""
+        from models.selection_manager import SelectionStatus
+        
         # Update selection in manager only, don't trigger panel update to avoid circular reference
         selection = self.selection_manager.get_selection(selection_id)
         if selection:
-            # Update selection data directly without triggering signals that would update the panel again
-            old_status = selection.status
-            self.selection_manager.update_selection(selection_id, **data)
+            # Convert enabled boolean to SelectionStatus if needed
+            update_data = data.copy()
+            if 'enabled' in update_data:
+                enabled = update_data.pop('enabled')
+                update_data['status'] = SelectionStatus.ACTIVE if enabled else SelectionStatus.DISABLED
             
-            # Only update external components (image and scatter plot)
-            updated_selection = self.selection_manager.get_selection(selection_id)
-            if updated_selection:
-                # Update image highlights
-                self.image_handler.highlight_cells(
-                    selection_id, 
-                    updated_selection.cell_indices, 
-                    updated_selection.color,
-                    alpha=0.4
-                )
+            # Update selection data directly without triggering signals that would update the panel again
+            self.selection_manager.update_selection(selection_id, **update_data)
+            
+            # Only update external components (image and scatter plot) if this is an enabled/disabled change
+            if 'enabled' in data:
+                is_enabled = data['enabled']
+                
+                if is_enabled:
+                    # Show highlights for enabled selection
+                    self.image_handler.highlight_cells(
+                        selection_id, 
+                        selection.cell_indices, 
+                        selection.color,
+                        alpha=0.4
+                    )
+                else:
+                    # Hide highlights for disabled selection
+                    self.image_handler.remove_cell_highlights(selection_id)
                 
                 # Update scatter plot highlighting
                 self._update_scatter_plot_highlights()
                 
-                self.update_window_title()
+                self.log_info(f"Updated selection {selection_id} from panel: enabled={is_enabled} - image highlights {'shown' if is_enabled else 'hidden'}")
+            else:
+                # For other updates (color, label, well), refresh highlights with current status
+                updated_selection = self.selection_manager.get_selection(selection_id)
+                if updated_selection and updated_selection.status == SelectionStatus.ACTIVE:
+                    self.image_handler.highlight_cells(
+                        selection_id, 
+                        updated_selection.cell_indices, 
+                        updated_selection.color,
+                        alpha=0.4
+                    )
                 
                 self.log_info(f"Updated selection {selection_id} from panel: {data}")
+            
+            self.update_window_title()
     
     def _on_calibration_point_clicked(self, image_x: int, image_y: int, point_label: str) -> None:
         """Handle calibration point clicked on image."""

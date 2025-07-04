@@ -76,12 +76,10 @@ tmp/
 *.mkv
 *.webm
 *.gif
-*.png
 *.jpg
 *.jpeg
 *.tiff
 *.bmp
-*.ico
 
 # Database files
 *.db
