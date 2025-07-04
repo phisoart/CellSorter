@@ -334,9 +334,9 @@ class ImageExportDialog(QDialog, LoggerMixin):
                     bbox = self.bounding_boxes[cell_index]
                     min_x, min_y, max_x, max_y = bbox
                     
-                    # Draw rectangle outline
+                    # Draw rectangle outline with thinner border
                     draw.rectangle([min_x, min_y, max_x, max_y], 
-                                 outline=color_rgb, width=3)
+                                 outline=color_rgb, width=1)
             
             # Save overlay image
             overlay_filename = f"{label}.jpg"
