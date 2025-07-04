@@ -18,4 +18,5 @@ PyYAML>=6.0
 
 # Additional build dependencies
 setuptools>=68.0.0
-wheel>=0.41.0 
+wheel>=0.41.0
+pywin32-ctypes 

@@ -11,6 +11,7 @@ from typing import Optional, Dict, Any, Union, List
 from pathlib import Path
 from datetime import datetime
 import platform
+import os
 
 import numpy as np
 
@@ -22,10 +23,11 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal, QTimer, QSettings, QRect, QSize
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QImage
 
-# Headless mode imports
-from headless.mode_manager import is_dev_mode, is_dual_mode, get_mode_info
-from headless.main_window_adapter import MainWindowAdapter
-from headless.ui_compatibility import UI
+# Conditional import for headless mode
+if os.environ.get('GUI_ONLY_MODE') != '1':
+    from headless.mode_manager import is_dev_mode, is_dual_mode, get_mode_info
+    from headless.main_window_adapter import MainWindowAdapter
+    from headless.ui_compatibility import UI
 
 from config.settings import (
     APP_NAME, APP_VERSION, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT,
