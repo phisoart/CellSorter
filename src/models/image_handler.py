@@ -1088,6 +1088,47 @@ class ImageHandler(QWidget, LoggerMixin):
         self.cell_overlays.clear()
         self.bounding_boxes.clear()
 
+    def get_image_region(self, x: int, y: int, width: int, height: int) -> Optional[np.ndarray]:
+        """
+        Extract a region from the main image.
+
+        Args:
+            x: Center X coordinate of the region.
+            y: Center Y coordinate of the region.
+            width: Width of the region to extract.
+            height: Height of the region to extract.
+
+        Returns:
+            A NumPy array representing the image region, or None if failed.
+        """
+        if self.image_data is None:
+            self.log_warning("Attempted to get image region, but no image is loaded.")
+            return None
+
+        img_h, img_w = self.image_data.shape[:2]
+        
+        # Calculate top-left corner
+        x1 = max(0, x - width // 2)
+        y1 = max(0, y - height // 2)
+        
+        # Calculate bottom-right corner
+        x2 = min(img_w, x1 + width)
+        y2 = min(img_h, y1 + height)
+        
+        # Ensure dimensions are correct after clamping
+        x1 = x2 - width
+        y1 = y2 - height
+        
+        x1 = max(0, x1)
+        y1 = max(0, y1)
+
+        try:
+            region = self.image_data[y1:y2, x1:x2]
+            return region.copy()
+        except Exception as e:
+            self.log_error(f"Failed to extract image region at ({x},{y}) with size ({width},{height}): {e}")
+            return None
+
     def center_on(self, image_x: float, image_y: float) -> None:
         """Center the view on a specific image coordinate."""
         if self.image_data is None:

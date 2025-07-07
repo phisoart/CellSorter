@@ -10,10 +10,11 @@ from dataclasses import dataclass
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
     QFrame, QScrollArea, QListWidget, QListWidgetItem,
-    QCheckBox, QSplitter, QTextEdit, QGroupBox
+    QCheckBox, QSplitter, QTextEdit, QGroupBox, QSizePolicy
 )
 from PySide6.QtCore import Signal, Qt, QSize
-from PySide6.QtGui import QPixmap, QPainter, QColor, QFont
+from PySide6.QtGui import QPixmap, QPainter, QColor, QFont, QMouseEvent, QImage
+import numpy as np
 
 from components.base.base_button import BaseButton, ButtonVariant, ButtonSize
 from config.design_tokens import Colors, Spacing, BorderRadius, Typography
@@ -197,10 +198,11 @@ class RowCellManager(QWidget, LoggerMixin):
     cell_navigation_requested = Signal(int)  # cell_index for main image navigation
     row_management_closed = Signal()
     
-    def __init__(self, parent: Optional[QWidget] = None):
+    def __init__(self, image_handler=None, csv_parser=None, parent: Optional[QWidget] = None):
         super().__init__(parent)
         
-        # Current state
+        self.image_handler = image_handler
+        self.csv_parser = csv_parser
         self.current_row_data: Optional[CellRowData] = None
         self.cell_items: List[CellRowItem] = []
         self.selected_cell_index: Optional[int] = None
@@ -559,24 +561,70 @@ class RowCellManager(QWidget, LoggerMixin):
         
         self.log_info(f"Cell {cell_index} selected")
     
+    def _numpy_to_qpixmap(self, array: np.ndarray) -> QPixmap:
+        """Convert a NumPy array to a QPixmap."""
+        if array is None:
+            return QPixmap()
+        
+        # Ensure array is contiguous
+        if not array.flags['C_CONTIGUOUS']:
+            array = np.ascontiguousarray(array)
+            
+        h, w = array.shape[:2]
+        
+        # Determine QImage format
+        if len(array.shape) == 2: # Grayscale
+            format = QImage.Format_Grayscale8
+            bytes_per_line = w
+        elif len(array.shape) == 3: # Color
+            if array.shape[2] == 4: # RGBA
+                format = QImage.Format_RGBA8888
+                bytes_per_line = 4 * w
+            else: # RGB
+                format = QImage.Format_RGB888
+                bytes_per_line = 3 * w
+        else:
+            self.log_error("Unsupported image format for pixmap conversion.")
+            return QPixmap()
+
+        q_image = QImage(array.data, w, h, bytes_per_line, format)
+        
+        # For RGB images, swap red and blue channels
+        if format == QImage.Format_RGB888:
+            q_image = q_image.rgbSwapped()
+        
+        return QPixmap.fromImage(q_image)
+
     def load_cell_image(self, cell_index: int) -> None:
         """Load and display the image for the selected cell."""
+        if not self.image_handler or not self.csv_parser:
+            self.cell_image_label.setText("Image display not available.")
+            return
+
         try:
-            # TODO: This is a placeholder - need to implement actual cell image extraction
-            # For now, show a placeholder indicating the cell
-            placeholder_text = f"Cell {cell_index}\nImage Preview\n(To be implemented)"
-            self.cell_image_label.setText(placeholder_text)
-            self.cell_image_label.setStyleSheet("""
-                QLabel {
-                    border: 2px solid var(--primary);
-                    border-radius: 8px;
-                    background-color: var(--primary)/10;
-                    color: var(--foreground);
-                    font-size: 14px;
-                    font-weight: 500;
-                    padding: 20px;
-                }
-            """)
+            cell_data = self.csv_parser.get_data_by_index(cell_index)
+            if cell_data is None:
+                raise ValueError(f"No data found for cell index {cell_index}")
+
+            x_col, y_col = self.csv_parser.get_xy_columns()
+            if not x_col or not y_col:
+                raise ValueError("X/Y columns not identified")
+
+            img_x, img_y = int(cell_data[x_col]), int(cell_data[y_col])
+            
+            # Extract a 64x64 region around the cell center
+            region = self.image_handler.get_image_region(img_x, img_y, 64, 64)
+            
+            if region is None:
+                raise ValueError("Failed to extract image region")
+
+            pixmap = self._numpy_to_qpixmap(region)
+            
+            self.cell_image_label.setPixmap(pixmap.scaled(
+                self.cell_image_label.size(),
+                Qt.KeepAspectRatio,
+                Qt.SmoothTransformation
+            ))
             
             self.log_info(f"Cell image loaded for cell {cell_index}")
             

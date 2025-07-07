@@ -382,7 +382,7 @@
             "description": "Replace the right cell details panel with a cell image display and implement event handlers to show the corresponding cell image when a specific cell is clicked.",
             "dependencies": [],
             "details": "1. Modify the ROI dialog component to replace the right details panel with an image display area.\n2. Create a new component or extend existing one to handle cell image display with proper scaling.\n3. Implement event handlers in the cell list component to capture cell selection events.\n4. Add a method to load and display the selected cell image when a cell is clicked.\n5. Ensure proper image scaling and quality by implementing responsive image container.\n6. Add loading state indicators for when images are being fetched.\n7. Implement error handling for cases where images cannot be loaded.\n<info added on 2025-07-07T08:04:07.237Z>\nProgress Update:\n\nCompleted:\n- Reduced cell row height from 80px to 40px (50% reduction)\n- Removed image buttons and implemented more compact layout\n- Replaced Cell Details panel with Cell Image panel\n- Implemented cell click functionality to display image preview area with placeholder\n\nRemaining Tasks:\n- Implement actual cell image extraction and display functionality\n- Optimize image loading and caching\n- Improve error handling\n</info added on 2025-07-07T08:04:07.237Z>",
-            "status": "in-progress",
+            "status": "done",
             "testStrategy": "Test image loading with various cell selections. Verify correct image is displayed for each cell. Test edge cases like missing images or slow network connections."
           },
           {
@@ -399,7 +399,7 @@
             "title": "Implement Navigate to Cell Functionality",
             "description": "Implement the 'Navigate to Cell' button functionality to center the main view on the selected cell using the existing navigation service.",
             "dependencies": [],
-            "details": "1. Connect the 'Navigate to Cell' button to an event handler in the ROI dialog component.\n2. Import and utilize the existing navigation service from Task 5.\n3. Extract the coordinates or position information of the selected cell.\n4. Implement a method to pass these coordinates to the navigation service.\n5. Add smooth transition animation by configuring animation parameters in the navigation call.\n6. Ensure the main view properly centers on the selected cell when the button is clicked.\n7. Add visual feedback (like button state change) to indicate when navigation is in progress.\n8. Implement proper error handling if navigation fails.",
+            "details": "1. Connect the 'Navigate to Cell' button to an event handler in the ROI dialog component.\n2. Import and utilize the existing navigation service from Task 5.\n3. Extract the coordinates or position information of the selected cell.\n4. Implement a method to pass these coordinates to the navigation service.\n5. Add smooth transition animation by configuring animation parameters in the navigation call.\n6. Ensure the main view properly centers on the selected cell when the button is clicked.\n7. Add visual feedback (like button state change) to indicate when navigation is in progress.\n8. Implement proper error handling if navigation fails.\n<info added on 2025-07-07T08:11:30.130Z>\n## Navigation Feature Implementation Status\n\n### Completed:\n- main_window.navigate_to_cell method already implemented\n- image_handler.center_on method available for centering the main view\n- Improved signal connections in the ROI dialog\n- Implemented signal transmission from cell_manager to dialog\n\n### Issues to Address:\n- CSVParser.get_data_by_index method added but needs verification of actual operation\n- Need to verify proper coordinate transformation when calling coordinate_transformer.transform method\n- Analysis needed to understand the cause of AttributeError appearing in logs\n\n### Next Steps:\n- Test navigation functionality in GUI mode\n- Debug and fix errors if they occur during testing\n</info added on 2025-07-07T08:11:30.130Z>",
             "status": "in-progress",
             "testStrategy": "Test navigation with cells in different positions. Verify the main view correctly centers on the selected cell. Test edge cases like cells at the boundaries of the viewable area."
           },
@@ -411,13 +411,22 @@
             "details": "1. Implement the missing SelectionManager.update_selection_indices method to update the current selection based on checked cells.\n2. Implement the missing CSVParser.get_data_by_index method to retrieve data for specific indices.\n3. Modify the 'Confirm' button click handler to collect indices of only checked cells.\n4. Update the selection confirmation logic to pass these indices to the SelectionManager.\n5. Implement the mechanism to update graphs based on the new selection.\n6. Add code to update image ROIs to highlight only the confirmed selection.\n7. Ensure the dialog closes properly after confirmation and all UI elements reflect the new selection.\n8. Add appropriate error handling and user feedback for the confirmation process.",
             "status": "done",
             "testStrategy": "Test selection confirmation with various combinations of checked/unchecked cells. Verify graphs and ROIs update correctly. Test edge cases like confirming with no cells selected or all cells selected."
+          },
+          {
+            "id": 5,
+            "title": "Fix ROI Dialog Close Button Not Working",
+            "description": "다이얼로그의 닫기(X) 버튼이나 Cancel 버튼을 눌렀을 때 정상적으로 창이 닫히지 않는 문제를 해결합니다. Qt의 closeEvent, reject, QDialog의 시그널-슬롯 매커니즘을 검토하고 수정합니다.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 9
           }
         ]
       }
     ],
     "metadata": {
       "created": "2025-07-07T04:53:03.413Z",
-      "updated": "2025-07-07T08:05:29.630Z",
+      "updated": "2025-07-07T08:26:53.472Z",
       "description": "Tasks for master context"
     }
   }

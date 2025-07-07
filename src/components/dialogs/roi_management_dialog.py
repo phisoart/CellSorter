@@ -40,10 +40,16 @@ class ROIManagementDialog(QDialog, LoggerMixin):
     cell_navigation_requested = Signal(int)  # cell_index for main image navigation
     changes_confirmed = Signal(str, dict)  # selection_id, changes_data
     
-    def __init__(self, parent: Optional[QWidget] = None, row_data: Optional[CellRowData] = None):
+    def __init__(self, 
+                 parent: Optional[QWidget] = None, 
+                 row_data: Optional[CellRowData] = None,
+                 image_handler=None, 
+                 csv_parser=None):
         super().__init__(parent)
         
         self.row_data = row_data
+        self.image_handler = image_handler
+        self.csv_parser = csv_parser
         self.initial_states: Dict[int, bool] = {}
         self.changes_made = False
         
@@ -133,7 +139,7 @@ class ROIManagementDialog(QDialog, LoggerMixin):
     def setup_content_area(self, parent_layout: QVBoxLayout) -> None:
         """Set up the main content area with the RowCellManager component."""
         # Create and embed the RowCellManager
-        self.cell_manager = RowCellManager()
+        self.cell_manager = RowCellManager(image_handler=self.image_handler, csv_parser=self.csv_parser)
         
         # Style the cell manager to fit dialog context
         self.cell_manager.setStyleSheet("""
@@ -323,9 +329,10 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         return states
     
     def closeEvent(self, event) -> None:
-        """Handle dialog close event."""
-        self.log_info("ROI Management Dialog closed")
-        super().closeEvent(event)
+        """Handle dialog close event by treating it as a cancellation."""
+        self.log_info("ROI Management Dialog closed via closeEvent")
+        self.reject()
+        event.accept()
     
     def keyPressEvent(self, event) -> None:
         """Handle keyboard events."""

@@ -1267,7 +1267,9 @@ class MainWindow(QMainWindow, LoggerMixin):
             # Create the ROI management dialog
             self.roi_management_dialog = ROIManagementDialog(
                 parent=self,
-                row_data=row_data
+                row_data=row_data,
+                image_handler=self.image_handler,
+                csv_parser=self.csv_parser
             )
 
             # Connect the navigation signal
@@ -1286,6 +1288,8 @@ class MainWindow(QMainWindow, LoggerMixin):
 
     def navigate_to_cell(self, cell_index: int) -> None:
         """Navigate the main image view to a specific cell."""
+        self.logger.info(f"🚀 Navigation requested for cell index: {cell_index}")
+        
         if self.csv_parser.data is None or self.csv_parser.data.empty:
             self.log_warning("Navigation requested but no CSV data is loaded.")
             return
@@ -1295,6 +1299,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         if cell_data is None:
             self.log_error(f"Could not find data for cell index: {cell_index}")
             return
+        self.logger.info(f"Found data for cell {cell_index}: {cell_data.to_dict()}")
 
         x_col, y_col = self.csv_parser.get_xy_columns()
         if not x_col or not y_col:
@@ -1302,9 +1307,11 @@ class MainWindow(QMainWindow, LoggerMixin):
             return
             
         data_x, data_y = cell_data[x_col], cell_data[y_col]
+        self.logger.info(f"CSV coordinates for cell {cell_index}: ({data_x}, {data_y})")
 
         # Transform to image coordinates
         image_x, image_y = self.coordinate_transformer.transform(data_x, data_y)
+        self.logger.info(f"Transformed to image coordinates: ({image_x}, {image_y})")
 
         # Center image view on the cell
         self.image_handler.center_on(image_x, image_y)
@@ -1334,10 +1341,43 @@ class MainWindow(QMainWindow, LoggerMixin):
         """Update the selection manager with changes from the ROI dialog."""
         if changes.get('changes_made'):
             included_indices = changes.get('included_cells', [])
-            self.selection_manager.update_selection_indices(selection_id, included_indices)
-            self.log_info(f"Updated selection {selection_id} with {len(included_indices)} cells after ROI management.")
+            success = self.selection_manager.update_selection_indices(selection_id, included_indices)
+            
+            if success:
+                # Update UI elements to reflect changes
+                self._update_after_selection_change(selection_id)
+                self.log_info(f"Updated selection {selection_id} with {len(included_indices)} cells after ROI management.")
+                self.update_status(f"Selection updated: {len(included_indices)} cells included")
+            else:
+                self.log_error(f"Failed to update selection {selection_id}")
+                self.update_status("Failed to update selection")
         else:
             self.log_info(f"ROI management for {selection_id} closed with no changes.")
+    
+    def _update_after_selection_change(self, selection_id: str) -> None:
+        """Update all UI elements after a selection has been modified."""
+        # Update scatter plot highlights
+        self._update_scatter_plot_highlights()
+        
+        # Update image overlays
+        selection = self.selection_manager.get_selection(selection_id)
+        if selection:
+            # Remove old highlights and add new ones
+            self.image_handler.remove_cell_highlights(selection_id)
+            self.image_handler.highlight_cells(
+                selection_id, 
+                selection.cell_indices, 
+                selection.color
+            )
+        
+        # Trigger selection panel update through existing mechanism
+        self._on_selection_updated(selection_id)
+        
+        # Update cell count in status bar
+        if selection:
+            self.update_cell_count(len(selection.cell_indices))
+        
+        self.log_info(f"UI updated after selection {selection_id} change")
     
 
     
