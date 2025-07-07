@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, 
     QFrame, QWidget
 )
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Signal, Qt, QTimer
 from PySide6.QtGui import QKeyEvent
 
 from components.widgets.row_cell_manager import RowCellManager, CellRowData
@@ -158,9 +158,6 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(16)
         
-        # Add stretch to right-align buttons
-        button_layout.addStretch()
-        
         # Cancel button
         self.cancel_button = QPushButton("Cancel")
         self.cancel_button.setFixedSize(120, 40)
@@ -208,8 +205,13 @@ class ROIManagementDialog(QDialog, LoggerMixin):
             }
         """)
         
+        self.confirm_button.setEnabled(False)  # Initially disabled
+        
         button_layout.addWidget(self.cancel_button)
         button_layout.addWidget(self.confirm_button)
+        
+        # Add stretch to right-align buttons
+        button_layout.addStretch()
         
         parent_layout.addWidget(button_container)
     
@@ -244,25 +246,27 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         # Load data into cell manager
         self.cell_manager.load_row_data(row_data)
         
+        # After loading, manually check for initial state consistency
+        self.changes_made = self._has_changes_from_initial()
+        self.confirm_button.setEnabled(self.changes_made)
+        
         self.log_info(f"Loaded row data: {row_data.selection_label} with {len(row_data.cell_indices)} cells")
     
     def on_cell_inclusion_changed(self, selection_id: str, cell_index: int, is_included: bool) -> None:
         """Handle cell inclusion state changes."""
-        # Track that changes have been made
-        if cell_index in self.initial_states:
-            if self.initial_states[cell_index] != is_included:
-                self.changes_made = True
-            elif self.initial_states[cell_index] == is_included:
-                # Check if all cells are back to initial state
-                self.changes_made = self._has_changes_from_initial()
-        
-        # Forward signal
+        # Forward the signal first
         self.cell_inclusion_changed.emit(selection_id, cell_index, is_included)
         
-        # Update confirm button state
-        self.confirm_button.setEnabled(True)  # Always allow confirmation
+        # Then, update the change state. Schedule with a single shot timer 
+        # to ensure the cell_manager's internal state has updated before we check it.
+        QTimer.singleShot(0, self._update_change_state)
         
         self.log_info(f"Cell {cell_index} inclusion changed: {is_included}")
+    
+    def _update_change_state(self):
+        """Update the changes_made flag and button state."""
+        self.changes_made = self._has_changes_from_initial()
+        self.confirm_button.setEnabled(self.changes_made)
     
     def on_cell_navigation_requested(self, cell_index: int) -> None:
         """Handle cell navigation requests."""
@@ -271,14 +275,16 @@ class ROIManagementDialog(QDialog, LoggerMixin):
     
     def _has_changes_from_initial(self) -> bool:
         """Check if any cells have been changed from their initial state."""
-        if not hasattr(self.cell_manager, 'cell_items'):
+        if not hasattr(self.cell_manager, 'cell_items') or not self.cell_manager.cell_items:
             return False
-        
-        for cell_index, initial_state in self.initial_states.items():
-            current_state = cell_index in self.cell_manager.get_included_cells()
-            if initial_state != current_state:
-                return True
-        return False
+
+        for cell_item in self.cell_manager.cell_items:
+            cell_index = cell_item.cell_index
+            if cell_index in self.initial_states:
+                initial_state = self.initial_states[cell_index]
+                if initial_state != cell_item.is_included:
+                    return True # A change was found
+        return False # No changes found
     
     def on_cancel_clicked(self) -> None:
         """Handle cancel button click."""
@@ -288,34 +294,30 @@ class ROIManagementDialog(QDialog, LoggerMixin):
     def on_confirm_clicked(self) -> None:
         """Handle confirm button click."""
         if self.row_data:
-            # Gather current cell states
-            included_cells = self.cell_manager.get_included_cells()
-            excluded_cells = self.cell_manager.get_excluded_cells()
+            changes_data = self.get_cell_states()
+            # Ensure the final 'changes_made' status is accurate
+            changes_data['changes_made'] = self._has_changes_from_initial()
             
-            changes_data = {
-                'included_cells': included_cells,
-                'excluded_cells': excluded_cells,
-                'changes_made': self.changes_made
-            }
-            
-            # Emit changes signal
             self.changes_confirmed.emit(self.row_data.selection_id, changes_data)
-            
-            self.log_info(f"ROI Management confirmed: {len(included_cells)} included, {len(excluded_cells)} excluded")
-        
-        self.accept()
+            self.log_info(f"ROI Management confirmed: {len(changes_data['included_cells'])} included, {len(changes_data['excluded_cells'])} excluded")
+            self.accept()
+        else:
+            self.log_warning("Confirm clicked with no row data.")
+            self.reject()
     
     def get_cell_states(self) -> Dict[str, Any]:
-        """Get current cell states for external access."""
+        """Get the current states of cells in the dialog."""
         if not self.row_data:
             return {}
         
-        return {
-            'selection_id': self.row_data.selection_id,
-            'included_cells': self.cell_manager.get_included_cells(),
-            'excluded_cells': self.cell_manager.get_excluded_cells(),
-            'changes_made': self.changes_made
-        }
+        states = {}
+        if self.row_data:
+            states['selection_id'] = self.row_data.selection_id
+            states['included_cells'] = self.cell_manager.get_included_cells()
+            states['excluded_cells'] = self.cell_manager.get_excluded_cells()
+        
+        states['changes_made'] = self.changes_made
+        return states
     
     def closeEvent(self, event) -> None:
         """Handle dialog close event."""

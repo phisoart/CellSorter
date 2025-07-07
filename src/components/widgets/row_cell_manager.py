@@ -524,15 +524,24 @@ class RowCellManager(QWidget, LoggerMixin):
         self.excluded_cells_label.setText(f"Excluded: {excluded_count}")
     
     def on_cell_toggled(self, cell_index: int, is_included: bool) -> None:
-        """Handle cell inclusion/exclusion toggle."""
+        """Handle cell item inclusion toggle."""
+        # Find the corresponding cell item and explicitly update its state.
+        # This ensures the manager and the item are always in sync.
+        for item in self.cell_items:
+            if item.cell_index == cell_index:
+                item.is_included = is_included
+                item.update_appearance() # Visually reflect the change
+                break
+        
+        self.update_statistics()
+        
+        # Emit signal for parent widget
         if self.current_row_data:
             self.cell_inclusion_changed.emit(
                 self.current_row_data.selection_id, 
                 cell_index, 
                 is_included
             )
-        
-        self.update_statistics()
         
         status = "included" if is_included else "excluded"
         self.log_info(f"Cell {cell_index} {status}")

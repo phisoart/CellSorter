@@ -11,12 +11,15 @@ import os
 from unittest.mock import Mock, patch, MagicMock
 from typing import List, Dict, Any
 import logging
+import unittest
+from PySide6.QtTest import QTest
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 
 from PySide6.QtWidgets import QApplication, QWidget
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, QObject, Signal
+from PySide6.QtGui import QKeyEvent
 
 from components.dialogs.roi_management_dialog import ROIManagementDialog, show_roi_management_dialog
 from components.widgets.row_cell_manager import CellRowData
@@ -142,7 +145,7 @@ class TestROIManagementDialogDEV(UITestCase):
         self.assertIsNotNone(cell_manager)
         
         # Verify cell manager has data
-        self.assertEqual(row_data, cell_manager.row_data)
+        self.assertEqual(row_data, cell_manager.current_row_data)
         
         # Test cell manager methods
         included_cells = cell_manager.get_included_cells()
@@ -174,8 +177,9 @@ class TestROIManagementDialogDEV(UITestCase):
             lambda cell_idx: navigation_signals.append(cell_idx)
         )
         
-        # Simulate cell inclusion change
-        dialog.on_cell_inclusion_changed("test_selection_1", 2, False)
+        # Simulate cell inclusion change by calling the manager's handler
+        dialog.cell_manager.on_cell_toggled(2, False)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # Verify signal emission
         self.assertEqual(1, len(inclusion_signals))
@@ -185,10 +189,13 @@ class TestROIManagementDialogDEV(UITestCase):
         self.assertFalse(signal_data[2])
         
         # Verify changes tracking
+        QTest.qWait(5)  # Allow time for QTimer single shot
         self.assertTrue(dialog.changes_made)
         
-        # Simulate navigation request
-        dialog.on_cell_navigation_requested(3)
+        # Simulate navigation request by calling the manager's handler
+        dialog.cell_manager.on_cell_selected(3)
+        dialog.cell_manager.on_navigate_clicked()
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # Verify navigation signal
         self.assertEqual(1, len(navigation_signals))
@@ -227,7 +234,8 @@ class TestROIManagementDialogDEV(UITestCase):
         )
         
         # Make some changes
-        dialog2.on_cell_inclusion_changed("test_selection_1", 1, False)
+        dialog2.cell_manager.on_cell_toggled(1, False)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # Simulate confirm button click
         dialog2.on_confirm_clicked()
@@ -257,7 +265,6 @@ class TestROIManagementDialogDEV(UITestCase):
         enter_handled = False
         
         # Test Escape key handling
-        from PySide6.QtGui import QKeyEvent
         escape_event = QKeyEvent(QKeyEvent.KeyPress, Qt.Key_Escape, Qt.NoModifier)
         
         # Simulate escape key
@@ -307,18 +314,20 @@ class TestROIManagementDialogDEV(UITestCase):
         self.assertFalse(dialog._has_changes_from_initial())
         
         # Make a change
-        dialog.on_cell_inclusion_changed("test_selection_1", 2, False)
+        dialog.cell_manager.on_cell_toggled(2, False)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         self.assertTrue(dialog.changes_made)
         
         # Revert the change
-        dialog.on_cell_inclusion_changed("test_selection_1", 2, True)
-        # Note: In real implementation, this might not automatically reset changes_made
-        # as it tracks that ANY change was made, not current state vs initial
+        dialog.cell_manager.on_cell_toggled(2, True)
+        QTest.qWait(5)  # Allow time for QTimer single shot
+        self.assertFalse(dialog.changes_made)
         
         # Make multiple changes
-        dialog.on_cell_inclusion_changed("test_selection_1", 0, False)
-        dialog.on_cell_inclusion_changed("test_selection_1", 1, False)
-        dialog.on_cell_inclusion_changed("test_selection_1", 3, False)
+        dialog.cell_manager.on_cell_toggled(0, False)
+        dialog.cell_manager.on_cell_toggled(1, False)
+        dialog.cell_manager.on_cell_toggled(3, False)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         self.assertTrue(dialog.changes_made)
         
@@ -341,8 +350,9 @@ class TestROIManagementDialogDEV(UITestCase):
         self.assertFalse(initial_states['changes_made'])
         
         # Make changes
-        dialog.on_cell_inclusion_changed("test_selection_1", 1, False)
-        dialog.on_cell_inclusion_changed("test_selection_1", 3, False)
+        dialog.cell_manager.on_cell_toggled(1, False)
+        dialog.cell_manager.on_cell_toggled(3, False)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # Get updated states
         updated_states = dialog.get_cell_states()
@@ -427,15 +437,19 @@ class TestROIManagementDialogDEV(UITestCase):
         self.assertFalse(dialog.changes_made)
         
         # 2. Exclude some cells
-        dialog.on_cell_inclusion_changed("test_selection_1", 2, False)
-        dialog.on_cell_inclusion_changed("test_selection_1", 5, False)
-        dialog.on_cell_inclusion_changed("test_selection_1", 8, False)
+        dialog.cell_manager.on_cell_toggled(2, False)
+        dialog.cell_manager.on_cell_toggled(5, False)
+        dialog.cell_manager.on_cell_toggled(8, False)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # 3. Navigate to a cell
-        dialog.on_cell_navigation_requested(7)
+        dialog.cell_manager.on_cell_selected(7)
+        dialog.cell_manager.on_navigate_clicked()
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # 4. Include one cell back
-        dialog.on_cell_inclusion_changed("test_selection_1", 5, True)
+        dialog.cell_manager.on_cell_toggled(5, True)
+        QTest.qWait(5)  # Allow time for QTimer single shot
         
         # 5. Confirm changes
         dialog.on_confirm_clicked()
