@@ -362,11 +362,62 @@
         ],
         "status": "done",
         "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Improve ROI Dialog UI/UX and Fix Functionality Issues",
+        "description": "Enhance the ROI dialog interface by modifying cell display layout, reducing row height, implementing navigation functionality, and fixing selection confirmation to properly update graphs and images.",
+        "details": "This task involves several UI/UX improvements and functionality fixes for the ROI dialog:\n\n1. Cell Display Modification:\n   - Replace the right cell details panel with cell image display\n   - Implement event handlers to show the corresponding cell image when a specific cell is clicked\n   - Ensure proper image scaling and quality for the display\n\n2. Layout Improvements:\n   - Reduce the height of selected cell rows on the left panel to approximately 50% of current height\n   - Remove the image button from the cell rows as it's no longer needed\n   - Adjust CSS/styling to maintain proper alignment and visual hierarchy\n   - Ensure responsive behavior is maintained after these changes\n\n3. Navigation Implementation:\n   - Implement the \"Navigate to Cell\" button functionality\n   - Connect this button to the main image view navigation system\n   - Utilize the existing navigation service from Task 5 to center the main view on the selected cell\n   - Add smooth transition animation for better user experience\n\n4. Confirmation Button Fix:\n   - Complete the \"Confirm\" button functionality to properly update selections\n   - Implement missing SelectionManager.update_selection_indices method\n   - Implement missing CSVParser.get_data_by_index method\n   - Ensure only checked cells are reflected in the selection\n   - Update graphs and image ROIs based on the confirmed selection\n\nTechnical Considerations:\n- Follow existing code patterns and architecture\n- Maintain type safety throughout implementation\n- Ensure proper error handling for all new functionality\n- Update relevant documentation to reflect the changes\n- Consider performance implications, especially for image loading and display",
+        "testStrategy": "1. UI Layout Testing:\n   - Verify cell details panel is replaced with cell image display\n   - Confirm row height is reduced to approximately 50% of original height\n   - Check that image buttons are removed from cell rows\n   - Test responsive behavior across different screen sizes\n\n2. Functionality Testing:\n   - Test cell selection by clicking on different cells\n   - Verify correct cell image appears when a cell is clicked\n   - Test \"Navigate to Cell\" button and confirm it properly centers the main view\n   - Verify smooth animation during navigation\n   - Test \"Confirm\" button with various selection scenarios (none, single, multiple cells)\n\n3. Integration Testing:\n   - Verify SelectionManager.update_selection_indices method works correctly\n   - Test CSVParser.get_data_by_index method with various indices\n   - Confirm that graphs and image ROIs update correctly after selection confirmation\n   - Test the entire workflow from cell selection to confirmation\n\n4. Edge Case Testing:\n   - Test with empty selections\n   - Test with very large number of selections\n   - Test with boundary cells (first/last in dataset)\n   - Verify proper error handling for missing or corrupt data\n\n5. Performance Testing:\n   - Measure and verify acceptable performance for image loading and display\n   - Test with large datasets to ensure UI remains responsive",
+        "status": "pending",
+        "dependencies": [
+          4,
+          5
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Cell Image Display Panel",
+            "description": "Replace the right cell details panel with a cell image display and implement event handlers to show the corresponding cell image when a specific cell is clicked.",
+            "dependencies": [],
+            "details": "1. Modify the ROI dialog component to replace the right details panel with an image display area.\n2. Create a new component or extend existing one to handle cell image display with proper scaling.\n3. Implement event handlers in the cell list component to capture cell selection events.\n4. Add a method to load and display the selected cell image when a cell is clicked.\n5. Ensure proper image scaling and quality by implementing responsive image container.\n6. Add loading state indicators for when images are being fetched.\n7. Implement error handling for cases where images cannot be loaded.",
+            "status": "in-progress",
+            "testStrategy": "Test image loading with various cell selections. Verify correct image is displayed for each cell. Test edge cases like missing images or slow network connections."
+          },
+          {
+            "id": 2,
+            "title": "Optimize Cell Row Layout and Styling",
+            "description": "Reduce the height of selected cell rows, remove unnecessary image buttons, and adjust styling to maintain proper alignment and visual hierarchy.",
+            "dependencies": [],
+            "details": "1. Modify the CSS for cell row components to reduce height to approximately 50% of current size.\n2. Remove the image button from each cell row in the component template.\n3. Adjust padding, margins, and alignment of cell row elements to maintain proper visual hierarchy.\n4. Update flex layouts or grid systems used in the cell list to accommodate the new row height.\n5. Ensure text elements remain readable and properly aligned after size reduction.\n6. Test and adjust responsive behavior to ensure layout works across different screen sizes.\n7. Update any related styling variables or constants in the theme configuration.",
+            "status": "pending",
+            "testStrategy": "Test UI appearance across different screen sizes. Verify that all cell information remains visible and properly aligned after height reduction. Ensure no visual regressions in the cell list component."
+          },
+          {
+            "id": 3,
+            "title": "Implement Navigate to Cell Functionality",
+            "description": "Implement the 'Navigate to Cell' button functionality to center the main view on the selected cell using the existing navigation service.",
+            "dependencies": [],
+            "details": "1. Connect the 'Navigate to Cell' button to an event handler in the ROI dialog component.\n2. Import and utilize the existing navigation service from Task 5.\n3. Extract the coordinates or position information of the selected cell.\n4. Implement a method to pass these coordinates to the navigation service.\n5. Add smooth transition animation by configuring animation parameters in the navigation call.\n6. Ensure the main view properly centers on the selected cell when the button is clicked.\n7. Add visual feedback (like button state change) to indicate when navigation is in progress.\n8. Implement proper error handling if navigation fails.",
+            "status": "pending",
+            "testStrategy": "Test navigation with cells in different positions. Verify the main view correctly centers on the selected cell. Test edge cases like cells at the boundaries of the viewable area."
+          },
+          {
+            "id": 4,
+            "title": "Fix Selection Confirmation and Update Mechanism",
+            "description": "Complete the 'Confirm' button functionality to properly update selections, implement missing methods, and ensure graphs and image ROIs reflect the confirmed selection.",
+            "dependencies": [],
+            "details": "1. Implement the missing SelectionManager.update_selection_indices method to update the current selection based on checked cells.\n2. Implement the missing CSVParser.get_data_by_index method to retrieve data for specific indices.\n3. Modify the 'Confirm' button click handler to collect indices of only checked cells.\n4. Update the selection confirmation logic to pass these indices to the SelectionManager.\n5. Implement the mechanism to update graphs based on the new selection.\n6. Add code to update image ROIs to highlight only the confirmed selection.\n7. Ensure the dialog closes properly after confirmation and all UI elements reflect the new selection.\n8. Add appropriate error handling and user feedback for the confirmation process.",
+            "status": "in-progress",
+            "testStrategy": "Test selection confirmation with various combinations of checked/unchecked cells. Verify graphs and ROIs update correctly. Test edge cases like confirming with no cells selected or all cells selected."
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-07-07T04:53:03.413Z",
-      "updated": "2025-07-07T07:12:31.468Z",
+      "updated": "2025-07-07T08:01:23.137Z",
       "description": "Tasks for master context"
     }
   }

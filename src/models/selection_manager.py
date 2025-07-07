@@ -318,6 +318,33 @@ class SelectionManager(QObject, LoggerMixin):
         self.log_info(f"Updated selection '{selection.label}'")
         return True
     
+    def update_selection_indices(self, selection_id: str, new_indices: List[int]) -> bool:
+        """
+        Update the cell indices for a specific selection.
+        
+        Args:
+            selection_id: ID of selection to update
+            new_indices: New list of cell indices
+        
+        Returns:
+            True if updated successfully, False otherwise
+        """
+        if selection_id not in self.selections:
+            self.log_warning(f"Selection not found: {selection_id}")
+            return False
+        
+        selection = self.selections[selection_id]
+        old_count = selection.cell_count
+        
+        # Update the cell indices
+        selection.cell_indices = list(set(new_indices))  # Remove duplicates
+        
+        # Emit signal
+        self.selection_updated.emit(selection_id)
+        
+        self.log_info(f"Updated selection '{selection.label}' indices: {old_count} -> {selection.cell_count} cells")
+        return True
+    
     def get_selection(self, selection_id: str) -> Optional[CellSelection]:
         """
         Get a selection by ID.

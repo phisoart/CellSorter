@@ -56,13 +56,13 @@ class CellRowItem(QFrame, LoggerMixin):
     
     def setup_ui(self) -> None:
         """Set up the cell item UI."""
-        self.setFixedHeight(80)
+        self.setFixedHeight(40)  # Reduced from 80 to 40 (50% reduction)
         self.setFrameStyle(QFrame.StyledPanel)
         self.setCursor(Qt.PointingHandCursor)
         
         layout = QHBoxLayout(self)
-        layout.setSpacing(12)
-        layout.setContentsMargins(12, 8, 12, 8)
+        layout.setSpacing(8)  # Reduced spacing
+        layout.setContentsMargins(8, 4, 8, 4)  # Reduced margins
         
         # Inclusion checkbox
         self.inclusion_checkbox = QCheckBox()
@@ -70,52 +70,33 @@ class CellRowItem(QFrame, LoggerMixin):
         self.inclusion_checkbox.stateChanged.connect(self.on_inclusion_changed)
         self.inclusion_checkbox.setToolTip("Include/exclude this cell from selection")
         
-        # Cell info section
-        info_layout = QVBoxLayout()
-        info_layout.setSpacing(2)
-        
+        # Cell info section - single line layout
         # Cell index label
         self.index_label = QLabel(f"Cell {self.cell_index}")
         self.index_label.setStyleSheet("""
             QLabel {
                 font-weight: 600;
-                font-size: 13px;
+                font-size: 12px;
                 color: var(--foreground);
             }
         """)
         
-        # Cell metadata display
-        metadata_text = self._format_metadata()
+        # Cell metadata display (simplified)
+        metadata_text = self._format_metadata_compact()
         self.metadata_label = QLabel(metadata_text)
         self.metadata_label.setStyleSheet("""
             QLabel {
-                font-size: 11px;
-                color: var(--muted-foreground);
-                margin-top: 2px;
-            }
-        """)
-        
-        info_layout.addWidget(self.index_label)
-        info_layout.addWidget(self.metadata_label)
-        
-        # Preview thumbnail placeholder
-        self.thumbnail_label = QLabel("Image")
-        self.thumbnail_label.setFixedSize(60, 60)
-        self.thumbnail_label.setAlignment(Qt.AlignCenter)
-        self.thumbnail_label.setStyleSheet("""
-            QLabel {
-                background-color: var(--muted);
-                border: 1px solid var(--border);
-                border-radius: 4px;
-                color: var(--muted-foreground);
                 font-size: 10px;
+                color: var(--muted-foreground);
+                margin-left: 8px;
             }
         """)
         
         layout.addWidget(self.inclusion_checkbox)
-        layout.addLayout(info_layout)
+        layout.addWidget(self.index_label)
+        layout.addWidget(self.metadata_label)
         layout.addStretch()
-        layout.addWidget(self.thumbnail_label)
+        # Removed thumbnail_label (image button)
     
     def _format_metadata(self) -> str:
         """Format cell metadata for display."""
@@ -131,6 +112,19 @@ class CellRowItem(QFrame, LoggerMixin):
             parts.append(f"Perimeter: {self.cell_metadata['perimeter']:.1f}")
         
         return " | ".join(parts) if parts else "Cell properties available"
+    
+    def _format_metadata_compact(self) -> str:
+        """Format cell metadata for compact display."""
+        if not self.cell_metadata:
+            return ""
+        
+        # Show only the most important metric in compact form
+        if 'area' in self.cell_metadata:
+            return f"A:{self.cell_metadata['area']:.0f}"
+        elif 'intensity' in self.cell_metadata:
+            return f"I:{self.cell_metadata['intensity']:.0f}"
+        
+        return ""
     
     def set_thumbnail(self, pixmap: QPixmap) -> None:
         """Set the thumbnail image for the cell."""
@@ -356,9 +350,9 @@ class RowCellManager(QWidget, LoggerMixin):
         splitter.addWidget(list_frame)
     
     def setup_cell_details(self, splitter: QSplitter) -> None:
-        """Set up the cell details section."""
-        details_frame = QGroupBox("Cell Details")
-        details_frame.setStyleSheet("""
+        """Set up the cell image display section."""
+        image_frame = QGroupBox("Cell Image")
+        image_frame.setStyleSheet("""
             QGroupBox {
                 font-weight: 600;
                 border: 1px solid var(--border);
@@ -373,9 +367,9 @@ class RowCellManager(QWidget, LoggerMixin):
             }
         """)
         
-        details_layout = QVBoxLayout(details_frame)
-        details_layout.setSpacing(12)
-        details_layout.setContentsMargins(8, 16, 8, 8)
+        image_layout = QVBoxLayout(image_frame)
+        image_layout.setSpacing(12)
+        image_layout.setContentsMargins(8, 16, 8, 8)
         
         # Selected cell info
         self.selected_cell_label = QLabel("No cell selected")
@@ -387,24 +381,24 @@ class RowCellManager(QWidget, LoggerMixin):
                 padding: 8px;
                 background-color: var(--muted);
                 border-radius: 6px;
+                text-align: center;
             }
         """)
         
-        # Cell properties display
-        self.cell_properties = QTextEdit()
-        self.cell_properties.setReadOnly(True)
-        self.cell_properties.setMaximumHeight(150)
-        self.cell_properties.setPlainText("Select a cell to view its properties")
-        self.cell_properties.setStyleSheet("""
-            QTextEdit {
-                border: 1px solid var(--border);
-                border-radius: 6px;
-                padding: 8px;
-                background-color: var(--background);
+        # Cell image display
+        self.cell_image_label = QLabel("Click a cell to view its image")
+        self.cell_image_label.setMinimumSize(200, 200)
+        self.cell_image_label.setAlignment(Qt.AlignCenter)
+        self.cell_image_label.setStyleSheet("""
+            QLabel {
+                border: 2px dashed var(--border);
+                border-radius: 8px;
+                background-color: var(--muted);
+                color: var(--muted-foreground);
                 font-size: 12px;
-                font-family: monospace;
             }
         """)
+        self.cell_image_label.setScaledContents(True)
         
         # Navigation button
         self.navigate_button = BaseButton(
@@ -414,12 +408,12 @@ class RowCellManager(QWidget, LoggerMixin):
         )
         self.navigate_button.setEnabled(False)
         
-        details_layout.addWidget(self.selected_cell_label)
-        details_layout.addWidget(self.cell_properties)
-        details_layout.addWidget(self.navigate_button)
-        details_layout.addStretch()
+        image_layout.addWidget(self.selected_cell_label)
+        image_layout.addWidget(self.cell_image_label)
+        image_layout.addWidget(self.navigate_button)
+        image_layout.addStretch()
         
-        splitter.addWidget(details_frame)
+        splitter.addWidget(image_frame)
     
     def setup_action_buttons(self, parent_layout: QVBoxLayout) -> None:
         """Set up the action buttons."""
@@ -507,7 +501,8 @@ class RowCellManager(QWidget, LoggerMixin):
         self.cell_items.clear()
         self.selected_cell_index = None
         self.selected_cell_label.setText("No cell selected")
-        self.cell_properties.setPlainText("Select a cell to view its properties")
+        self.cell_image_label.setText("Click a cell to view its image")
+        self.cell_image_label.setPixmap(QPixmap())  # Clear image
         self.navigate_button.setEnabled(False)
     
     def update_statistics(self) -> None:
@@ -554,18 +549,49 @@ class RowCellManager(QWidget, LoggerMixin):
         
         self.selected_cell_index = cell_index
         
-        # Update details panel
+        # Update image panel
         self.selected_cell_label.setText(f"Cell {cell_index}")
         
-        # Find cell metadata
-        if self.current_row_data:
-            metadata = self.current_row_data.cell_metadata.get(cell_index, {})
-            properties_text = self._format_cell_properties(metadata)
-            self.cell_properties.setPlainText(properties_text)
+        # Load and display cell image
+        self.load_cell_image(cell_index)
         
         self.navigate_button.setEnabled(True)
         
         self.log_info(f"Cell {cell_index} selected")
+    
+    def load_cell_image(self, cell_index: int) -> None:
+        """Load and display the image for the selected cell."""
+        try:
+            # TODO: This is a placeholder - need to implement actual cell image extraction
+            # For now, show a placeholder indicating the cell
+            placeholder_text = f"Cell {cell_index}\nImage Preview\n(To be implemented)"
+            self.cell_image_label.setText(placeholder_text)
+            self.cell_image_label.setStyleSheet("""
+                QLabel {
+                    border: 2px solid var(--primary);
+                    border-radius: 8px;
+                    background-color: var(--primary)/10;
+                    color: var(--foreground);
+                    font-size: 14px;
+                    font-weight: 500;
+                    padding: 20px;
+                }
+            """)
+            
+            self.log_info(f"Cell image loaded for cell {cell_index}")
+            
+        except Exception as e:
+            self.log_error(f"Failed to load cell image for cell {cell_index}: {e}")
+            self.cell_image_label.setText("Failed to load cell image")
+            self.cell_image_label.setStyleSheet("""
+                QLabel {
+                    border: 2px dashed var(--border);
+                    border-radius: 8px;
+                    background-color: var(--muted);
+                    color: var(--muted-foreground);
+                    font-size: 12px;
+                }
+            """)
     
     def _format_cell_properties(self, metadata: Dict[str, Any]) -> str:
         """Format cell properties for display."""

@@ -446,6 +446,44 @@ class CSVParser(QObject, LoggerMixin):
         
         return self.data.sample(n=n_rows).copy()
     
+    def get_data_by_index(self, index: int) -> Optional[pd.Series]:
+        """
+        Get data for a specific row index.
+        
+        Args:
+            index: Row index to retrieve
+        
+        Returns:
+            Series with row data or None if not found
+        """
+        if self.data is None or self.data.empty:
+            return None
+        
+        if index < 0 or index >= len(self.data):
+            self.log_warning(f"Index {index} out of range [0, {len(self.data)})")
+            return None
+        
+        return self.data.iloc[index].copy()
+    
+    def get_xy_columns(self) -> Tuple[Optional[str], Optional[str]]:
+        """
+        Get the X and Y coordinate column names.
+        
+        Returns:
+            Tuple of (x_column, y_column) names or (None, None)
+        """
+        if self.data is None:
+            return None, None
+        
+        # Look for standard CellProfiler coordinate columns
+        x_candidates = [col for col in self.data.columns if 'Center_X' in col or 'Location_Center_X' in col]
+        y_candidates = [col for col in self.data.columns if 'Center_Y' in col or 'Location_Center_Y' in col]
+        
+        x_col = x_candidates[0] if x_candidates else None
+        y_col = y_candidates[0] if y_candidates else None
+        
+        return x_col, y_col
+    
     def export_filtered_data(self, filtered_data: pd.DataFrame, 
                            output_path: str, include_metadata: bool = True) -> bool:
         """
