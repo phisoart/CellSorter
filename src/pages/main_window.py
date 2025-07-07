@@ -1309,8 +1309,13 @@ class MainWindow(QMainWindow, LoggerMixin):
         data_x, data_y = cell_data[x_col], cell_data[y_col]
         self.logger.info(f"CSV coordinates for cell {cell_index}: ({data_x}, {data_y})")
 
-        # Transform to image coordinates
-        image_x, image_y = self.coordinate_transformer.transform(data_x, data_y)
+        # Transform to image coordinates using stage_to_pixel
+        transformed_coords = self.coordinate_transformer.stage_to_pixel(data_x, data_y)
+        if not transformed_coords:
+            self.log_error(f"Failed to transform stage coordinates for cell {cell_index}")
+            return
+            
+        image_x, image_y = transformed_coords
         self.logger.info(f"Transformed to image coordinates: ({image_x}, {image_y})")
 
         # Center image view on the cell

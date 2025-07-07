@@ -369,7 +369,7 @@
         "description": "Enhance the ROI dialog interface by modifying cell display layout, reducing row height, implementing navigation functionality, and fixing selection confirmation to properly update graphs and images.",
         "details": "This task involves several UI/UX improvements and functionality fixes for the ROI dialog:\n\n1. Cell Display Modification:\n   - Replace the right cell details panel with cell image display\n   - Implement event handlers to show the corresponding cell image when a specific cell is clicked\n   - Ensure proper image scaling and quality for the display\n\n2. Layout Improvements:\n   - Reduce the height of selected cell rows on the left panel to approximately 50% of current height\n   - Remove the image button from the cell rows as it's no longer needed\n   - Adjust CSS/styling to maintain proper alignment and visual hierarchy\n   - Ensure responsive behavior is maintained after these changes\n\n3. Navigation Implementation:\n   - Implement the \"Navigate to Cell\" button functionality\n   - Connect this button to the main image view navigation system\n   - Utilize the existing navigation service from Task 5 to center the main view on the selected cell\n   - Add smooth transition animation for better user experience\n\n4. Confirmation Button Fix:\n   - Complete the \"Confirm\" button functionality to properly update selections\n   - Implement missing SelectionManager.update_selection_indices method\n   - Implement missing CSVParser.get_data_by_index method\n   - Ensure only checked cells are reflected in the selection\n   - Update graphs and image ROIs based on the confirmed selection\n\nTechnical Considerations:\n- Follow existing code patterns and architecture\n- Maintain type safety throughout implementation\n- Ensure proper error handling for all new functionality\n- Update relevant documentation to reflect the changes\n- Consider performance implications, especially for image loading and display",
         "testStrategy": "1. UI Layout Testing:\n   - Verify cell details panel is replaced with cell image display\n   - Confirm row height is reduced to approximately 50% of original height\n   - Check that image buttons are removed from cell rows\n   - Test responsive behavior across different screen sizes\n\n2. Functionality Testing:\n   - Test cell selection by clicking on different cells\n   - Verify correct cell image appears when a cell is clicked\n   - Test \"Navigate to Cell\" button and confirm it properly centers the main view\n   - Verify smooth animation during navigation\n   - Test \"Confirm\" button with various selection scenarios (none, single, multiple cells)\n\n3. Integration Testing:\n   - Verify SelectionManager.update_selection_indices method works correctly\n   - Test CSVParser.get_data_by_index method with various indices\n   - Confirm that graphs and image ROIs update correctly after selection confirmation\n   - Test the entire workflow from cell selection to confirmation\n\n4. Edge Case Testing:\n   - Test with empty selections\n   - Test with very large number of selections\n   - Test with boundary cells (first/last in dataset)\n   - Verify proper error handling for missing or corrupt data\n\n5. Performance Testing:\n   - Measure and verify acceptable performance for image loading and display\n   - Test with large datasets to ensure UI remains responsive",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           4,
           5
@@ -391,7 +391,7 @@
             "description": "Reduce the height of selected cell rows, remove unnecessary image buttons, and adjust styling to maintain proper alignment and visual hierarchy.",
             "dependencies": [],
             "details": "1. Modify the CSS for cell row components to reduce height to approximately 50% of current size.\n2. Remove the image button from each cell row in the component template.\n3. Adjust padding, margins, and alignment of cell row elements to maintain proper visual hierarchy.\n4. Update flex layouts or grid systems used in the cell list to accommodate the new row height.\n5. Ensure text elements remain readable and properly aligned after size reduction.\n6. Test and adjust responsive behavior to ensure layout works across different screen sizes.\n7. Update any related styling variables or constants in the theme configuration.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test UI appearance across different screen sizes. Verify that all cell information remains visible and properly aligned after height reduction. Ensure no visual regressions in the cell list component."
           },
           {
@@ -400,7 +400,7 @@
             "description": "Implement the 'Navigate to Cell' button functionality to center the main view on the selected cell using the existing navigation service.",
             "dependencies": [],
             "details": "1. Connect the 'Navigate to Cell' button to an event handler in the ROI dialog component.\n2. Import and utilize the existing navigation service from Task 5.\n3. Extract the coordinates or position information of the selected cell.\n4. Implement a method to pass these coordinates to the navigation service.\n5. Add smooth transition animation by configuring animation parameters in the navigation call.\n6. Ensure the main view properly centers on the selected cell when the button is clicked.\n7. Add visual feedback (like button state change) to indicate when navigation is in progress.\n8. Implement proper error handling if navigation fails.\n<info added on 2025-07-07T08:11:30.130Z>\n## Navigation Feature Implementation Status\n\n### Completed:\n- main_window.navigate_to_cell method already implemented\n- image_handler.center_on method available for centering the main view\n- Improved signal connections in the ROI dialog\n- Implemented signal transmission from cell_manager to dialog\n\n### Issues to Address:\n- CSVParser.get_data_by_index method added but needs verification of actual operation\n- Need to verify proper coordinate transformation when calling coordinate_transformer.transform method\n- Analysis needed to understand the cause of AttributeError appearing in logs\n\n### Next Steps:\n- Test navigation functionality in GUI mode\n- Debug and fix errors if they occur during testing\n</info added on 2025-07-07T08:11:30.130Z>",
-            "status": "in-progress",
+            "status": "done",
             "testStrategy": "Test navigation with cells in different positions. Verify the main view correctly centers on the selected cell. Test edge cases like cells at the boundaries of the viewable area."
           },
           {
@@ -426,7 +426,7 @@
     ],
     "metadata": {
       "created": "2025-07-07T04:53:03.413Z",
-      "updated": "2025-07-07T08:26:53.472Z",
+      "updated": "2025-07-07T08:28:02.345Z",
       "description": "Tasks for master context"
     }
   }
