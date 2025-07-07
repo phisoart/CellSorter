@@ -1,0 +1,159 @@
+2025-07-07 14:03:08,171 - cellsorter - INFO - === DEV MODE: Cell Selection Preview Tests ===
+2025-07-07 14:03:08,179 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,180 - cellsorter - INFO - Setup test: test_cancellation_workflow_dev
+2025-07-07 14:03:08,180 - cellsorter - INFO - Testing cancellation workflow...
+2025-07-07 14:03:08,186 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 3 cells for preview
+2025-07-07 14:03:08,187 - cellsorter.components.widgets.cell_selection_preview - INFO - Selection cancelled
+2025-07-07 14:03:08,189 - cellsorter - INFO - ✅ Cancellation workflow verified
+2025-07-07 14:03:08,190 - cellsorter - INFO - Teardown test: test_cancellation_workflow_dev
+2025-07-07 14:03:08,195 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,197 - cellsorter - INFO - Setup test: test_cell_loading_dev
+2025-07-07 14:03:08,198 - cellsorter - INFO - Testing cell loading...
+2025-07-07 14:03:08,229 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:08,324 - cellsorter - INFO - ✅ Cell loading verified
+2025-07-07 14:03:08,332 - cellsorter - INFO - Teardown test: test_cell_loading_dev
+2025-07-07 14:03:08,365 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,368 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:03:08,368 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:03:08,372 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:03:08,377 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,386 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:03:08,390 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:03:08,398 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 6 cells for preview
+2025-07-07 14:03:08,412 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 0 selected for navigation
+2025-07-07 14:03:08,530 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:03:08,535 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,536 - cellsorter - INFO - Setup test: test_confirmation_workflow_dev
+2025-07-07 14:03:08,536 - cellsorter - INFO - Testing confirmation workflow...
+2025-07-07 14:03:08,541 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 4 cells for preview
+2025-07-07 14:03:08,542 - cellsorter.components.widgets.cell_selection_preview - INFO - Selection confirmed: 3 cells
+2025-07-07 14:03:08,543 - cellsorter - INFO - ✅ Confirmation workflow verified
+2025-07-07 14:03:08,543 - cellsorter - INFO - Teardown test: test_confirmation_workflow_dev
+2025-07-07 14:03:08,548 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,551 - cellsorter - INFO - Setup test: test_empty_dataset_handling_dev
+2025-07-07 14:03:08,551 - cellsorter - INFO - Testing empty dataset handling...
+2025-07-07 14:03:08,551 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 0 cells for preview
+2025-07-07 14:03:08,552 - cellsorter - INFO - ✅ Empty dataset handling verified
+2025-07-07 14:03:08,552 - cellsorter - INFO - Teardown test: test_empty_dataset_handling_dev
+2025-07-07 14:03:08,558 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,558 - cellsorter - INFO - Setup test: test_exceeded_limit_handling_dev
+2025-07-07 14:03:08,559 - cellsorter - INFO - Testing exceeded limit handling...
+2025-07-07 14:03:08,613 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 50 cells for preview
+2025-07-07 14:03:08,613 - cellsorter - INFO - ✅ Exceeded limit handling verified
+2025-07-07 14:03:08,614 - cellsorter - INFO - Teardown test: test_exceeded_limit_handling_dev
+2025-07-07 14:03:08,621 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,621 - cellsorter - INFO - Setup test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:03:08,622 - cellsorter - INFO - Testing inclusion toggle simulation...
+2025-07-07 14:03:08,625 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 3 cells for preview
+2025-07-07 14:03:08,625 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 0 excluded
+2025-07-07 14:03:08,627 - cellsorter - INFO - Teardown test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:03:08,632 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,634 - cellsorter - INFO - Setup test: test_large_dataset_performance_dev
+2025-07-07 14:03:08,635 - cellsorter - INFO - Testing large dataset performance...
+2025-07-07 14:03:08,691 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 50 cells for preview
+2025-07-07 14:03:08,692 - cellsorter - INFO - ✅ Large dataset performance verified (load time: 0.055s)
+2025-07-07 14:03:08,692 - cellsorter - INFO - Teardown test: test_large_dataset_performance_dev
+2025-07-07 14:03:08,702 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,703 - cellsorter - INFO - Setup test: test_memory_management_dev
+2025-07-07 14:03:08,703 - cellsorter - INFO - Testing memory management...
+2025-07-07 14:03:08,712 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:08,724 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:08,737 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:08,738 - cellsorter - INFO - ✅ Memory management verified
+2025-07-07 14:03:08,738 - cellsorter - INFO - Teardown test: test_memory_management_dev
+2025-07-07 14:03:08,743 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,744 - cellsorter - INFO - Setup test: test_statistics_calculation_dev
+2025-07-07 14:03:08,745 - cellsorter - INFO - Testing statistics calculation...
+2025-07-07 14:03:08,755 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 8 cells for preview
+2025-07-07 14:03:08,755 - cellsorter - INFO - ✅ Statistics calculation verified
+2025-07-07 14:03:08,756 - cellsorter - INFO - Teardown test: test_statistics_calculation_dev
+2025-07-07 14:03:08,761 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:08,761 - cellsorter - INFO - Setup test: test_thumbnail_interaction_simulation_dev
+2025-07-07 14:03:08,762 - cellsorter - INFO - Testing thumbnail interaction simulation...
+2025-07-07 14:03:08,769 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 5 cells for preview
+2025-07-07 14:03:08,770 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 0 selected for navigation
+2025-07-07 14:03:08,772 - cellsorter - INFO - Teardown test: test_thumbnail_interaction_simulation_dev
+2025-07-07 14:03:42,134 - cellsorter - INFO - === DEV MODE: Cell Selection Preview Tests ===
+2025-07-07 14:03:42,143 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,144 - cellsorter - INFO - Setup test: test_cancellation_workflow_dev
+2025-07-07 14:03:42,145 - cellsorter - INFO - Testing cancellation workflow...
+2025-07-07 14:03:42,148 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 3 cells for preview
+2025-07-07 14:03:42,149 - cellsorter.components.widgets.cell_selection_preview - INFO - Selection cancelled
+2025-07-07 14:03:42,150 - cellsorter - INFO - ✅ Cancellation workflow verified
+2025-07-07 14:03:42,151 - cellsorter - INFO - Teardown test: test_cancellation_workflow_dev
+2025-07-07 14:03:42,159 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,159 - cellsorter - INFO - Setup test: test_cell_loading_dev
+2025-07-07 14:03:42,160 - cellsorter - INFO - Testing cell loading...
+2025-07-07 14:03:42,171 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:42,174 - cellsorter - INFO - ✅ Cell loading verified
+2025-07-07 14:03:42,175 - cellsorter - INFO - Teardown test: test_cell_loading_dev
+2025-07-07 14:03:42,183 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,184 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:03:42,185 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:03:42,189 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:03:42,190 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:03:42,207 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,208 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:03:42,209 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:03:42,221 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 6 cells for preview
+2025-07-07 14:03:42,222 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 0 selected for navigation
+2025-07-07 14:03:42,222 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 2 selected for navigation
+2025-07-07 14:03:42,223 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 1 excluded
+2025-07-07 14:03:42,224 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 4 excluded
+2025-07-07 14:03:42,225 - cellsorter.components.widgets.cell_selection_preview - INFO - Selection confirmed: 4 cells
+2025-07-07 14:03:42,227 - cellsorter - INFO - ✅ Comprehensive workflow verified
+2025-07-07 14:03:42,228 - cellsorter - INFO - 🎉 All DEV mode tests completed successfully!
+2025-07-07 14:03:42,228 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:03:42,234 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,238 - cellsorter - INFO - Setup test: test_confirmation_workflow_dev
+2025-07-07 14:03:42,238 - cellsorter - INFO - Testing confirmation workflow...
+2025-07-07 14:03:42,247 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 4 cells for preview
+2025-07-07 14:03:42,249 - cellsorter.components.widgets.cell_selection_preview - INFO - Selection confirmed: 3 cells
+2025-07-07 14:03:42,250 - cellsorter - INFO - ✅ Confirmation workflow verified
+2025-07-07 14:03:42,251 - cellsorter - INFO - Teardown test: test_confirmation_workflow_dev
+2025-07-07 14:03:42,263 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,264 - cellsorter - INFO - Setup test: test_empty_dataset_handling_dev
+2025-07-07 14:03:42,264 - cellsorter - INFO - Testing empty dataset handling...
+2025-07-07 14:03:42,265 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 0 cells for preview
+2025-07-07 14:03:42,266 - cellsorter - INFO - ✅ Empty dataset handling verified
+2025-07-07 14:03:42,267 - cellsorter - INFO - Teardown test: test_empty_dataset_handling_dev
+2025-07-07 14:03:42,276 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,277 - cellsorter - INFO - Setup test: test_exceeded_limit_handling_dev
+2025-07-07 14:03:42,278 - cellsorter - INFO - Testing exceeded limit handling...
+2025-07-07 14:03:42,342 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 50 cells for preview
+2025-07-07 14:03:42,343 - cellsorter - INFO - ✅ Exceeded limit handling verified
+2025-07-07 14:03:42,344 - cellsorter - INFO - Teardown test: test_exceeded_limit_handling_dev
+2025-07-07 14:03:42,348 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,349 - cellsorter - INFO - Setup test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:03:42,350 - cellsorter - INFO - Testing inclusion toggle simulation...
+2025-07-07 14:03:42,357 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 3 cells for preview
+2025-07-07 14:03:42,357 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 0 excluded
+2025-07-07 14:03:42,358 - cellsorter - INFO - ✅ Inclusion toggle simulation verified
+2025-07-07 14:03:42,358 - cellsorter - INFO - Teardown test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:03:42,364 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,364 - cellsorter - INFO - Setup test: test_large_dataset_performance_dev
+2025-07-07 14:03:42,365 - cellsorter - INFO - Testing large dataset performance...
+2025-07-07 14:03:42,424 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 50 cells for preview
+2025-07-07 14:03:42,424 - cellsorter - INFO - ✅ Large dataset performance verified (load time: 0.057s)
+2025-07-07 14:03:42,425 - cellsorter - INFO - Teardown test: test_large_dataset_performance_dev
+2025-07-07 14:03:42,429 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,430 - cellsorter - INFO - Setup test: test_memory_management_dev
+2025-07-07 14:03:42,430 - cellsorter - INFO - Testing memory management...
+2025-07-07 14:03:42,442 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:42,459 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:42,474 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 10 cells for preview
+2025-07-07 14:03:42,475 - cellsorter - INFO - ✅ Memory management verified
+2025-07-07 14:03:42,475 - cellsorter - INFO - Teardown test: test_memory_management_dev
+2025-07-07 14:03:42,480 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,482 - cellsorter - INFO - Setup test: test_statistics_calculation_dev
+2025-07-07 14:03:42,483 - cellsorter - INFO - Testing statistics calculation...
+2025-07-07 14:03:42,494 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 8 cells for preview
+2025-07-07 14:03:42,495 - cellsorter - INFO - ✅ Statistics calculation verified
+2025-07-07 14:03:42,495 - cellsorter - INFO - Teardown test: test_statistics_calculation_dev
+2025-07-07 14:03:42,501 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell selection preview component initialized
+2025-07-07 14:03:42,504 - cellsorter - INFO - Setup test: test_thumbnail_interaction_simulation_dev
+2025-07-07 14:03:42,505 - cellsorter - INFO - Testing thumbnail interaction simulation...
+2025-07-07 14:03:42,511 - cellsorter.components.widgets.cell_selection_preview - INFO - Loaded 5 cells for preview
+2025-07-07 14:03:42,514 - cellsorter.components.widgets.cell_selection_preview - INFO - Cell 0 selected for navigation
+2025-07-07 14:03:42,515 - cellsorter - INFO - ✅ Thumbnail interaction simulation verified
+2025-07-07 14:03:42,515 - cellsorter - INFO - Teardown test: test_thumbnail_interaction_simulation_dev

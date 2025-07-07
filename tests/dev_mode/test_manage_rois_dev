@@ -1,0 +1,856 @@
+2025-07-07 14:13:06,415 - cellsorter - INFO - === DEV MODE: Manage ROIs Button Tests ===
+2025-07-07 14:13:06,429 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,432 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,433 - cellsorter - INFO - Setup test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:13:06,434 - cellsorter - INFO - Testing button hide on multiple selection...
+2025-07-07 14:13:06,439 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,440 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,442 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,443 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,446 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,448 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:06,455 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,456 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:06,460 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,461 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:13:06,463 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,465 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:13:06,470 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,471 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_4: Test Selection 4
+2025-07-07 14:13:06,473 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,474 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_4: A4
+2025-07-07 14:13:06,476 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:06,476 - cellsorter.components.widgets.selection_panel - INFO - Loaded 4 selections
+2025-07-07 14:13:06,478 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:06,482 - cellsorter - INFO - Teardown test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:13:06,492 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,497 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,499 - cellsorter - INFO - Setup test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:13:06,508 - cellsorter - INFO - Testing button out-of-bounds protection...
+2025-07-07 14:13:06,510 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:06,528 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,533 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:06,555 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,558 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:06,561 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:06,565 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:06,566 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:06,571 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:06,575 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:13:06,578 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:13:06,582 - cellsorter - INFO - Teardown test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:13:06,593 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,609 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,612 - cellsorter - INFO - Setup test: test_button_visibility_on_selection_dev
+2025-07-07 14:13:06,612 - cellsorter - INFO - Testing button visibility on selection...
+2025-07-07 14:13:06,614 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,615 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,616 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,617 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,623 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,624 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:06,628 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,629 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:06,631 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,633 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:13:06,640 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,641 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:13:06,643 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,644 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:13:06,646 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:06,649 - cellsorter - INFO - Teardown test: test_button_visibility_on_selection_dev
+2025-07-07 14:13:06,657 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,661 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,662 - cellsorter - INFO - Setup test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:13:06,664 - cellsorter - INFO - Testing cell inclusion change handling...
+2025-07-07 14:13:06,666 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,667 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,677 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,678 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,690 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,693 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:13:06,695 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 excluded in selection selection_1
+2025-07-07 14:13:06,699 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 included in selection selection_1
+2025-07-07 14:13:06,699 - cellsorter - INFO - ✅ Cell inclusion change handling verified
+2025-07-07 14:13:06,700 - cellsorter - INFO - Teardown test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:13:06,707 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,711 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,713 - cellsorter - INFO - Setup test: test_cell_navigation_request_handling_dev
+2025-07-07 14:13:06,716 - cellsorter - INFO - Testing cell navigation request handling...
+2025-07-07 14:13:06,733 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,734 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,741 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,742 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,745 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,748 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:13:06,750 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:06,759 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 5 in selection selection_1
+2025-07-07 14:13:06,764 - cellsorter - INFO - ✅ Cell navigation request handling verified
+2025-07-07 14:13:06,766 - cellsorter - INFO - Teardown test: test_cell_navigation_request_handling_dev
+2025-07-07 14:13:06,777 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,781 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,782 - cellsorter - INFO - Setup test: test_cell_row_data_creation_dev
+2025-07-07 14:13:06,782 - cellsorter - INFO - Testing CellRowData creation...
+2025-07-07 14:13:06,783 - cellsorter - INFO - Teardown test: test_cell_row_data_creation_dev
+2025-07-07 14:13:06,791 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,794 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,794 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:13:06,795 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:13:06,796 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:13:06,796 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:13:06,800 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,804 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,805 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:13:06,806 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:13:06,807 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,808 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,809 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,810 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,812 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,812 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:06,814 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,814 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:06,815 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,816 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:13:06,820 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,821 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:13:06,824 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:06,825 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:13:06,827 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:06,829 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:13:06,832 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,834 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,840 - cellsorter - INFO - Setup test: test_empty_selection_data_handling_dev
+2025-07-07 14:13:06,841 - cellsorter - INFO - Testing empty selection data handling...
+2025-07-07 14:13:06,842 - cellsorter.components.widgets.selection_panel - WARNING - No row selected for ROI management
+2025-07-07 14:13:06,843 - cellsorter - INFO - ✅ Empty selection data handling verified
+2025-07-07 14:13:06,844 - cellsorter - INFO - Teardown test: test_empty_selection_data_handling_dev
+2025-07-07 14:13:06,847 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:06,849 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:06,850 - cellsorter - INFO - Setup test: test_roi_management_close_handling_dev
+2025-07-07 14:13:06,850 - cellsorter - INFO - Testing ROI management close handling...
+2025-07-07 14:13:06,854 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,855 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:06,860 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,861 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:06,863 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:06,864 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:13:06,865 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:07,690 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:13:07,708 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:13:07,711 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:13:07,712 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:13:07,712 - cellsorter - INFO - ✅ ROI management close handling verified
+2025-07-07 14:13:07,712 - cellsorter - INFO - Teardown test: test_roi_management_close_handling_dev
+2025-07-07 14:13:07,716 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:07,721 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:07,722 - cellsorter - INFO - Setup test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:13:07,723 - cellsorter - INFO - Testing ROI management dialog trigger...
+2025-07-07 14:13:07,724 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:07,725 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:07,726 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:07,726 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:07,728 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:07,729 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:07,730 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:07,731 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:07,732 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:07,732 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:13:07,737 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:07,740 - cellsorter - INFO - Teardown test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:13:43,010 - cellsorter - INFO - === DEV MODE: Manage ROIs Button Tests ===
+2025-07-07 14:13:43,027 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,031 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,032 - cellsorter - INFO - Setup test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:13:43,032 - cellsorter - INFO - Testing button hide on multiple selection...
+2025-07-07 14:13:43,033 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,034 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,035 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,036 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,040 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,042 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:43,044 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,044 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:43,046 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,046 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:13:43,048 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,048 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:13:43,050 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,050 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_4: Test Selection 4
+2025-07-07 14:13:43,052 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,052 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_4: A4
+2025-07-07 14:13:43,059 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:13:43,060 - cellsorter.components.widgets.selection_panel - INFO - Loaded 4 selections
+2025-07-07 14:13:43,062 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:43,065 - cellsorter - INFO - Teardown test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:13:43,068 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,074 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,074 - cellsorter - INFO - Setup test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:13:43,075 - cellsorter - INFO - Testing button out-of-bounds protection...
+2025-07-07 14:13:43,076 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,076 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,078 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,078 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,079 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,080 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:43,081 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,082 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:43,083 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,083 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:13:43,085 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:13:43,086 - cellsorter - INFO - Teardown test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:13:43,093 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,095 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,096 - cellsorter - INFO - Setup test: test_button_visibility_on_selection_dev
+2025-07-07 14:13:43,097 - cellsorter - INFO - Testing button visibility on selection...
+2025-07-07 14:13:43,098 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,098 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,100 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,101 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,103 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,108 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:43,109 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,110 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:43,112 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,112 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:13:43,113 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,114 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:13:43,115 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,117 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:13:43,118 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:43,119 - cellsorter - INFO - Teardown test: test_button_visibility_on_selection_dev
+2025-07-07 14:13:43,126 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,129 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,130 - cellsorter - INFO - Setup test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:13:43,130 - cellsorter - INFO - Testing cell inclusion change handling...
+2025-07-07 14:13:43,132 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,132 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,134 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,135 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,136 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,140 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:13:43,141 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 excluded in selection selection_1
+2025-07-07 14:13:43,142 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 included in selection selection_1
+2025-07-07 14:13:43,142 - cellsorter - INFO - ✅ Cell inclusion change handling verified
+2025-07-07 14:13:43,143 - cellsorter - INFO - Teardown test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:13:43,146 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,149 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,150 - cellsorter - INFO - Setup test: test_cell_navigation_request_handling_dev
+2025-07-07 14:13:43,151 - cellsorter - INFO - Testing cell navigation request handling...
+2025-07-07 14:13:43,152 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,152 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,156 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,157 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,159 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,160 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:13:43,161 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:43,162 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 5 in selection selection_1
+2025-07-07 14:13:43,162 - cellsorter - INFO - ✅ Cell navigation request handling verified
+2025-07-07 14:13:43,163 - cellsorter - INFO - Teardown test: test_cell_navigation_request_handling_dev
+2025-07-07 14:13:43,166 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,168 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,169 - cellsorter - INFO - Setup test: test_cell_row_data_creation_dev
+2025-07-07 14:13:43,170 - cellsorter - INFO - Testing CellRowData creation...
+2025-07-07 14:13:43,173 - cellsorter - INFO - ✅ CellRowData creation verified
+2025-07-07 14:13:43,173 - cellsorter - INFO - Teardown test: test_cell_row_data_creation_dev
+2025-07-07 14:13:43,177 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,179 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,180 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:13:43,180 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:13:43,181 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:13:43,181 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:13:43,185 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,190 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,191 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:13:43,191 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:13:43,192 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,193 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,195 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,198 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,203 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,216 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:43,219 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,225 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:43,228 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,229 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:13:43,231 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,233 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:13:43,235 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:13:43,235 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:13:43,236 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:43,243 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:13:43,247 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,249 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,250 - cellsorter - INFO - Setup test: test_empty_selection_data_handling_dev
+2025-07-07 14:13:43,250 - cellsorter - INFO - Testing empty selection data handling...
+2025-07-07 14:13:43,252 - cellsorter.components.widgets.selection_panel - WARNING - No row selected for ROI management
+2025-07-07 14:13:43,252 - cellsorter - INFO - ✅ Empty selection data handling verified
+2025-07-07 14:13:43,253 - cellsorter - INFO - Teardown test: test_empty_selection_data_handling_dev
+2025-07-07 14:13:43,261 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,263 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,264 - cellsorter - INFO - Setup test: test_roi_management_close_handling_dev
+2025-07-07 14:13:43,265 - cellsorter - INFO - Testing ROI management close handling...
+2025-07-07 14:13:43,266 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,266 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,268 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,268 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,273 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:13:43,275 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:13:43,276 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:43,774 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:13:43,791 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:13:43,794 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:13:43,795 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:13:43,795 - cellsorter - INFO - ✅ ROI management close handling verified
+2025-07-07 14:13:43,796 - cellsorter - INFO - Teardown test: test_roi_management_close_handling_dev
+2025-07-07 14:13:43,798 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:13:43,800 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:13:43,801 - cellsorter - INFO - Setup test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:13:43,801 - cellsorter - INFO - Testing ROI management dialog trigger...
+2025-07-07 14:13:43,802 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,803 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:13:43,808 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,808 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:13:43,810 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,810 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:13:43,812 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,812 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:13:43,814 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:13:43,814 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:13:43,816 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:13:43,816 - cellsorter - INFO - Teardown test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:15:14,236 - cellsorter - INFO - === DEV MODE: Manage ROIs Button Tests ===
+2025-07-07 14:15:14,251 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,253 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,254 - cellsorter - INFO - Setup test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:15:14,255 - cellsorter - INFO - Testing button hide on multiple selection...
+2025-07-07 14:15:14,256 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,257 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:14,259 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,262 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:14,264 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,265 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:14,267 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,268 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:14,269 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,270 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:15:14,271 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,273 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:15:14,274 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,275 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_4: Test Selection 4
+2025-07-07 14:15:14,278 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,280 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_4: A4
+2025-07-07 14:15:14,281 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:14,282 - cellsorter.components.widgets.selection_panel - INFO - Loaded 4 selections
+2025-07-07 14:15:14,284 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:14,287 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_3
+2025-07-07 14:15:14,289 - cellsorter - INFO - ✅ Button hide on multiple selection verified
+2025-07-07 14:15:14,290 - cellsorter - INFO - Teardown test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:15:14,301 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,303 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,304 - cellsorter - INFO - Setup test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:15:14,304 - cellsorter - INFO - Testing button out-of-bounds protection...
+2025-07-07 14:15:14,305 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:14,305 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:14,306 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:14,307 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:14,311 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:14,313 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:14,315 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:14,316 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:14,317 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:14,318 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:15:14,320 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:15:14,320 - cellsorter - INFO - ✅ Button out-of-bounds protection verified
+2025-07-07 14:15:14,321 - cellsorter - INFO - Teardown test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:15:14,324 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,328 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,329 - cellsorter - INFO - Setup test: test_button_visibility_on_selection_dev
+2025-07-07 14:15:14,329 - cellsorter - INFO - Testing button visibility on selection...
+2025-07-07 14:15:14,331 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,332 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:14,334 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,334 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:14,335 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,336 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:14,337 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,338 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:14,339 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,339 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:15:14,341 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,341 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:15:14,345 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,346 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:15:14,348 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:14,350 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:15:14,350 - cellsorter - INFO - ✅ Button visibility on selection verified
+2025-07-07 14:15:14,351 - cellsorter - INFO - Teardown test: test_button_visibility_on_selection_dev
+2025-07-07 14:15:14,354 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,356 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,356 - cellsorter - INFO - Setup test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:15:14,357 - cellsorter - INFO - Testing cell inclusion change handling...
+2025-07-07 14:15:14,358 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:14,358 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:14,362 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:14,364 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:14,365 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:14,365 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:15:14,366 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 excluded in selection selection_1
+2025-07-07 14:15:14,367 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 included in selection selection_1
+2025-07-07 14:15:14,367 - cellsorter - INFO - ✅ Cell inclusion change handling verified
+2025-07-07 14:15:14,367 - cellsorter - INFO - Teardown test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:15:14,370 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,372 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,373 - cellsorter - INFO - Setup test: test_cell_navigation_request_handling_dev
+2025-07-07 14:15:14,373 - cellsorter - INFO - Testing cell navigation request handling...
+2025-07-07 14:15:14,374 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:14,374 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:14,377 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:14,379 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:14,380 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:14,381 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:15:14,382 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:14,382 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 5 in selection selection_1
+2025-07-07 14:15:14,383 - cellsorter - INFO - ✅ Cell navigation request handling verified
+2025-07-07 14:15:14,383 - cellsorter - INFO - Teardown test: test_cell_navigation_request_handling_dev
+2025-07-07 14:15:14,386 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,388 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,389 - cellsorter - INFO - Setup test: test_cell_row_data_creation_dev
+2025-07-07 14:15:14,389 - cellsorter - INFO - Testing CellRowData creation...
+2025-07-07 14:15:14,390 - cellsorter - INFO - ✅ CellRowData creation verified
+2025-07-07 14:15:14,390 - cellsorter - INFO - Teardown test: test_cell_row_data_creation_dev
+2025-07-07 14:15:14,396 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,399 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,399 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:15:14,400 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:15:14,400 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:15:14,401 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:15:14,404 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:14,407 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:14,407 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:15:14,408 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:15:14,414 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,415 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:14,416 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,416 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:14,418 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,418 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:14,419 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,420 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:14,422 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,422 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:15:14,424 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,424 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:15:14,425 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:14,429 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:15:14,431 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:14,954 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:15:14,974 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:15:14,983 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:15:14,984 - cellsorter.components.widgets.selection_panel - INFO - Cell 2 excluded in selection selection_1
+2025-07-07 14:15:14,984 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 7 in selection selection_1
+2025-07-07 14:15:14,985 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:15:14,986 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_3
+2025-07-07 14:15:14,989 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:15:14,997 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:15,005 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:15,006 - cellsorter - INFO - Setup test: test_empty_selection_data_handling_dev
+2025-07-07 14:15:15,007 - cellsorter - INFO - Testing empty selection data handling...
+2025-07-07 14:15:15,011 - cellsorter.components.widgets.selection_panel - WARNING - No row selected for ROI management
+2025-07-07 14:15:15,013 - cellsorter - INFO - ✅ Empty selection data handling verified
+2025-07-07 14:15:15,014 - cellsorter - INFO - Teardown test: test_empty_selection_data_handling_dev
+2025-07-07 14:15:15,018 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:15,020 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:15,021 - cellsorter - INFO - Setup test: test_roi_management_close_handling_dev
+2025-07-07 14:15:15,021 - cellsorter - INFO - Testing ROI management close handling...
+2025-07-07 14:15:15,023 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:15,023 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:15,025 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:15,027 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:15,029 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:15,030 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:15:15,031 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:15,042 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:15:15,062 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:15:15,064 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:15:15,064 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:15:15,065 - cellsorter - INFO - ✅ ROI management close handling verified
+2025-07-07 14:15:15,065 - cellsorter - INFO - Teardown test: test_roi_management_close_handling_dev
+2025-07-07 14:15:15,069 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:15,071 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:15,071 - cellsorter - INFO - Setup test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:15:15,072 - cellsorter - INFO - Testing ROI management dialog trigger...
+2025-07-07 14:15:15,073 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:15,073 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:15,074 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:15,074 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:15,079 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:15,079 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:15,081 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:15,081 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:15,083 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:15,084 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:15:15,086 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:15,098 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:15:15,118 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:15:15,121 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:15:15,121 - cellsorter - INFO - ✅ ROI management dialog trigger verified
+2025-07-07 14:15:15,122 - cellsorter - INFO - Teardown test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:15:38,880 - cellsorter - INFO - === DEV MODE: Manage ROIs Button Tests ===
+2025-07-07 14:15:38,895 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:38,900 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:38,900 - cellsorter - INFO - Setup test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:15:38,901 - cellsorter - INFO - Testing button hide on multiple selection...
+2025-07-07 14:15:38,902 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,902 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:38,904 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,905 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:38,907 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,909 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:38,916 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,919 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:38,921 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,922 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:15:38,924 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,925 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:15:38,928 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,932 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_4: Test Selection 4
+2025-07-07 14:15:38,933 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,934 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_4: A4
+2025-07-07 14:15:38,935 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:15:38,936 - cellsorter.components.widgets.selection_panel - INFO - Loaded 4 selections
+2025-07-07 14:15:38,937 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:38,940 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_3
+2025-07-07 14:15:38,941 - cellsorter - INFO - ✅ Button hide on multiple selection verified
+2025-07-07 14:15:38,941 - cellsorter - INFO - Teardown test: test_button_hide_on_multiple_selection_dev
+2025-07-07 14:15:38,951 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:38,954 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:38,954 - cellsorter - INFO - Setup test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:15:38,955 - cellsorter - INFO - Testing button out-of-bounds protection...
+2025-07-07 14:15:38,955 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:38,956 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:38,957 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:38,958 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:38,962 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:38,963 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:38,966 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:38,966 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:38,967 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:38,968 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:15:38,969 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:15:38,970 - cellsorter - INFO - ✅ Button out-of-bounds protection verified
+2025-07-07 14:15:38,971 - cellsorter - INFO - Teardown test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:15:38,974 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:38,976 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:38,979 - cellsorter - INFO - Setup test: test_button_visibility_on_selection_dev
+2025-07-07 14:15:38,980 - cellsorter - INFO - Testing button visibility on selection...
+2025-07-07 14:15:38,981 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,981 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:38,983 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,984 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:38,985 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,985 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:38,987 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,987 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:38,988 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,989 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:15:38,991 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,991 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:15:38,992 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:38,993 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:15:38,996 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:38,997 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:15:38,999 - cellsorter - INFO - ✅ Button visibility on selection verified
+2025-07-07 14:15:38,999 - cellsorter - INFO - Teardown test: test_button_visibility_on_selection_dev
+2025-07-07 14:15:39,002 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,004 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,005 - cellsorter - INFO - Setup test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:15:39,005 - cellsorter - INFO - Testing cell inclusion change handling...
+2025-07-07 14:15:39,008 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,009 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:39,013 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,014 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:39,015 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,016 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:15:39,017 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 excluded in selection selection_1
+2025-07-07 14:15:39,017 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 included in selection selection_1
+2025-07-07 14:15:39,018 - cellsorter - INFO - ✅ Cell inclusion change handling verified
+2025-07-07 14:15:39,018 - cellsorter - INFO - Teardown test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:15:39,021 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,024 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,024 - cellsorter - INFO - Setup test: test_cell_navigation_request_handling_dev
+2025-07-07 14:15:39,025 - cellsorter - INFO - Testing cell navigation request handling...
+2025-07-07 14:15:39,031 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,031 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:39,035 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,036 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:39,036 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,037 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:15:39,038 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:39,039 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 5 in selection selection_1
+2025-07-07 14:15:39,040 - cellsorter - INFO - ✅ Cell navigation request handling verified
+2025-07-07 14:15:39,040 - cellsorter - INFO - Teardown test: test_cell_navigation_request_handling_dev
+2025-07-07 14:15:39,045 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,050 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,050 - cellsorter - INFO - Setup test: test_cell_row_data_creation_dev
+2025-07-07 14:15:39,051 - cellsorter - INFO - Testing CellRowData creation...
+2025-07-07 14:15:39,051 - cellsorter - INFO - ✅ CellRowData creation verified
+2025-07-07 14:15:39,051 - cellsorter - INFO - Teardown test: test_cell_row_data_creation_dev
+2025-07-07 14:15:39,055 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,057 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,057 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:15:39,058 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:15:39,058 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:15:39,058 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:15:39,065 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,067 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,068 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:15:39,068 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:15:39,069 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,069 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:39,071 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,072 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:39,073 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,073 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:39,074 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,075 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:39,079 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,080 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:15:39,082 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,082 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:15:39,083 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:15:39,083 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:15:39,085 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:39,568 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:15:39,584 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:15:39,588 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:15:39,588 - cellsorter.components.widgets.selection_panel - INFO - Cell 2 excluded in selection selection_1
+2025-07-07 14:15:39,589 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 7 in selection selection_1
+2025-07-07 14:15:39,589 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:15:39,590 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_3
+2025-07-07 14:15:39,591 - cellsorter - INFO - ✅ Comprehensive workflow verified
+2025-07-07 14:15:39,592 - cellsorter - INFO - 🎉 All DEV mode tests completed successfully!
+2025-07-07 14:15:39,592 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:15:39,598 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,601 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,601 - cellsorter - INFO - Setup test: test_empty_selection_data_handling_dev
+2025-07-07 14:15:39,602 - cellsorter - INFO - Testing empty selection data handling...
+2025-07-07 14:15:39,603 - cellsorter.components.widgets.selection_panel - WARNING - No row selected for ROI management
+2025-07-07 14:15:39,604 - cellsorter - INFO - ✅ Empty selection data handling verified
+2025-07-07 14:15:39,605 - cellsorter - INFO - Teardown test: test_empty_selection_data_handling_dev
+2025-07-07 14:15:39,608 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,610 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,613 - cellsorter - INFO - Setup test: test_roi_management_close_handling_dev
+2025-07-07 14:15:39,614 - cellsorter - INFO - Testing ROI management close handling...
+2025-07-07 14:15:39,616 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,616 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:39,617 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,618 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:39,620 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:15:39,620 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:15:39,622 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:39,636 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:15:39,653 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:15:39,655 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:15:39,656 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:15:39,656 - cellsorter - INFO - ✅ ROI management close handling verified
+2025-07-07 14:15:39,657 - cellsorter - INFO - Teardown test: test_roi_management_close_handling_dev
+2025-07-07 14:15:39,659 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:15:39,666 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:15:39,667 - cellsorter - INFO - Setup test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:15:39,667 - cellsorter - INFO - Testing ROI management dialog trigger...
+2025-07-07 14:15:39,669 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:39,669 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:15:39,671 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:39,671 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:15:39,673 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:39,673 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:15:39,674 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:39,675 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:15:39,676 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:15:39,680 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:15:39,682 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:15:39,692 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:15:39,709 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:15:39,714 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:15:39,715 - cellsorter - INFO - ✅ ROI management dialog trigger verified
+2025-07-07 14:15:39,715 - cellsorter - INFO - Teardown test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:49:57,260 - cellsorter - INFO - === DEV MODE: Manage ROIs Button Tests ===
+2025-07-07 14:49:57,289 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,292 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,292 - cellsorter - INFO - Setup test: test_button_disable_on_multiple_selection_dev
+2025-07-07 14:49:57,293 - cellsorter - INFO - Testing button disable on multiple selection...
+2025-07-07 14:49:57,294 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,294 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:57,296 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,297 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:57,300 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,301 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:49:57,302 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,303 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:49:57,305 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,305 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:49:57,306 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,306 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:49:57,307 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,308 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_4: Test Selection 4
+2025-07-07 14:49:57,309 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,309 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_4: A4
+2025-07-07 14:49:57,310 - cellsorter.components.widgets.well_plate - INFO - Set 4 well assignments
+2025-07-07 14:49:57,310 - cellsorter.components.widgets.selection_panel - INFO - Loaded 4 selections
+2025-07-07 14:49:57,312 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:49:57,313 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_3
+2025-07-07 14:49:57,314 - cellsorter - INFO - ✅ Button disable on multiple selection verified
+2025-07-07 14:49:57,314 - cellsorter - INFO - Teardown test: test_button_disable_on_multiple_selection_dev
+2025-07-07 14:49:57,406 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,409 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,409 - cellsorter - INFO - Setup test: test_button_enabled_on_selection_dev
+2025-07-07 14:49:57,410 - cellsorter - INFO - Testing button enabled state on selection...
+2025-07-07 14:49:57,411 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,411 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:57,412 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,413 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:57,416 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,417 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:49:57,419 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,419 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:49:57,423 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,424 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:49:57,425 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,425 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:49:57,426 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,426 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:49:57,427 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:49:57,428 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:49:57,429 - cellsorter - INFO - ✅ Button enabled state on selection verified
+2025-07-07 14:49:57,429 - cellsorter - INFO - Teardown test: test_button_enabled_on_selection_dev
+2025-07-07 14:49:57,447 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,452 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,452 - cellsorter - INFO - Setup test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:49:57,453 - cellsorter - INFO - Testing button out-of-bounds protection...
+2025-07-07 14:49:57,454 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:57,455 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:57,456 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:57,456 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:57,458 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:57,458 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:49:57,460 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:57,460 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:49:57,461 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:57,461 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:49:57,463 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_2
+2025-07-07 14:49:57,463 - cellsorter - INFO - ✅ Button out-of-bounds protection verified
+2025-07-07 14:49:57,464 - cellsorter - INFO - Teardown test: test_button_out_of_bounds_protection_dev
+2025-07-07 14:49:57,497 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,502 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,503 - cellsorter - INFO - Setup test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:49:57,503 - cellsorter - INFO - Testing cell inclusion change handling...
+2025-07-07 14:49:57,505 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:57,505 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:57,507 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:57,508 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:57,509 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:57,511 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:49:57,513 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 excluded in selection selection_1
+2025-07-07 14:49:57,514 - cellsorter.components.widgets.selection_panel - INFO - Cell 3 included in selection selection_1
+2025-07-07 14:49:57,514 - cellsorter - INFO - ✅ Cell inclusion change handling verified
+2025-07-07 14:49:57,514 - cellsorter - INFO - Teardown test: test_cell_inclusion_change_handling_dev
+2025-07-07 14:49:57,577 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,579 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,580 - cellsorter - INFO - Setup test: test_cell_navigation_request_handling_dev
+2025-07-07 14:49:57,580 - cellsorter - INFO - Testing cell navigation request handling...
+2025-07-07 14:49:57,581 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:57,582 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:57,584 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:57,585 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:57,586 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:57,586 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:49:57,588 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:49:57,589 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 5 in selection selection_1
+2025-07-07 14:49:57,589 - cellsorter - INFO - ✅ Cell navigation request handling verified
+2025-07-07 14:49:57,590 - cellsorter - INFO - Teardown test: test_cell_navigation_request_handling_dev
+2025-07-07 14:49:57,626 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,628 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,629 - cellsorter - INFO - Setup test: test_cell_row_data_creation_dev
+2025-07-07 14:49:57,630 - cellsorter - INFO - Testing CellRowData creation...
+2025-07-07 14:49:57,630 - cellsorter - INFO - ✅ CellRowData creation verified
+2025-07-07 14:49:57,630 - cellsorter - INFO - Teardown test: test_cell_row_data_creation_dev
+2025-07-07 14:49:57,647 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,651 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,653 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:49:57,655 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:49:57,657 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:49:57,657 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:49:57,671 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:57,675 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:57,675 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:49:57,675 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:49:57,676 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,677 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:57,679 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,679 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:57,681 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,688 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:49:57,690 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,691 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:49:57,692 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,693 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_3: Test Selection 3
+2025-07-07 14:49:57,694 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,695 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_3: A3
+2025-07-07 14:49:57,697 - cellsorter.components.widgets.well_plate - INFO - Set 3 well assignments
+2025-07-07 14:49:57,697 - cellsorter.components.widgets.selection_panel - INFO - Loaded 3 selections
+2025-07-07 14:49:57,699 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:49:58,496 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:49:58,514 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:49:58,526 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:49:58,527 - cellsorter.components.widgets.selection_panel - INFO - Cell 2 excluded in selection selection_1
+2025-07-07 14:49:58,528 - cellsorter.components.widgets.selection_panel - INFO - Navigation requested to cell 7 in selection selection_1
+2025-07-07 14:49:58,529 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:49:58,530 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_3
+2025-07-07 14:49:58,531 - cellsorter - INFO - ✅ Comprehensive workflow verified
+2025-07-07 14:49:58,531 - cellsorter - INFO - 🎉 All DEV mode tests completed successfully!
+2025-07-07 14:49:58,531 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:49:58,629 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:58,631 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:58,631 - cellsorter - INFO - Setup test: test_empty_selection_data_handling_dev
+2025-07-07 14:49:58,634 - cellsorter - INFO - Testing empty selection data handling...
+2025-07-07 14:49:58,636 - cellsorter.components.widgets.selection_panel - WARNING - No row selected for ROI management
+2025-07-07 14:49:58,636 - cellsorter - INFO - ✅ Empty selection data handling verified
+2025-07-07 14:49:58,637 - cellsorter - INFO - Teardown test: test_empty_selection_data_handling_dev
+2025-07-07 14:49:58,645 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:58,648 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:58,648 - cellsorter - INFO - Setup test: test_roi_management_close_handling_dev
+2025-07-07 14:49:58,650 - cellsorter - INFO - Testing ROI management close handling...
+2025-07-07 14:49:58,652 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:58,653 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:58,654 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:58,654 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:58,655 - cellsorter.components.widgets.well_plate - INFO - Set 1 well assignments
+2025-07-07 14:49:58,656 - cellsorter.components.widgets.selection_panel - INFO - Loaded 1 selections
+2025-07-07 14:49:58,657 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:49:58,671 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:49:58,689 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:49:58,691 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:49:58,691 - cellsorter.components.widgets.selection_panel - INFO - ROI management dialog closed
+2025-07-07 14:49:58,692 - cellsorter - INFO - ✅ ROI management close handling verified
+2025-07-07 14:49:58,692 - cellsorter - INFO - Teardown test: test_roi_management_close_handling_dev
+2025-07-07 14:49:58,702 - cellsorter.components.widgets.well_plate - INFO - Well plate widget initialized
+2025-07-07 14:49:58,705 - cellsorter.components.widgets.selection_panel - INFO - Selection panel initialized
+2025-07-07 14:49:58,705 - cellsorter - INFO - Setup test: test_roi_management_dialog_trigger_dev
+2025-07-07 14:49:58,706 - cellsorter - INFO - Testing ROI management dialog trigger...
+2025-07-07 14:49:58,707 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:58,707 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_1: Test Selection 1
+2025-07-07 14:49:58,709 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:58,709 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_1: A1
+2025-07-07 14:49:58,711 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:58,711 - cellsorter.components.widgets.selection_panel - INFO - Updated label for selection selection_2: Test Selection 2
+2025-07-07 14:49:58,713 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:58,713 - cellsorter.components.widgets.selection_panel - INFO - Updated well for selection selection_2: A2
+2025-07-07 14:49:58,714 - cellsorter.components.widgets.well_plate - INFO - Set 2 well assignments
+2025-07-07 14:49:58,714 - cellsorter.components.widgets.selection_panel - INFO - Loaded 2 selections
+2025-07-07 14:49:58,719 - cellsorter.components.widgets.selection_panel - INFO - Row selected for ROI management: selection_1
+2025-07-07 14:49:58,731 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:49:58,760 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection 1 with 10 cells
+2025-07-07 14:49:58,762 - cellsorter.components.widgets.selection_panel - INFO - Opened ROI management for selection: selection_1
+2025-07-07 14:49:58,763 - cellsorter - INFO - ✅ ROI management dialog trigger verified
+2025-07-07 14:49:58,764 - cellsorter - INFO - Teardown test: test_roi_management_dialog_trigger_dev

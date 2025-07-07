@@ -1,0 +1,653 @@
+2025-07-07 14:07:40,964 - cellsorter - INFO - === DEV MODE: Row Cell Manager Tests ===
+2025-07-07 14:07:41,747 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,747 - cellsorter - INFO - Setup test: test_bulk_operations_dev
+2025-07-07 14:07:41,748 - cellsorter - INFO - Testing bulk operations...
+2025-07-07 14:07:41,758 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 6 cells
+2025-07-07 14:07:41,759 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,760 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,760 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:41,761 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:41,761 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:07:41,761 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:07:41,762 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:07:41,762 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:07:41,763 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:07:41,764 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:07:41,765 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 14:07:41,767 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 14:07:41,768 - cellsorter.components.widgets.row_cell_manager - INFO - All cells included
+2025-07-07 14:07:41,768 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:07:41,769 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:07:41,770 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,771 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,771 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:07:41,772 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:07:41,772 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:41,773 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:41,773 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:07:41,775 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:07:41,775 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:07:41,776 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:07:41,776 - cellsorter.components.widgets.row_cell_manager - INFO - All cells excluded
+2025-07-07 14:07:41,777 - cellsorter - INFO - ✅ Bulk operations verified
+2025-07-07 14:07:41,777 - cellsorter - INFO - Teardown test: test_bulk_operations_dev
+2025-07-07 14:07:41,791 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,792 - cellsorter - INFO - Setup test: test_cell_item_initialization_dev
+2025-07-07 14:07:41,793 - cellsorter - INFO - Testing cell item initialization...
+2025-07-07 14:07:41,796 - cellsorter - INFO - ✅ Cell item initialization verified
+2025-07-07 14:07:41,798 - cellsorter - INFO - Teardown test: test_cell_item_initialization_dev
+2025-07-07 14:07:41,813 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,818 - cellsorter - INFO - Setup test: test_cell_item_thumbnail_dev
+2025-07-07 14:07:41,818 - cellsorter - INFO - Testing cell item thumbnail...
+2025-07-07 14:07:41,822 - cellsorter - INFO - ✅ Cell item thumbnail verified
+2025-07-07 14:07:41,822 - cellsorter - INFO - Teardown test: test_cell_item_thumbnail_dev
+2025-07-07 14:07:41,838 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,839 - cellsorter - INFO - Setup test: test_cell_selection_simulation_dev
+2025-07-07 14:07:41,840 - cellsorter - INFO - Testing cell selection simulation...
+2025-07-07 14:07:41,854 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 5 cells
+2025-07-07 14:07:41,855 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 selected
+2025-07-07 14:07:41,858 - cellsorter - INFO - Teardown test: test_cell_selection_simulation_dev
+2025-07-07 14:07:41,877 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,879 - cellsorter - INFO - Setup test: test_close_functionality_dev
+2025-07-07 14:07:41,879 - cellsorter - INFO - Testing close functionality...
+2025-07-07 14:07:41,888 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 3 cells
+2025-07-07 14:07:41,890 - cellsorter.components.widgets.row_cell_manager - INFO - Row management closed
+2025-07-07 14:07:41,890 - cellsorter - INFO - ✅ Close functionality verified
+2025-07-07 14:07:41,891 - cellsorter - INFO - Teardown test: test_close_functionality_dev
+2025-07-07 14:07:41,904 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,905 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:07:41,906 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:07:41,906 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:07:41,907 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:07:41,922 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,924 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:07:41,924 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:07:41,937 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 6 cells
+2025-07-07 14:07:41,941 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 selected
+2025-07-07 14:07:41,943 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 selected
+2025-07-07 14:07:41,944 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,944 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,945 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:41,945 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:41,946 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 4
+2025-07-07 14:07:41,947 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:07:41,949 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:07:41,952 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:07:41,952 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:07:41,953 - cellsorter.components.widgets.row_cell_manager - INFO - All cells included
+2025-07-07 14:07:41,953 - cellsorter.components.widgets.row_cell_manager - INFO - Row management closed
+2025-07-07 14:07:41,954 - cellsorter - INFO - ✅ Comprehensive workflow verified
+2025-07-07 14:07:41,954 - cellsorter - INFO - 🎉 All DEV mode tests completed successfully!
+2025-07-07 14:07:41,955 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:07:41,973 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,973 - cellsorter - INFO - Setup test: test_empty_row_data_handling_dev
+2025-07-07 14:07:41,974 - cellsorter - INFO - Testing empty row data handling...
+2025-07-07 14:07:41,974 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Empty Selection with 0 cells
+2025-07-07 14:07:41,975 - cellsorter - INFO - ✅ Empty row data handling verified
+2025-07-07 14:07:41,975 - cellsorter - INFO - Teardown test: test_empty_row_data_handling_dev
+2025-07-07 14:07:41,988 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:41,989 - cellsorter - INFO - Setup test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:07:41,989 - cellsorter - INFO - Testing inclusion toggle simulation...
+2025-07-07 14:07:41,996 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 4 cells
+2025-07-07 14:07:41,997 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,997 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:41,998 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:42,000 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:42,002 - cellsorter - INFO - ✅ Inclusion toggle simulation verified
+2025-07-07 14:07:42,002 - cellsorter - INFO - Teardown test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:07:42,013 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:42,014 - cellsorter - INFO - Setup test: test_large_dataset_performance_dev
+2025-07-07 14:07:42,015 - cellsorter - INFO - Testing large dataset performance...
+2025-07-07 14:07:42,208 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 100 cells
+2025-07-07 14:07:42,209 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:07:42,209 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:07:42,210 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:42,210 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:07:42,211 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:07:42,211 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:07:42,212 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:42,212 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:07:42,213 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:07:42,213 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:07:42,214 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:07:42,214 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:07:42,215 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 6 excluded
+2025-07-07 14:07:42,217 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 6 excluded
+2025-07-07 14:07:42,218 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 excluded
+2025-07-07 14:07:42,219 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 excluded
+2025-07-07 14:07:42,219 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 14:07:42,220 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 14:07:42,220 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 9 excluded
+2025-07-07 14:07:42,221 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 9 excluded
+2025-07-07 14:07:42,221 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 10 excluded
+2025-07-07 14:07:42,222 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 10 excluded
+2025-07-07 14:07:42,222 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 11 excluded
+2025-07-07 14:07:42,223 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 11 excluded
+2025-07-07 14:07:42,223 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 12 excluded
+2025-07-07 14:07:42,224 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 12 excluded
+2025-07-07 14:07:42,224 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 13 excluded
+2025-07-07 14:07:42,225 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 13 excluded
+2025-07-07 14:07:42,225 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 14 excluded
+2025-07-07 14:07:42,226 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 14 excluded
+2025-07-07 14:07:42,226 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 15 excluded
+2025-07-07 14:07:42,227 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 15 excluded
+2025-07-07 14:07:42,228 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 16 excluded
+2025-07-07 14:07:42,230 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 16 excluded
+2025-07-07 14:07:42,231 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 17 excluded
+2025-07-07 14:07:42,231 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 17 excluded
+2025-07-07 14:07:42,233 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 18 excluded
+2025-07-07 14:07:42,236 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 18 excluded
+2025-07-07 14:07:42,236 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 19 excluded
+2025-07-07 14:07:42,237 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 19 excluded
+2025-07-07 14:07:42,238 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 20 excluded
+2025-07-07 14:07:42,242 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 20 excluded
+2025-07-07 14:07:42,243 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 21 excluded
+2025-07-07 14:07:42,243 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 21 excluded
+2025-07-07 14:07:42,244 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 22 excluded
+2025-07-07 14:07:42,244 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 22 excluded
+2025-07-07 14:07:42,245 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 23 excluded
+2025-07-07 14:07:42,245 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 23 excluded
+2025-07-07 14:07:42,246 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 24 excluded
+2025-07-07 14:07:42,246 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 24 excluded
+2025-07-07 14:07:42,247 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 25 excluded
+2025-07-07 14:07:42,248 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 25 excluded
+2025-07-07 14:07:42,248 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 26 excluded
+2025-07-07 14:07:42,254 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 26 excluded
+2025-07-07 14:07:42,254 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 27 excluded
+2025-07-07 14:07:42,255 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 27 excluded
+2025-07-07 14:07:42,255 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 28 excluded
+2025-07-07 14:07:42,256 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 28 excluded
+2025-07-07 14:07:42,256 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 29 excluded
+2025-07-07 14:07:42,257 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 29 excluded
+2025-07-07 14:07:42,258 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 30 excluded
+2025-07-07 14:07:42,258 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 30 excluded
+2025-07-07 14:07:42,258 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 31 excluded
+2025-07-07 14:07:42,259 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 31 excluded
+2025-07-07 14:07:42,259 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 32 excluded
+2025-07-07 14:07:42,260 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 32 excluded
+2025-07-07 14:07:42,261 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 33 excluded
+2025-07-07 14:07:42,261 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 33 excluded
+2025-07-07 14:07:42,262 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 34 excluded
+2025-07-07 14:07:42,262 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 34 excluded
+2025-07-07 14:07:42,262 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 35 excluded
+2025-07-07 14:07:42,263 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 35 excluded
+2025-07-07 14:07:42,263 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 36 excluded
+2025-07-07 14:07:42,264 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 36 excluded
+2025-07-07 14:07:42,264 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 37 excluded
+2025-07-07 14:07:42,264 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 37 excluded
+2025-07-07 14:07:42,265 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 38 excluded
+2025-07-07 14:07:42,268 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 38 excluded
+2025-07-07 14:07:42,269 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 39 excluded
+2025-07-07 14:07:42,269 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 39 excluded
+2025-07-07 14:07:42,270 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 40 excluded
+2025-07-07 14:07:42,271 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 40 excluded
+2025-07-07 14:07:42,271 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 41 excluded
+2025-07-07 14:07:42,272 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 41 excluded
+2025-07-07 14:07:42,272 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 42 excluded
+2025-07-07 14:07:42,272 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 42 excluded
+2025-07-07 14:07:42,273 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 43 excluded
+2025-07-07 14:07:42,274 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 43 excluded
+2025-07-07 14:07:42,275 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 44 excluded
+2025-07-07 14:07:42,275 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 44 excluded
+2025-07-07 14:07:42,277 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 45 excluded
+2025-07-07 14:07:42,278 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 45 excluded
+2025-07-07 14:07:42,278 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 46 excluded
+2025-07-07 14:07:42,280 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 46 excluded
+2025-07-07 14:07:42,280 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 47 excluded
+2025-07-07 14:07:42,281 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 47 excluded
+2025-07-07 14:07:42,281 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 48 excluded
+2025-07-07 14:07:42,284 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 48 excluded
+2025-07-07 14:07:42,285 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 49 excluded
+2025-07-07 14:07:42,286 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 49 excluded
+2025-07-07 14:07:42,286 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 50 excluded
+2025-07-07 14:07:42,287 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 50 excluded
+2025-07-07 14:07:42,287 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 51 excluded
+2025-07-07 14:07:42,289 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 51 excluded
+2025-07-07 14:07:42,290 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 52 excluded
+2025-07-07 14:07:42,291 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 52 excluded
+2025-07-07 14:07:42,292 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 53 excluded
+2025-07-07 14:07:42,292 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 53 excluded
+2025-07-07 14:07:42,293 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 54 excluded
+2025-07-07 14:07:42,293 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 54 excluded
+2025-07-07 14:07:42,294 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 55 excluded
+2025-07-07 14:07:42,294 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 55 excluded
+2025-07-07 14:07:42,294 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 56 excluded
+2025-07-07 14:07:42,295 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 56 excluded
+2025-07-07 14:07:42,295 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 57 excluded
+2025-07-07 14:07:42,296 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 57 excluded
+2025-07-07 14:07:42,297 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 58 excluded
+2025-07-07 14:07:42,297 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 58 excluded
+2025-07-07 14:07:42,298 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 59 excluded
+2025-07-07 14:07:42,298 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 59 excluded
+2025-07-07 14:07:42,301 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 60 excluded
+2025-07-07 14:07:42,302 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 60 excluded
+2025-07-07 14:07:42,303 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 61 excluded
+2025-07-07 14:07:42,303 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 61 excluded
+2025-07-07 14:07:42,304 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 62 excluded
+2025-07-07 14:07:42,304 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 62 excluded
+2025-07-07 14:07:42,305 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 63 excluded
+2025-07-07 14:07:42,306 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 63 excluded
+2025-07-07 14:07:42,307 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 64 excluded
+2025-07-07 14:07:42,308 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 64 excluded
+2025-07-07 14:07:42,308 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 65 excluded
+2025-07-07 14:07:42,309 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 65 excluded
+2025-07-07 14:07:42,310 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 66 excluded
+2025-07-07 14:07:42,310 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 66 excluded
+2025-07-07 14:07:42,311 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 67 excluded
+2025-07-07 14:07:42,311 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 67 excluded
+2025-07-07 14:07:42,312 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 68 excluded
+2025-07-07 14:07:42,312 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 68 excluded
+2025-07-07 14:07:42,312 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 69 excluded
+2025-07-07 14:07:42,313 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 69 excluded
+2025-07-07 14:07:42,313 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 70 excluded
+2025-07-07 14:07:42,314 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 70 excluded
+2025-07-07 14:07:42,315 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 71 excluded
+2025-07-07 14:07:42,317 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 71 excluded
+2025-07-07 14:07:42,319 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 72 excluded
+2025-07-07 14:07:42,319 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 72 excluded
+2025-07-07 14:07:42,320 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 73 excluded
+2025-07-07 14:07:42,321 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 73 excluded
+2025-07-07 14:07:42,322 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 74 excluded
+2025-07-07 14:07:42,322 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 74 excluded
+2025-07-07 14:07:42,323 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 75 excluded
+2025-07-07 14:07:42,323 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 75 excluded
+2025-07-07 14:07:42,324 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 76 excluded
+2025-07-07 14:07:42,324 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 76 excluded
+2025-07-07 14:07:42,324 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 77 excluded
+2025-07-07 14:07:42,325 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 77 excluded
+2025-07-07 14:07:42,325 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 78 excluded
+2025-07-07 14:07:42,326 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 78 excluded
+2025-07-07 14:07:42,326 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 79 excluded
+2025-07-07 14:07:42,327 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 79 excluded
+2025-07-07 14:07:42,327 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 80 excluded
+2025-07-07 14:07:42,328 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 80 excluded
+2025-07-07 14:07:42,328 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 81 excluded
+2025-07-07 14:07:42,329 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 81 excluded
+2025-07-07 14:07:42,329 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 82 excluded
+2025-07-07 14:07:42,329 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 82 excluded
+2025-07-07 14:07:42,330 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 83 excluded
+2025-07-07 14:07:42,331 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 83 excluded
+2025-07-07 14:07:42,332 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 84 excluded
+2025-07-07 14:07:42,335 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 84 excluded
+2025-07-07 14:07:42,336 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 85 excluded
+2025-07-07 14:07:42,338 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 85 excluded
+2025-07-07 14:07:42,339 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 86 excluded
+2025-07-07 14:07:42,341 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 86 excluded
+2025-07-07 14:07:42,342 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 87 excluded
+2025-07-07 14:07:42,344 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 87 excluded
+2025-07-07 14:07:42,344 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 88 excluded
+2025-07-07 14:07:42,345 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 88 excluded
+2025-07-07 14:07:42,345 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 89 excluded
+2025-07-07 14:07:42,345 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 89 excluded
+2025-07-07 14:07:42,346 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 90 excluded
+2025-07-07 14:07:42,346 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 90 excluded
+2025-07-07 14:07:42,347 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 91 excluded
+2025-07-07 14:07:42,347 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 91 excluded
+2025-07-07 14:07:42,347 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 92 excluded
+2025-07-07 14:07:42,348 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 92 excluded
+2025-07-07 14:07:42,348 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 93 excluded
+2025-07-07 14:07:42,352 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 93 excluded
+2025-07-07 14:07:42,354 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 94 excluded
+2025-07-07 14:07:42,354 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 94 excluded
+2025-07-07 14:07:42,357 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 95 excluded
+2025-07-07 14:07:42,357 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 95 excluded
+2025-07-07 14:07:42,358 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 96 excluded
+2025-07-07 14:07:42,358 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 96 excluded
+2025-07-07 14:07:42,359 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 97 excluded
+2025-07-07 14:07:42,360 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 97 excluded
+2025-07-07 14:07:42,360 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 98 excluded
+2025-07-07 14:07:42,360 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 98 excluded
+2025-07-07 14:07:42,361 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 99 excluded
+2025-07-07 14:07:42,361 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 99 excluded
+2025-07-07 14:07:42,361 - cellsorter.components.widgets.row_cell_manager - INFO - All cells excluded
+2025-07-07 14:07:42,362 - cellsorter - INFO - ✅ Large dataset performance verified (load: 0.192s, bulk: 0.153s)
+2025-07-07 14:07:42,362 - cellsorter - INFO - Teardown test: test_large_dataset_performance_dev
+2025-07-07 14:07:42,375 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:42,376 - cellsorter - INFO - Setup test: test_memory_management_dev
+2025-07-07 14:07:42,376 - cellsorter - INFO - Testing memory management...
+2025-07-07 14:07:42,394 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 10 cells
+2025-07-07 14:07:42,415 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 10 cells
+2025-07-07 14:07:42,448 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 10 cells
+2025-07-07 14:07:42,452 - cellsorter - INFO - ✅ Memory management verified
+2025-07-07 14:07:42,452 - cellsorter - INFO - Teardown test: test_memory_management_dev
+2025-07-07 14:07:42,463 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:42,464 - cellsorter - INFO - Setup test: test_navigation_request_dev
+2025-07-07 14:07:42,464 - cellsorter - INFO - Testing navigation request...
+2025-07-07 14:07:42,473 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 3 cells
+2025-07-07 14:07:42,474 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 selected
+2025-07-07 14:07:42,475 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 1
+2025-07-07 14:07:42,475 - cellsorter - INFO - ✅ Navigation request verified
+2025-07-07 14:07:42,477 - cellsorter - INFO - Teardown test: test_navigation_request_dev
+2025-07-07 14:07:42,491 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:07:42,492 - cellsorter - INFO - Setup test: test_row_data_loading_dev
+2025-07-07 14:07:42,494 - cellsorter - INFO - Testing row data loading...
+2025-07-07 14:07:42,517 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 8 cells
+2025-07-07 14:07:42,518 - cellsorter - INFO - ✅ Row data loading verified
+2025-07-07 14:07:42,519 - cellsorter - INFO - Teardown test: test_row_data_loading_dev
+2025-07-07 14:08:05,778 - cellsorter - INFO - === DEV MODE: Row Cell Manager Tests ===
+2025-07-07 14:08:06,889 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:06,890 - cellsorter - INFO - Setup test: test_bulk_operations_dev
+2025-07-07 14:08:06,891 - cellsorter - INFO - Testing bulk operations...
+2025-07-07 14:08:06,904 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 6 cells
+2025-07-07 14:08:06,919 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:06,922 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:06,922 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:06,929 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:06,931 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:08:06,934 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:08:06,936 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:08:06,937 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:08:06,943 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:08:06,949 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:08:06,953 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 14:08:06,954 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 14:08:06,955 - cellsorter.components.widgets.row_cell_manager - INFO - All cells included
+2025-07-07 14:08:06,956 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:08:06,957 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:08:06,957 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:06,959 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:06,961 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:08:06,962 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:08:06,963 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:06,964 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:06,966 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:08:06,966 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:08:06,971 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:08:06,972 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:08:06,973 - cellsorter.components.widgets.row_cell_manager - INFO - All cells excluded
+2025-07-07 14:08:06,974 - cellsorter - INFO - ✅ Bulk operations verified
+2025-07-07 14:08:06,975 - cellsorter - INFO - Teardown test: test_bulk_operations_dev
+2025-07-07 14:08:07,010 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,014 - cellsorter - INFO - Setup test: test_cell_item_initialization_dev
+2025-07-07 14:08:07,015 - cellsorter - INFO - Testing cell item initialization...
+2025-07-07 14:08:07,021 - cellsorter - INFO - ✅ Cell item initialization verified
+2025-07-07 14:08:07,021 - cellsorter - INFO - Teardown test: test_cell_item_initialization_dev
+2025-07-07 14:08:07,032 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,046 - cellsorter - INFO - Setup test: test_cell_item_thumbnail_dev
+2025-07-07 14:08:07,047 - cellsorter - INFO - Testing cell item thumbnail...
+2025-07-07 14:08:07,049 - cellsorter - INFO - ✅ Cell item thumbnail verified
+2025-07-07 14:08:07,050 - cellsorter - INFO - Teardown test: test_cell_item_thumbnail_dev
+2025-07-07 14:08:07,066 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,110 - cellsorter - INFO - Setup test: test_cell_selection_simulation_dev
+2025-07-07 14:08:07,140 - cellsorter - INFO - Testing cell selection simulation...
+2025-07-07 14:08:07,169 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 5 cells
+2025-07-07 14:08:07,179 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 selected
+2025-07-07 14:08:07,187 - cellsorter - INFO - ✅ Cell selection simulation verified
+2025-07-07 14:08:07,191 - cellsorter - INFO - Teardown test: test_cell_selection_simulation_dev
+2025-07-07 14:08:07,221 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,272 - cellsorter - INFO - Setup test: test_close_functionality_dev
+2025-07-07 14:08:07,281 - cellsorter - INFO - Testing close functionality...
+2025-07-07 14:08:07,293 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 3 cells
+2025-07-07 14:08:07,297 - cellsorter.components.widgets.row_cell_manager - INFO - Row management closed
+2025-07-07 14:08:07,298 - cellsorter - INFO - ✅ Close functionality verified
+2025-07-07 14:08:07,306 - cellsorter - INFO - Teardown test: test_close_functionality_dev
+2025-07-07 14:08:07,321 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,325 - cellsorter - INFO - Setup test: test_component_initialization_dev
+2025-07-07 14:08:07,327 - cellsorter - INFO - Testing component initialization...
+2025-07-07 14:08:07,328 - cellsorter - INFO - ✅ Component initialization verified
+2025-07-07 14:08:07,329 - cellsorter - INFO - Teardown test: test_component_initialization_dev
+2025-07-07 14:08:07,354 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,363 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 14:08:07,363 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 14:08:07,379 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 6 cells
+2025-07-07 14:08:07,391 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 selected
+2025-07-07 14:08:07,394 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 selected
+2025-07-07 14:08:07,398 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:07,399 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:07,422 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:07,429 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:07,438 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 4
+2025-07-07 14:08:07,454 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:08:07,459 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 included
+2025-07-07 14:08:07,464 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:08:07,466 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 included
+2025-07-07 14:08:07,500 - cellsorter.components.widgets.row_cell_manager - INFO - All cells included
+2025-07-07 14:08:07,520 - cellsorter.components.widgets.row_cell_manager - INFO - Row management closed
+2025-07-07 14:08:07,520 - cellsorter - INFO - ✅ Comprehensive workflow verified
+2025-07-07 14:08:07,531 - cellsorter - INFO - 🎉 All DEV mode tests completed successfully!
+2025-07-07 14:08:07,532 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 14:08:07,546 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,547 - cellsorter - INFO - Setup test: test_empty_row_data_handling_dev
+2025-07-07 14:08:07,548 - cellsorter - INFO - Testing empty row data handling...
+2025-07-07 14:08:07,566 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Empty Selection with 0 cells
+2025-07-07 14:08:07,570 - cellsorter - INFO - ✅ Empty row data handling verified
+2025-07-07 14:08:07,571 - cellsorter - INFO - Teardown test: test_empty_row_data_handling_dev
+2025-07-07 14:08:07,586 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,591 - cellsorter - INFO - Setup test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:08:07,592 - cellsorter - INFO - Testing inclusion toggle simulation...
+2025-07-07 14:08:07,599 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 4 cells
+2025-07-07 14:08:07,608 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:07,608 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:07,609 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:07,610 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:07,611 - cellsorter - INFO - ✅ Inclusion toggle simulation verified
+2025-07-07 14:08:07,612 - cellsorter - INFO - Teardown test: test_inclusion_toggle_simulation_dev
+2025-07-07 14:08:07,627 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:07,636 - cellsorter - INFO - Setup test: test_large_dataset_performance_dev
+2025-07-07 14:08:07,642 - cellsorter - INFO - Testing large dataset performance...
+2025-07-07 14:08:07,893 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 100 cells
+2025-07-07 14:08:07,896 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:08:07,898 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 14:08:07,899 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:07,905 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 14:08:07,907 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:08:07,908 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 14:08:07,909 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:07,911 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 14:08:07,912 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:08:07,913 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 4 excluded
+2025-07-07 14:08:07,914 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:08:07,914 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 14:08:07,915 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 6 excluded
+2025-07-07 14:08:07,916 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 6 excluded
+2025-07-07 14:08:07,921 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 excluded
+2025-07-07 14:08:07,921 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 excluded
+2025-07-07 14:08:07,923 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 14:08:07,926 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 14:08:07,928 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 9 excluded
+2025-07-07 14:08:07,929 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 9 excluded
+2025-07-07 14:08:07,930 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 10 excluded
+2025-07-07 14:08:07,931 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 10 excluded
+2025-07-07 14:08:07,933 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 11 excluded
+2025-07-07 14:08:07,936 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 11 excluded
+2025-07-07 14:08:07,937 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 12 excluded
+2025-07-07 14:08:07,938 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 12 excluded
+2025-07-07 14:08:07,942 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 13 excluded
+2025-07-07 14:08:07,943 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 13 excluded
+2025-07-07 14:08:07,944 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 14 excluded
+2025-07-07 14:08:07,945 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 14 excluded
+2025-07-07 14:08:07,946 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 15 excluded
+2025-07-07 14:08:07,946 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 15 excluded
+2025-07-07 14:08:07,947 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 16 excluded
+2025-07-07 14:08:07,948 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 16 excluded
+2025-07-07 14:08:07,949 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 17 excluded
+2025-07-07 14:08:07,951 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 17 excluded
+2025-07-07 14:08:07,953 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 18 excluded
+2025-07-07 14:08:07,955 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 18 excluded
+2025-07-07 14:08:07,956 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 19 excluded
+2025-07-07 14:08:07,959 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 19 excluded
+2025-07-07 14:08:07,960 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 20 excluded
+2025-07-07 14:08:07,960 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 20 excluded
+2025-07-07 14:08:07,962 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 21 excluded
+2025-07-07 14:08:07,963 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 21 excluded
+2025-07-07 14:08:07,963 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 22 excluded
+2025-07-07 14:08:07,965 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 22 excluded
+2025-07-07 14:08:07,966 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 23 excluded
+2025-07-07 14:08:07,971 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 23 excluded
+2025-07-07 14:08:07,972 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 24 excluded
+2025-07-07 14:08:07,974 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 24 excluded
+2025-07-07 14:08:07,975 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 25 excluded
+2025-07-07 14:08:07,975 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 25 excluded
+2025-07-07 14:08:07,977 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 26 excluded
+2025-07-07 14:08:07,977 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 26 excluded
+2025-07-07 14:08:07,978 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 27 excluded
+2025-07-07 14:08:07,979 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 27 excluded
+2025-07-07 14:08:07,979 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 28 excluded
+2025-07-07 14:08:07,980 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 28 excluded
+2025-07-07 14:08:07,981 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 29 excluded
+2025-07-07 14:08:07,981 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 29 excluded
+2025-07-07 14:08:07,985 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 30 excluded
+2025-07-07 14:08:07,986 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 30 excluded
+2025-07-07 14:08:07,988 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 31 excluded
+2025-07-07 14:08:07,989 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 31 excluded
+2025-07-07 14:08:07,991 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 32 excluded
+2025-07-07 14:08:07,992 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 32 excluded
+2025-07-07 14:08:07,994 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 33 excluded
+2025-07-07 14:08:07,995 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 33 excluded
+2025-07-07 14:08:07,996 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 34 excluded
+2025-07-07 14:08:07,999 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 34 excluded
+2025-07-07 14:08:08,003 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 35 excluded
+2025-07-07 14:08:08,004 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 35 excluded
+2025-07-07 14:08:08,004 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 36 excluded
+2025-07-07 14:08:08,005 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 36 excluded
+2025-07-07 14:08:08,006 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 37 excluded
+2025-07-07 14:08:08,007 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 37 excluded
+2025-07-07 14:08:08,008 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 38 excluded
+2025-07-07 14:08:08,009 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 38 excluded
+2025-07-07 14:08:08,010 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 39 excluded
+2025-07-07 14:08:08,011 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 39 excluded
+2025-07-07 14:08:08,012 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 40 excluded
+2025-07-07 14:08:08,012 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 40 excluded
+2025-07-07 14:08:08,013 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 41 excluded
+2025-07-07 14:08:08,014 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 41 excluded
+2025-07-07 14:08:08,015 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 42 excluded
+2025-07-07 14:08:08,016 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 42 excluded
+2025-07-07 14:08:08,016 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 43 excluded
+2025-07-07 14:08:08,021 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 43 excluded
+2025-07-07 14:08:08,024 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 44 excluded
+2025-07-07 14:08:08,025 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 44 excluded
+2025-07-07 14:08:08,026 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 45 excluded
+2025-07-07 14:08:08,028 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 45 excluded
+2025-07-07 14:08:08,029 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 46 excluded
+2025-07-07 14:08:08,030 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 46 excluded
+2025-07-07 14:08:08,030 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 47 excluded
+2025-07-07 14:08:08,031 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 47 excluded
+2025-07-07 14:08:08,033 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 48 excluded
+2025-07-07 14:08:08,036 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 48 excluded
+2025-07-07 14:08:08,038 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 49 excluded
+2025-07-07 14:08:08,039 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 49 excluded
+2025-07-07 14:08:08,040 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 50 excluded
+2025-07-07 14:08:08,041 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 50 excluded
+2025-07-07 14:08:08,042 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 51 excluded
+2025-07-07 14:08:08,043 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 51 excluded
+2025-07-07 14:08:08,044 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 52 excluded
+2025-07-07 14:08:08,044 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 52 excluded
+2025-07-07 14:08:08,045 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 53 excluded
+2025-07-07 14:08:08,046 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 53 excluded
+2025-07-07 14:08:08,048 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 54 excluded
+2025-07-07 14:08:08,049 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 54 excluded
+2025-07-07 14:08:08,052 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 55 excluded
+2025-07-07 14:08:08,053 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 55 excluded
+2025-07-07 14:08:08,055 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 56 excluded
+2025-07-07 14:08:08,056 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 56 excluded
+2025-07-07 14:08:08,057 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 57 excluded
+2025-07-07 14:08:08,058 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 57 excluded
+2025-07-07 14:08:08,059 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 58 excluded
+2025-07-07 14:08:08,060 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 58 excluded
+2025-07-07 14:08:08,061 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 59 excluded
+2025-07-07 14:08:08,063 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 59 excluded
+2025-07-07 14:08:08,064 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 60 excluded
+2025-07-07 14:08:08,069 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 60 excluded
+2025-07-07 14:08:08,072 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 61 excluded
+2025-07-07 14:08:08,074 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 61 excluded
+2025-07-07 14:08:08,075 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 62 excluded
+2025-07-07 14:08:08,076 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 62 excluded
+2025-07-07 14:08:08,077 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 63 excluded
+2025-07-07 14:08:08,078 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 63 excluded
+2025-07-07 14:08:08,080 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 64 excluded
+2025-07-07 14:08:08,081 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 64 excluded
+2025-07-07 14:08:08,086 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 65 excluded
+2025-07-07 14:08:08,088 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 65 excluded
+2025-07-07 14:08:08,089 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 66 excluded
+2025-07-07 14:08:08,090 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 66 excluded
+2025-07-07 14:08:08,090 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 67 excluded
+2025-07-07 14:08:08,091 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 67 excluded
+2025-07-07 14:08:08,092 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 68 excluded
+2025-07-07 14:08:08,094 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 68 excluded
+2025-07-07 14:08:08,095 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 69 excluded
+2025-07-07 14:08:08,099 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 69 excluded
+2025-07-07 14:08:08,099 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 70 excluded
+2025-07-07 14:08:08,103 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 70 excluded
+2025-07-07 14:08:08,104 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 71 excluded
+2025-07-07 14:08:08,105 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 71 excluded
+2025-07-07 14:08:08,106 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 72 excluded
+2025-07-07 14:08:08,107 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 72 excluded
+2025-07-07 14:08:08,109 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 73 excluded
+2025-07-07 14:08:08,109 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 73 excluded
+2025-07-07 14:08:08,111 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 74 excluded
+2025-07-07 14:08:08,112 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 74 excluded
+2025-07-07 14:08:08,114 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 75 excluded
+2025-07-07 14:08:08,115 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 75 excluded
+2025-07-07 14:08:08,116 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 76 excluded
+2025-07-07 14:08:08,119 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 76 excluded
+2025-07-07 14:08:08,121 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 77 excluded
+2025-07-07 14:08:08,121 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 77 excluded
+2025-07-07 14:08:08,122 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 78 excluded
+2025-07-07 14:08:08,122 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 78 excluded
+2025-07-07 14:08:08,124 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 79 excluded
+2025-07-07 14:08:08,124 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 79 excluded
+2025-07-07 14:08:08,125 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 80 excluded
+2025-07-07 14:08:08,126 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 80 excluded
+2025-07-07 14:08:08,127 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 81 excluded
+2025-07-07 14:08:08,128 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 81 excluded
+2025-07-07 14:08:08,131 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 82 excluded
+2025-07-07 14:08:08,132 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 82 excluded
+2025-07-07 14:08:08,133 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 83 excluded
+2025-07-07 14:08:08,138 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 83 excluded
+2025-07-07 14:08:08,139 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 84 excluded
+2025-07-07 14:08:08,140 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 84 excluded
+2025-07-07 14:08:08,142 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 85 excluded
+2025-07-07 14:08:08,143 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 85 excluded
+2025-07-07 14:08:08,144 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 86 excluded
+2025-07-07 14:08:08,145 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 86 excluded
+2025-07-07 14:08:08,146 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 87 excluded
+2025-07-07 14:08:08,147 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 87 excluded
+2025-07-07 14:08:08,148 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 88 excluded
+2025-07-07 14:08:08,149 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 88 excluded
+2025-07-07 14:08:08,150 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 89 excluded
+2025-07-07 14:08:08,152 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 89 excluded
+2025-07-07 14:08:08,153 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 90 excluded
+2025-07-07 14:08:08,154 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 90 excluded
+2025-07-07 14:08:08,156 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 91 excluded
+2025-07-07 14:08:08,157 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 91 excluded
+2025-07-07 14:08:08,158 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 92 excluded
+2025-07-07 14:08:08,159 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 92 excluded
+2025-07-07 14:08:08,160 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 93 excluded
+2025-07-07 14:08:08,161 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 93 excluded
+2025-07-07 14:08:08,162 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 94 excluded
+2025-07-07 14:08:08,163 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 94 excluded
+2025-07-07 14:08:08,165 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 95 excluded
+2025-07-07 14:08:08,165 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 95 excluded
+2025-07-07 14:08:08,168 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 96 excluded
+2025-07-07 14:08:08,170 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 96 excluded
+2025-07-07 14:08:08,170 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 97 excluded
+2025-07-07 14:08:08,171 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 97 excluded
+2025-07-07 14:08:08,172 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 98 excluded
+2025-07-07 14:08:08,174 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 98 excluded
+2025-07-07 14:08:08,175 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 99 excluded
+2025-07-07 14:08:08,176 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 99 excluded
+2025-07-07 14:08:08,176 - cellsorter.components.widgets.row_cell_manager - INFO - All cells excluded
+2025-07-07 14:08:08,178 - cellsorter - INFO - ✅ Large dataset performance verified (load: 0.254s, bulk: 0.282s)
+2025-07-07 14:08:08,180 - cellsorter - INFO - Teardown test: test_large_dataset_performance_dev
+2025-07-07 14:08:08,196 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:08,199 - cellsorter - INFO - Setup test: test_memory_management_dev
+2025-07-07 14:08:08,203 - cellsorter - INFO - Testing memory management...
+2025-07-07 14:08:08,229 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 10 cells
+2025-07-07 14:08:08,256 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 10 cells
+2025-07-07 14:08:08,279 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 10 cells
+2025-07-07 14:08:08,280 - cellsorter - INFO - ✅ Memory management verified
+2025-07-07 14:08:08,281 - cellsorter - INFO - Teardown test: test_memory_management_dev
+2025-07-07 14:08:08,295 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:08,295 - cellsorter - INFO - Setup test: test_navigation_request_dev
+2025-07-07 14:08:08,296 - cellsorter - INFO - Testing navigation request...
+2025-07-07 14:08:08,304 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 3 cells
+2025-07-07 14:08:08,306 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 selected
+2025-07-07 14:08:08,308 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 1
+2025-07-07 14:08:08,310 - cellsorter - INFO - ✅ Navigation request verified
+2025-07-07 14:08:08,310 - cellsorter - INFO - Teardown test: test_navigation_request_dev
+2025-07-07 14:08:08,326 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 14:08:08,328 - cellsorter - INFO - Setup test: test_row_data_loading_dev
+2025-07-07 14:08:08,328 - cellsorter - INFO - Testing row data loading...
+2025-07-07 14:08:08,348 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection with 8 cells
+2025-07-07 14:08:08,350 - cellsorter - INFO - ✅ Row data loading verified
+2025-07-07 14:08:08,352 - cellsorter - INFO - Teardown test: test_row_data_loading_dev

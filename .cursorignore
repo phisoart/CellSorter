@@ -93,5 +93,4 @@ settings.json
 .env.production
 
 # Taskmaster and backup files
-.taskmaster/
 *.backup 

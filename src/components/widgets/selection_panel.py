@@ -20,6 +20,7 @@ from PySide6.QtWidgets import QFrame as QtFrame, QHeaderView as QtHeaderView, QA
 from PySide6.QtWidgets import QMessageBox as QtMessageBox
 
 from components.widgets.well_plate import WellPlateWidget
+from components.widgets.row_cell_manager import RowCellManager, CellRowData
 from components.base.base_button import BaseButton
 from components.dialogs.custom_color_dialog import CustomColorDialog
 from components.dialogs.well_selection_dialog import WellSelectionDialog
@@ -44,6 +45,7 @@ class SelectionPanel(QWidget, LoggerMixin):
     selection_updated = Signal(str, dict)  # selection_id, updated_data
     selection_deleted = Signal(str)  # selection_id
     export_requested = Signal()  # Request export dialog
+    roi_management_requested = Signal(str)  # selection_id for ROI management
     
     def __init__(self, parent: Optional[QWidget] = None):
         super().__init__(parent)
@@ -53,6 +55,10 @@ class SelectionPanel(QWidget, LoggerMixin):
         
         # Prevent circular reference during updates
         self._updating_selection: bool = False
+        
+        # ROI Management state
+        self.selected_row_id: Optional[str] = None
+        self.roi_manager: Optional[RowCellManager] = None
         
         self.setup_ui()
         self.connect_signals()
@@ -65,15 +71,51 @@ class SelectionPanel(QWidget, LoggerMixin):
         layout.setSpacing(12)  # COMPONENT_SPACING equivalent
         layout.setContentsMargins(8, 8, 8, 8)  # PANEL_MARGIN equivalent
         
-        # Title with better styling
+        # Title section with "Manage ROIs" button
+        title_layout = QHBoxLayout()
+        title_layout.setContentsMargins(0, 0, 0, 8)
+        
         title_label = QLabel("Cell Selections")
         title_label.setStyleSheet("""
             font-weight: bold; 
             font-size: 14px; 
-            margin-bottom: 8px;
             color: var(--foreground);
         """)
-        layout.addWidget(title_label)
+        
+        # Create "Manage ROIs" button - always visible but enabled/disabled based on selection
+        self.manage_rois_button = QPushButton("Manage ROIs")
+        self.manage_rois_button.setEnabled(False)  # Initially disabled until row selected
+        self.manage_rois_button.setMinimumHeight(28)
+        self.manage_rois_button.setMinimumWidth(100)
+        self.manage_rois_button.clicked.connect(self.open_roi_management)
+        self.manage_rois_button.setStyleSheet("""
+            QPushButton {
+                background-color: var(--accent);
+                color: var(--accent-foreground);
+                border: none;
+                border-radius: 6px;
+                padding: 4px 12px;
+                font-weight: 500;
+                font-size: 12px;
+            }
+            QPushButton:hover:enabled {
+                background-color: var(--accent)/90;
+            }
+            QPushButton:pressed:enabled {
+                background-color: var(--accent)/80;
+            }
+            QPushButton:disabled {
+                background-color: var(--muted);
+                color: var(--muted-foreground);
+                opacity: 0.6;
+            }
+        """)
+        
+        title_layout.addWidget(title_label)
+        title_layout.addStretch()  # Push button to the right
+        title_layout.addWidget(self.manage_rois_button)
+        
+        layout.addLayout(title_layout)
         
         # Create splitter for table and well plate
         splitter = QSplitter(Qt.Vertical)
@@ -534,9 +576,29 @@ class SelectionPanel(QWidget, LoggerMixin):
                     self.log_info(f"Updated well for selection {selection_id}: {new_well}")
     
     def on_table_selection_changed(self) -> None:
-        """Handle table selection changes to update delete button state."""
+        """Handle table selection changes to update delete button state and ROI management."""
         selected_rows = self.selection_table.selectionModel().selectedRows()
         self.delete_button.setEnabled(len(selected_rows) > 0)
+        
+        # Handle "Manage ROIs" button activation
+        if len(selected_rows) == 1:
+            # Single row selected - enable "Manage ROIs" button
+            selected_row = selected_rows[0].row()
+            selections_list = list(self.selections_data.items())
+            
+            if selected_row < len(selections_list):
+                selection_id = selections_list[selected_row][0]
+                self.selected_row_id = selection_id
+                self.manage_rois_button.setEnabled(True)
+                self.log_info(f"Row selected for ROI management: {selection_id}")
+            else:
+                self.selected_row_id = None
+                self.manage_rois_button.setEnabled(False)
+        else:
+            # No selection or multiple selections - disable button
+            self.selected_row_id = None
+            self.manage_rois_button.setEnabled(False)
+        
         # Individual delete buttons in table rows are always enabled
     
     def on_well_clicked(self, well_position: str) -> None:
@@ -857,3 +919,98 @@ class SelectionPanel(QWidget, LoggerMixin):
             self.export_protocol_button.setToolTip("Complete coordinate calibration to enable protocol export")
         
         self.log_info(f"Export protocol button {'enabled' if is_calibrated else 'disabled'} - calibration {'complete' if is_calibrated else 'required'}")
+    
+    def open_roi_management(self) -> None:
+        """Open the ROI management dialog for the selected row."""
+        if not self.selected_row_id:
+            self.log_warning("No row selected for ROI management")
+            return
+        
+        selection_data = self.selections_data.get(self.selected_row_id)
+        if not selection_data:
+            self.log_warning(f"Selection data not found for ID: {self.selected_row_id}")
+            return
+        
+        # Create cell row data from selection
+        cell_row_data = self._create_cell_row_data(self.selected_row_id, selection_data)
+        
+        # Create or reuse ROI manager
+        if not self.roi_manager:
+            self.roi_manager = RowCellManager(self)
+            self.roi_manager.cell_inclusion_changed.connect(self.on_cell_inclusion_changed)
+            self.roi_manager.cell_navigation_requested.connect(self.on_cell_navigation_requested)
+            self.roi_manager.row_management_closed.connect(self.on_roi_management_closed)
+        
+        # Load data and show
+        self.roi_manager.load_row_data(cell_row_data)
+        self.roi_manager.show()
+        self.roi_manager.raise_()
+        
+        self.log_info(f"Opened ROI management for selection: {self.selected_row_id}")
+    
+    def _create_cell_row_data(self, selection_id: str, selection_data: Dict[str, Any]) -> CellRowData:
+        """Create CellRowData from selection data."""
+        # Extract cell indices and metadata from selection data
+        cell_indices = selection_data.get('cell_indices', list(range(selection_data.get('cell_count', 0))))
+        cell_metadata = selection_data.get('cell_metadata', {}).copy()
+        
+        # Ensure all cell indices have metadata
+        for i, cell_idx in enumerate(cell_indices):
+            if cell_idx not in cell_metadata:
+                cell_metadata[cell_idx] = {
+                    'area': 100 + i * 10,
+                    'intensity': 50 + i * 5,
+                    'perimeter': 30 + i * 3
+                }
+        
+        return CellRowData(
+            selection_id=selection_id,
+            selection_label=selection_data.get('label', f'Selection {selection_id}'),
+            selection_color=selection_data.get('color', '#FF0000'),
+            cell_indices=cell_indices,
+            cell_metadata=cell_metadata
+        )
+    
+    def on_cell_inclusion_changed(self, selection_id: str, cell_index: int, included: bool) -> None:
+        """Handle cell inclusion/exclusion changes from ROI manager."""
+        if selection_id in self.selections_data:
+            # Update cell inclusion status in selection data
+            if 'excluded_cells' not in self.selections_data[selection_id]:
+                self.selections_data[selection_id]['excluded_cells'] = set()
+            
+            excluded_cells = self.selections_data[selection_id]['excluded_cells']
+            if included:
+                excluded_cells.discard(cell_index)
+            else:
+                excluded_cells.add(cell_index)
+            
+            # Emit signal for external handling
+            self.selection_updated.emit(selection_id, {
+                'excluded_cells': list(excluded_cells),
+                'action': 'cell_inclusion_changed',
+                'cell_index': cell_index,
+                'included': included
+            })
+            
+            self.log_info(f"Cell {cell_index} {'included' if included else 'excluded'} in selection {selection_id}")
+    
+    def on_cell_navigation_requested(self, cell_index: int) -> None:
+        """Handle cell navigation requests from ROI manager."""
+        if self.selected_row_id:
+            # Emit signal with selection and cell information
+            self.roi_management_requested.emit(self.selected_row_id)
+            
+            # Also emit more specific navigation signal
+            self.selection_updated.emit(self.selected_row_id, {
+                'action': 'navigate_to_cell',
+                'cell_index': cell_index
+            })
+            
+            self.log_info(f"Navigation requested to cell {cell_index} in selection {self.selected_row_id}")
+    
+    def on_roi_management_closed(self) -> None:
+        """Handle ROI management dialog closure."""
+        if self.roi_manager:
+            self.roi_manager.hide()
+        
+        self.log_info("ROI management dialog closed")
