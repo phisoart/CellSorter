@@ -1244,13 +1244,23 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def show_roi_management_dialog(self, selection_id: str) -> None:
         """Create and show the ROI Management Dialog for a given selection."""
-        self.logger.info(f"🔥 MAIN WINDOW: show_roi_management_dialog called with selection_id: {selection_id}")
-        print(f"🔥 MAIN WINDOW: show_roi_management_dialog called with selection_id: {selection_id}")
+        self.logger.info(f"Request to show ROI Management Dialog for selection: {selection_id}")
+
+        # If a dialog for the same selection is already visible, just activate it.
+        if (hasattr(self, 'roi_management_dialog') and 
+            self.roi_management_dialog and 
+            self.roi_management_dialog.isVisible() and
+            self.roi_management_dialog.row_data and
+            self.roi_management_dialog.row_data.selection_id == selection_id):
+            self.logger.info("ROI dialog already open for this selection. Activating it.")
+            self.roi_management_dialog.activateWindow()
+            return
+
+        # If a different dialog is open, close it first.
+        if hasattr(self, 'roi_management_dialog') and self.roi_management_dialog and self.roi_management_dialog.isVisible():
+            self.roi_management_dialog.close()
         
         try:
-            if self.roi_management_dialog and self.roi_management_dialog.isVisible():
-                self.roi_management_dialog.close()
-
             selection_data = self.selection_manager.get_selection(selection_id)
             if not selection_data:
                 self.error_handler.show_error("Selection not found", f"Could not find data for selection ID: {selection_id}")
@@ -1264,7 +1274,7 @@ class MainWindow(QMainWindow, LoggerMixin):
             from components.widgets.row_cell_manager import CellRowData
             row_data = self._create_cell_row_data(selection_id, selection_data)
 
-            # Create the ROI management dialog
+            # Create a new ROI management dialog
             self.roi_management_dialog = ROIManagementDialog(
                 parent=self,
                 row_data=row_data,
@@ -1272,13 +1282,11 @@ class MainWindow(QMainWindow, LoggerMixin):
                 csv_parser=self.csv_parser
             )
 
-            # Connect the navigation signal
+            # Connect signals
             self.roi_management_dialog.cell_navigation_requested.connect(self.navigate_to_cell)
-            
-            # Connect changes confirmed signal
             self.roi_management_dialog.changes_confirmed.connect(self._on_roi_changes_confirmed)
 
-            # Show the dialog
+            # Show the dialog non-modally
             self.roi_management_dialog.show()
             self.logger.info(f"ROI Management Dialog opened for selection: {selection_id}")
 
