@@ -946,6 +946,9 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.roi_manager.show()
         self.roi_manager.raise_()
         
+        # Emit the ROI management requested signal to main window
+        self.roi_management_requested.emit(self.selected_row_id)
+        
         self.log_info(f"Opened ROI management for selection: {self.selected_row_id}")
     
     def _create_cell_row_data(self, selection_id: str, selection_data: Dict[str, Any]) -> CellRowData:

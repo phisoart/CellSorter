@@ -450,7 +450,14 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_panel.selection_toggled.connect(self._on_panel_selection_toggled)
         self.selection_panel.selection_updated.connect(self._on_panel_selection_updated)
         self.selection_panel.export_requested.connect(self.export_protocol)
+        
+        # ROI management connection with debug logging
+        self.logger.info(f"🔧 SETUP: Connecting selection_panel.roi_management_requested to show_roi_management_dialog")
+        print(f"🔧 SETUP: Connecting selection_panel.roi_management_requested to show_roi_management_dialog")
+        print(f"🔧 SETUP: selection_panel object: {self.selection_panel}")
+        print(f"🔧 SETUP: roi_management_requested signal: {self.selection_panel.roi_management_requested}")
         self.selection_panel.roi_management_requested.connect(self.show_roi_management_dialog)
+        print(f"🔧 SETUP: Connection completed successfully")
         
         # Image handler connections
         self.image_handler.coordinates_changed.connect(self.update_coordinates)
@@ -1237,6 +1244,9 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def show_roi_management_dialog(self, selection_id: str) -> None:
         """Create and show the ROI Management Dialog for a given selection."""
+        self.logger.info(f"🔥 MAIN WINDOW: show_roi_management_dialog called with selection_id: {selection_id}")
+        print(f"🔥 MAIN WINDOW: show_roi_management_dialog called with selection_id: {selection_id}")
+        
         try:
             if self.roi_management_dialog and self.roi_management_dialog.isVisible():
                 self.roi_management_dialog.close()
