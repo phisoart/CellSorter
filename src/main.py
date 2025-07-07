@@ -20,7 +20,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QFont
 
 from pages.main_window import MainWindow
-from utils.update_checker import UpdateChecker
 
 def main() -> None:
     """Main application entry point."""
@@ -45,16 +44,10 @@ def main() -> None:
         theme_manager = ThemeManager(app)
         theme_manager.apply_theme("light")  # Default theme
 
-        # Initialize update checker
-        update_checker = UpdateChecker(APP_VERSION)
-
-        # Create and show main window, injecting the theme manager and update checker
+        # Create and show main window, injecting the theme manager
         from pages.main_window import MainWindow
-        window = MainWindow(theme_manager=theme_manager, update_checker=update_checker)
+        window = MainWindow(theme_manager=theme_manager)
         window.show()
-        
-        # Start periodic update checking after window is shown
-        update_checker.start_periodic_check()
 
         # Start event loop
         sys.exit(app.exec())

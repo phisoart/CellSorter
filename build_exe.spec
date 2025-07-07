@@ -46,7 +46,6 @@ a = Analysis(
         'utils.design_tokens',
         'utils.accessibility',
         'utils.style_converter',
-        'utils.update_checker',
         'utils.default_templates',
         'utils.expression_parser',
         'utils.card_colors',

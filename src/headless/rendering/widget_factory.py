@@ -75,26 +75,26 @@ class WidgetFactory(LoggerMixin):
             from pages.main_window import MainWindow
             from services.theme_manager import ThemeManager
             from PySide6.QtWidgets import QApplication
-            # theme_manager 우선순위: kwargs > 기존 인스턴스 > 새로 생성
+            
             theme_manager = kwargs.pop('theme_manager', None)
             if theme_manager is None:
                 app = QApplication.instance()
                 if app is None:
-                    # Headless fallback: QApplication이 없으면 생성 시도
                     try:
-                        from PySide6.QtWidgets import QApplication
                         import sys
                         app = QApplication(sys.argv)
                     except Exception:
                         app = None
-                if app is not None:
+                
+                if app:
                     theme_manager = ThemeManager(app)
-                else:
-                    # 완전 headless fallback: ThemeManager 없이 생성 시도
-                    return MainWindow(None, None, parent)
-            update_checker = kwargs.pop('update_checker', None)
-            # MainWindow(theme_manager, update_checker=None, parent=None)
-            return MainWindow(theme_manager, update_checker, parent)
+
+            if not theme_manager:
+                self.log_error("Failed to create MainWindow: ThemeManager is not available.")
+                return QWidget(parent) if parent else QWidget()
+
+            return MainWindow(theme_manager, parent)
+            
         except ImportError as e:
             self.log_warning(f"MainWindow not available: {e}, using QWidget placeholder")
             return QWidget(parent) if parent else QWidget()

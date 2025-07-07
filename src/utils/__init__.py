@@ -9,7 +9,6 @@ from .logging_config import setup_logging, LoggerMixin
 from .exceptions import CellSorterError, ImageLoadError, CSVParseError, CalibrationError, DataValidationError
 from .design_tokens import DesignTokens
 from .style_converter import convert_css_to_qt
-from .update_checker import UpdateChecker
 from .accessibility import (
     AccessibilityRole, 
     AccessibilityState,
@@ -36,7 +35,6 @@ __all__ = [
     'DataValidationError',
     'DesignTokens',
     'convert_css_to_qt',
-    'UpdateChecker',
     # Accessibility utilities
     'AccessibilityRole',
     'AccessibilityState', 

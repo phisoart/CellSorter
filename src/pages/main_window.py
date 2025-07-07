@@ -71,7 +71,7 @@ class MainWindow(QMainWindow, LoggerMixin):
     csv_loaded = Signal(str)    # File path
     export_requested = Signal() # Export protocol request
     
-    def __init__(self, theme_manager: ThemeManager, update_checker=None, parent: Optional[QWidget] = None):
+    def __init__(self, theme_manager: ThemeManager, parent: Optional[QWidget] = None):
         super().__init__(parent)
         
         # Initialize error handler
@@ -79,7 +79,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Initialize theme manager (light theme only)
         self.theme_manager = theme_manager
-        self.update_checker = update_checker
         
         # Component state tracking - removed session management
         self.current_image_path: Optional[str] = None
@@ -90,10 +89,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Initialize theme manager (light theme only)
         self.theme_manager.apply_theme("light")
-        
-        # Initialize update checker
-        if self.update_checker:
-            self.update_checker.update_available.connect(self._on_update_available)
         
         # Initialize core components
         self.image_handler = ImageHandler(self)
@@ -464,9 +459,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Minimap connections
         self.minimap_widget.navigation_requested.connect(self.image_handler.center_on)
-        
-        # Check for updates on startup
-        QTimer.singleShot(1500, self.check_for_updates)
         
         # Set initial calibration status for SelectionPanel (disabled by default)
         if hasattr(self, 'selection_panel'):
@@ -1231,68 +1223,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self._current_calibration_dialog = None
         dialog.deleteLater()
     
-    def check_for_updates(self) -> None:
-        """Manually check for application updates."""
-        if self.update_checker:
-            self.update_checker.check_for_updates(force=True)
-            self.update_status("Checking for updates...")
-        else:
-            QMessageBox.information(self, "Update Check", 
-                                  "Update checking is not available in this version.")
-    
-    def show_update_preferences(self) -> None:
-        """Show update preferences dialog."""
-        if not self.update_checker:
-            return
-            
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Update Preferences")
-        dialog.setFixedSize(400, 200)
-        
-        layout = QVBoxLayout(dialog)
-        
-        # Auto-check checkbox
-        from PySide6.QtWidgets import QCheckBox, QDialogButtonBox
-        auto_check = QCheckBox("Automatically check for updates")
-        auto_check.setChecked(self.update_checker.auto_check_enabled)
-        layout.addWidget(auto_check)
-        
-        # Info label
-        info_label = QLabel("CellSorter will check for updates once a week when this option is enabled.")
-        info_label.setWordWrap(True)
-        info_label.setStyleSheet("color: #666; margin: 10px 0;")
-        layout.addWidget(info_label)
-        
-        # Current version info
-        version_label = QLabel(f"Current version: {APP_VERSION}")
-        layout.addWidget(version_label)
-        
-        # Buttons
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.accepted.connect(dialog.accept)
-        buttons.rejected.connect(dialog.reject)
-        layout.addWidget(buttons)
-        
-        if dialog.exec() == QDialog.Accepted:
-            self.update_checker.auto_check_enabled = auto_check.isChecked()
-            self.log_info(f"Update auto-check set to: {auto_check.isChecked()}")
-    
-    def _on_update_available(self, current_version: str, latest_version: str, download_url: str) -> None:
-        """Handle update availability notification."""
-        reply = QMessageBox.information(
-            self,
-            "Update Available",
-            f"A new version of CellSorter is available!\n\n"
-            f"Current version: {current_version}\n"
-            f"Latest version: {latest_version}\n\n"
-            f"Would you like to download the update?",
-            QMessageBox.Yes | QMessageBox.No
-        )
-        
-        if reply == QMessageBox.Yes:
-            import webbrowser
-            webbrowser.open(download_url)
-    
     def _update_minimap_viewport(self) -> None:
         """Update minimap viewport rectangle."""
         if self.image_handler.image_data is not None:
@@ -1307,33 +1237,40 @@ class MainWindow(QMainWindow, LoggerMixin):
     
     def show_roi_management_dialog(self, selection_id: str) -> None:
         """Create and show the ROI Management Dialog for a given selection."""
-        if self.roi_management_dialog and self.roi_management_dialog.isVisible():
-            self.roi_management_dialog.close()
-
-        selection_data = self.selection_manager.get_selection(selection_id)
-        if not selection_data:
-            self.error_handler.show_error("Selection not found", f"Could not find data for selection ID: {selection_id}")
-            return
-        
-        if not self.csv_parser.get_data().any().any():
-            self.error_handler.show_error("No CSV Data", "Cannot manage ROIs without loaded cell data.")
-            return
-
-        # Create data structure for the dialog
         try:
-            row_data = self._create_cell_row_data(selection_id, selection_data)
-        except (ValueError, KeyError) as e:
-            self.error_handler.show_error("Data Error", f"Failed to prepare data for ROI management: {e}")
-            return
-        
-        self.roi_management_dialog = ROIManagementDialog(row_data=row_data, parent=self)
-        
-        # Connect signals
-        self.roi_management_dialog.cell_navigation_requested.connect(self.navigate_to_cell)
-        self.roi_management_dialog.changes_confirmed.connect(self._on_roi_changes_confirmed)
-        
-        self.roi_management_dialog.show()
-        self.log_info(f"ROI Management Dialog opened for selection {selection_id}")
+            QMessageBox.information(self, "Debug", "Attempting to show ROI Management Dialog...")
+
+            if self.roi_management_dialog and self.roi_management_dialog.isVisible():
+                self.roi_management_dialog.close()
+
+            selection_data = self.selection_manager.get_selection(selection_id)
+            if not selection_data:
+                self.error_handler.show_error("Selection not found", f"Could not find data for selection ID: {selection_id}")
+                return
+            
+            if not self.csv_parser.get_data().any().any():
+                self.error_handler.show_error("No CSV Data", "Cannot manage ROIs without loaded cell data.")
+                return
+
+            # Create data structure for the dialog
+            try:
+                row_data = self._create_cell_row_data(selection_id, selection_data)
+            except (ValueError, KeyError) as e:
+                self.error_handler.show_error("Data Error", f"Failed to prepare data for ROI management: {e}")
+                return
+            
+            self.roi_management_dialog = ROIManagementDialog(row_data=row_data, parent=self)
+            
+            # Connect signals
+            self.roi_management_dialog.cell_navigation_requested.connect(self.navigate_to_cell)
+            self.roi_management_dialog.changes_confirmed.connect(self._on_roi_changes_confirmed)
+            
+            self.roi_management_dialog.show()
+            self.log_info(f"ROI Management Dialog opened for selection {selection_id}")
+
+        except Exception as e:
+            self.log_critical(f"An unexpected error occurred in show_roi_management_dialog: {e}", exc_info=True)
+            QMessageBox.critical(self, "Critical Error", f"Could not open the ROI management dialog due to an unexpected error:\n\n{e}")
 
     def navigate_to_cell(self, cell_index: int) -> None:
         """Navigate the main image view to a specific cell."""
