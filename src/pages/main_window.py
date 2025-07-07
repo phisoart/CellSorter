@@ -1238,8 +1238,6 @@ class MainWindow(QMainWindow, LoggerMixin):
     def show_roi_management_dialog(self, selection_id: str) -> None:
         """Create and show the ROI Management Dialog for a given selection."""
         try:
-            QMessageBox.information(self, "Debug", "Attempting to show ROI Management Dialog...")
-
             if self.roi_management_dialog and self.roi_management_dialog.isVisible():
                 self.roi_management_dialog.close()
 
@@ -1248,33 +1246,37 @@ class MainWindow(QMainWindow, LoggerMixin):
                 self.error_handler.show_error("Selection not found", f"Could not find data for selection ID: {selection_id}")
                 return
             
-            if not self.csv_parser.get_data().any().any():
-                self.error_handler.show_error("No CSV Data", "Cannot manage ROIs without loaded cell data.")
+            if self.csv_parser.data is None or self.csv_parser.data.empty:
+                self.error_handler.show_error("No CSV data", "Please load CSV data before managing ROIs")
                 return
 
-            # Create data structure for the dialog
-            try:
-                row_data = self._create_cell_row_data(selection_id, selection_data)
-            except (ValueError, KeyError) as e:
-                self.error_handler.show_error("Data Error", f"Failed to prepare data for ROI management: {e}")
-                return
-            
-            self.roi_management_dialog = ROIManagementDialog(row_data=row_data, parent=self)
-            
-            # Connect signals
+            # Create CellRowData for the dialog
+            from components.widgets.row_cell_manager import CellRowData
+            row_data = self._create_cell_row_data(selection_id, selection_data)
+
+            # Create the ROI management dialog
+            self.roi_management_dialog = ROIManagementDialog(
+                parent=self,
+                row_data=row_data
+            )
+
+            # Connect the navigation signal
             self.roi_management_dialog.cell_navigation_requested.connect(self.navigate_to_cell)
-            self.roi_management_dialog.changes_confirmed.connect(self._on_roi_changes_confirmed)
             
+            # Connect changes confirmed signal
+            self.roi_management_dialog.changes_confirmed.connect(self._on_roi_changes_confirmed)
+
+            # Show the dialog
             self.roi_management_dialog.show()
-            self.log_info(f"ROI Management Dialog opened for selection {selection_id}")
+            self.logger.info(f"ROI Management Dialog opened for selection: {selection_id}")
 
         except Exception as e:
-            self.log_critical(f"An unexpected error occurred in show_roi_management_dialog: {e}", exc_info=True)
-            QMessageBox.critical(self, "Critical Error", f"Could not open the ROI management dialog due to an unexpected error:\n\n{e}")
+            self.logger.critical(f"An unexpected error occurred in show_roi_management_dialog: {e}", exc_info=True)
+            QMessageBox.critical(self, "Error", f"Failed to show ROI Management Dialog: {str(e)}")
 
     def navigate_to_cell(self, cell_index: int) -> None:
         """Navigate the main image view to a specific cell."""
-        if not self.csv_parser.get_data().any().any():
+        if self.csv_parser.data is None or self.csv_parser.data.empty:
             self.log_warning("Navigation requested but no CSV data is loaded.")
             return
 
@@ -1300,8 +1302,8 @@ class MainWindow(QMainWindow, LoggerMixin):
 
     def _create_cell_row_data(self, selection_id: str, selection_data: Dict[str, Any]) -> CellRowData:
         """Helper to create CellRowData for the ROI dialog."""
-        cell_indices = selection_data['indices']
-        all_data = self.csv_parser.get_data()
+        cell_indices = selection_data.cell_indices
+        all_data = self.csv_parser.data
         
         # Extract metadata for the selected cells
         cell_metadata = {}
@@ -1312,8 +1314,8 @@ class MainWindow(QMainWindow, LoggerMixin):
 
         return CellRowData(
             selection_id=selection_id,
-            selection_label=selection_data['label'],
-            selection_color=selection_data['color'],
+            selection_label=selection_data.label,
+            selection_color=selection_data.color,
             cell_indices=cell_indices,
             cell_metadata=cell_metadata
         )

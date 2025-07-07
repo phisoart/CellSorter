@@ -144,3 +144,818 @@
 2025-07-07 14:59:58,723 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 3
 2025-07-07 14:59:58,723 - cellsorter - INFO - ✅ Signal connections verified
 2025-07-07 14:59:58,723 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:09:11,811 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:09:11,813 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:09:11,813 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:09:12,216 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,232 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:09:12,232 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:09:12,233 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,235 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:09:12,235 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:09:12,237 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:09:12,238 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:09:12,248 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,262 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:09:12,262 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:09:12,262 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,263 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:09:12,263 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:09:12,263 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: True
+2025-07-07 15:09:12,264 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 included
+2025-07-07 15:09:12,264 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 0 inclusion changed: False
+2025-07-07 15:09:12,264 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 15:09:12,264 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:09:12,265 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:09:12,265 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:09:12,265 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:09:12,265 - cellsorter - INFO - ✅ Change tracking logic verified
+2025-07-07 15:09:12,266 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:09:12,268 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:09:12,269 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:09:12,279 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,299 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:09:12,299 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:09:12,300 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,300 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:09:12,301 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:09:12,301 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:09:12,301 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:09:12,302 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:09:12,302 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:09:12,303 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:09:12,303 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:09:12,303 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:09:12,304 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:09:12,304 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:09:12,305 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 10 included, 0 excluded
+2025-07-07 15:09:12,305 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:09:12,557 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:09:12,557 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:09:12,569 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,579 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,579 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,579 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,592 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,604 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,604 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,605 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,606 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:09:12,606 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:09:12,609 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:09:12,609 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:09:12,622 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,633 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,635 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,635 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,636 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:09:12,647 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,659 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,659 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:12,660 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,660 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:09:12,660 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:09:12,661 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 3 included, 0 excluded
+2025-07-07 15:09:12,661 - cellsorter - INFO - ✅ Dialog button functionality verified
+2025-07-07 15:09:12,661 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:09:12,664 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:09:12,664 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:09:12,675 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,681 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:09:12,681 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:09:12,682 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:09:12,684 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:09:12,685 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:09:12,695 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,721 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:09:12,722 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:09:12,722 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,722 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:09:12,722 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:09:12,724 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:09:12,725 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:09:12,735 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,747 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:12,747 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:12,747 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,748 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:09:12,748 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:09:12,749 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:09:12,749 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:09:12,749 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:09:12,759 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:09:12,760 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:09:12,771 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,781 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:12,782 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:12,782 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,782 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:09:12,792 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,804 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:12,805 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:12,805 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,806 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:09:12,806 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:09:12,806 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:09:12,808 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:09:12,809 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:09:12,819 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:12,831 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:12,831 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:12,832 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:12,832 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:09:12,832 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:09:12,833 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 selected
+2025-07-07 15:09:12,833 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 3
+2025-07-07 15:09:12,834 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 3
+2025-07-07 15:09:12,835 - cellsorter - INFO - ✅ Signal connections verified
+2025-07-07 15:09:12,835 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:09:37,669 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:09:37,671 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:09:37,672 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:09:38,067 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,084 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:09:38,085 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:09:38,085 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,088 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:09:38,088 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:09:38,090 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:09:38,090 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:09:38,100 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,114 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:09:38,115 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:09:38,115 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,116 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:09:38,116 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:09:38,116 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:09:38,374 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:09:38,374 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:09:38,385 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,408 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:09:38,409 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:09:38,409 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,410 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:09:38,410 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:09:38,410 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:09:38,411 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:09:38,411 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:09:38,411 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:09:38,412 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:09:38,412 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:09:38,413 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:09:38,413 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:09:38,414 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:09:38,414 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 10 included, 0 excluded
+2025-07-07 15:09:38,415 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:09:38,428 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:09:38,428 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:09:38,440 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,452 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,453 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,453 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,465 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,476 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,476 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,476 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,478 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:09:38,478 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:09:38,480 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:09:38,480 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:09:38,490 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,500 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,501 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,501 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,502 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:09:38,512 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,522 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,523 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:09:38,523 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,524 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:09:38,524 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:09:38,524 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 3 included, 0 excluded
+2025-07-07 15:09:38,525 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:09:38,533 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:09:38,534 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:09:38,544 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,550 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:09:38,550 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:09:38,550 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:09:38,553 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:09:38,553 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:09:38,563 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,590 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:09:38,591 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:09:38,591 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,592 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:09:38,592 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:09:38,594 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:09:38,594 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:09:38,605 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,617 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:38,617 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:38,617 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,618 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:09:38,618 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:09:38,619 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:09:38,619 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:09:38,619 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:09:38,631 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:09:38,631 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:09:38,642 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,689 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:38,690 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:38,690 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,691 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:09:38,726 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,740 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:38,741 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:09:38,741 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,741 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:09:38,742 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:09:38,742 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:09:38,756 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:09:38,756 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:09:38,768 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:09:38,783 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:38,784 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:09:38,784 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:09:38,784 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:09:38,785 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:09:38,791 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:10:02,650 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:10:02,652 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:10:02,653 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:10:03,285 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,305 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:10:03,306 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:10:03,306 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,307 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:10:03,307 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:10:03,314 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:10:03,314 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:10:03,328 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,348 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:10:03,348 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:10:03,350 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,351 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:10:03,351 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:10:03,352 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:10:03,613 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:10:03,614 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:10:03,625 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,645 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:10:03,646 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:10:03,646 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,647 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:10:03,647 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:10:03,647 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:10:03,647 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:10:03,648 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:10:03,648 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:10:03,649 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:10:03,649 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:10:03,649 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:10:03,649 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:10:03,650 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:10:03,651 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 10 included, 0 excluded
+2025-07-07 15:10:03,651 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:10:03,661 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:10:03,662 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:10:03,672 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,684 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,685 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,685 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,695 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,706 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,706 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,707 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,708 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:10:03,708 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:10:03,711 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:10:03,711 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:10:03,724 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,734 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,734 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,735 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,735 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:10:03,746 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,756 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,757 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:03,757 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,758 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:10:03,758 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:10:03,758 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 3 included, 0 excluded
+2025-07-07 15:10:03,759 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:10:03,768 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:10:03,769 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:10:03,779 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,784 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:10:03,784 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:10:03,785 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:10:03,787 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:10:03,787 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:10:03,799 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,827 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:10:03,827 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:10:03,827 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,828 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:10:03,828 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:10:03,830 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:10:03,830 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:10:03,842 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,854 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:03,855 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:03,855 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,855 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:10:03,856 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:10:03,856 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:10:03,856 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:10:03,857 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:10:03,866 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:10:03,866 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:10:03,878 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,890 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:03,891 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:03,891 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,892 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:10:03,901 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,913 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:03,914 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:03,914 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,915 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:10:03,915 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:10:03,915 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:10:03,917 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:10:03,917 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:10:03,928 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:03,942 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:03,942 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:03,942 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:03,943 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:10:03,943 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:10:03,944 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:10:28,744 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:10:28,746 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:10:28,746 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:10:29,149 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,166 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:10:29,167 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:10:29,167 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,169 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:10:29,169 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:10:29,171 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:10:29,172 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:10:29,182 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,196 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:10:29,197 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:10:29,197 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,197 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:10:29,198 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:10:29,198 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:10:29,444 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:10:29,445 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:10:29,454 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,475 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:10:29,476 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:10:29,476 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,476 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:10:29,477 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:10:29,477 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:10:29,477 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:10:29,477 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:10:29,478 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:10:29,478 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:10:29,479 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:10:29,479 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:10:29,479 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:10:29,480 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:10:29,481 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 10 included, 0 excluded
+2025-07-07 15:10:29,481 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:10:29,492 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:10:29,492 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:10:29,504 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,515 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,515 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,515 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,528 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,537 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,537 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,538 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,539 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:10:29,540 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:10:29,542 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:10:29,542 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:10:29,552 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,563 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,564 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,564 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,565 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:10:29,576 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,585 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,585 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:10:29,585 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,586 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:10:29,586 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:10:29,586 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 3 included, 0 excluded
+2025-07-07 15:10:29,587 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:10:29,597 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:10:29,598 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:10:29,608 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,614 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:10:29,614 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:10:29,614 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:10:29,616 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:10:29,617 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:10:29,629 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,656 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:10:29,657 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:10:29,657 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,658 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:10:29,658 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:10:29,660 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:10:29,660 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:10:29,670 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,684 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:29,685 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:29,686 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,686 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:10:29,686 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:10:29,687 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:10:29,687 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:10:29,688 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:10:29,697 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:10:29,697 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:10:29,708 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,719 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:29,719 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:29,720 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,720 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:10:29,730 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,742 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:29,742 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:10:29,743 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,743 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:10:29,743 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:10:29,744 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:10:29,746 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:10:29,746 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:10:29,756 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:10:29,769 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:29,770 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:10:29,770 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:10:29,770 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:10:29,771 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:10:29,772 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:11:23,823 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:11:23,826 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:11:23,827 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:11:24,239 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,256 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:11:24,256 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:11:24,257 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,257 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:11:24,257 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:11:24,260 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:11:24,261 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:11:24,270 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,285 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:11:24,286 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:11:24,286 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,286 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:11:24,287 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:11:24,288 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:11:24,539 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:11:24,539 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:11:24,550 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,571 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:11:24,572 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:11:24,572 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,573 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:11:24,573 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:11:24,573 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:11:24,573 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:11:24,574 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:11:24,574 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:11:24,576 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:11:24,577 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:11:24,577 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:11:24,577 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:11:24,578 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:11:24,579 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 10 included, 0 excluded
+2025-07-07 15:11:24,579 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:11:24,589 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:11:24,589 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:11:24,600 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,611 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,611 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,612 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,622 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,633 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,633 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,634 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,635 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:11:24,635 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:11:24,637 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:11:24,638 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:11:24,649 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,659 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,660 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,661 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,661 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:11:24,671 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,681 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,681 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:11:24,682 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,682 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:11:24,682 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:11:24,683 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 3 included, 0 excluded
+2025-07-07 15:11:24,683 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:11:24,694 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:11:24,694 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:11:24,704 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,710 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:11:24,711 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:11:24,711 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:11:24,713 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:11:24,714 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:11:24,726 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,753 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:11:24,753 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:11:24,754 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,754 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:11:24,754 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:11:24,756 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:11:24,757 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:11:24,768 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,780 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:11:24,781 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:11:24,781 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,781 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:11:24,782 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:11:24,783 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:11:24,783 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:11:24,783 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:11:24,795 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:11:24,795 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:11:24,805 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,816 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:11:24,817 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:11:24,817 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,817 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:11:24,827 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,838 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:11:24,838 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:11:24,839 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,839 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:11:24,839 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:11:24,840 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:11:24,842 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:11:24,843 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:11:24,853 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:11:24,866 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:11:24,866 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:11:24,867 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:11:24,867 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:11:24,867 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:11:24,868 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:11:59,766 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:11:59,768 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:11:59,768 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:12:00,182 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,206 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:12:00,207 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:12:00,207 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,211 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:12:00,211 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:12:00,215 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:12:00,216 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:12:00,226 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,244 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:12:00,245 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:12:00,245 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,246 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:12:00,246 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:12:00,247 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:12:00,513 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:12:00,514 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:12:00,525 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,548 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:12:00,548 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:12:00,549 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,549 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:12:00,549 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:12:00,550 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:12:00,551 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:12:00,551 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:12:00,551 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:12:00,552 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:12:00,552 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:12:00,552 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:12:00,553 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:12:00,553 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:12:00,554 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 10 included, 0 excluded
+2025-07-07 15:12:00,554 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:12:00,565 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:12:00,565 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:12:00,576 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,586 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,587 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,587 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,599 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,609 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,609 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,609 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,612 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:12:00,612 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:12:00,614 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:12:00,615 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:12:00,625 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,636 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,636 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,637 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,637 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:12:00,649 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,661 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,663 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:00,663 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,664 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:12:00,664 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:12:00,664 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 3 included, 0 excluded
+2025-07-07 15:12:00,665 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:12:00,675 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:12:00,675 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:12:00,686 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,692 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:12:00,693 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:12:00,694 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:12:00,697 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:12:00,697 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:12:00,707 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,734 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:12:00,734 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:12:00,735 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,735 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:12:00,735 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:12:00,737 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:12:00,737 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:12:00,748 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,760 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:00,761 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:00,761 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,762 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:12:00,762 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:12:00,762 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:12:00,763 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:12:00,763 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:12:00,773 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:12:00,774 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:12:00,785 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,798 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:00,798 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:00,798 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,799 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:12:00,809 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,822 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:00,822 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:00,822 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,823 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:12:00,823 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:12:00,824 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:12:00,825 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:12:00,825 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:12:00,836 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:00,850 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:00,851 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:00,851 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:00,852 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:12:00,852 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:12:00,852 - cellsorter - INFO - Teardown test: test_signal_connections_dev
+2025-07-07 15:12:51,927 - cellsorter - INFO - === DEV MODE: ROI Management Dialog Tests ===
+2025-07-07 15:12:51,929 - cellsorter - INFO - Setup test: test_cell_manager_integration_dev
+2025-07-07 15:12:51,931 - cellsorter - INFO - Testing cell manager integration...
+2025-07-07 15:12:52,357 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,375 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:12:52,376 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 8 cells
+2025-07-07 15:12:52,376 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,379 - cellsorter - INFO - ✅ Cell manager integration verified
+2025-07-07 15:12:52,379 - cellsorter - INFO - Teardown test: test_cell_manager_integration_dev
+2025-07-07 15:12:52,383 - cellsorter - INFO - Setup test: test_change_tracking_logic_dev
+2025-07-07 15:12:52,383 - cellsorter - INFO - Testing change tracking logic...
+2025-07-07 15:12:52,394 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,409 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:12:52,410 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 6 cells
+2025-07-07 15:12:52,410 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,411 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:12:52,411 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:12:52,420 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: True
+2025-07-07 15:12:52,420 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 included
+2025-07-07 15:12:52,437 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 0 inclusion changed: False
+2025-07-07 15:12:52,438 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 0 excluded
+2025-07-07 15:12:52,439 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:12:52,439 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:12:52,440 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:12:52,440 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:12:52,453 - cellsorter - INFO - ✅ Change tracking logic verified
+2025-07-07 15:12:52,453 - cellsorter - INFO - Teardown test: test_change_tracking_logic_dev
+2025-07-07 15:12:52,455 - cellsorter - INFO - Setup test: test_comprehensive_workflow_dev
+2025-07-07 15:12:52,455 - cellsorter - INFO - Testing comprehensive workflow...
+2025-07-07 15:12:52,466 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,488 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:12:52,489 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 10 cells
+2025-07-07 15:12:52,489 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,490 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:12:52,490 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:12:52,490 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: False
+2025-07-07 15:12:52,491 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 excluded
+2025-07-07 15:12:52,491 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 8 inclusion changed: False
+2025-07-07 15:12:52,491 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 8 excluded
+2025-07-07 15:12:52,503 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 7 selected
+2025-07-07 15:12:52,503 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 7
+2025-07-07 15:12:52,503 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 7
+2025-07-07 15:12:52,517 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 5 inclusion changed: True
+2025-07-07 15:12:52,518 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 5 included
+2025-07-07 15:12:52,534 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 8 included, 2 excluded
+2025-07-07 15:12:52,534 - cellsorter - INFO - ✅ Comprehensive workflow verified
+2025-07-07 15:12:52,534 - cellsorter - INFO - 🎉 All ROI Management Dialog DEV mode tests completed successfully!
+2025-07-07 15:12:52,535 - cellsorter - INFO - Teardown test: test_comprehensive_workflow_dev
+2025-07-07 15:12:52,537 - cellsorter - INFO - Setup test: test_convenience_function_dev
+2025-07-07 15:12:52,537 - cellsorter - INFO - Testing convenience function...
+2025-07-07 15:12:52,547 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,557 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,557 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,558 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,569 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,577 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,578 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,578 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,579 - cellsorter - INFO - ✅ Convenience function verified
+2025-07-07 15:12:52,579 - cellsorter - INFO - Teardown test: test_convenience_function_dev
+2025-07-07 15:12:52,583 - cellsorter - INFO - Setup test: test_dialog_buttons_functionality_dev
+2025-07-07 15:12:52,584 - cellsorter - INFO - Testing dialog button functionality...
+2025-07-07 15:12:52,593 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,603 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,603 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,603 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,604 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:12:52,613 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,624 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,624 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 3 cells
+2025-07-07 15:12:52,625 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,625 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:12:52,625 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:12:52,632 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 2 included, 1 excluded
+2025-07-07 15:12:52,632 - cellsorter - INFO - ✅ Dialog button functionality verified
+2025-07-07 15:12:52,633 - cellsorter - INFO - Teardown test: test_dialog_buttons_functionality_dev
+2025-07-07 15:12:52,635 - cellsorter - INFO - Setup test: test_dialog_initialization_dev
+2025-07-07 15:12:52,635 - cellsorter - INFO - Testing dialog initialization...
+2025-07-07 15:12:52,644 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,651 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for unknown
+2025-07-07 15:12:52,652 - cellsorter - INFO - ✅ Dialog initialization verified
+2025-07-07 15:12:52,652 - cellsorter - INFO - Teardown test: test_dialog_initialization_dev
+2025-07-07 15:12:52,654 - cellsorter - INFO - Setup test: test_dialog_with_row_data_dev
+2025-07-07 15:12:52,655 - cellsorter - INFO - Testing dialog with row data...
+2025-07-07 15:12:52,666 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,692 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:12:52,692 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 15 cells
+2025-07-07 15:12:52,693 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,693 - cellsorter - INFO - ✅ Dialog with row data verified
+2025-07-07 15:12:52,693 - cellsorter - INFO - Teardown test: test_dialog_with_row_data_dev
+2025-07-07 15:12:52,695 - cellsorter - INFO - Setup test: test_get_cell_states_dev
+2025-07-07 15:12:52,695 - cellsorter - INFO - Testing cell states retrieval...
+2025-07-07 15:12:52,705 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,719 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:52,719 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:52,720 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,720 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 1 inclusion changed: False
+2025-07-07 15:12:52,721 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 1 excluded
+2025-07-07 15:12:52,721 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 3 inclusion changed: False
+2025-07-07 15:12:52,721 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 excluded
+2025-07-07 15:12:52,736 - cellsorter - INFO - ✅ Cell states retrieval verified
+2025-07-07 15:12:52,736 - cellsorter - INFO - Teardown test: test_get_cell_states_dev
+2025-07-07 15:12:52,739 - cellsorter - INFO - Setup test: test_keyboard_navigation_dev
+2025-07-07 15:12:52,739 - cellsorter - INFO - Testing keyboard navigation...
+2025-07-07 15:12:52,749 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,760 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:52,760 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:52,761 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,761 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog cancelled
+2025-07-07 15:12:52,771 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,782 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:52,782 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 4 cells
+2025-07-07 15:12:52,783 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,784 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management confirmed: 4 included, 0 excluded
+2025-07-07 15:12:52,784 - cellsorter - INFO - ✅ Keyboard navigation verified
+2025-07-07 15:12:52,784 - cellsorter - INFO - Teardown test: test_keyboard_navigation_dev
+2025-07-07 15:12:52,786 - cellsorter - INFO - Setup test: test_signal_connections_dev
+2025-07-07 15:12:52,786 - cellsorter - INFO - Testing signal connections...
+2025-07-07 15:12:52,795 - cellsorter.components.widgets.row_cell_manager - INFO - Row cell manager initialized
+2025-07-07 15:12:52,808 - cellsorter.components.widgets.row_cell_manager - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:52,808 - cellsorter.components.dialogs.roi_management_dialog - INFO - Loaded row data: Test Selection Row with 5 cells
+2025-07-07 15:12:52,809 - cellsorter.components.dialogs.roi_management_dialog - INFO - ROI Management Dialog initialized for test_selection_1
+2025-07-07 15:12:52,809 - cellsorter.components.dialogs.roi_management_dialog - INFO - Cell 2 inclusion changed: False
+2025-07-07 15:12:52,809 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 2 excluded
+2025-07-07 15:12:52,839 - cellsorter.components.widgets.row_cell_manager - INFO - Cell 3 selected
+2025-07-07 15:12:52,840 - cellsorter.components.dialogs.roi_management_dialog - INFO - Navigation requested for cell 3
+2025-07-07 15:12:52,841 - cellsorter.components.widgets.row_cell_manager - INFO - Navigation requested to cell 3
+2025-07-07 15:12:52,849 - cellsorter - INFO - ✅ Signal connections verified
+2025-07-07 15:12:52,850 - cellsorter - INFO - Teardown test: test_signal_connections_dev

@@ -107,7 +107,7 @@
         "id": 4,
         "title": "Implement ROI Management Dialog",
         "description": "Develop a dedicated dialog for cell management that displays a list of all individual cells in the selected row with thumbnails and checkboxes for inclusion/exclusion.",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [
           3
         ],
@@ -139,7 +139,7 @@
             "id": 3,
             "title": "Develop Checkbox State Management",
             "description": "Implement the state management logic for cell inclusion/exclusion via checkboxes",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -150,7 +150,7 @@
             "id": 4,
             "title": "Create Dialog Lifecycle Management",
             "description": "Implement the dialog opening, closing, and focus management with keyboard navigation support",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -161,7 +161,7 @@
             "id": 5,
             "title": "Implement Three-Mode Testing System",
             "description": "Create a development system that supports DEV → DUAL → GUI testing modes",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               2,
               3,
@@ -174,7 +174,7 @@
             "id": 6,
             "title": "Integrate with CellSorter Design System",
             "description": "Ensure the dialog follows CellSorter design guidelines and integrates with the existing application",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1,
               2,
@@ -197,7 +197,7 @@
         "dependencies": [
           4
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -205,7 +205,7 @@
             "description": "Create utility functions to handle coordinate transformations between the ROI dialog and main image view, ensuring accurate cell positioning.",
             "dependencies": [],
             "details": "Develop a coordinate system utility that maps cell coordinates from the ROI dialog to the main image view. Include functions for coordinate conversion, scaling based on zoom level, and viewport positioning calculations. Create a reusable service that can be imported where needed.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Write unit tests for coordinate transformation functions with various input scenarios including edge cases like extreme zoom levels and boundary positions."
           },
           {
@@ -216,7 +216,7 @@
               1
             ],
             "details": "Implement a navigation service with methods to calculate optimal scroll positions based on cell coordinates and viewport dimensions. Include functions to determine the center point of cells and adjust scroll position accordingly. Handle edge cases where cells are near image boundaries.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test the centering functionality with cells at different positions (center, edges, corners) and with different viewport sizes."
           },
           {
@@ -225,7 +225,7 @@
             "description": "Create visual highlighting effects for the selected cell using CSS and DOM manipulation.",
             "dependencies": [],
             "details": "Design and implement a highlighting system that visually distinguishes the selected cell. Use CSS classes for styling with transitions for smooth visual effects. Consider accessibility by ensuring sufficient contrast. Implement methods to add and remove highlights as selection changes.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test highlight application and removal across different browsers to ensure consistent visual appearance."
           },
           {
@@ -237,7 +237,7 @@
               3
             ],
             "details": "Enhance the navigation service with animation capabilities. Implement smooth scrolling using either CSS scroll-behavior or requestAnimationFrame for more complex animations. Add configurable animation duration and easing functions. Ensure animations work well across different browsers and devices.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test animation performance on various devices and browsers. Verify that animations complete correctly and don't interfere with other UI interactions."
           },
           {
@@ -250,7 +250,7 @@
               4
             ],
             "details": "Implement event handlers for cell selection in the ROI dialog. Create a communication system between the ROI dialog and main image view components. Ensure proper state management for tracking the currently selected cell. Add developer mode for testing and debugging the navigation and highlighting features.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create integration tests that simulate user interactions from ROI dialog selection through to main view navigation and highlighting. Test edge cases like rapid successive selections."
           }
         ]
@@ -265,7 +265,7 @@
         "dependencies": [
           4
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -283,7 +283,7 @@
           5,
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -291,7 +291,7 @@
             "description": "Create a headless simulation system for DEV mode that allows testing without GUI rendering",
             "dependencies": [],
             "details": "Develop a headless simulation system that can run tests without GUI rendering. Implement state management, event simulation, and virtual DOM manipulation for DEV mode. Create utilities for simulating user interactions programmatically. Ensure all operations can be executed and verified without visual rendering.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Write unit tests using Jest to verify the headless simulation system correctly handles state changes and events. Create test cases that validate the simulation matches expected outcomes."
           },
           {
@@ -302,7 +302,7 @@
               1
             ],
             "details": "Create a centralized logging system that records all operations, state changes, and events. Implement different logging levels (debug, info, warning, error). Add context-aware logging that includes the current test mode. Develop mechanisms to export logs for analysis. Ensure logs can be filtered and searched efficiently.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test the logging system by verifying log output format, content, and persistence across different operations and modes. Validate that appropriate information is captured for debugging purposes."
           },
           {
@@ -314,7 +314,7 @@
               2
             ],
             "details": "Develop comparison mechanisms to verify that headless state and GUI rendering remain synchronized. Implement snapshot testing for GUI elements. Create validation functions that check for discrepancies between expected and actual GUI states. Add automatic detection and reporting of synchronization issues.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create tests that deliberately introduce synchronization issues and verify they are correctly detected. Test edge cases where state changes might not properly reflect in the GUI."
           },
           {
@@ -325,7 +325,7 @@
               2
             ],
             "details": "Set up Cypress for end-to-end testing of the production GUI. Create test utilities for simulating real user interactions with the interface. Implement visual regression testing to catch unexpected UI changes. Develop test scenarios that cover critical user workflows in the production environment.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create end-to-end tests using Cypress that simulate complete user workflows. Implement visual comparison tests to detect unexpected UI changes between versions."
           },
           {
@@ -339,7 +339,7 @@
               4
             ],
             "details": "Implement a mode selector that determines the current testing mode based on environment variables or configuration. Create a unified test runner that can execute tests in any mode. Develop consistent reporting mechanisms across all modes. Implement utilities to run the same test cases across different modes for comparison. Add configuration options for customizing test execution.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test the mode selector by verifying it correctly identifies and switches between modes. Validate that the test runner executes tests appropriately in each mode with consistent reporting."
           }
         ]
@@ -360,13 +360,13 @@
           6,
           7
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-07T04:53:03.413Z",
-      "updated": "2025-07-07T06:00:21.884Z",
+      "updated": "2025-07-07T07:12:31.468Z",
       "description": "Tasks for master context"
     }
   }
