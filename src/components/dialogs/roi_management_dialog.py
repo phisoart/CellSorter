@@ -222,9 +222,12 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         self.confirm_button.clicked.connect(self.on_confirm_clicked)
         
         # Cell manager signal forwarding
-        if hasattr(self, 'cell_manager'):
+        if hasattr(self, 'cell_manager') and self.cell_manager:
             self.cell_manager.cell_inclusion_changed.connect(self.on_cell_inclusion_changed)
             self.cell_manager.cell_navigation_requested.connect(self.on_cell_navigation_requested)
+            
+            # Debug logging for signal connections
+            self.log_info("Connected ROI dialog signals to cell manager")
     
     @error_handler("Loading row data")
     def load_row_data(self, row_data: CellRowData) -> None:
