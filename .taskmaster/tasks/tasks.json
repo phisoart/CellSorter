@@ -3,63 +3,305 @@
     "tasks": [
       {
         "id": 1,
-        "title": "Implement Delete Column Improvements",
-        "description": "Rename the Action column header to Delete, resize Delete buttons to match row height, and ensure proper deletion functionality.",
-        "details": "1. Locate the table header definition in the codebase and change 'Action' to 'Delete'\n2. Modify the Delete button styling to ensure it spans the full row height (±2px tolerance)\n3. Verify the deletion functionality works correctly by:\n   - Ensuring the click event handler is properly connected\n   - Confirming the row removal from the table\n   - Verifying the model update signal is emitted\n\nCode changes will likely involve:\n```python\n# For header rename\nself.table.setHorizontalHeaderItem(delete_column_index, QTableWidgetItem(\"Delete\"))\n\n# For button sizing (example approach)\nclass DeleteButtonDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        # Configure button to match row height\n        button_rect = option.rect\n        # Paint the button with proper dimensions\n        # ...\n\n# Ensure deletion handler is properly connected\ndelete_button.clicked.connect(self.remove_selection)\n```",
-        "testStrategy": "Run the existing automated tests to verify functionality:\n1. `pytest tests/dev_mode/test_selection_management_sync.py`\n2. `pytest tests/dual_mode/test_selection_management_consistency.py`\n3. `pytest tests/gui_mode/test_selection_management_production.py`\n\nAdditionally, perform manual verification:\n- Confirm header displays 'Delete' in all three modes\n- Verify button height matches row height within 2px tolerance\n- Test deletion functionality by clicking buttons and confirming rows are removed",
+        "title": "Implement Cell Selection Preview Component",
+        "description": "Create a component that displays a preview of all selected cells before final save operation, providing visual feedback to users.",
+        "details": "Develop a React component using the latest React 18 with TypeScript for type safety. Implement a grid-based layout using CSS Grid or Flexbox to display cell thumbnails efficiently. Use React Context API to manage the selection state across components. For image rendering, utilize the browser's native image optimization capabilities with proper lazy loading for performance. Implement responsive design using CSS media queries to ensure the preview works on various screen sizes. The component should:\n\n1. Subscribe to the cell selection state changes\n2. Render thumbnails of all selected cells in a grid layout\n3. Indicate which cells will be included in the well assignment\n4. Provide clear visual feedback on the selection status\n\nCode structure:\n```typescript\ninterface CellPreviewProps {\n  selectedCells: Cell[];\n  onPreviewComplete: () => void;\n}\n\nconst CellSelectionPreview: React.FC<CellPreviewProps> = ({ selectedCells, onPreviewComplete }) => {\n  // Rendering logic for cell preview grid\n  return (\n    <div className=\"cell-preview-container\">\n      <div className=\"cell-preview-grid\">\n        {selectedCells.map((cell) => (\n          <CellThumbnail \n            key={cell.id} \n            cell={cell} \n            isIncluded={cell.isIncluded} \n          />\n        ))}\n      </div>\n      <div className=\"preview-actions\">\n        <Button onClick={onPreviewComplete}>Confirm Selection</Button>\n      </div>\n    </div>\n  );\n};\n```",
+        "testStrategy": "1. Unit tests using Jest and React Testing Library to verify component rendering and behavior\n2. Test different cell selection scenarios (empty, single, multiple cells)\n3. Verify visual feedback mechanisms work correctly\n4. Test responsive behavior across different viewport sizes\n5. Integration tests to ensure the preview component interacts correctly with the cell selection state\n6. End-to-end tests using Cypress to validate the complete user flow\n7. Implement DEV mode testing with headless simulation of user interactions",
         "priority": "high",
         "dependencies": [],
-        "status": "done",
+        "status": "pending",
         "subtasks": []
       },
       {
         "id": 2,
-        "title": "Fix Enabled Checkbox Alignment and Toggle Functionality",
-        "description": "Center the Enabled checkbox both horizontally and vertically within its column and fix the bug where re-enabling a previously disabled selection doesn't update both UI and model state.",
-        "details": "1. Implement a custom checkbox delegate to ensure proper alignment:\n```python\nclass CenteredCheckBoxDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        # Get checkbox state from model\n        checked = index.data(Qt.CheckStateRole) == Qt.Checked\n        \n        # Calculate centered position\n        checkbox_rect = QRect(option.rect)\n        checkbox_size = QApplication.style().pixelMetric(QStyle.PM_IndicatorWidth)\n        x_center = checkbox_rect.x() + (checkbox_rect.width() - checkbox_size) // 2\n        y_center = checkbox_rect.y() + (checkbox_rect.height() - checkbox_size) // 2\n        centered_rect = QRect(x_center, y_center, checkbox_size, checkbox_size)\n        \n        # Draw the checkbox\n        QApplication.style().drawPrimitive(\n            QStyle.PE_IndicatorCheckBox,\n            QStyleOptionButton(),\n            painter\n        )\n```\n\n2. Fix the re-enabling bug by ensuring the model is updated when checkbox state changes:\n```python\ndef on_checkbox_toggled(self, index):\n    current_state = self.model.data(index, Qt.CheckStateRole)\n    new_state = Qt.Unchecked if current_state == Qt.Checked else Qt.Checked\n    \n    # Update model\n    self.model.setData(index, new_state, Qt.CheckStateRole)\n    \n    # Update UI\n    self.table.update(index)\n    \n    # Emit signal for model state update\n    self.selectionStateChanged.emit(index.row(), new_state == Qt.Checked)\n```",
-        "testStrategy": "1. Run the existing test suite across all three modes:\n   - `tests/dev_mode/test_selection_management_sync.py`\n   - `tests/dual_mode/test_selection_management_consistency.py`\n   - `tests/gui_mode/test_selection_management_production.py`\n\n2. Add specific tests for the checkbox toggle functionality:\n   - Test toggling from checked to unchecked and verify model update\n   - Test toggling from unchecked to checked and verify model update\n   - Verify UI reflects the correct state after toggling\n\n3. Implement pixel comparison test to verify checkbox centering",
+        "title": "Develop Row-by-Row Cell Management Interface",
+        "description": "Create an interface that allows users to examine and manage individual cells within each row, with capabilities to inspect cell quality and characteristics.",
+        "details": "Implement a row-based management interface using React with TypeScript. Use a virtualized list component like 'react-window' (v21.0.0+) for efficient rendering of potentially large cell lists. Implement a responsive design that adapts to different screen sizes.\n\nKey implementation details:\n1. Create a row selection mechanism that highlights the currently selected row\n2. Implement cell inspection panel that shows detailed information about cells in the selected row\n3. Use CSS Grid for layout with proper accessibility attributes (ARIA roles)\n4. Implement checkbox interface using controlled components for cell inclusion/exclusion\n5. Use React Context or Redux for state management across components\n\nSample implementation:\n```typescript\ninterface RowCellManagementProps {\n  rows: CellRow[];\n  onCellToggle: (cellId: string, included: boolean) => void;\n  onRowSelect: (rowId: string) => void;\n}\n\nconst RowCellManagement: React.FC<RowCellManagementProps> = ({ rows, onCellToggle, onRowSelect }) => {\n  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);\n  \n  const handleRowClick = (rowId: string) => {\n    setSelectedRowId(rowId);\n    onRowSelect(rowId);\n  };\n  \n  return (\n    <div className=\"row-management-container\">\n      <div className=\"row-list\">\n        {rows.map(row => (\n          <RowItem \n            key={row.id}\n            row={row}\n            isSelected={row.id === selectedRowId}\n            onClick={() => handleRowClick(row.id)}\n          />\n        ))}\n      </div>\n      {selectedRowId && (\n        <CellInspectionPanel \n          rowId={selectedRowId}\n          cells={rows.find(r => r.id === selectedRowId)?.cells || []}\n          onCellToggle={onCellToggle}\n        />\n      )}\n    </div>\n  );\n};\n```",
+        "testStrategy": "1. Unit tests for row selection and cell management components\n2. Test cell inclusion/exclusion functionality with various test cases\n3. Verify row selection highlights correctly\n4. Test keyboard navigation and accessibility features\n5. Integration tests to ensure row and cell management components work together\n6. Performance testing with large datasets to ensure virtualization works correctly\n7. DEV mode testing with simulated user interactions and comprehensive logging",
         "priority": "high",
-        "dependencies": [],
-        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
         "subtasks": []
       },
       {
         "id": 3,
-        "title": "Implement In-Cell Label Editing",
-        "description": "Replace overlay editing with in-place text editing for the Label column using QStyledItemDelegate to ensure the cell text updates during editing without overlay artifacts.",
-        "details": "1. Create a custom item delegate for in-place editing:\n```python\nclass LabelItemDelegate(QStyledItemDelegate):\n    def createEditor(self, parent, option, index):\n        editor = QLineEdit(parent)\n        return editor\n        \n    def setEditorData(self, editor, index):\n        value = index.model().data(index, Qt.EditRole)\n        editor.setText(value)\n        \n    def setModelData(self, editor, model, index):\n        value = editor.text()\n        model.setData(index, value, Qt.EditRole)\n        \n    def updateEditorGeometry(self, editor, option, index):\n        editor.setGeometry(option.rect)\n```\n\n2. Apply the delegate to the Label column:\n```python\nlabel_column_index = self.get_column_index_by_name(\"Label\")\nself.table.setItemDelegateForColumn(label_column_index, LabelItemDelegate())\n```\n\n3. Ensure double-clicking activates editing:\n```python\nself.table.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.EditKeyPressed)\n```\n\n4. Connect signals to handle edit completion:\n```python\ndef on_item_changed(self, item):\n    if item.column() == label_column_index:\n        row = item.row()\n        new_label = item.text()\n        # Update model\n        self.update_selection_label(row, new_label)\n        # Emit signal\n        self.selectionLabelChanged.emit(row, new_label)\n```",
-        "testStrategy": "1. Run the existing test suite for label editing functionality:\n   - `tests/dev_mode/test_selection_management_sync.py`\n\n2. Add specific tests for in-cell editing:\n   - Test double-clicking enters edit mode\n   - Test editing and pressing Enter commits changes\n   - Test editing and clicking elsewhere commits changes\n   - Verify no overlay artifacts remain visible during editing\n\n3. Verify consistency across all three modes (DEV, DUAL, GUI)",
+        "title": "Create Manage ROIs Button and Dialog Trigger",
+        "description": "Implement the 'Manage ROIs' button in the Cell selections widget that appears when a row is selected, and create the dialog trigger mechanism.",
+        "details": "Add a conditional button to the Cell selections widget that appears only when a row is selected. Use React's conditional rendering and state management to control button visibility. Implement the dialog trigger mechanism using a modern dialog library like '@headlessui/react' (v1.7.0+) for accessibility and customization.\n\nImplementation steps:\n1. Add button to Cell selections widget with proper positioning (top-right area)\n2. Implement conditional rendering based on row selection state\n3. Create dialog trigger mechanism with proper state management\n4. Ensure button follows CellSorter design tokens and style guidelines\n5. Add keyboard shortcuts for power users (e.g., Alt+M to open dialog)\n\nSample code:\n```typescript\ninterface ManageROIsButtonProps {\n  isRowSelected: boolean;\n  onManageClick: () => void;\n}\n\nconst ManageROIsButton: React.FC<ManageROIsButtonProps> = ({ isRowSelected, onManageClick }) => {\n  if (!isRowSelected) return null;\n  \n  return (\n    <button \n      className=\"manage-rois-button\" \n      onClick={onManageClick}\n      aria-label=\"Manage ROIs\"\n    >\n      Manage ROIs\n    </button>\n  );\n};\n\n// In parent component\nconst CellSelectionsWidget: React.FC = () => {\n  const [isDialogOpen, setIsDialogOpen] = useState(false);\n  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);\n  \n  const handleRowSelect = (rowId: string) => {\n    setSelectedRowId(rowId);\n  };\n  \n  const openManageDialog = () => {\n    setIsDialogOpen(true);\n  };\n  \n  return (\n    <div className=\"cell-selections-widget\">\n      {/* Existing widget content */}\n      <ManageROIsButton \n        isRowSelected={selectedRowId !== null}\n        onManageClick={openManageDialog}\n      />\n      {isDialogOpen && (\n        <ROIManagementDialog \n          rowId={selectedRowId!}\n          onClose={() => setIsDialogOpen(false)}\n        />\n      )}\n    </div>\n  );\n};\n```",
+        "testStrategy": "1. Unit tests to verify button appears only when a row is selected\n2. Test dialog trigger functionality\n3. Verify button positioning and styling matches design requirements\n4. Test keyboard shortcuts and accessibility features\n5. Integration tests to ensure button interacts correctly with row selection state\n6. End-to-end tests for the complete user flow from row selection to dialog opening\n7. DEV mode testing with headless simulation and logging",
         "priority": "medium",
-        "dependencies": [],
-        "status": "done",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
         "subtasks": []
       },
       {
         "id": 4,
-        "title": "Enhance Color Column with Centered Text and Color Picker Dialog",
-        "description": "Center align color names, limit selectable colors to those in COLOR_PALETTE, implement a color picker dialog with swatches, and display both color name and chip in the cell.",
-        "details": "1. Create a centered text delegate for the Color column:\n```python\nclass CenteredTextDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        option.displayAlignment = Qt.AlignCenter\n        super().paint(painter, option, index)\n```\n\n2. Implement a color picker dialog:\n```python\nclass ColorPickerDialog(QDialog):\n    def __init__(self, parent=None):\n        super().__init__(parent)\n        self.setWindowTitle(\"Select Color\")\n        layout = QGridLayout()\n        \n        # Load colors from COLOR_PALETTE\n        from architecture import COLOR_PALETTE\n        \n        row, col = 0, 0\n        for color_name, color_value in COLOR_PALETTE.items():\n            button = QPushButton()\n            button.setFixedSize(100, 30)\n            \n            # Create a layout with color chip and name\n            button_layout = QHBoxLayout(button)\n            color_chip = QFrame()\n            color_chip.setFixedSize(20, 20)\n            color_chip.setStyleSheet(f\"background-color: {color_value};\")\n            button_layout.addWidget(color_chip)\n            button_layout.addWidget(QLabel(color_name))\n            \n            button.clicked.connect(lambda checked, name=color_name: self.select_color(name))\n            layout.addWidget(button, row, col)\n            \n            col += 1\n            if col > 3:  # 4 columns layout\n                col = 0\n                row += 1\n                \n        self.setLayout(layout)\n        self.selected_color = None\n        \n    def select_color(self, color_name):\n        self.selected_color = color_name\n        self.accept()\n```\n\n3. Create a custom delegate for the Color column with color chip:\n```python\nclass ColorDelegate(QStyledItemDelegate):\n    def paint(self, painter, option, index):\n        color_name = index.data(Qt.DisplayRole)\n        from architecture import COLOR_PALETTE\n        \n        if color_name in COLOR_PALETTE:\n            color_value = COLOR_PALETTE[color_name]\n            \n            # Draw background\n            painter.fillRect(option.rect, option.palette.base())\n            \n            # Draw color chip\n            chip_rect = QRect(option.rect.x() + 5, \n                             option.rect.y() + 5,\n                             20, \n                             option.rect.height() - 10)\n            painter.fillRect(chip_rect, QColor(color_value))\n            \n            # Draw text centered\n            text_rect = QRect(option.rect.x() + 30,\n                             option.rect.y(),\n                             option.rect.width() - 35,\n                             option.rect.height())\n            painter.drawText(text_rect, Qt.AlignCenter, color_name)\n        else:\n            super().paint(painter, option, index)\n    \n    def createEditor(self, parent, option, index):\n        # No direct editing, will show dialog instead\n        return None\n    \n    def editorEvent(self, event, model, option, index):\n        if event.type() == QEvent.MouseButtonDblClick:\n            dialog = ColorPickerDialog(parent=None)\n            if dialog.exec_() == QDialog.Accepted and dialog.selected_color:\n                model.setData(index, dialog.selected_color, Qt.EditRole)\n            return True\n        return False\n```\n\n4. Apply the delegate to the Color column:\n```python\ncolor_column_index = self.get_column_index_by_name(\"Color\")\nself.table.setItemDelegateForColumn(color_column_index, ColorDelegate())\n```",
-        "testStrategy": "1. Run existing scatter-plot and selection tests across all modes to verify color selection functionality\n\n2. Add specific tests for the color column enhancements:\n   - Verify center alignment of color names\n   - Test that only colors from COLOR_PALETTE can be selected\n   - Verify the color dialog displays all 16 colors from COLOR_PALETTE\n   - Test that selecting a color updates both the model and UI\n   - Verify the color chip is displayed correctly next to the color name\n\n3. Implement automated Qt pixel tests to verify center alignment and color chip display",
-        "priority": "medium",
-        "dependencies": [],
-        "status": "done",
-        "subtasks": []
+        "title": "Implement ROI Management Dialog",
+        "description": "Develop a dedicated dialog for cell management that displays a list of all individual cells in the selected row with thumbnails and checkboxes for inclusion/exclusion.",
+        "details": "Create a modal dialog component using a modern, accessible dialog library like '@headlessui/react' (v1.7.0+) or 'react-modal' (v3.16.0+). Implement a grid layout for cell thumbnails with checkboxes for inclusion/exclusion. Ensure the dialog is responsive and follows CellSorter design guidelines.\n\nKey implementation details:\n1. Create a modal dialog component with proper focus management and keyboard navigation\n2. Implement a grid of cell thumbnails with checkboxes\n3. Add click handler for cell images to trigger main image navigation\n4. Ensure proper state management for cell inclusion/exclusion\n5. Add confirmation and cancel buttons with appropriate actions\n\nSample implementation:\n```typescript\ninterface ROIManagementDialogProps {\n  rowId: string;\n  cells: Cell[];\n  onClose: () => void;\n  onCellToggle: (cellId: string, included: boolean) => void;\n  onCellClick: (cellId: string) => void;\n}\n\nconst ROIManagementDialog: React.FC<ROIManagementDialogProps> = ({\n  rowId,\n  cells,\n  onClose,\n  onCellToggle,\n  onCellClick\n}) => {\n  const [cellStates, setCellStates] = useState<Record<string, boolean>>(\n    cells.reduce((acc, cell) => ({ ...acc, [cell.id]: cell.isIncluded }), {})\n  );\n  \n  const handleCellToggle = (cellId: string) => {\n    setCellStates(prev => {\n      const newState = { ...prev, [cellId]: !prev[cellId] };\n      onCellToggle(cellId, newState[cellId]);\n      return newState;\n    });\n  };\n  \n  const handleCellClick = (cellId: string) => {\n    onCellClick(cellId);\n  };\n  \n  const handleConfirm = () => {\n    // Apply changes and close dialog\n    onClose();\n  };\n  \n  return (\n    <Dialog open={true} onClose={onClose} className=\"roi-management-dialog\">\n      <Dialog.Overlay className=\"dialog-overlay\" />\n      <Dialog.Title>Manage ROIs for Row {rowId}</Dialog.Title>\n      <div className=\"cell-grid\">\n        {cells.map(cell => (\n          <div key={cell.id} className=\"cell-item\">\n            <div \n              className=\"cell-thumbnail\" \n              onClick={() => handleCellClick(cell.id)}\n            >\n              <img src={cell.thumbnailUrl} alt={`Cell ${cell.id}`} />\n            </div>\n            <label className=\"cell-checkbox\">\n              <input\n                type=\"checkbox\"\n                checked={cellStates[cell.id]}\n                onChange={() => handleCellToggle(cell.id)}\n              />\n              Include in protocol\n            </label>\n          </div>\n        ))}\n      </div>\n      <div className=\"dialog-actions\">\n        <button onClick={onClose}>Cancel</button>\n        <button onClick={handleConfirm}>Confirm</button>\n      </div>\n    </Dialog>\n  );\n};\n```",
+        "testStrategy": "1. Unit tests for dialog component rendering and behavior\n2. Test cell thumbnail display and checkbox functionality\n3. Verify cell click handler correctly triggers main image navigation\n4. Test dialog open/close functionality\n5. Verify state management for cell inclusion/exclusion\n6. Test keyboard navigation and accessibility features\n7. Integration tests to ensure dialog works correctly with other components\n8. End-to-end tests for the complete user flow\n9. DEV mode testing with headless simulation and logging",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design ROI Dialog UI Layout",
+            "description": "Create the responsive layout structure for the ROI Management Dialog following CellSorter design guidelines",
+            "dependencies": [],
+            "details": "Design the grid layout for cell thumbnails with proper spacing and alignment. Implement responsive behavior for different screen sizes. Create CSS styles for the dialog container, header, grid layout, and action buttons. Follow accessibility guidelines for proper contrast and focus states.",
+            "status": "pending",
+            "testStrategy": "Verify layout renders correctly across different screen sizes. Ensure proper spacing and alignment of elements. Test with screen readers to confirm accessibility."
+          },
+          {
+            "id": 2,
+            "title": "Implement Cell Thumbnail Rendering",
+            "description": "Develop the component to display cell thumbnails with proper loading states and error handling",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a reusable thumbnail component that loads and displays cell images. Implement loading states and error fallbacks for missing images. Add click handler to trigger main image navigation when a thumbnail is clicked. Optimize image loading for performance with lazy loading techniques.",
+            "status": "pending",
+            "testStrategy": "Test image loading with various image sizes and formats. Verify error states display correctly when images fail to load. Confirm click handlers properly trigger navigation."
+          },
+          {
+            "id": 3,
+            "title": "Develop Checkbox State Management",
+            "description": "Implement the state management logic for cell inclusion/exclusion via checkboxes",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a state management system to track which cells are included/excluded. Implement checkbox toggle functionality with proper event handlers. Ensure state changes are properly reflected in the UI. Develop the logic to apply changes when the dialog is confirmed.",
+            "status": "pending",
+            "testStrategy": "Test checkbox toggling for individual cells. Verify state is correctly maintained during dialog interaction. Confirm state changes are properly applied when dialog is confirmed."
+          },
+          {
+            "id": 4,
+            "title": "Create Dialog Lifecycle Management",
+            "description": "Implement the dialog opening, closing, and focus management with keyboard navigation support",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate a modern, accessible dialog library (@headlessui/react v1.7.0+ or react-modal v3.16.0+). Implement proper focus trapping within the dialog. Add keyboard navigation support (Escape to close, Tab for focus). Create open/close animations for a smooth user experience.",
+            "status": "pending",
+            "testStrategy": "Test keyboard navigation within the dialog. Verify focus is properly trapped inside the dialog. Confirm dialog can be closed with Escape key and close button."
+          },
+          {
+            "id": 5,
+            "title": "Implement Development Mode Simulation",
+            "description": "Create a development mode that allows testing the dialog with simulated data",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Develop a simulation mode that generates mock cell data for testing. Create toggles to switch between different test scenarios. Implement logging for state changes during development. Add performance monitoring tools for optimization.",
+            "status": "pending",
+            "testStrategy": "Verify simulation mode correctly generates test data. Test different scenarios with varying numbers of cells. Confirm logging provides useful debugging information."
+          },
+          {
+            "id": 6,
+            "title": "Integrate with CellSorter Design System",
+            "description": "Ensure the dialog follows CellSorter design guidelines and integrates with the existing application",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Apply CellSorter design tokens (colors, typography, spacing) to all dialog elements. Ensure consistent styling with the rest of the application. Implement proper transitions and animations according to design guidelines. Add final polish for production-ready implementation.",
+            "status": "pending",
+            "testStrategy": "Verify visual consistency with CellSorter design system. Test with design team for approval. Confirm all animations and transitions work smoothly."
+          }
+        ]
       },
       {
         "id": 5,
-        "title": "Implement Well Selection via 96-Well Plate Dialog",
-        "description": "Create a graphical 96-well plate dialog for selecting wells, with rows A-H and columns 01-12, that updates the Well column value and validates against invalid or duplicate selections.",
-        "details": "1. Implement the 96-well plate dialog:\n```python\nclass WellPlateDialog(QDialog):\n    def __init__(self, parent=None, current_well=None, existing_wells=None):\n        super().__init__(parent)\n        self.setWindowTitle(\"Select Well\")\n        self.setMinimumSize(600, 400)\n        \n        self.existing_wells = existing_wells or []\n        self.selected_well = current_well\n        \n        layout = QVBoxLayout()\n        grid_layout = QGridLayout()\n        \n        # Add column headers (1-12)\n        for col in range(1, 13):\n            label = QLabel(f\"{col:02d}\")\n            label.setAlignment(Qt.AlignCenter)\n            grid_layout.addWidget(label, 0, col)\n        \n        # Add row headers (A-H) and well buttons\n        for row in range(8):\n            row_label = QLabel(chr(65 + row))  # A-H\n            row_label.setAlignment(Qt.AlignCenter)\n            grid_layout.addWidget(row_label, row + 1, 0)\n            \n            for col in range(1, 13):\n                well_id = f\"{chr(65 + row)}{col:02d}\"\n                button = QPushButton(well_id)\n                button.setFixedSize(40, 40)\n                \n                # Highlight current well\n                if well_id == current_well:\n                    button.setStyleSheet(\"background-color: lightblue;\")\n                \n                # Disable already selected wells\n                if well_id in self.existing_wells and well_id != current_well:\n                    button.setEnabled(False)\n                    button.setStyleSheet(\"background-color: lightgray;\")\n                \n                button.clicked.connect(lambda checked, w=well_id: self.select_well(w))\n                grid_layout.addWidget(button, row + 1, col)\n        \n        layout.addLayout(grid_layout)\n        \n        # Add buttons\n        button_layout = QHBoxLayout()\n        cancel_button = QPushButton(\"Cancel\")\n        cancel_button.clicked.connect(self.reject)\n        button_layout.addWidget(cancel_button)\n        \n        ok_button = QPushButton(\"OK\")\n        ok_button.clicked.connect(self.accept)\n        button_layout.addWidget(ok_button)\n        \n        layout.addLayout(button_layout)\n        self.setLayout(layout)\n    \n    def select_well(self, well_id):\n        self.selected_well = well_id\n        # Update UI to show selection\n        for i in range(1, 9):\n            for j in range(1, 13):\n                button = self.findChild(QPushButton, f\"{chr(64 + i)}{j:02d}\")\n                if button:\n                    if button.text() == well_id:\n                        button.setStyleSheet(\"background-color: lightblue;\")\n                    elif button.text() not in self.existing_wells:\n                        button.setStyleSheet(\"\")\n```\n\n2. Implement a custom delegate for the Well column:\n```python\nclass WellDelegate(QStyledItemDelegate):\n    def createEditor(self, parent, option, index):\n        # No direct editing, will show dialog instead\n        return None\n    \n    def editorEvent(self, event, model, option, index):\n        if event.type() == QEvent.MouseButtonDblClick:\n            # Get current well and existing wells\n            current_well = index.data(Qt.DisplayRole)\n            existing_wells = []\n            for row in range(model.rowCount()):\n                if row != index.row():  # Exclude current row\n                    well_idx = model.index(row, index.column())\n                    well = model.data(well_idx, Qt.DisplayRole)\n                    if well:\n                        existing_wells.append(well)\n            \n            dialog = WellPlateDialog(None, current_well, existing_wells)\n            if dialog.exec_() == QDialog.Accepted and dialog.selected_well:\n                model.setData(index, dialog.selected_well, Qt.EditRole)\n            return True\n        return False\n```\n\n3. Apply the delegate to the Well column:\n```python\nwell_column_index = self.get_column_index_by_name(\"Well\")\nself.table.setItemDelegateForColumn(well_column_index, WellDelegate())\n```\n\n4. Implement validation for duplicate wells:\n```python\ndef validate_well_selection(self, row, well_id):\n    # Check for duplicates\n    for i in range(self.table.rowCount()):\n        if i != row:  # Skip current row\n            well_item = self.table.item(i, well_column_index)\n            if well_item and well_item.text() == well_id:\n                QMessageBox.warning(self, \"Duplicate Well\", \n                                   f\"Well {well_id} is already assigned to another selection.\")\n                return False\n    return True\n```",
-        "testStrategy": "1. Add dedicated tests under `tests/dev_mode/test_selection_management_sync.py`:\n   - Test opening the well plate dialog\n   - Test selecting a well updates the table cell correctly\n   - Test that duplicate well assignments show a warning\n   - Test that invalid well selections are prevented\n\n2. Propagate tests to DUAL and GUI modes to ensure consistent behavior\n\n3. Manual testing:\n   - Verify the dialog displays A-H rows and 01-12 columns correctly\n   - Test that clicking a well updates the table cell\n   - Verify that duplicate well assignments are properly handled",
-        "priority": "low",
-        "dependencies": [],
-        "status": "done",
+        "title": "Implement Main Image Navigation and Cell Highlighting",
+        "description": "Develop functionality to center and highlight a selected cell in the main image view when clicked in the ROI dialog, with smooth navigation to the selected cell location.",
+        "details": "Implement a navigation system that centers the main image view on a selected cell with smooth animation. Use modern animation techniques like CSS transitions or the Web Animations API for smooth scrolling. Add visual highlighting for the currently selected cell.\n\nKey implementation details:\n1. Create a navigation service that handles scrolling and centering in the main image view\n2. Implement smooth scrolling animation using CSS transitions or requestAnimationFrame\n3. Add visual highlighting for the selected cell using CSS overlay or SVG mask\n4. Ensure proper event handling between ROI dialog and main image view\n\nSample implementation:\n```typescript\ninterface MainImageNavigationProps {\n  imageRef: React.RefObject<HTMLDivElement>;\n  selectedCellId: string | null;\n  cells: Cell[];\n}\n\nconst MainImageNavigation: React.FC<MainImageNavigationProps> = ({\n  imageRef,\n  selectedCellId,\n  cells\n}) => {\n  useEffect(() => {\n    if (!selectedCellId || !imageRef.current) return;\n    \n    const selectedCell = cells.find(cell => cell.id === selectedCellId);\n    if (!selectedCell) return;\n    \n    // Calculate scroll position to center the cell\n    const { x, y, width, height } = selectedCell.coordinates;\n    const containerRect = imageRef.current.getBoundingClientRect();\n    \n    const scrollX = x + width/2 - containerRect.width/2;\n    const scrollY = y + height/2 - containerRect.height/2;\n    \n    // Smooth scroll to the cell\n    imageRef.current.scrollTo({\n      left: scrollX,\n      top: scrollY,\n      behavior: 'smooth'\n    });\n    \n    // Highlight the cell\n    highlightCell(selectedCellId);\n  }, [selectedCellId, cells, imageRef]);\n  \n  const highlightCell = (cellId: string) => {\n    // Remove previous highlights\n    document.querySelectorAll('.cell-highlight').forEach(el => {\n      el.classList.remove('cell-highlight');\n    });\n    \n    // Add highlight to selected cell\n    const cellElement = document.getElementById(`cell-${cellId}`);\n    if (cellElement) {\n      cellElement.classList.add('cell-highlight');\n    }\n  };\n  \n  return null; // This is a behavior component, not a visual one\n};\n```\n\nCSS for highlighting:\n```css\n.cell-highlight {\n  outline: 2px solid var(--highlight-color, #0088ff);\n  box-shadow: 0 0 10px rgba(0, 136, 255, 0.5);\n  z-index: 10;\n  position: relative;\n  transition: outline 0.3s ease, box-shadow 0.3s ease;\n}\n```",
+        "testStrategy": "1. Unit tests for navigation calculations and scrolling behavior\n2. Test cell highlighting functionality\n3. Verify smooth scrolling animation works correctly\n4. Test edge cases (e.g., cell near image boundaries)\n5. Integration tests to ensure navigation works correctly with ROI dialog\n6. Performance testing to ensure smooth animations\n7. Cross-browser testing for animation compatibility\n8. DEV mode testing with headless simulation and logging",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Coordinate Transformation Logic",
+            "description": "Create utility functions to handle coordinate transformations between the ROI dialog and main image view, ensuring accurate cell positioning.",
+            "dependencies": [],
+            "details": "Develop a coordinate system utility that maps cell coordinates from the ROI dialog to the main image view. Include functions for coordinate conversion, scaling based on zoom level, and viewport positioning calculations. Create a reusable service that can be imported where needed.",
+            "status": "pending",
+            "testStrategy": "Write unit tests for coordinate transformation functions with various input scenarios including edge cases like extreme zoom levels and boundary positions."
+          },
+          {
+            "id": 2,
+            "title": "Create Image Centering Functionality",
+            "description": "Develop the core navigation service that handles scrolling and centering the main image view on a selected cell.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement a navigation service with methods to calculate optimal scroll positions based on cell coordinates and viewport dimensions. Include functions to determine the center point of cells and adjust scroll position accordingly. Handle edge cases where cells are near image boundaries.",
+            "status": "pending",
+            "testStrategy": "Test the centering functionality with cells at different positions (center, edges, corners) and with different viewport sizes."
+          },
+          {
+            "id": 3,
+            "title": "Implement Cell Highlighting Visualization",
+            "description": "Create visual highlighting effects for the selected cell using CSS and DOM manipulation.",
+            "dependencies": [],
+            "details": "Design and implement a highlighting system that visually distinguishes the selected cell. Use CSS classes for styling with transitions for smooth visual effects. Consider accessibility by ensuring sufficient contrast. Implement methods to add and remove highlights as selection changes.",
+            "status": "pending",
+            "testStrategy": "Test highlight application and removal across different browsers to ensure consistent visual appearance."
+          },
+          {
+            "id": 4,
+            "title": "Add Smooth Animation Transitions",
+            "description": "Implement smooth scrolling and highlighting animations using CSS transitions or the Web Animations API.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Enhance the navigation service with animation capabilities. Implement smooth scrolling using either CSS scroll-behavior or requestAnimationFrame for more complex animations. Add configurable animation duration and easing functions. Ensure animations work well across different browsers and devices.",
+            "status": "pending",
+            "testStrategy": "Test animation performance on various devices and browsers. Verify that animations complete correctly and don't interfere with other UI interactions."
+          },
+          {
+            "id": 5,
+            "title": "Integrate ROI Dialog and Main View Event Handling",
+            "description": "Connect the ROI dialog selection events with the main image navigation system to create a cohesive user experience.",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Implement event handlers for cell selection in the ROI dialog. Create a communication system between the ROI dialog and main image view components. Ensure proper state management for tracking the currently selected cell. Add developer mode for testing and debugging the navigation and highlighting features.",
+            "status": "pending",
+            "testStrategy": "Create integration tests that simulate user interactions from ROI dialog selection through to main view navigation and highlighting. Test edge cases like rapid successive selections."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Implement Cell Inclusion/Exclusion Logic for Protocol Export",
+        "description": "Develop the logic to track cell inclusion/exclusion status and ensure only checked cells are included in the protocol export.",
+        "details": "Create a state management system to track which cells are included or excluded from the protocol export. Implement persistence of this state across the application and ensure it's properly reflected in the protocol export process.\n\nKey implementation details:\n1. Extend the cell data model to include inclusion/exclusion status\n2. Implement state management using React Context, Redux, or a similar state management library\n3. Create selectors or filters to get only included cells for protocol export\n4. Ensure state persistence across component unmounts/remounts\n5. Add validation to prevent protocol export with no cells selected\n\nSample implementation:\n```typescript\n// Cell data model extension\ninterface Cell {\n  id: string;\n  rowId: string;\n  coordinates: { x: number; y: number; width: number; height: number };\n  thumbnailUrl: string;\n  isIncluded: boolean; // New field for inclusion status\n}\n\n// Context for cell inclusion state\ninterface CellInclusionContextType {\n  includedCells: Record<string, boolean>;\n  toggleCellInclusion: (cellId: string) => void;\n  getIncludedCellsForRow: (rowId: string) => Cell[];\n  getIncludedCellsForProtocol: () => Cell[];\n}\n\nconst CellInclusionContext = createContext<CellInclusionContextType | null>(null);\n\nconst CellInclusionProvider: React.FC = ({ children }) => {\n  const [includedCells, setIncludedCells] = useState<Record<string, boolean>>({});\n  const { cells } = useCellData(); // Hook to get all cell data\n  \n  const toggleCellInclusion = (cellId: string) => {\n    setIncludedCells(prev => ({\n      ...prev,\n      [cellId]: !prev[cellId]\n    }));\n  };\n  \n  const getIncludedCellsForRow = (rowId: string) => {\n    return cells\n      .filter(cell => cell.rowId === rowId)\n      .filter(cell => includedCells[cell.id] !== false); // Include by default unless explicitly excluded\n  };\n  \n  const getIncludedCellsForProtocol = () => {\n    return cells.filter(cell => includedCells[cell.id] !== false);\n  };\n  \n  return (\n    <CellInclusionContext.Provider value={{\n      includedCells,\n      toggleCellInclusion,\n      getIncludedCellsForRow,\n      getIncludedCellsForProtocol\n    }}>\n      {children}\n    </CellInclusionContext.Provider>\n  );\n};\n\n// Hook for using the context\nconst useCellInclusion = () => {\n  const context = useContext(CellInclusionContext);\n  if (!context) {\n    throw new Error('useCellInclusion must be used within a CellInclusionProvider');\n  }\n  return context;\n};\n\n// Protocol export integration\nconst exportProtocol = () => {\n  const { getIncludedCellsForProtocol } = useCellInclusion();\n  const includedCells = getIncludedCellsForProtocol();\n  \n  if (includedCells.length === 0) {\n    alert('No cells selected for protocol export');\n    return;\n  }\n  \n  // Proceed with protocol export using only included cells\n  generateProtocol(includedCells);\n};\n```",
+        "testStrategy": "1. Unit tests for cell inclusion/exclusion state management\n2. Test protocol export with various inclusion/exclusion scenarios\n3. Verify validation for empty selection works correctly\n4. Test state persistence across component lifecycle events\n5. Integration tests to ensure inclusion/exclusion state is properly reflected in the UI\n6. End-to-end tests for the complete protocol export flow\n7. DEV mode testing with headless simulation and comprehensive logging",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Multi-Mode Testing Framework",
+        "description": "Develop a comprehensive testing framework that supports DEV, DUAL, and GUI modes as specified in the technical requirements.",
+        "details": "Create a testing framework that supports three distinct modes of operation: DEV mode for headless simulation and logging, DUAL mode for GUI synchronization validation, and GUI mode for production-ready interface testing.\n\nKey implementation details:\n1. Implement a mode selector that determines the current testing mode\n2. Create a headless simulation system for DEV mode testing\n3. Implement comprehensive logging for all operations\n4. Develop GUI synchronization validation for DUAL mode\n5. Use Jest for unit tests and Cypress for end-to-end tests\n6. Create test utilities for simulating user interactions\n\nSample implementation:\n```typescript\n// Testing mode enum\nenum TestMode {\n  DEV = 'dev',\n  DUAL = 'dual',\n  GUI = 'gui'\n}\n\n// Testing context\ninterface TestingContextType {\n  mode: TestMode;\n  setMode: (mode: TestMode) => void;\n  log: (message: string, data?: any) => void;\n  simulateUserAction: (action: UserAction) => void;\n  validateGUISync: () => boolean;\n}\n\nconst TestingContext = createContext<TestingContextType | null>(null);\n\nconst TestingProvider: React.FC = ({ children }) => {\n  const [mode, setMode] = useState<TestMode>(\n    (process.env.REACT_APP_TEST_MODE as TestMode) || TestMode.GUI\n  );\n  \n  const log = (message: string, data?: any) => {\n    if (mode === TestMode.DEV || mode === TestMode.DUAL) {\n      console.log(`[${mode.toUpperCase()}] ${message}`, data || '');\n      \n      // In a real implementation, you might want to send logs to a server or file\n      if (process.env.NODE_ENV !== 'production') {\n        // Save logs to file or service for later analysis\n      }\n    }\n  };\n  \n  const simulateUserAction = (action: UserAction) => {\n    if (mode === TestMode.DEV || mode === TestMode.DUAL) {\n      log('Simulating user action', action);\n      \n      // Execute the simulated action\n      switch (action.type) {\n        case 'click':\n          // Simulate click on element\n          break;\n        case 'select':\n          // Simulate selection\n          break;\n        case 'input':\n          // Simulate input\n          break;\n        // Other action types\n      }\n    }\n  };\n  \n  const validateGUISync = () => {\n    if (mode === TestMode.DUAL) {\n      log('Validating GUI synchronization');\n      // Compare headless state with GUI state\n      // Return true if synchronized, false otherwise\n      return true;\n    }\n    return true; // Always return true in other modes\n  };\n  \n  return (\n    <TestingContext.Provider value={{\n      mode,\n      setMode,\n      log,\n      simulateUserAction,\n      validateGUISync\n    }}>\n      {children}\n    </TestingContext.Provider>\n  );\n};\n\n// Hook for using the testing context\nconst useTesting = () => {\n  const context = useContext(TestingContext);\n  if (!context) {\n    throw new Error('useTesting must be used within a TestingProvider');\n  }\n  return context;\n};\n\n// Example test utility\nconst simulateCellSelection = (cells: Cell[]) => {\n  const { mode, simulateUserAction, log } = useTesting();\n  \n  log('Simulating cell selection', cells);\n  \n  cells.forEach(cell => {\n    simulateUserAction({\n      type: 'click',\n      target: `cell-${cell.id}`,\n      data: { cellId: cell.id }\n    });\n  });\n};\n```",
+        "testStrategy": "1. Unit tests for each testing mode functionality\n2. Test mode switching and behavior differences\n3. Verify logging system works correctly in different modes\n4. Test headless simulation capabilities\n5. Verify GUI synchronization validation in DUAL mode\n6. Integration tests to ensure testing framework works with all components\n7. Meta-tests to verify the testing framework itself is working correctly",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement DEV Mode Headless Simulation System",
+            "description": "Create a headless simulation system for DEV mode that allows testing without GUI rendering",
+            "dependencies": [],
+            "details": "Develop a headless simulation system that can run tests without GUI rendering. Implement state management, event simulation, and virtual DOM manipulation for DEV mode. Create utilities for simulating user interactions programmatically. Ensure all operations can be executed and verified without visual rendering.",
+            "status": "pending",
+            "testStrategy": "Write unit tests using Jest to verify the headless simulation system correctly handles state changes and events. Create test cases that validate the simulation matches expected outcomes."
+          },
+          {
+            "id": 2,
+            "title": "Develop Comprehensive Logging System",
+            "description": "Implement a robust logging system that captures operations across all testing modes",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a centralized logging system that records all operations, state changes, and events. Implement different logging levels (debug, info, warning, error). Add context-aware logging that includes the current test mode. Develop mechanisms to export logs for analysis. Ensure logs can be filtered and searched efficiently.",
+            "status": "pending",
+            "testStrategy": "Test the logging system by verifying log output format, content, and persistence across different operations and modes. Validate that appropriate information is captured for debugging purposes."
+          },
+          {
+            "id": 3,
+            "title": "Implement DUAL Mode GUI Synchronization Validation",
+            "description": "Create a system to validate synchronization between headless state and GUI rendering in DUAL mode",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Develop comparison mechanisms to verify that headless state and GUI rendering remain synchronized. Implement snapshot testing for GUI elements. Create validation functions that check for discrepancies between expected and actual GUI states. Add automatic detection and reporting of synchronization issues.",
+            "status": "pending",
+            "testStrategy": "Create tests that deliberately introduce synchronization issues and verify they are correctly detected. Test edge cases where state changes might not properly reflect in the GUI."
+          },
+          {
+            "id": 4,
+            "title": "Develop GUI Mode Production Testing",
+            "description": "Implement production-ready interface testing for GUI mode with end-to-end test capabilities",
+            "dependencies": [
+              2
+            ],
+            "details": "Set up Cypress for end-to-end testing of the production GUI. Create test utilities for simulating real user interactions with the interface. Implement visual regression testing to catch unexpected UI changes. Develop test scenarios that cover critical user workflows in the production environment.",
+            "status": "pending",
+            "testStrategy": "Create end-to-end tests using Cypress that simulate complete user workflows. Implement visual comparison tests to detect unexpected UI changes between versions."
+          },
+          {
+            "id": 5,
+            "title": "Create Integrated Test Mode Selector and Runner",
+            "description": "Develop a unified system to select and run tests across all three modes with consistent reporting",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Implement a mode selector that determines the current testing mode based on environment variables or configuration. Create a unified test runner that can execute tests in any mode. Develop consistent reporting mechanisms across all modes. Implement utilities to run the same test cases across different modes for comparison. Add configuration options for customizing test execution.",
+            "status": "pending",
+            "testStrategy": "Test the mode selector by verifying it correctly identifies and switches between modes. Validate that the test runner executes tests appropriately in each mode with consistent reporting."
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Implement End-to-End User Workflow Integration",
+        "description": "Integrate all components to create a seamless end-to-end user workflow for cell selection, preview, management, and protocol export.",
+        "details": "Connect all previously developed components to create a complete, seamless user workflow that follows the sequence outlined in the PRD. Ensure proper state management, event handling, and UI transitions between steps.\n\nKey implementation details:\n1. Create a workflow manager that orchestrates the user flow\n2. Implement proper state transitions between workflow steps\n3. Ensure data consistency across the entire workflow\n4. Add error handling and recovery mechanisms\n5. Implement analytics tracking for workflow steps (if applicable)\n\nSample implementation:\n```typescript\n// Workflow steps enum\nenum WorkflowStep {\n  CELL_SELECTION = 'cell_selection',\n  ROW_SELECTION = 'row_selection',\n  CELL_MANAGEMENT = 'cell_management',\n  PROTOCOL_EXPORT = 'protocol_export'\n}\n\n// Workflow context\ninterface WorkflowContextType {\n  currentStep: WorkflowStep;\n  selectedCells: Cell[];\n  selectedRowId: string | null;\n  isManageDialogOpen: boolean;\n  setStep: (step: WorkflowStep) => void;\n  selectCells: (cells: Cell[]) => void;\n  selectRow: (rowId: string) => void;\n  openManageDialog: () => void;\n  closeManageDialog: () => void;\n  exportProtocol: () => void;\n}\n\nconst WorkflowContext = createContext<WorkflowContextType | null>(null);\n\nconst WorkflowProvider: React.FC = ({ children }) => {\n  const [currentStep, setCurrentStep] = useState<WorkflowStep>(WorkflowStep.CELL_SELECTION);\n  const [selectedCells, setSelectedCells] = useState<Cell[]>([]);\n  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);\n  const [isManageDialogOpen, setIsManageDialogOpen] = useState(false);\n  \n  const { log } = useTesting();\n  const { getIncludedCellsForProtocol } = useCellInclusion();\n  \n  const setStep = (step: WorkflowStep) => {\n    log('Changing workflow step', { from: currentStep, to: step });\n    setCurrentStep(step);\n  };\n  \n  const selectCells = (cells: Cell[]) => {\n    log('Selecting cells', cells);\n    setSelectedCells(cells);\n    setStep(WorkflowStep.ROW_SELECTION);\n  };\n  \n  const selectRow = (rowId: string) => {\n    log('Selecting row', rowId);\n    setSelectedRowId(rowId);\n  };\n  \n  const openManageDialog = () => {\n    log('Opening manage dialog');\n    setIsManageDialogOpen(true);\n    setStep(WorkflowStep.CELL_MANAGEMENT);\n  };\n  \n  const closeManageDialog = () => {\n    log('Closing manage dialog');\n    setIsManageDialogOpen(false);\n    setStep(WorkflowStep.ROW_SELECTION);\n  };\n  \n  const exportProtocol = () => {\n    log('Exporting protocol');\n    const includedCells = getIncludedCellsForProtocol();\n    \n    if (includedCells.length === 0) {\n      alert('No cells selected for protocol export');\n      return;\n    }\n    \n    // Proceed with protocol export\n    generateProtocol(includedCells);\n    setStep(WorkflowStep.PROTOCOL_EXPORT);\n  };\n  \n  return (\n    <WorkflowContext.Provider value={{\n      currentStep,\n      selectedCells,\n      selectedRowId,\n      isManageDialogOpen,\n      setStep,\n      selectCells,\n      selectRow,\n      openManageDialog,\n      closeManageDialog,\n      exportProtocol\n    }}>\n      {children}\n    </WorkflowContext.Provider>\n  );\n};\n\n// Main application component integrating all parts\nconst CellSorterApp: React.FC = () => {\n  return (\n    <TestingProvider>\n      <CellInclusionProvider>\n        <WorkflowProvider>\n          <div className=\"cell-sorter-app\">\n            <MainImageView />\n            <CellSelectionWidget />\n            <WorkflowControls />\n            <ManageROIsDialog />\n          </div>\n        </WorkflowProvider>\n      </CellInclusionProvider>\n    </TestingProvider>\n  );\n};\n```",
+        "testStrategy": "1. End-to-end tests for the complete user workflow\n2. Test each transition between workflow steps\n3. Verify data consistency throughout the workflow\n4. Test error handling and recovery mechanisms\n5. Verify analytics tracking (if applicable)\n6. Test with various real-world scenarios and edge cases\n7. Performance testing for the integrated workflow\n8. Usability testing with real users if possible\n9. DEV mode testing with headless simulation of the entire workflow\n10. DUAL mode testing to verify GUI synchronization throughout the workflow",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "status": "pending",
         "subtasks": []
       }
     ],
     "metadata": {
-      "created": "2025-07-01T06:25:51.475Z",
-      "updated": "2025-07-01T06:39:29.370Z",
+      "created": "2025-07-07T04:53:03.413Z",
+      "updated": "2025-07-07T04:53:03.413Z",
       "description": "Tasks for master context"
     }
   }

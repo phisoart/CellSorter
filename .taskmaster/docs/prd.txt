@@ -1,128 +1,76 @@
-# Product Requirements Document: Cell Selections Table UI Enhancements
+# CellSorter - Cell Selection Management Feature PRD
 
-## Objective
-Improve the usability and visual consistency of the Cell Selections table by addressing alignment, editing experience, and interaction issues across all three modes (DEV → DUAL → GUI).
+## Overview
+Enhance the cell selection functionality to provide granular control over individual cells within a well selection, allowing users to review and manage cells before protocol export.
 
----
+## Background
+Currently, when users perform cell selection, all selected cells are assigned to a single well. Users need the ability to:
+1. Preview selected cells before saving
+2. Selectively save only desired cells
+3. Remove unwanted cells from the protocol
 
-## Feature 1 – Delete Column Improvements
+## Feature Requirements
 
-### Description
-1. Rename column header from **Action** to **Delete**.
-2. Resize Delete buttons to match the full row height and maintain consistent width.
-3. Ensure the Delete button continues to remove the targeted selection without regression.
+### 1. Cell Selection Preview
+- After cell selection, display a preview of all selected cells
+- Show which cells will be included in the well assignment
+- Provide visual feedback before final save operation
 
-### User Story
-_As a user, I want a clearly labeled Delete column with properly-sized buttons so that I can intuitively remove selections without UI glitches._
+### 2. Row-by-Row Cell Management
+- Enable examination of individual cells within each row
+- Allow users to inspect cell quality and characteristics
+- Provide checkbox interface for cell inclusion/exclusion
 
-### Acceptance Criteria
-- Column header displays **Delete** in all modes.
-- Delete button height equals the table row height (±2 px tolerance).
-- Clicking Delete removes the row immediately and emits the proper model-update signal.
-- All three modes pass automated tests located in `tests/*/test_selection_management*`.
+### 3. Manage ROIs Dialog
+- Add "Manage ROIs" button in Cell selections widget (top-right area)
+- Button appears when a row is clicked/selected
+- Opens dedicated dialog for cell management
 
-### 3-Mode Test Strategy
-| Mode | Test | Expected Result |
-|------|------|-----------------|
-| DEV  | `pytest tests/dev_mode/test_selection_management_sync.py` | No failures |
-| DUAL | `pytest tests/dual_mode/test_selection_management_consistency.py` | Matches DEV |
-| GUI  | `pytest tests/gui_mode/test_selection_management_production.py` | Production passes |
+### 4. ROI Management Dialog Features
+- Display list of all individual cells in the selected row
+- Show cell images/thumbnails for visual inspection
+- Checkbox for each cell to include/exclude from protocol
+- NO ability to change well assignment or label colors
+- Click on cell image centers that cell in main image view
 
----
+### 5. Main Image Navigation
+- When cell is clicked in ROI dialog, center that cell in left main image
+- Smooth navigation to selected cell location
+- Visual highlighting of currently selected cell
 
-## Feature 2 – Enabled Checkbox Alignment & Toggle Fix
+## Technical Requirements
 
-### Description
-1. Horizontally and vertically center the checkbox within the Enabled column.
-2. Fix bug: re-enabling a previously disabled selection must update both the UI and underlying model state.
+### Development Mode Testing
+- All functionality must be testable in DEV mode
+- Comprehensive logging for all operations
+- Headless simulation of all user interactions
+- Validation through test suite execution
 
-### User Story
-_As a user, I need the Enabled checkbox centred and reliably toggleable so that I can easily enable or disable selections._
+### GUI Design
+- Maintain design system harmony with existing interface
+- Follow CellSorter design tokens and style guidelines
+- Responsive layout for different screen sizes
+- Consistent interaction patterns
 
-### Acceptance Criteria
-- Checkbox appears centred in every row (verified via pixel comparison test).
-- Toggling from unchecked → checked updates model and refreshes UI.
+### Three-Mode Implementation
+- DEV Mode: Headless simulation + comprehensive logging
+- DUAL Mode: GUI synchronization validation
+- GUI Mode: Production-ready user interface
 
-### 3-Mode Test Strategy
-`tests/dev_mode/test_selection_management_sync.py`, `...dual_mode/...`, `...gui_mode/...` – all assert correct state transitions.
+## User Workflow
+1. User performs cell selection (existing functionality)
+2. User clicks on a row in the selection results
+3. "Manage ROIs" button appears in Cell selections widget
+4. User clicks "Manage ROIs" to open dialog
+5. Dialog shows all cells in that row with images
+6. User can uncheck unwanted cells
+7. User clicks on cell image to navigate main view
+8. User confirms selection and closes dialog
+9. Only checked cells are included in protocol export
 
----
-
-## Feature 3 – Label In-Cell Editing
-
-### Description
-Replace overlay editing with in-place text editing using a proper `QStyledItemDelegate` so that the cell text itself updates during editing.
-
-### User Story
-_As a user, when I edit a label, the old text should be editable directly within the cell without overlay artefacts._
-
-### Acceptance Criteria
-- Double-clicking a Label cell enters in-place edit mode.
-- Editing commits on Enter/Focus-out and updates the model without flicker.
-- No overlay of previous text remains visible while typing.
-
-### 3-Mode Test Strategy
-`tests/dev_mode/test_selection_management_sync.py` → label editing; consistency verified in DUAL & GUI.
-
----
-
-## Feature 4 – Color Column Enhancements
-
-### Description
-1. Center align color names.
-2. Limit selectable colors to those defined in `COLOR_PALETTE` (see `ARCHITECTURE.md`).
-3. Provide a dialog displaying the palette with color swatches next to names.
-4. After selection, the cell shows the color name and a small colour chip.
-
-### User Story
-_As a user, I want to pick colours only from the approved palette via an intuitive dialog so that selections remain consistent._
-
-### Acceptance Criteria
-- Dialog lists exactly 16 colors from `COLOR_PALETTE`.
-- Selecting a color updates both the model and UI chip.
-- Center alignment verified visually and via automated Qt pixel test.
-
-### 3-Mode Test Strategy
-Colour selection flow covered in existing scatter-plot and selection tests across modes.
-
----
-
-## Feature 5 – Well Selection via 96-Well Plate Dialog
-
-### Description
-Provide a graphical 96-well plate dialog for changing the Well column value.
-
-### User Story
-_As a user, I want a visual well plate to choose wells quickly and accurately._
-
-### Acceptance Criteria
-- Dialog displays A-H rows and 01-12 columns.
-- Clicking a well immediately updates the table cell.
-- Invalid or duplicate well assignment prompts a warning.
-
-### 3-Mode Test Strategy
-Add dedicated tests under `tests/dev_mode/test_selection_management_sync.py` and propagate to DUAL/GUI.
-
----
-
-## Non-Functional Requirements
-- All new UI code adheres to PEP-8 and project coding conventions.
-- Cross-platform behaviour (Windows/macOS) validated.
-- No introduction of external dependencies beyond those already in `requirements.txt`.
-
-## Out of Scope
-- Any changes to session management or template management systems.
-- Theme switching; the application remains single-theme.
-
-## Milestones & Priority
-| ID | Feature | Priority |
-|----|---------|----------|
-| 1  | Delete Column Improvements | High |
-| 2  | Enabled Checkbox Alignment & Toggle Fix | High |
-| 3  | Color Column Enhancements | Medium |
-| 4  | Label In-Cell Editing | Medium |
-| 5  | Well Selection Dialog | Low |
-
----
-
-End of Document
+## Success Criteria
+- Users can preview all selected cells before saving
+- Individual cells can be excluded from protocol
+- Navigation between dialog and main image works seamlessly
+- All functionality verified through DEV mode testing
+- GUI maintains design consistency with existing interface
