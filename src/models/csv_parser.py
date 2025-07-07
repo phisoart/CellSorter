@@ -307,10 +307,15 @@ class CSVParser(QObject, LoggerMixin):
         """
         self.data = dataframe
         self.metadata = metadata
+        self.current_file_path = metadata.get('file_path')
         
-        # Emit signals
+        # --- Add calculated center columns ---
+        self._calculate_center_coordinates()
+        # ------------------------------------
+        
+        self.log_info("CSV data loaded and validated.")
+        self.data_validated.emit(True)
         self.csv_loaded.emit(self.current_file_path)
-        self.data_validated.emit(metadata['has_required_columns'])
         
         # Log performance
         if self.parse_start_time:
@@ -319,6 +324,36 @@ class CSVParser(QObject, LoggerMixin):
             
             if not metadata.get('performance_target_met', True):
                 self.log_warning("CSV parsing exceeded performance target")
+    
+    def _calculate_center_coordinates(self) -> None:
+        """
+        Calculate center coordinates from bounding box data if they don't exist.
+        """
+        if self.data is None:
+            return
+
+        x_min_col = 'AreaShape_BoundingBoxMinimum_X'
+        x_max_col = 'AreaShape_BoundingBoxMaximum_X'
+        y_min_col = 'AreaShape_BoundingBoxMinimum_Y'
+        y_max_col = 'AreaShape_BoundingBoxMaximum_Y'
+        
+        required_cols = [x_min_col, x_max_col, y_min_col, y_max_col]
+        
+        # Check if all required bounding box columns exist
+        if all(col in self.data.columns for col in required_cols):
+            # Check if center columns already exist
+            x_center_col_name = 'Location_Center_X'
+            y_center_col_name = 'Location_Center_Y'
+
+            if x_center_col_name not in self.data.columns:
+                self.data[x_center_col_name] = self.data[[x_min_col, x_max_col]].mean(axis=1)
+                self.log_info(f"Calculated and added '{x_center_col_name}' column.")
+
+            if y_center_col_name not in self.data.columns:
+                self.data[y_center_col_name] = self.data[[y_min_col, y_max_col]].mean(axis=1)
+                self.log_info(f"Calculated and added '{y_center_col_name}' column.")
+        else:
+            self.log_warning("Could not calculate center coordinates because bounding box columns are missing.")
     
     def _on_csv_load_failed(self, error_message: str) -> None:
         """
