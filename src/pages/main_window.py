@@ -542,12 +542,20 @@ class MainWindow(QMainWindow, LoggerMixin):
                               "Please calibrate coordinates first to export protocol.")
             return
         
+        # Create an updated list of selections with the latest indices from SelectionManager
+        updated_selections = []
+        for selection_stub in selections_data:
+            selection_id = selection_stub.get('id')
+            if not selection_id:
+                continue
+            
+            # Get the most up-to-date selection data, which includes changes from ROI management
+            current_selection_data = self.selection_manager.get_selection(selection_id)
+            if current_selection_data:
+                updated_selections.append(current_selection_data)
+
         # Convert selections data to dictionary format expected by dialog
-        selections_dict = {}
-        for selection in selections_data:
-            selection_id = selection.get('id', '')
-            if selection_id:
-                selections_dict[selection_id] = selection
+        selections_dict = {sel['id']: sel for sel in updated_selections}
         
         # Get bounding boxes from image handler (already processed during CSV loading)
         bounding_boxes = []
