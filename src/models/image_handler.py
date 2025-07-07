@@ -1087,3 +1087,30 @@ class ImageHandler(QWidget, LoggerMixin):
         self.overlays.clear()
         self.cell_overlays.clear()
         self.bounding_boxes.clear()
+
+    def center_on(self, image_x: float, image_y: float) -> None:
+        """Center the view on a specific image coordinate."""
+        if self.image_data is None:
+            self.log_warning("Cannot center view, no image loaded.")
+            return
+
+        # Calculate the zoom level needed to make the target point the center
+        # This requires translating the view so the target point (image_x, image_y)
+        # ends up at the center of the viewport (self.label.width()/2, self.label.height()/2)
+        
+        # 1. Convert image coords to the coordinate system of the zoomed pixmap
+        zoomed_x = image_x * self.zoom_level
+        zoomed_y = image_y * self.zoom_level
+        
+        # 2. Calculate the required pan offset to place this point at the center
+        center_x = self.image_label.width() / 2
+        center_y = self.image_label.height() / 2
+        
+        pan_x = center_x - zoomed_x
+        pan_y = center_y - zoomed_y
+        
+        self.pan_offset = (pan_x, pan_y)
+        
+        self._update_display()
+        self.viewport_changed.emit()
+        self.log_info(f"Centered view on image coordinates ({image_x:.1f}, {image_y:.1f})")

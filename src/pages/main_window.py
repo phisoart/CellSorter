@@ -52,6 +52,7 @@ from components.dialogs.calibration_dialog import CalibrationDialog
 from components.dialogs.export_dialog import ExportDialog
 from components.dialogs.image_export_dialog import ImageExportDialog
 from components.dialogs.protocol_export_dialog import ProtocolExportDialog
+from components.dialogs.roi_management_dialog import ROIManagementDialog, CellRowData
 
 
 class MainWindow(QMainWindow, LoggerMixin):
@@ -105,6 +106,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         
         # Initialize minimap widget
         self.minimap_widget = MinimapWidget(self)
+        
+        # ROI Management Dialog
+        self.roi_management_dialog: Optional[ROIManagementDialog] = None
         
         # UI setup
         self.setup_ui()
@@ -451,6 +455,7 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_panel.selection_toggled.connect(self._on_panel_selection_toggled)
         self.selection_panel.selection_updated.connect(self._on_panel_selection_updated)
         self.selection_panel.export_requested.connect(self.export_protocol)
+        self.selection_panel.roi_management_requested.connect(self.show_roi_management_dialog)
         
         # Image handler connections
         self.image_handler.coordinates_changed.connect(self.update_coordinates)
@@ -458,8 +463,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.image_handler.viewport_changed.connect(self._update_minimap_viewport)
         
         # Minimap connections
-        self.minimap_widget.navigation_requested.connect(self.image_handler.navigate_to_position)
-        self.image_handler.zoom_changed.connect(self._update_minimap_viewport)
+        self.minimap_widget.navigation_requested.connect(self.image_handler.center_on)
+        
+        # Check for updates on startup
+        QTimer.singleShot(1500, self.check_for_updates)
         
         # Set initial calibration status for SelectionPanel (disabled by default)
         if hasattr(self, 'selection_panel'):
@@ -498,8 +505,6 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.update_status(f"Loading CSV: {Path(file_path).name}")
             self.update_window_title()
             self.log_info(f"Loading CSV: {file_path}")
-    
-
     
     @error_handler("Exporting analysis results")
     def export_protocol(self) -> None:
@@ -703,8 +708,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.update_status("All selections cleared")
         self.update_window_title()
     
-
-    
     def pan_left(self) -> None:
         """Pan image view left."""
         if self.current_image_path:
@@ -745,10 +748,6 @@ class MainWindow(QMainWindow, LoggerMixin):
         else:
             self.image_handler.set_calibration_mode(False)
             self.update_status("Calibration tool deactivated")
-    
-
-    
-
     
     def update_status(self, message: str) -> None:
         """Update status bar message."""
@@ -944,8 +943,6 @@ class MainWindow(QMainWindow, LoggerMixin):
                 self.log_info(f"{method}: {len(indices)} cells")
         else:
             self.update_status("No cells selected")
-    
-
     
     def _on_calibration_updated(self, is_valid: bool) -> None:
         """Handle calibration update."""
@@ -1299,6 +1296,91 @@ class MainWindow(QMainWindow, LoggerMixin):
             image_size = QSize(img_width, img_height)
             
             self.minimap_widget.update_viewport(viewport_rect, image_size)
+    
+    def show_roi_management_dialog(self, selection_id: str) -> None:
+        """Create and show the ROI Management Dialog for a given selection."""
+        if self.roi_management_dialog and self.roi_management_dialog.isVisible():
+            self.roi_management_dialog.close()
+
+        selection_data = self.selection_manager.get_selection(selection_id)
+        if not selection_data:
+            self.error_handler.show_error("Selection not found", f"Could not find data for selection ID: {selection_id}")
+            return
+        
+        if not self.csv_parser.get_data().any().any():
+            self.error_handler.show_error("No CSV Data", "Cannot manage ROIs without loaded cell data.")
+            return
+
+        # Create data structure for the dialog
+        try:
+            row_data = self._create_cell_row_data(selection_id, selection_data)
+        except (ValueError, KeyError) as e:
+            self.error_handler.show_error("Data Error", f"Failed to prepare data for ROI management: {e}")
+            return
+        
+        self.roi_management_dialog = ROIManagementDialog(row_data=row_data, parent=self)
+        
+        # Connect signals
+        self.roi_management_dialog.cell_navigation_requested.connect(self.navigate_to_cell)
+        self.roi_management_dialog.changes_confirmed.connect(self._on_roi_changes_confirmed)
+        
+        self.roi_management_dialog.show()
+        self.log_info(f"ROI Management Dialog opened for selection {selection_id}")
+
+    def navigate_to_cell(self, cell_index: int) -> None:
+        """Navigate the main image view to a specific cell."""
+        if not self.csv_parser.get_data().any().any():
+            self.log_warning("Navigation requested but no CSV data is loaded.")
+            return
+
+        # Get cell coordinates from the full dataset
+        cell_data = self.csv_parser.get_data_by_index(cell_index)
+        if cell_data is None:
+            self.log_error(f"Could not find data for cell index: {cell_index}")
+            return
+
+        x_col, y_col = self.csv_parser.get_xy_columns()
+        if not x_col or not y_col:
+            self.log_error("X/Y columns not identified in CSV data.")
+            return
+            
+        data_x, data_y = cell_data[x_col], cell_data[y_col]
+
+        # Transform to image coordinates
+        image_x, image_y = self.coordinate_transformer.transform(data_x, data_y)
+
+        # Center image view on the cell
+        self.image_handler.center_on(image_x, image_y)
+        self.log_info(f"Navigated to cell {cell_index} at image coordinates ({image_x:.2f}, {image_y:.2f})")
+
+    def _create_cell_row_data(self, selection_id: str, selection_data: Dict[str, Any]) -> CellRowData:
+        """Helper to create CellRowData for the ROI dialog."""
+        cell_indices = selection_data['indices']
+        all_data = self.csv_parser.get_data()
+        
+        # Extract metadata for the selected cells
+        cell_metadata = {}
+        if not all_data.empty:
+            row_metadata = all_data.loc[cell_indices]
+            # Convert to a dictionary of dictionaries
+            cell_metadata = {index: data.to_dict() for index, data in row_metadata.iterrows()}
+
+        return CellRowData(
+            selection_id=selection_id,
+            selection_label=selection_data['label'],
+            selection_color=selection_data['color'],
+            cell_indices=cell_indices,
+            cell_metadata=cell_metadata
+        )
+
+    def _on_roi_changes_confirmed(self, selection_id: str, changes: Dict[str, Any]) -> None:
+        """Update the selection manager with changes from the ROI dialog."""
+        if changes.get('changes_made'):
+            included_indices = changes.get('included_cells', [])
+            self.selection_manager.update_selection_indices(selection_id, included_indices)
+            self.log_info(f"Updated selection {selection_id} with {len(included_indices)} cells after ROI management.")
+        else:
+            self.log_info(f"ROI management for {selection_id} closed with no changes.")
     
 
     
