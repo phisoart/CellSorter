@@ -931,25 +931,11 @@ class SelectionPanel(QWidget, LoggerMixin):
             self.log_warning(f"Selection data not found for ID: {self.selected_row_id}")
             return
         
-        # Create cell row data from selection
-        cell_row_data = self._create_cell_row_data(self.selected_row_id, selection_data)
-        
-        # Create or reuse ROI manager
-        if not self.roi_manager:
-            self.roi_manager = RowCellManager(self)
-            self.roi_manager.cell_inclusion_changed.connect(self.on_cell_inclusion_changed)
-            self.roi_manager.cell_navigation_requested.connect(self.on_cell_navigation_requested)
-            self.roi_manager.row_management_closed.connect(self.on_roi_management_closed)
-        
-        # Load data and show
-        self.roi_manager.load_row_data(cell_row_data)
-        self.roi_manager.show()
-        self.roi_manager.raise_()
-        
-        # Emit the ROI management requested signal to main window
+        # RowCellManager 사용하지 않고 모달 다이얼로그만 사용
+        # 메인 윈도우에 ROI 관리 다이얼로그 요청
         self.roi_management_requested.emit(self.selected_row_id)
         
-        self.log_info(f"Opened ROI management for selection: {self.selected_row_id}")
+        self.log_info(f"Requested ROI management dialog for selection: {self.selected_row_id}")
     
     def _create_cell_row_data(self, selection_id: str, selection_data: Dict[str, Any]) -> CellRowData:
         """Create CellRowData from selection data."""

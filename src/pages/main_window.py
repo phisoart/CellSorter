@@ -451,13 +451,9 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.selection_panel.selection_updated.connect(self._on_panel_selection_updated)
         self.selection_panel.export_requested.connect(self.export_protocol)
         
-        # ROI management connection with debug logging
+        # ROI 관리 모달 다이얼로그 연결 복원 - 사용자 요청에 따라 모달 다이얼로그만 사용
         self.logger.info(f"🔧 SETUP: Connecting selection_panel.roi_management_requested to show_roi_management_dialog")
-        print(f"🔧 SETUP: Connecting selection_panel.roi_management_requested to show_roi_management_dialog")
-        print(f"🔧 SETUP: selection_panel object: {self.selection_panel}")
-        print(f"🔧 SETUP: roi_management_requested signal: {self.selection_panel.roi_management_requested}")
         self.selection_panel.roi_management_requested.connect(self.show_roi_management_dialog)
-        print(f"🔧 SETUP: Connection completed successfully")
         
         # Image handler connections
         self.image_handler.coordinates_changed.connect(self.update_coordinates)

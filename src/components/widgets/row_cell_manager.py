@@ -682,6 +682,15 @@ class RowCellManager(QWidget, LoggerMixin):
     def on_close_clicked(self) -> None:
         """Handle close button click."""
         self.row_management_closed.emit()
+        
+        # 위젯을 실제로 닫거나 숨깁니다
+        if self.parent():
+            # 부모가 있으면 숨김
+            self.hide()
+        else:
+            # 독립 위젯이면 닫음
+            self.close()
+        
         self.log_info("Row management closed")
     
     def get_included_cells(self) -> List[int]:

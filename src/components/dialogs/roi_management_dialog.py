@@ -141,6 +141,11 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         # Create and embed the RowCellManager
         self.cell_manager = RowCellManager(image_handler=self.image_handler, csv_parser=self.csv_parser)
         
+        # 다이얼로그 컨텍스트에서는 RowCellManager의 Close 버튼을 숨김
+        # 대신 다이얼로그의 Close 버튼만 사용
+        if hasattr(self.cell_manager, 'close_button'):
+            self.cell_manager.close_button.hide()
+        
         # Style the cell manager to fit dialog context
         self.cell_manager.setStyleSheet("""
             RowCellManager {
@@ -164,8 +169,8 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(16)
         
-        # Cancel button
-        self.cancel_button = QPushButton("Cancel")
+        # Cancel button -> Close button
+        self.cancel_button = QPushButton("Close")
         self.cancel_button.setFixedSize(120, 40)
         self.cancel_button.setStyleSheet("""
             QPushButton {
@@ -296,8 +301,8 @@ class ROIManagementDialog(QDialog, LoggerMixin):
         return False # No changes found
     
     def on_cancel_clicked(self) -> None:
-        """Handle cancel button click."""
-        self.log_info("ROI Management Dialog cancelled")
+        """Handle close button click."""
+        self.log_info("ROI Management Dialog closed")
         self.reject()
     
     def on_confirm_clicked(self) -> None:
