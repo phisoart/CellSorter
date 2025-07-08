@@ -125,6 +125,10 @@ class MainWindow(QMainWindow, LoggerMixin):
         self.setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT)
         
+        # macOS에서 MainWindow 배경을 명시적으로 흰색으로 강제
+        if platform.system() == "Darwin":
+            self.setStyleSheet("background-color: #FFFFFF;")
+        
         # Fix titlebar visibility on macOS
         if platform.system() == "Darwin":  # macOS
             # Ensure title bar is visible on macOS

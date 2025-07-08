@@ -87,47 +87,53 @@ class ThemeManager(QObject, LoggerMixin):
         Args:
             theme_name: Theme name (always "light")
         """
-        # Force light theme only
-        theme_name = "light"
-        
-        self.apply_custom_theme(theme_name)
-            
+        # macOS에서는 항상 화이트 모드 강제
+        if platform.system() == "Darwin":
+            theme_name = "light"
+            self.apply_custom_theme(theme_name, force_white_mode=True)
+            self._force_macos_white_palette()  # QPalette도 강제 적용
+        else:
+            theme_name = "light"
+            self.apply_custom_theme(theme_name)
         self.current_theme = theme_name
         self.settings.setValue("theme", theme_name)
         self.theme_changed.emit(theme_name)
-        self.log_info(f"Applied light theme")
+        self.log_info(f"Applied light theme (macOS 화이트 모드: {platform.system() == 'Darwin'})")
     
-    def apply_custom_theme(self, theme_name: str = "light") -> None:
+    def apply_custom_theme(self, theme_name: str = "light", force_white_mode: bool = False) -> None:
         """Apply custom shadcn/ui inspired light theme."""
         try:
-            colors = self.COLORS_LIGHT
-            
-            # Generate stylesheet
+            colors = self.COLORS_LIGHT.copy()
+            # macOS에서 화이트 모드 강제
+            if force_white_mode and platform.system() == "Darwin":
+                for k in colors:
+                    if k == 'background' or k.endswith('_background') or k == 'card':
+                        colors[k] = 'hsl(0, 0%, 100%)'  # 흰색
+                    elif k == 'foreground' or k.endswith('_foreground'):
+                        colors[k] = 'hsl(0, 0%, 0%)'    # 검정
             stylesheet = self._generate_stylesheet(colors)
-            
-            # Log stylesheet length for debugging
             self.log_info(f"Generated stylesheet length: {len(stylesheet)} characters")
-            
-            # Apply to application
             self.app.setStyleSheet(stylesheet)
-            
-            self.log_info(f"Successfully applied custom light theme")
-            
+            self.log_info(f"Successfully applied custom light theme (macOS 화이트 모드: {force_white_mode})")
         except Exception as e:
             self.log_error(f"Failed to apply custom light theme: {e}")
-            # Try fallback
             try:
-                colors = self.COLORS_LIGHT
+                colors = self.COLORS_LIGHT.copy()
+                if force_white_mode and platform.system() == "Darwin":
+                    for k in colors:
+                        if k == 'background' or k.endswith('_background') or k == 'card':
+                            colors[k] = 'hsl(0, 0%, 100%)'
+                        elif k == 'foreground' or k.endswith('_foreground'):
+                            colors[k] = 'hsl(0, 0%, 0%)'
                 hex_colors = {}
                 for key, hsl in colors.items():
                     qcolor = self._hsl_to_qcolor(hsl)
                     hex_colors[key] = qcolor.name()
-                fallback_stylesheet = self._generate_fallback_stylesheet(hex_colors)
+                fallback_stylesheet = self._generate_fallback_stylesheet(hex_colors, force_white_mode)
                 self.app.setStyleSheet(fallback_stylesheet)
-                self.log_info(f"Applied fallback stylesheet for light theme")
+                self.log_info(f"Applied fallback stylesheet for light theme (macOS 화이트 모드: {force_white_mode})")
             except Exception as fallback_error:
                 self.log_error(f"Even fallback failed: {fallback_error}")
-                # Clear stylesheet to avoid parsing errors
                 self.app.setStyleSheet("")
     
     def get_current_theme(self) -> str:
@@ -162,8 +168,24 @@ class ThemeManager(QObject, LoggerMixin):
         self.log_info("Using direct Qt stylesheet generation for compatibility")
         return self._generate_fallback_stylesheet(hex_colors)
     
-    def _generate_fallback_stylesheet(self, hex_colors: Dict[str, str]) -> str:
+    def _generate_fallback_stylesheet(self, hex_colors: Dict[str, str], force_white_mode: bool = False) -> str:
         """Generate fallback stylesheet when CSS file is not available."""
+        # macOS에서 화이트 모드 강제
+        prepend_white_css = ""
+        if force_white_mode and platform.system() == "Darwin":
+            hex_colors = hex_colors.copy()
+            for k in hex_colors:
+                if k == 'background' or k.endswith('_background') or k == 'card':
+                    hex_colors[k] = '#ffffff'
+                elif k == 'foreground' or k.endswith('_foreground'):
+                    hex_colors[k] = '#000000'
+            # 모든 주요 위젯 배경/글씨 강제
+            prepend_white_css = '''
+QWidget, QFrame, QGroupBox, QMenuBar, QToolBar, QTableWidget, QStatusBar {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+'''
         # Platform-specific font families
         if platform.system() == "Darwin":  # macOS
             font_family = '"SF Pro Text", "Helvetica Neue", system-ui, sans-serif'
@@ -172,7 +194,7 @@ class ThemeManager(QObject, LoggerMixin):
         else:  # Linux and others
             font_family = '"Ubuntu", "Roboto", system-ui, sans-serif'
             
-        return f"""
+        return prepend_white_css + f"""
         /* CellSorter Fallback Stylesheet - Platform: {platform.system()} */
         QMainWindow {{
             background-color: {hex_colors.get('background', '#ffffff')};
@@ -375,3 +397,17 @@ class ThemeManager(QObject, LoggerMixin):
                 hex_colors[var_name] = hsl_value
         
         return hex_colors
+
+    def _force_macos_white_palette(self):
+        """macOS에서 QPalette를 흰색 배경/검정 글씨로 강제 적용"""
+        from PySide6.QtGui import QPalette, QColor
+        palette = QPalette()
+        palette.setColor(QPalette.Window, QColor("#FFFFFF"))
+        palette.setColor(QPalette.WindowText, QColor("#000000"))
+        palette.setColor(QPalette.Base, QColor("#FFFFFF"))
+        palette.setColor(QPalette.Text, QColor("#000000"))
+        palette.setColor(QPalette.Button, QColor("#FFFFFF"))
+        palette.setColor(QPalette.ButtonText, QColor("#000000"))
+        palette.setColor(QPalette.Highlight, QColor("#E0E0E0"))
+        palette.setColor(QPalette.HighlightedText, QColor("#000000"))
+        self.app.setPalette(palette)

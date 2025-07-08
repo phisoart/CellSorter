@@ -42,7 +42,12 @@ def main() -> None:
 
         # Initialize theme manager before creating main window
         theme_manager = ThemeManager(app)
-        theme_manager.apply_theme("light")  # Default theme
+        # macOS에서 항상 화이트 모드 강제
+        import platform
+        if platform.system() == "Darwin":
+            theme_manager.apply_theme("light")  # 내부에서 macOS 분기 처리
+        else:
+            theme_manager.apply_theme("light")
 
         # Create and show main window, injecting the theme manager
         from pages.main_window import MainWindow
