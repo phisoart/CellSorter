@@ -16,6 +16,8 @@ from PySide6.QtGui import QKeyEvent
 from components.widgets.row_cell_manager import RowCellManager, CellRowData
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
+# coordinate_transformer 임포트 추가
+from models.coordinate_transformer import CoordinateTransformer
 
 
 class ROIManagementDialog(QDialog, LoggerMixin):
@@ -44,12 +46,14 @@ class ROIManagementDialog(QDialog, LoggerMixin):
                  parent: Optional[QWidget] = None, 
                  row_data: Optional[CellRowData] = None,
                  image_handler=None, 
-                 csv_parser=None):
+                 csv_parser=None,
+                 coordinate_transformer: Optional[CoordinateTransformer] = None):
         super().__init__(parent)
         
         self.row_data = row_data
         self.image_handler = image_handler
         self.csv_parser = csv_parser
+        self.coordinate_transformer = coordinate_transformer
         self.initial_states: Dict[int, bool] = {}
         self.changes_made = False
         
@@ -64,7 +68,8 @@ class ROIManagementDialog(QDialog, LoggerMixin):
     
     def setup_dialog_properties(self) -> None:
         """Configure dialog properties and appearance."""
-        self.setModal(True)
+        # Non-modal로 변경하여 메인 윈도우 조작 가능하게 함
+        self.setModal(False) 
         self.setWindowTitle("Manage ROIs")
         self.resize(900, 700)  # Optimal size for cell management
         
@@ -139,7 +144,11 @@ class ROIManagementDialog(QDialog, LoggerMixin):
     def setup_content_area(self, parent_layout: QVBoxLayout) -> None:
         """Set up the main content area with the RowCellManager component."""
         # Create and embed the RowCellManager
-        self.cell_manager = RowCellManager(image_handler=self.image_handler, csv_parser=self.csv_parser)
+        self.cell_manager = RowCellManager(
+            image_handler=self.image_handler, 
+            csv_parser=self.csv_parser,
+            coordinate_transformer=self.coordinate_transformer
+        )
         
         # 다이얼로그 컨텍스트에서는 RowCellManager의 Close 버튼을 숨김
         # 대신 다이얼로그의 Close 버튼만 사용
@@ -354,18 +363,24 @@ class ROIManagementDialog(QDialog, LoggerMixin):
 
 # Convenience function for dialog usage
 def show_roi_management_dialog(parent: Optional[QWidget] = None, 
-                             row_data: Optional[CellRowData] = None) -> Optional[Dict[str, Any]]:
+                             row_data: Optional[CellRowData] = None,
+                             coordinate_transformer: Optional[CoordinateTransformer] = None) -> Optional[Dict[str, Any]]:
     """
     Show the ROI Management Dialog and return the result.
     
     Args:
         parent: Parent widget
         row_data: CellRowData to manage
+        coordinate_transformer: The coordinate transformer instance
     
     Returns:
         Dictionary with cell states if accepted, None if cancelled
     """
-    dialog = ROIManagementDialog(parent, row_data)
+    dialog = ROIManagementDialog(
+        parent, 
+        row_data, 
+        coordinate_transformer=coordinate_transformer
+    )
     
     if dialog.exec() == QDialog.Accepted:
         return dialog.get_cell_states()

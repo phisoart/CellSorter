@@ -95,9 +95,9 @@ class LoggerMixin:
         """Log warning message with optional context."""
         self.logger.warning(message, extra=kwargs)
     
-    def log_error(self, message: str, **kwargs) -> None:
+    def log_error(self, message: str, exc_info: bool = False, **kwargs) -> None:
         """Log error message with optional context."""
-        self.logger.error(message, extra=kwargs)
+        self.logger.error(message, exc_info=exc_info, extra=kwargs)
     
     def log_debug(self, message: str, **kwargs) -> None:
         """Log debug message with optional context."""

@@ -20,6 +20,7 @@ from components.base.base_button import BaseButton, ButtonVariant, ButtonSize
 from config.design_tokens import Colors, Spacing, BorderRadius, Typography
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
+from models.coordinate_transformer import CoordinateTransformer
 
 
 @dataclass
@@ -198,11 +199,17 @@ class RowCellManager(QWidget, LoggerMixin):
     cell_navigation_requested = Signal(int)  # cell_index for main image navigation
     row_management_closed = Signal()
     
-    def __init__(self, image_handler=None, csv_parser=None, parent: Optional[QWidget] = None):
+    def __init__(self, 
+                 image_handler=None, 
+                 csv_parser=None, 
+                 coordinate_transformer: Optional[CoordinateTransformer] = None,
+                 parent: Optional[QWidget] = None):
         super().__init__(parent)
         
         self.image_handler = image_handler
         self.csv_parser = csv_parser
+        self.coordinate_transformer = coordinate_transformer
+        
         self.current_row_data: Optional[CellRowData] = None
         self.cell_items: List[CellRowItem] = []
         self.selected_cell_index: Optional[int] = None
@@ -388,9 +395,12 @@ class RowCellManager(QWidget, LoggerMixin):
         """)
         
         # Cell image display
-        self.cell_image_label = QLabel("Click a cell to view its image")
-        self.cell_image_label.setMinimumSize(200, 200)
+        self.cell_image_label = QLabel("No cell selected")
         self.cell_image_label.setAlignment(Qt.AlignCenter)
+        self.cell_image_label.setFrameShape(QFrame.StyledPanel)
+        self.cell_image_label.setWordWrap(True)
+        # 고정 크기 설정
+        self.cell_image_label.setFixedSize(256, 256)
         self.cell_image_label.setStyleSheet("""
             QLabel {
                 border: 2px dashed var(--border);
@@ -562,87 +572,77 @@ class RowCellManager(QWidget, LoggerMixin):
         self.log_info(f"Cell {cell_index} selected")
     
     def _numpy_to_qpixmap(self, array: np.ndarray) -> QPixmap:
-        """Convert a NumPy array to a QPixmap."""
+        """Convert a numpy array to a QPixmap."""
         if array is None:
             return QPixmap()
-        
-        # Ensure array is contiguous
-        if not array.flags['C_CONTIGUOUS']:
-            array = np.ascontiguousarray(array)
-            
-        h, w = array.shape[:2]
-        
-        # Determine QImage format
-        if len(array.shape) == 2: # Grayscale
-            format = QImage.Format_Grayscale8
-            bytes_per_line = w
-        elif len(array.shape) == 3: # Color
-            if array.shape[2] == 4: # RGBA
-                format = QImage.Format_RGBA8888
-                bytes_per_line = 4 * w
-            else: # RGB
-                format = QImage.Format_RGB888
-                bytes_per_line = 3 * w
-        else:
-            self.log_error("Unsupported image format for pixmap conversion.")
-            return QPixmap()
 
-        q_image = QImage(array.data, w, h, bytes_per_line, format)
-        
-        # For RGB images, swap red and blue channels
-        if format == QImage.Format_RGB888:
-            q_image = q_image.rgbSwapped()
-        
-        return QPixmap.fromImage(q_image)
+        # Handle different array types
+        if array.dtype == np.uint8:
+            if len(array.shape) == 2:  # Grayscale
+                h, w = array.shape
+                image = QImage(array.data, w, h, w, QImage.Format_Grayscale8)
+            elif len(array.shape) == 3 and array.shape[2] == 3:  # RGB
+                h, w, ch = array.shape
+                image = QImage(array.data, w, h, w * ch, QImage.Format_RGB888)
+            else:
+                self.log_warning("Unsupported numpy array shape for QPixmap conversion.")
+                return QPixmap()
+        else:
+            # Normalize and convert for other types (e.g., float)
+            # Ensure array is not empty and has a max value > 0 to avoid division by zero
+            if array.size > 0 and np.max(array) > 0:
+                array = (array / np.max(array) * 255).astype(np.uint8)
+            else:
+                array = array.astype(np.uint8) # or return a blank image
+
+            h, w = array.shape
+            image = QImage(array.data, w, h, w, QImage.Format_Grayscale8)
+
+        # Make a copy of the image data to avoid potential memory issues
+        return QPixmap.fromImage(image.copy())
+
 
     def load_cell_image(self, cell_index: int) -> None:
-        """Load and display the image for the selected cell."""
-        if not self.image_handler or not self.csv_parser:
-            self.cell_image_label.setText("Image display not available.")
+        """Load and display the image for a specific cell."""
+        if not self.image_handler or not self.current_row_data:
+            self.cell_image_label.setText("Image Handler or data not available.")
             return
 
         try:
-            cell_data = self.csv_parser.get_data_by_index(cell_index)
-            if cell_data is None:
-                raise ValueError(f"No data found for cell index {cell_index}")
+            pixel_coords = self.get_cell_coordinates(cell_index)
 
-            x_col, y_col = self.csv_parser.get_xy_columns()
-            if not x_col or not y_col:
-                raise ValueError("X/Y columns not identified")
+            if pixel_coords is None:
+                self.cell_image_label.setText(f"No coordinates for cell {cell_index}")
+                return
+            
+            pixel_x, pixel_y = pixel_coords
 
-            img_x, img_y = int(cell_data[x_col]), int(cell_data[y_col])
-            
-            # Extract a 64x64 region around the cell center
-            region = self.image_handler.get_image_region(img_x, img_y, 64, 64)
-            
-            if region is None:
-                raise ValueError("Failed to extract image region")
+            # Get cropped image
+            crop_size = 100  # pixels
+            cropped_image_np = self.image_handler.get_image_region(
+                int(pixel_x), int(pixel_y), crop_size, crop_size
+            )
 
-            pixmap = self._numpy_to_qpixmap(region)
-            
-            self.cell_image_label.setPixmap(pixmap.scaled(
-                self.cell_image_label.size(),
-                Qt.KeepAspectRatio,
-                Qt.SmoothTransformation
-            ))
-            
-            self.log_info(f"Cell image loaded for cell {cell_index}")
-            
+            if cropped_image_np is not None:
+                pixmap = self._numpy_to_qpixmap(cropped_image_np)
+                if not pixmap.isNull():
+                    self.cell_image_label.setPixmap(pixmap.scaled(
+                        self.cell_image_label.size(),
+                        Qt.KeepAspectRatio,
+                        Qt.SmoothTransformation
+                    ))
+                else:
+                    self.cell_image_label.setText(f"Could not display\nimage for cell {cell_index}")
+            else:
+                self.cell_image_label.setText(f"Could not load\nimage for cell {cell_index}")
+
         except Exception as e:
-            self.log_error(f"Failed to load cell image for cell {cell_index}: {e}")
-            self.cell_image_label.setText("Failed to load cell image")
-            self.cell_image_label.setStyleSheet("""
-                QLabel {
-                    border: 2px dashed var(--border);
-                    border-radius: 8px;
-                    background-color: var(--muted);
-                    color: var(--muted-foreground);
-                    font-size: 12px;
-                }
-            """)
-    
+            self.log_error(f"Failed to load image for cell {cell_index}: {e}", exc_info=True)
+            self.cell_image_label.setText(f"Error loading image\nfor cell {cell_index}")
+
+
     def _format_cell_properties(self, metadata: Dict[str, Any]) -> str:
-        """Format cell properties for display."""
+        """Formats cell properties into a readable string."""
         if not metadata:
             return "No properties available for this cell"
         
@@ -660,6 +660,8 @@ class RowCellManager(QWidget, LoggerMixin):
     def on_navigate_clicked(self) -> None:
         """Handle navigate to cell click."""
         if self.selected_cell_index is not None:
+            # 네비게이션은 변환된 좌표가 아닌 원본 CSV 인덱스를 사용해야 함
+            # 메인 윈도우의 navigate_to_cell이 인덱스를 기반으로 좌표를 다시 계산
             self.cell_navigation_requested.emit(self.selected_cell_index)
             self.log_info(f"Navigation requested to cell {self.selected_cell_index}")
     
@@ -679,6 +681,28 @@ class RowCellManager(QWidget, LoggerMixin):
         
         self.log_info("All cells excluded")
     
+    def get_cell_coordinates(self, cell_index: int) -> Optional[tuple[int, int]]:
+        """Get transformed coordinates for a given cell index."""
+        if not self.csv_parser:
+            return None
+            
+        try:
+            cell_data = self.csv_parser.get_data_by_index(cell_index)
+            if cell_data is None: return None
+
+            x_col, y_col = self.csv_parser.get_xy_columns()
+            if not x_col or not y_col: return None
+
+            raw_x, raw_y = int(cell_data[x_col]), int(cell_data[y_col])
+            
+            if self.coordinate_transformer and self.coordinate_transformer.is_calibrated():
+                return self.coordinate_transformer.transform(raw_x, raw_y)
+            
+            return raw_x, raw_y
+        except Exception as e:
+            self.log_error(f"Error getting coordinates for cell {cell_index}: {e}")
+            return None
+
     def on_close_clicked(self) -> None:
         """Handle close button click."""
         self.row_management_closed.emit()
