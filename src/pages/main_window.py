@@ -550,7 +550,7 @@ class MainWindow(QMainWindow, LoggerMixin):
                 updated_selections.append(current_selection_data)
 
         # Convert selections data to dictionary format expected by dialog
-        selections_dict = {sel['id']: sel for sel in updated_selections}
+        selections_dict = {sel.id: sel for sel in updated_selections}
         
         # Get bounding boxes from image handler (already processed during CSV loading)
         bounding_boxes = []
@@ -1275,7 +1275,8 @@ class MainWindow(QMainWindow, LoggerMixin):
                 parent=self,
                 row_data=row_data,
                 image_handler=self.image_handler,
-                csv_parser=self.csv_parser
+                csv_parser=self.csv_parser,
+                coordinate_transformer=self.coordinate_transformer
             )
 
             # Connect signals
@@ -1298,33 +1299,39 @@ class MainWindow(QMainWindow, LoggerMixin):
             self.log_warning("Navigation requested but no CSV data is loaded.")
             return
 
-        # Get cell coordinates from the full dataset
         cell_data = self.csv_parser.get_data_by_index(cell_index)
         if cell_data is None:
             self.log_error(f"Could not find data for cell index: {cell_index}")
             return
-        self.logger.info(f"Found data for cell {cell_index}: {cell_data.to_dict()}")
-
+        
         x_col, y_col = self.csv_parser.get_xy_columns()
         if not x_col or not y_col:
             self.log_error("X/Y columns not identified in CSV data.")
             return
             
-        data_x, data_y = cell_data[x_col], cell_data[y_col]
-        self.logger.info(f"CSV coordinates for cell {cell_index}: ({data_x}, {data_y})")
+        raw_x, raw_y = int(cell_data[x_col]), int(cell_data[y_col])
+        self.logger.info(f"Raw CSV coordinates for cell {cell_index}: ({raw_x}, {raw_y})")
 
-        # Transform to image coordinates using stage_to_pixel
-        transformed_coords = self.coordinate_transformer.stage_to_pixel(data_x, data_y)
-        if not transformed_coords:
-            self.log_error(f"Failed to transform stage coordinates for cell {cell_index}")
-            return
-            
-        image_x, image_y = transformed_coords
-        self.logger.info(f"Transformed to image coordinates: ({image_x}, {image_y})")
+        # 보정된 이미지 좌표를 가져옵니다.
+        if self.coordinate_transformer.is_calibrated():
+            result = self.coordinate_transformer.pixel_to_stage(raw_x, raw_y)
+            if result:
+                # pixel_to_stage가 반환하는 것은 스테이지 좌표이지만, 
+                # 현재 시스템에서는 보정된 픽셀 좌표처럼 사용되고 있습니다.
+                # center_on은 이미지 좌표를 기대합니다.
+                # TODO: pixel_to_image, stage_to_image 등 좌표계 변환 명칭 명확화 필요
+                image_x, image_y = int(result.stage_x), int(result.stage_y)
+                self.logger.info(f"Transformed to image coordinates: ({image_x}, {image_y})")
+            else:
+                self.log_warning(f"Coordinate transformation failed for cell {cell_index}. Using raw coordinates.")
+                image_x, image_y = raw_x, raw_y
+        else:
+            self.log_warning("Coordinates not calibrated. Using raw CSV coordinates for navigation.")
+            image_x, image_y = raw_x, raw_y
 
         # Center image view on the cell
         self.image_handler.center_on(image_x, image_y)
-        self.log_info(f"Navigated to cell {cell_index} at image coordinates ({image_x:.2f}, {image_y:.2f})")
+        self.log_info(f"Navigated to cell {cell_index} at image coordinates ({image_x}, {image_y})")
 
     def _create_cell_row_data(self, selection_id: str, selection_data: Dict[str, Any]) -> CellRowData:
         """Helper to create CellRowData for the ROI dialog."""

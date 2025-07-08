@@ -27,6 +27,7 @@ from components.dialogs.well_selection_dialog import WellSelectionDialog
 from config.settings import BUTTON_HEIGHT, BUTTON_MIN_WIDTH, BUTTON_SPACING, COMPONENT_SPACING, SELECTION_COLORS
 from utils.logging_config import LoggerMixin
 from utils.error_handler import error_handler
+from models.selection_manager import CellSelection, SelectionStatus
 
 
 class SelectionPanel(QWidget, LoggerMixin):
@@ -320,28 +321,29 @@ class SelectionPanel(QWidget, LoggerMixin):
         self.selection_table.cellDoubleClicked.connect(self.on_table_cell_double_clicked)
     
     @error_handler("Loading selections data")
-    def load_selections(self, selections: List[Dict[str, Any]]) -> None:
+    def load_selections(self, selections: List['CellSelection']) -> None:
         """
         Load selections data into the panel.
-        
+
         Args:
-            selections: List of selection data dictionaries
+            selections: List of CellSelection objects
         """
-        # Clear existing data
         self.selections_data.clear()
-        self.selection_table.setRowCount(0)
         
-        # Load new data
-        for selection_data in selections:
-            selection_id = selection_data.get('id', '')
-            if selection_id:
-                self.selections_data[selection_id] = selection_data.copy()
+        for selection_obj in selections:
+            self.selections_data[selection_obj.id] = {
+                "label": selection_obj.label,
+                "color": selection_obj.color,
+                "cell_indices": selection_obj.cell_indices,
+                "well_position": selection_obj.well_position,
+                "status": selection_obj.status.value,
+                "cell_count": selection_obj.cell_count,
+                "enabled": selection_obj.status == SelectionStatus.ACTIVE
+            }
         
-        # Update displays
         self.refresh_table()
         self.refresh_well_plate()
-        
-        self.log_info(f"Loaded {len(selections)} selections")
+        self.log_info(f"{len(selections)} selections loaded into the panel.")
     
     def refresh_table(self) -> None:
         """Refresh the selection table display."""
